@@ -1,5 +1,5 @@
 {
-  "name": "bloga",
+  "name": "blogaa",
   "version": "0.0.1",
   "description": "rulee's personal blog system",
   "main": "app.js",
@@ -22,9 +22,6 @@
   "author": "jae",
   "license": "BSD",
   "gitHead": "a4c182a5121aa047e62f13be1135e6fb309dae4f",
-  "dependencies": {
-    "http-client": "~1.0.0"
-  },
   "devDependencies": {
     "tiny-lr": "0.0.5",
     "gulp": "~3.6.1",

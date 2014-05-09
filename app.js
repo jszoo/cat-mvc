@@ -1,6 +1,4 @@
-#!/usr/bin/env node
-
-var util = require('util'),
+﻿var util = require('util'),
     http = require('http'),
     fs = require('fs'),
     url = require('url'),
@@ -8,11 +6,11 @@ var util = require('util'),
 
 var DEFAULT_PORT = 8000;
 
-function main(argv) {
+function main(port) {
   new HttpServer({
     'GET': createServlet(StaticServlet),
     'HEAD': createServlet(StaticServlet)
-  }).start(Number(argv[2]) || DEFAULT_PORT);
+  }).start(port  || DEFAULT_PORT);
 }
 
 function escapeHtml(value) {
@@ -82,7 +80,7 @@ StaticServlet.MimeMap = {
   'jpeg': 'image/jpeg',
   'gif': 'image/gif',
   'png': 'image/png',
-  'svg': 'image/svg+xml'
+  'svg': 'image/svg+xml'
 };
 
 StaticServlet.prototype.handleRequest = function(req, res) {
@@ -241,4 +239,4 @@ StaticServlet.prototype.writeDirectoryIndex_ = function(req, res, path, files) {
 };
 
 // Must be last,
-main(process.argv);
+main(process.env.PORT || 1337);

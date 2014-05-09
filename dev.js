@@ -1,4 +1,4 @@
-var webserver = require('./webserver');
+var webserver = require('./lib/webserver');
 
 var DEFAULT_PORT = 8000;
 var argv_port = process.argv[2];

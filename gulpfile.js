@@ -17,20 +17,20 @@ var gulp = require('gulp');
 // js
 gulp.task('js', function(){
   gulp
-    .src('js/main.js')
+    .src('app/js/main.js')
     .pipe(browserify({
       insertGlobals : true,
       debug : true
     }))
     .pipe(concat('bundle.js'))
-    .pipe(gulp.dest('./dist/js'))
+    .pipe(gulp.dest('./app/dist/js'))
     .pipe(livereload(server));
 });
 
 // js min
 gulp.task('js-min', function () {
   gulp
-    .src('js/main.js')
+    .src('app/js/main.js')
     .pipe(plumber({
       errorHandler: notify.onError("js error: <%= error.message %>")
     }))
@@ -42,13 +42,13 @@ gulp.task('js-min', function () {
     .pipe(rename({ suffix: '.min' }))
     .pipe(ngmin())
     // .pipe(uglify())
-    .pipe(gulp.dest('./dist/js'));
+    .pipe(gulp.dest('./app/dist/js'));
 });
 
 // css
 gulp.task('css', function () {
   gulp
-    .src('css/main.sass')
+    .src('app/css/main.sass')
     .pipe(plumber({
       errorHandler: notify.onError("css error: <%= error.message %>")
     }))
@@ -56,21 +56,21 @@ gulp.task('css', function () {
       sourceMap: false
     }))
     .pipe(concat('bundle.css'))
-    .pipe(gulp.dest('./dist/css'))
+    .pipe(gulp.dest('./app/dist/css'))
     .pipe(livereload(server));
 });
 
 // css min
 gulp.task('css-min', function () {
   gulp
-    .src('css/main.sass')
+    .src('app/css/main.sass')
     .pipe(sass({
       sourceMap: false
     }))
     .pipe(concat('bundle.css'))
     .pipe(rename({ suffix: '.min' }))
     .pipe(minifycss())
-    .pipe(gulp.dest('./dist/css'));
+    .pipe(gulp.dest('./app/dist/css'));
 });
 
 
@@ -82,10 +82,10 @@ gulp.task('publish', ['js', 'js-min', 'css', 'css-min'], function () {
 
 // clean
 gulp.task('clean', function() {
-  gulp.src(['./dist/js/bundle.js',
-            './dist/js/bundle.min.js',
-            './dist/css/bundle.css',
-            './dist/css/bundle.min.css'], {read: false})
+  gulp.src(['./app/dist/js/bundle.js',
+            './app/dist/js/bundle.min.js',
+            './app/dist/css/bundle.css',
+            './app/dist/css/bundle.min.css'], {read: false})
     .pipe(clean());
 });
 
@@ -93,8 +93,8 @@ gulp.task('clean', function() {
 // watch
 gulp.task('watch', function () {
   var paths = {
-    js: ['js/**/*.js'],
-    css: ['css/**/*.sass', 'css/**/*.css']
+    js: ['app/js/**/*.js'],
+    css: ['app/css/**/*.sass', 'app/css/**/*.css']
   };
   server.listen(35729, function (err) {
     if (err) {

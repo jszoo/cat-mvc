@@ -6,15 +6,10 @@ var util = require('util'),
     url = require('url'),
     events = require('events');
 
-var DEFAULT_PORT = 8000;
 
-function main(argv) {
-  new HttpServer({
-    'GET': createServlet(StaticServlet),
-    'HEAD': createServlet(StaticServlet)
-  }).start(Number(argv[2]) || DEFAULT_PORT);
-}
-
+/**
+ * Static helpers
+ */
 function escapeHtml(value) {
   return value.toString().
     replace('<', '&lt;').
@@ -240,5 +235,14 @@ StaticServlet.prototype.writeDirectoryIndex_ = function(req, res, path, files) {
   res.end();
 };
 
-// Must be last,
-main(process.argv);
+/**
+ * Export
+ */
+module.exports = {
+  create: function(port){
+    return new HttpServer({
+      'GET': createServlet(StaticServlet),
+      'HEAD': createServlet(StaticServlet)
+    }).start(port);
+  }
+};

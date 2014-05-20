@@ -6,10 +6,9 @@
 
 'use strict';
 
+require('./libraries/all');
 var utilitiesName = 'Bloga.utilities';
 angular.module(utilitiesName, []).constant('utils', require('./utilities/all'));
-
-require('./libraries/all');
 
 var directives = require('./directives/all');
 var dataService = require('./dataservice/all');

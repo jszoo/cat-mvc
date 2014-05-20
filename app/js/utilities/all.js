@@ -4,12 +4,60 @@
 * create date: 2014.5.4
 */
 
+var padLeft = function(str, len, chr, reverse) {
+	if (str !== null && str !== undefined) {
+		str = str + ''; var num = len - str.length;
+		if (num > 0) {
+			for (var i = 0; i < num; i++) {
+				if (reverse === true) {
+					str = str + chr;
+				} else {
+					str = chr + str;
+				}
+			}
+		}
+	}
+	return str;
+};
+
+var readObj = function(obj, namespace) {
+    var names = namespace.split(/\.|\[|\]|\(/), ret = obj;
+    angular.forEach(names, function (key, i) { if (key && ret) { ret = (isNaN(key) ? (key === ')' ? ret() : ret[key]) : ret[parseInt(key, 10)]); } });
+    return ret;
+};
+
 module.exports = {
-	padLeft: require('./pad-left'),
-	padRight: require('./pad-right'),
-	viewUrl: require('./view-url'),
-	readObj: require('./read-obj'),
-	i18n: require('./i18n'),
-	type: require('./type'),
-	args2arr: require('./args2arr')
+
+	arg2arr: function() {
+		var splice = Array.prototype.splice;
+		return function(args, skip) {
+			return splice.call(args, skip || 0);
+		};
+	}(),
+
+	type: function() {
+		var op = Object.prototype;
+		var class2type = {}, natives = 'Boolean Number String Function Array Date RegExp Object Error'.split(' ');
+		for (var i = 0; i < natives.length; i++) {class2type['[object ' + natives[i] + ']'] = natives[i].toLowerCase(); }
+		return function(obj) {
+			return obj == null ? String(obj) : class2type[op.toString.call(obj)] || 'object';
+		};
+	}(),
+
+	padLeft: padLeft,
+
+	padRight: function(str, len, chr) {
+		return padLeft(str, len, chr, true);
+	},
+
+	viewUrl: function (url){
+		return url;
+	},
+
+	readObj: readObj,
+
+	i18n: function(key, val) {
+		var getVal = readObj({}, key);
+		return getVal !== undefined ? getVal : val;
+	}
 };

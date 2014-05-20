@@ -6,18 +6,21 @@
 
 'use strict';
 
-var libraries = require('./libraries/add');
-var utilities = require('./utilities/add');
-var directives = require('./directives/add');
-var dataService = require('./dataservice/add');
-var controllers = require('./controllers/add');
-var tests = require('./tests/add');
+var utilitiesName = 'Bloga.utilities';
+angular.module(utilitiesName, []).constant('utils', require('./utilities/all'));
+
+require('./libraries/all');
+
+var directives = require('./directives/all');
+var dataService = require('./dataservice/all');
+var controllers = require('./controllers/all');
+var tests = require('./tests/all');
 
 var bloga = angular.module('Bloga', [
     'ngTouch',
     'ngRoute',
     'ngAnimate',
-    utilities.name,
+    utilitiesName,
     directives.name,
     dataService.name,
     controllers.name

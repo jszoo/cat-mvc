@@ -5,5 +5,5 @@
 */
 
 module.exports = [
-	require('./test1/add').name
+	require('./test1/all').name
 ];

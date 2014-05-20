@@ -38,6 +38,8 @@ var Promise = function() {
 };
 
 Promise.prototype = {
+	constructor: Promise,
+	
     _status: null, _resolves: null, _rejects: null,
 
     initialize: function(resolver){

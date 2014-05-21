@@ -92,15 +92,15 @@ Promise.cast = function(thenablePromise) {
 	return Promise.resolve(thenablePromise);
 };
 
-Promise.all = function(promises) {
+Promise.all = function(iterable) {
 	var doResolve, doReject, promise = new Promise(function(resolve, reject) {
 		doResolve = resolve; doReject = reject;
 	});
-	if (type(promises) === 'array') {
+	if (type(iterable) === 'array') {
 		var resolveNum = 0, rejectNum = 0, values = [],
 		resolve = function(value) {
 			values.push(value);
-			if ((++resolveNum) === promises.length) {
+			if ((++resolveNum) === iterable.length) {
 				doResolve(values);
 			}
 		},
@@ -109,8 +109,8 @@ Promise.all = function(promises) {
 				doReject(error);
 			}
 		};
-		for (var i = 0; i < promises.length; i++) {
-			var p = promises[i];
+		for (var i = 0; i < iterable.length; i++) {
+			var p = iterable[i];
 			if (!thenable(p)) {
 				p = Promise.cast(p);
 			}
@@ -122,11 +122,11 @@ Promise.all = function(promises) {
 	return promise;
 };
 
-Promise.race = function(promises) {
+Promise.race = function(iterable) {
 	var doResolve, doReject, promise = new Promise(function(resolve, reject) {
 		doResolve = resolve; doReject = reject;
 	});
-	if (type(promises) === 'array') {
+	if (type(iterable) === 'array') {
 		var doneNum = 0,
 		resolve = function(value) {
 			if ((++doneNum) === 1) {
@@ -138,9 +138,9 @@ Promise.race = function(promises) {
 				doReject(error);
 			}
 		};
-		for (var i = 0; i < promises.length; i++) {
-			if (thenable(promises[i])) {
-				promises[i].then(resolve, reject);
+		for (var i = 0; i < iterable.length; i++) {
+			if (thenable(iterable[i])) {
+				iterable[i].then(resolve, reject);
 			}
 		}
 	}

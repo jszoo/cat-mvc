@@ -52,10 +52,10 @@ Promise.prototype = {
     _status: null, _resolves: null, _rejects: null,
     
     //
-	then: function(onResolved, onRejected) {
-		if (isFunc(onResolved)) {
-			if (this._status === STATUS.pending) { this._resolves.push(onResolved); }
-			else if (this._status === STATUS.resolved) { onResolved(this._value); }
+	then: function(onFulfilled, onRejected) {
+		if (isFunc(onFulfilled)) {
+			if (this._status === STATUS.pending) { this._resolves.push(onFulfilled); }
+			else if (this._status === STATUS.resolved) { onFulfilled(this._value); }
 		}
 		return this.catch(onRejected);
 	},

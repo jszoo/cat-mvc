@@ -56,13 +56,18 @@ Promise.prototype = {
     
     //
 	then: function(onResolved, onRejected) {
-		if (this._status === STATUS.pending) {
-			if (isFunc(onResolved)) { this._resolves.push(onResolved); }
-			if (isFunc(onRejected)) { this._rejects.push(onRejected); }
-		} else if (this._status === STATUS.resolved) {
-			if (isFunc(onResolved)) { onResolved.apply(this, this._values); }
-		} else if (this._status === STATUS.rejected) {
-			if (isFunc(onRejected)) { onRejected.apply(this, this._errors); }
+		if (isFunc(onResolved)) {
+			if (this._status === STATUS.pending) { this._resolves.push(onResolved); }
+			else if (this._status === STATUS.resolved) { onResolved.apply(this, this._values); }
+		}
+		return this.catch(onRejected);
+	},
+
+	//
+	catch: function(onRejected) {
+		if (isFunc(onRejected)) {
+			if (this._status === STATUS.pending) { this._rejects.push(onRejected); }
+			else if (this._status === STATUS.rejected) { onRejected.apply(this, this._errors); }
 		}
 		return this;
 	},
@@ -113,7 +118,7 @@ Promise.reject = function() {
 	return promise.reject.apply(promise, arg2arr(arguments));
 };
 
-Promise.when = function() {
+Promise.all = function() {
 	var promise = new Promise();
 	var callbackNum = 0, thenableNum = 0, results = [];
 	var callback = function() {

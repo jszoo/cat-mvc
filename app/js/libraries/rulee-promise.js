@@ -15,7 +15,7 @@ var type = require('../utilities/all').type,
 
 var STATUS = {
 	pending: 0,
-	resolved: 1,
+	fulfilled: 1,
 	rejected: 2 
 };
 
@@ -29,7 +29,7 @@ var Promise = function(resolver) {
 	var self = this;
 	resolver(function(value) {
 		if (self._status === STATUS.pending) {
-			self._status = STATUS.resolved;
+			self._status = STATUS.fulfilled;
 			self._value = value;
 			for (var i = 0; i < self._resolves.length; i++) {
 				self._resolves[i](self._value);
@@ -55,7 +55,7 @@ Promise.prototype = {
 	then: function(onFulfilled, onRejected) {
 		if (isFunc(onFulfilled)) {
 			if (this._status === STATUS.pending) { this._resolves.push(onFulfilled); }
-			else if (this._status === STATUS.resolved) { onFulfilled(this._value); }
+			else if (this._status === STATUS.fulfilled) { onFulfilled(this._value); }
 		}
 		return this.catch(onRejected);
 	},

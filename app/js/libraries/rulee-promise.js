@@ -35,12 +35,12 @@ var Promise = function(resolver) {
 				self._resolves[i](self._value);
 			}
 		}
-	}, function(error) {
+	}, function(reason) {
 		if (self._status === STATUS.pending) {
 			self._status = STATUS.rejected;
-			self._error = error;
+			self._reason = reason;
 			for (var i = 0; i < self._rejects.length; i++) {
-				self._rejects[i](self._error);
+				self._rejects[i](self._reason);
 			}
 		}
 	});
@@ -64,7 +64,7 @@ Promise.prototype = {
 	catch: function(onRejected) {
 		if (isFunc(onRejected)) {
 			if (this._status === STATUS.pending) { this._rejects.push(onRejected); }
-			else if (this._status === STATUS.rejected) { onRejected(this._error); }
+			else if (this._status === STATUS.rejected) { onRejected(this._reason); }
 		}
 		return this;
 	}
@@ -82,9 +82,9 @@ Promise.resolve = function(value) {
 	return promise;
 };
 
-Promise.reject = function(error) {
+Promise.reject = function(reason) {
 	return new Promise(function(resolve, reject) {
-		reject(error);
+		reject(reason);
 	});
 };
 
@@ -104,9 +104,9 @@ Promise.all = function(iterable) {
 				doResolve(values);
 			}
 		},
-		reject = function(error) {
+		reject = function(reason) {
 			if ((++rejectNum) === 1) {
-				doReject(error);
+				doReject(reason);
 			}
 		};
 		for (var i = 0; i < iterable.length; i++) {
@@ -133,9 +133,9 @@ Promise.race = function(iterable) {
 				doResolve(value);
 			}
 		},
-		reject = function(error) {
+		reject = function(reason) {
 			if ((++doneNum) === 1) {
-				doReject(error);
+				doReject(reason);
 			}
 		};
 		for (var i = 0; i < iterable.length; i++) {

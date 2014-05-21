@@ -2,7 +2,9 @@
 * promise
 * author: ronglin
 * create date: 2014.5.19
-* reference: http://www.html5rocks.com/zh/tutorials/es6/promises/
+* reference:
+*    http://www.html5rocks.com/zh/tutorials/es6/promises/
+*    https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise
 */
 
 'use strict';
@@ -72,7 +74,7 @@ Promise.resolve = function(value) {
 	var doResolve, doReject, promise = new Promise(function(resolve, reject) {
 		doResolve = resolve; doReject = reject;
 	});
-	if (value instanceof Promise) {
+	if (thenable(value)) {
 		value.then(doResolve, doReject);
 	} else {
 		doResolve(value);
@@ -87,15 +89,7 @@ Promise.reject = function(error) {
 };
 
 Promise.cast = function(thenablePromise) {
-	var doResolve, doReject, promise = new Promise(function(resolve, reject) {
-		doResolve = resolve; doReject = reject;
-	});
-	if (thenable(thenablePromise)) {
-		thenablePromise.then(doResolve, doReject);
-	} else {
-		doResolve(thenablePromise);
-	}
-	return promise;
+	return Promise.resolve(thenablePromise);
 };
 
 Promise.all = function(promises) {
@@ -103,10 +97,10 @@ Promise.all = function(promises) {
 		doResolve = resolve; doReject = reject;
 	});
 	if (type(promises) === 'array') {
-		var resolveNum = 0, rejectNum = 0, thenableNum = 0, values = [],
+		var resolveNum = 0, rejectNum = 0, values = [],
 		resolve = function(value) {
 			values.push(value);
-			if ((++resolveNum) === thenableNum) {
+			if ((++resolveNum) === promises.length) {
 				doResolve(values);
 			}
 		},
@@ -116,10 +110,11 @@ Promise.all = function(promises) {
 			}
 		};
 		for (var i = 0; i < promises.length; i++) {
-			if (thenable(promises[i])) {
-				thenableNum++;
-				promises[i].then(resolve, reject);
+			var p = promises[i];
+			if (!thenable(p)) {
+				p = Promise.cast(p);
 			}
+			p.then(resolve, reject);
 		}
 	} else {
 		doResolve();

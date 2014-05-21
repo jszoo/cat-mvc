@@ -9,5 +9,4 @@ require('./angular-touch.min');
 require('./angular-resource.min');
 require('./angular-animate.min');
 require('./angular-route.min');
-//require('./rulee-promise');
-require('./rulee-promise-chrome');
+require('./rulee-promise');

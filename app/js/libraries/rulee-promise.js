@@ -12,53 +12,49 @@ var type = require('../utilities/all').type,
 	isFunc = function(fn) { return type(fn) === 'function'; },
 	thenable = function(obj) { return obj && isFunc(obj['then']); };
 
-var delegate = function(fn, scope, delay) {
-	scope = scope || this;
-	return function() {
-		var args = arg2arr(arguments);
-		if (type(delay) === 'number') {
-			setTimeout(function() {
-				return fn.apply(scope, args);
-			}, delay);
-		} else {
-			return fn.apply(scope, args);
-		}
-	};
-};
-
 var STATUS = {
 	pending: 0,
 	resolved: 1,
 	rejected: 2 
 };
 
-var Promise = function() {
-	var args = arg2arr(arguments);
-	this.initialize.apply(this, args);
+var Promise = function(resolver) {
+	if (!isFunc(resolver)) {
+		throw new Error('Promise constructor takes a function argument');
+	}
+	this._status = STATUS.pending;
+	this._resolves = [];
+	this._rejects = [];
+	var self = this;
+	resolver(function(value) {
+		if (self._status === STATUS.pending) {
+			self._status = STATUS.resolved;
+			self._value = value;
+			for (var i = 0; i < self._resolves.length; i++) {
+				self._resolves[i](self._value);
+			}
+		}
+	}, function(error) {
+		if (self._status === STATUS.pending) {
+			self._status = STATUS.rejected;
+			self._error = error;
+			for (var i = 0; i < self._rejects.length; i++) {
+				self._rejects[i](self._error);
+			}
+		}
+	});
 };
 
 Promise.prototype = {
 	constructor: Promise,
 	
     _status: null, _resolves: null, _rejects: null,
-
-    initialize: function(resolver){
-		this._status = STATUS.pending;
-		this._resolves = [];
-		this._rejects = [];
-		if (isFunc(resolver)) {
-			resolver.call(this,
-				delegate(this.resolve, this),
-				delegate(this.reject, this)
-			);
-		}
-    },
     
     //
 	then: function(onResolved, onRejected) {
 		if (isFunc(onResolved)) {
 			if (this._status === STATUS.pending) { this._resolves.push(onResolved); }
-			else if (this._status === STATUS.resolved) { onResolved.apply(this, this._values); }
+			else if (this._status === STATUS.resolved) { onResolved(this._value); }
 		}
 		return this.catch(onRejected);
 	},
@@ -67,78 +63,98 @@ Promise.prototype = {
 	catch: function(onRejected) {
 		if (isFunc(onRejected)) {
 			if (this._status === STATUS.pending) { this._rejects.push(onRejected); }
-			else if (this._status === STATUS.rejected) { onRejected.apply(this, this._errors); }
+			else if (this._status === STATUS.rejected) { onRejected(this._error); }
 		}
 		return this;
-	},
-	
-	//
-	resolve: function() {
-		if (this._status === STATUS.pending) {
-			this._status = STATUS.resolved;
-			this._values = arg2arr(arguments);
-			for (var i = 0; i < this._resolves.length; i++) {
-				this._resolves[i].apply(this, this._values);
+	}
+};
+
+Promise.resolve = function(value) {
+	var doResolve, doReject, promise = new Promise(function(resolve, reject) {
+		doResolve = resolve; doReject = reject;
+	});
+	if (value instanceof Promise) {
+		value.then(doResolve, doReject);
+	} else {
+		doResolve(value);
+	}
+	return promise;
+};
+
+Promise.reject = function(error) {
+	return new Promise(function(resolve, reject) {
+		reject(error);
+	});
+};
+
+Promise.cast = function(thenablePromise) {
+	var doResolve, doReject, promise = new Promise(function(resolve, reject) {
+		doResolve = resolve; doReject = reject;
+	});
+	if (thenable(thenablePromise)) {
+		thenablePromise.then(doResolve, doReject);
+	} else {
+		doResolve(thenablePromise);
+	}
+	return promise;
+};
+
+Promise.all = function(promises) {
+	var doResolve, doReject, promise = new Promise(function(resolve, reject) {
+		doResolve = resolve; doReject = reject;
+	});
+	if (type(promises) === 'array') {
+		var resolveNum = 0, rejectNum = 0, thenableNum = 0, values = [],
+		resolve = function(value) {
+			values.push(value);
+			if ((++resolveNum) === thenableNum) {
+				doResolve(values);
+			}
+		},
+		reject = function(error) {
+			if ((++rejectNum) === 1) {
+				doReject(error);
+			}
+		};
+		for (var i = 0; i < promises.length; i++) {
+			if (thenable(promises[i])) {
+				thenableNum++;
+				promises[i].then(resolve, reject);
 			}
 		}
-		return this;
-	},
+	} else {
+		doResolve();
+	}
+	return promise;
+};
 
-	//
-	reject: function() {
-		if (this._status === STATUS.pending) {
-			this._status = STATUS.rejected;
-			this._errors = arg2arr(arguments);
-			for (var i = 0; i < this._rejects.length; i++) {
-				this._rejects[i].apply(this, this._errors);
+Promise.race = function(promises) {
+	var doResolve, doReject, promise = new Promise(function(resolve, reject) {
+		doResolve = resolve; doReject = reject;
+	});
+	if (type(promises) === 'array') {
+		var doneNum = 0,
+		resolve = function(value) {
+			if ((++doneNum) === 1) {
+				doResolve(value);
 			}
-		}
-		return this;
-	},
-
-	//
-	delay: function(ms) {
-		var self = this;
-		return new Promise(function(resolve, reject) {
-			self.then(
-				delegate(resolve, this, ms),
-				delegate(reject, this, ms)
-			);
-		});
-    }
-};
-
-Promise.resolve = function() {
-	var promise = new Promise();
-	return promise.resolve.apply(promise, arg2arr(arguments));
-};
-
-Promise.reject = function() {
-	var promise = new Promise();
-	return promise.reject.apply(promise, arg2arr(arguments));
-};
-
-Promise.all = function() {
-	var promise = new Promise();
-	var callbackNum = 0, thenableNum = 0, results = [];
-	var callback = function() {
-		callbackNum++;
-		results.push(arg2arr(arguments));
-		if (callbackNum === thenableNum) {
-			promise.resolve.apply(promise, results);
-		}
-	};
-	var args = arg2arr(arguments);
-	for (var i = 0; i < args.length; i++) {
-		if (thenable(args[i])) {
-			thenableNum++;
-			args[i].then(callback, callback);
+		},
+		reject = function(error) {
+			if ((++doneNum) === 1) {
+				doReject(error);
+			}
+		};
+		for (var i = 0; i < promises.length; i++) {
+			if (thenable(promises[i])) {
+				promises[i].then(resolve, reject);
+			}
 		}
 	}
 	return promise;
 };
 
 
+//Promise.name = 'Promise';
 if (typeof(window) !== 'undefined') {
 	Promise._promise = window.Promise;
 	window.Promise = Promise;

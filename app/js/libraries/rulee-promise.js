@@ -8,7 +8,6 @@
 'use strict';
 
 var type = require('../utilities/all').type,
-	arg2arr = require('../utilities/all').arg2arr,
 	isFunc = function(fn) { return type(fn) === 'function'; },
 	thenable = function(obj) { return obj && isFunc(obj['then']); };
 
@@ -155,6 +154,7 @@ Promise.race = function(promises) {
 
 
 //Promise.name = 'Promise';
+
 if (typeof(window) !== 'undefined') {
 	Promise._promise = window.Promise;
 	window.Promise = Promise;

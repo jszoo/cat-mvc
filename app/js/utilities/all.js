@@ -44,6 +44,22 @@ module.exports = {
 		};
 	}(),
 
+	isAncestor = function (p, c) {
+        var ret = false;
+        if (p && c) {
+            if (p.contains) {
+                return p.contains(c);
+            } else if (p.compareDocumentPosition) {
+                return !!(p.compareDocumentPosition(c) & 16);
+            } else {
+                while (c = c.parentNode) {
+                    ret = c == p || ret;
+                }
+            }
+        }
+        return ret;
+    },
+
 	padLeft: padLeft,
 
 	padRight: function(str, len, chr) {
@@ -59,5 +75,11 @@ module.exports = {
 	i18n: function(key, val) {
 		var getVal = readObj({}, key);
 		return getVal !== undefined ? getVal : val;
+	},
+
+	dom: {
+		parseUrl: require('./dom/parseUrl'),
+		hasScroll: require('./dom/hasScroll'),
+		scrollbarWidth: require('./dom/scrollbarWidth')
 	}
 };

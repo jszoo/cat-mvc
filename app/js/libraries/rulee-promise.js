@@ -3,6 +3,7 @@
 * author: ronglin
 * create date: 2014.5.19
 * reference:
+*    http://promisesaplus.com/
 *    http://www.html5rocks.com/zh/tutorials/es6/promises/
 *    https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise
 */
@@ -88,10 +89,6 @@ Promise.reject = function(reason) {
 	});
 };
 
-Promise.cast = function(thenablePromise) {
-	return Promise.resolve(thenablePromise);
-};
-
 Promise.all = function(iterable) {
 	var doResolve, doReject, promise = new Promise(function(resolve, reject) {
 		doResolve = resolve; doReject = reject;
@@ -112,7 +109,8 @@ Promise.all = function(iterable) {
 		for (var i = 0; i < iterable.length; i++) {
 			var p = iterable[i];
 			if (!thenable(p)) {
-				p = Promise.cast(p);
+				// cast
+				p = Promise.resolve(p);
 			}
 			p.then(resolve, reject);
 		}

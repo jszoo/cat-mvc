@@ -12,7 +12,14 @@
 
 var type = require('../utilities/all').type,
 	isFunc = function(fn) { return type(fn) === 'function'; },
+	isArray = function(obj) { return type(obj) === 'array'; },
 	thenable = function(obj) { return obj && isFunc(obj['then']); };
+
+var thenAll = function(iterable, resolve, reject) {
+	for (var i = 0; i < iterable.length; i++) { var p;
+		(thenable(p = iterable[i]) ? p : Promise.resolve(p)).then(resolve, reject);
+	}
+};
 
 var STATUS = {
 	pending: 0,
@@ -23,6 +30,9 @@ var STATUS = {
 var Promise = function(resolver) {
 	if (!isFunc(resolver)) {
 		throw new Error('Promise constructor takes a function argument');
+	}
+	if (!(this instanceof Promise)) {
+		return new Promise(resolver);
 	}
 	this._status = STATUS.pending;
 	this._resolves = [];
@@ -77,15 +87,13 @@ Promise.prototype = {
 };
 
 Promise.resolve = function(value) {
-	var doResolve, doReject, promise = new Promise(function(resolve, reject) {
-		doResolve = resolve; doReject = reject;
+	return new Promise(function(resolve, reject) {
+		if (thenable(value)) {
+			value.then(resolve, reject);
+		} else {
+			resolve(value);
+		}
 	});
-	if (thenable(value)) {
-		value.then(doResolve, doReject);
-	} else {
-		doResolve(value);
-	}
-	return promise;
 };
 
 Promise.reject = function(reason) {
@@ -95,59 +103,27 @@ Promise.reject = function(reason) {
 };
 
 Promise.all = function(iterable) {
-	var doResolve, doReject, promise = new Promise(function(resolve, reject) {
-		doResolve = resolve; doReject = reject;
-	});
-	if (type(iterable) === 'array') {
-		var resolveNum = 0, rejectNum = 0, values = [],
-		resolve = function(value) {
-			values.push(value);
-			if (++resolveNum === iterable.length) {
-				doResolve(values);
-			}
-		},
-		reject = function(reason) {
-			if (++rejectNum === 1) {
-				doReject(reason);
-			}
-		};
-		for (var i = 0; i < iterable.length; i++) {
-			var p = iterable[i];
-			if (!thenable(p)) {
-				// cast
-				p = Promise.resolve(p);
-			}
-			p.then(resolve, reject);
+	return new Promise(function(resolve, reject) {
+		var values = [];
+		if (isArray(iterable)) {
+			thenAll(iterable, function(value) {
+				values.push(value);
+				if (values.length === iterable.length) {
+					resolve(values);
+				}
+			}, reject);
+		} else {
+			resolve(values);
 		}
-	} else {
-		doResolve();
-	}
-	return promise;
+	});
 };
 
 Promise.race = function(iterable) {
-	var doResolve, doReject, promise = new Promise(function(resolve, reject) {
-		doResolve = resolve; doReject = reject;
-	});
-	if (type(iterable) === 'array') {
-		var doneNum = 0,
-		resolve = function(value) {
-			if (++doneNum === 1) {
-				doResolve(value);
-			}
-		},
-		reject = function(reason) {
-			if (++doneNum === 1) {
-				doReject(reason);
-			}
-		};
-		for (var i = 0; i < iterable.length; i++) {
-			if (thenable(iterable[i])) {
-				iterable[i].then(resolve, reject);
-			}
+	return new Promise(function(resolve, reject) {
+		if (isArray(iterable)) {
+			thenAll(iterable, resolve, reject);
 		}
-	}
-	return promise;
+	});
 };
 
 

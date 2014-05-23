@@ -1,0 +1,20 @@
+﻿<!DOCTYPE html>
+
+<html lang="en" ng-app="Bloga">
+<head>
+    <title>Bloga</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="dist/css/bundle.css" />
+    <script type="text/javascript" src="dist/js/bundle.js"></script>
+</head>
+<body ng-controller="MainCtrl">
+    <bloga-header></bloga-header>
+    <div id="body-container" ng-view ng-class="slide">
+    </div>
+    <div ng-show="testEnabled">
+        <div>{{tests.provider}}</div>
+        <div>{{tests.factory}}</div>
+    	<div>{{tests.service}}</div>
+    </div>
+</body>
+</html>

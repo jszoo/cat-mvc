@@ -1,0 +1,10 @@
+<section id="main">
+    <div class="block blog-list">
+        <ul>
+            <li ng-repeat="b in blogs">
+                <a href="javascript:;" ng-click="go('/blog/' + b.id)">{{b.title}}</a>
+                <div>{{b.content}}</div>
+            </li>
+        </ul>
+    </div>
+</section>

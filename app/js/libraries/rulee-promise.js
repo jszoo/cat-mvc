@@ -58,16 +58,21 @@ Promise.prototype = {
 			if (this._status === STATUS.pending) { this._resolves.push(onFulfilled); }
 			else if (this._status === STATUS.fulfilled) { onFulfilled(this._value); }
 		}
-		return this.catch(onRejected);
-	},
-
-	//
-	catch: function(onRejected) {
 		if (isFunc(onRejected)) {
 			if (this._status === STATUS.pending) { this._rejects.push(onRejected); }
 			else if (this._status === STATUS.rejected) { onRejected(this._reason); }
 		}
-		return this;
+		if (this.__fthen === true) {
+			delete this.__fthen;
+		} else {
+			this.__fthen = true;
+			return Promise.resolve(this);
+		}
+	},
+
+	//
+	catch: function(onRejected) {
+		return this.then(null, onRejected);
 	}
 };
 
@@ -97,12 +102,12 @@ Promise.all = function(iterable) {
 		var resolveNum = 0, rejectNum = 0, values = [],
 		resolve = function(value) {
 			values.push(value);
-			if ((++resolveNum) === iterable.length) {
+			if (++resolveNum === iterable.length) {
 				doResolve(values);
 			}
 		},
 		reject = function(reason) {
-			if ((++rejectNum) === 1) {
+			if (++rejectNum === 1) {
 				doReject(reason);
 			}
 		};
@@ -127,12 +132,12 @@ Promise.race = function(iterable) {
 	if (type(iterable) === 'array') {
 		var doneNum = 0,
 		resolve = function(value) {
-			if ((++doneNum) === 1) {
+			if (++doneNum === 1) {
 				doResolve(value);
 			}
 		},
 		reject = function(reason) {
-			if ((++doneNum) === 1) {
+			if (++doneNum === 1) {
 				doReject(reason);
 			}
 		};

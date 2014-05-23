@@ -79,7 +79,6 @@ module.exports = {
 
 	dom: {
 		parseUrl: require('./dom/parseUrl'),
-		hasScroll: require('./dom/hasScroll'),
-		scrollbarWidth: require('./dom/scrollbarWidth')
+		hasScroll: require('./dom/hasScroll')
 	}
 };

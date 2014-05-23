@@ -44,7 +44,7 @@ module.exports = {
 		};
 	}(),
 
-	isAncestor = function (p, c) {
+	isAncestor: function (p, c) {
         var ret = false;
         if (p && c) {
             if (p.contains) {

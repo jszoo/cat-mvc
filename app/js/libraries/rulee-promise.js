@@ -15,16 +15,11 @@ var type = require('../utilities/all').type,
 	isArray = function(obj) { return type(obj) === 'array'; },
 	thenable = function(obj) { return obj && isFunc(obj['then']); };
 
+var STATUS = { pending: 0, fulfilled: 1, rejected: 2 };
 var thenAll = function(iterable, resolve, reject) {
 	for (var i = 0; i < iterable.length; i++) { var p;
 		(thenable(p = iterable[i]) ? p : Promise.resolve(p)).then(resolve, reject);
 	}
-};
-
-var STATUS = {
-	pending: 0,
-	fulfilled: 1,
-	rejected: 2 
 };
 
 var Promise = function(resolver) {
@@ -34,11 +29,11 @@ var Promise = function(resolver) {
 	if (!(this instanceof Promise)) {
 		return new Promise(resolver);
 	}
+	//
 	this._status = STATUS.pending;
-	this._resolves = [];
-	this._rejects = [];
-	var self = this;
-	resolver(function(value) {
+	this._resolves = []; this._rejects = [];
+	//
+	var self = this, resolve = resolver(function(value) {
 		if (self._status === STATUS.pending) {
 			self._status = STATUS.fulfilled;
 			self._value = value;
@@ -46,7 +41,7 @@ var Promise = function(resolver) {
 				self._resolves[i](self._value);
 			}
 		}
-	}, function(reason) {
+	}, reject = function(reason) {
 		if (self._status === STATUS.pending) {
 			self._status = STATUS.rejected;
 			self._reason = reason;
@@ -55,6 +50,13 @@ var Promise = function(resolver) {
 			}
 		}
 	});
+	setTimeout(function() {
+		try {
+			resolver(resolve, reject);
+		} catch (ex) {
+			reject(ex);
+		}
+	}, 0);
 };
 
 Promise.prototype = {

@@ -10,6 +10,7 @@ require('./libraries/all');
 var utilitiesName = 'Bloga.utilities';
 angular.module(utilitiesName, []).constant('utils', require('./utilities/all'));
 
+var filters = require('./filters/all');
 var directives = require('./directives/all');
 var dataService = require('./dataservice/all');
 var controllers = require('./controllers/all');
@@ -20,6 +21,7 @@ var bloga = angular.module('Bloga', [
     'ngRoute',
     'ngAnimate',
     utilitiesName,
+    filters.name,
     directives.name,
     dataService.name,
     controllers.name

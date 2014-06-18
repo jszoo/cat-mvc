@@ -13,6 +13,7 @@
 </head>
 <body ng-controller="MainCtrl">
     <bloga-header></bloga-header>
+    <bloga-menu current="Page2"></bloga-menu>
     <div id="body-container" ng-view ng-class="slide">
     </div>
     <div ng-show="testEnabled">
@@ -20,5 +21,6 @@
         <div>{{tests.factory}}</div>
     	<div>{{tests.service}}</div>
     </div>
+    <bloga-footer></bloga-footer>
 </body>
 </html>

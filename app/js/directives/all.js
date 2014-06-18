@@ -7,4 +7,6 @@
 var name = module.exports.name = 'Bloga.directives';
 
 angular.module(name, [])
-.directive('blogaHeader', require('./header'));
+.directive('blogaHeader', require('./header'))
+.directive('blogaFooter', require('./footer'))
+.directive('blogaMenu', require('./menu'));

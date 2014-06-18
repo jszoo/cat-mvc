@@ -5,10 +5,22 @@
 */
 
 module.exports = ['utils', function(utils) {
-	return {
-		scope: { current: '@' },
-		templateUrl: utils.viewUrl('views/directives/menu.html'),
-		restrict: 'E',
-		replace: true
-	};
+    var menuController = function($scope) {
+        this.scope = $scope;
+    };
+    menuController.prototype = {
+        scope: null,
+        constructor: menuController,
+        showPage: function(page) {
+            alert(page);
+        }
+    };
+    // ret
+    return {
+        scope: { current: '@' },
+        controller: menuController,
+        templateUrl: utils.viewUrl('views/directives/menu.html'),
+        restrict: 'E',
+        replace: true
+    };
 }];

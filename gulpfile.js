@@ -5,7 +5,7 @@ var gulp = require('gulp');
     uglify = require('gulp-uglify'),
     concat = require('gulp-concat'),
     clean = require('gulp-clean'),
-    sass = require('gulp-sass'),
+    less = require('gulp-less'),
     rename = require('gulp-rename'),
     minifycss = require('gulp-minify-css'),
     livereload = require('gulp-livereload'),
@@ -48,11 +48,11 @@ gulp.task('js-min', function () {
 // css
 gulp.task('css', function () {
   gulp
-    .src('app/css/main.sass')
+    .src('app/css/main.less')
     .pipe(plumber({
       errorHandler: notify.onError("css error: <%= error.message %>")
     }))
-    .pipe(sass({
+    .pipe(less({
       sourceMap: false
     }))
     .pipe(concat('bundle.css'))
@@ -63,8 +63,8 @@ gulp.task('css', function () {
 // css min
 gulp.task('css-min', function () {
   gulp
-    .src('app/css/main.sass')
-    .pipe(sass({
+    .src('app/css/main.less')
+    .pipe(less({
       sourceMap: false
     }))
     .pipe(concat('bundle.css'))
@@ -94,7 +94,7 @@ gulp.task('clean', function() {
 gulp.task('watch', function () {
   var paths = {
     js: ['app/js/**/*.js'],
-    css: ['app/css/**/*.sass', 'app/css/**/*.css']
+    css: ['app/css/**/*.less', 'app/css/**/*.css']
   };
   server.listen(35729, function (err) {
     if (err) {

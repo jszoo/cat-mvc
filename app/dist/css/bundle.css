@@ -1,9 +1,320 @@
+/**
+ * main css loader
+ * author: ronglin
+ * create date: 2014.5.19
+ */
+/* Reset
+------------------------------------------------------*/
+body,
+div,
+dl,
+dt,
+dd,
+ul,
+ol,
+li,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+pre,
+code,
+form,
+fieldset,
+legend,
+input,
+button,
+textarea,
+p,
+blockquote,
+th,
+td {
+  margin: 0;
+  padding: 0;
+}
+article,
+aside,
+details,
+figcaption,
+figure,
+footer,
+header,
+hgroup,
+menu,
+nav,
+section {
+  display: block;
+}
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+fieldset,
+img {
+  border: 0;
+}
+li {
+  list-style: none;
+}
+:focus {
+  outline: 0;
+}
+/*@purpose To enable resizing for IE */
+/*@branch For IE6-Win, IE7-Win */
+input,
+button,
+textarea,
+select {
+  *font-size: 100%;
+}
+/* Remove special stylesheet in firefox */
+button::-moz-focus-inner,
+input[type="reset"]::-moz-focus-inner,
+input[type="button"]::-moz-focus-inner,
+input[type="submit"]::-moz-focus-inner,
+input[type="file"] > input[type="button"]::-moz-focus-inner {
+  border: none;
+  padding: 0;
+}
 /*
-* reset
+[Contents]
+
+	0- Global
+	1- Links
+	2- Content
 */
-/*
-* base
-*/
-body {
-  font: 100% Helvetica, sans-serif;
-  color: #333; }
+/* =0 Global
+---------------------------------------------------------------------------------------------------------------------*/
+.hide {
+  display: none;
+}
+.left {
+  float: left;
+}
+.right {
+  float: right;
+}
+.clear {
+  clear: both;
+}
+.text-center {
+  text-align: center;
+}
+/* Clearfix
+------------------------------------------------------*/
+.clearfix:after {
+  clear: both;
+  content: " ";
+  display: block;
+  font-size: 0;
+  height: 0;
+  visibility: hidden;
+}
+/* The micro clearfix http://nicolasgallagher.com/micro-clearfix-hack/
+------------------------------------------------------*/
+/* =1 Links
+---------------------------------------------------------------------------------------------------------------------*/
+a {
+  color: #117B00;
+  text-decoration: underline;
+}
+a:hover {
+  text-decoration: none;
+}
+/* =2 Content(For Tinymce)
+---------------------------------------------------------------------------------------------------------------------*/
+.content h1,
+.content h2,
+.content h3,
+.content h4,
+.content h5,
+.content h6 {
+  font-size: 16px;
+}
+.content h1 span,
+.content h2 span,
+.content h3 span,
+.content h4 span,
+.content h5 span,
+.content h6 span {
+  font-weight: 400;
+}
+.content p {
+  margin-bottom: 1em;
+}
+.content pre {
+  padding: 8px;
+}
+.content ol,
+.content ul {
+  margin-bottom: 1em;
+}
+.content ol h1,
+.content ul h1,
+.content ol h2,
+.content ul h2,
+.content ol h3,
+.content ul h3,
+.content ol h4,
+.content ul h4,
+.content ol h5,
+.content ul h5,
+.content ol h6,
+.content ul h6 {
+  display: inline;
+}
+.content ol li {
+  list-style: decimal inside;
+}
+.content ul li {
+  list-style: disc inside;
+}
+/* Less funcs
+------------------------------------------------------*/
+/* Fontface
+---------------------------------------------------------------------------------------------------------------------*/
+@font-face {
+  font-family: 'ProximaNova';
+  font-style: normal;
+  font-weight: 300;
+  src: url('fonts/proximanova-light-webfont.eot');
+  src: url('fonts/proximanova-light-webfont.eot?#iefix') format('embedded-opentype'), url('fonts/proximanova-light-webfont.woff') format('woff'), url('fonts/proximanova-light-webfont.ttf') format('truetype'), url('fonts/proximanova-light-webfont.svg#ProximaNova') format('svg');
+}
+@font-face {
+  font-family: 'ProximaNova';
+  font-style: italic;
+  font-weight: 300;
+  src: url('fonts/proximanova-lightitalic-webfont.eot');
+  src: url('fonts/proximanova-lightitalic-webfont.eot?#iefix') format('embedded-opentype'), url('fonts/proximanova-lightitalic-webfont.woff') format('woff'), url('fonts/proximanova-lightitalic-webfont.ttf') format('truetype'), url('fonts/proximanova-lightitalic-webfont.svg#ProximaNova') format('svg');
+}
+@font-face {
+  font-family: 'ProximaNova';
+  font-style: normal;
+  font-weight: 400;
+  src: url('fonts/proximanova-regular-webfont.eot');
+  src: url('fonts/proximanova-regular-webfont.eot?#iefix') format('embedded-opentype'), url('fonts/proximanova-regular-webfont.woff') format('woff'), url('fonts/proximanova-regular-webfont.ttf') format('truetype'), url('fonts/proximanova-regular-webfont.svg#ProximaNova') format('svg');
+}
+@font-face {
+  font-family: 'ProximaNova';
+  font-style: italic;
+  font-weight: 400;
+  src: url('fonts/proximanova-regitalic-webfont.eot');
+  src: url('fonts/proximanova-regitalic-webfont.eot?#iefix') format('embedded-opentype'), url('fonts/proximanova-regitalic-webfont.woff') format('woff'), url('fonts/proximanova-regitalic-webfont.ttf') format('truetype'), url('fonts/proximanova-regitalic-webfont.svg#ProximaNova') format('svg');
+}
+@font-face {
+  font-family: 'ProximaNova';
+  font-style: normal;
+  font-weight: 600;
+  src: url('fonts/proximanova-semibold-webfont.eot');
+  src: url('fonts/proximanova-semibold-webfont.eot?#iefix') format('embedded-opentype'), url('fonts/proximanova-semibold-webfont.woff') format('woff'), url('fonts/proximanova-semibold-webfont.ttf') format('truetype'), url('fonts/proximanova-semibold-webfont.svg#ProximaNova') format('svg');
+}
+@font-face {
+  font-family: 'ProximaNova';
+  font-style: italic;
+  font-weight: 600;
+  src: url('fonts/proximanova-sbolditalic-webfont.eot');
+  src: url('fonts/proximanova-sbolditalic-webfont.eot?#iefix') format('embedded-opentype'), url('fonts/proximanova-sbolditalic-webfont.woff') format('woff'), url('fonts/proximanova-sbolditalic-webfont.ttf') format('truetype'), url('fonts/proximanova-sbolditalic-webfont.svg#ProximaNova') format('svg');
+}
+@font-face {
+  font-family: 'ProximaNova';
+  font-style: normal;
+  font-weight: 700;
+  src: url('fonts/proximanova-bold-webfont.eot');
+  src: url('fonts/proximanova-bold-webfont.eot?#iefix') format('embedded-opentype'), url('fonts/proximanova-bold-webfont.woff') format('woff'), url('fonts/proximanova-bold-webfont.ttf') format('truetype'), url('fonts/proximanova-bold-webfont.svg#ProximaNova') format('svg');
+}
+@font-face {
+  font-family: 'ProximaNova';
+  font-style: italic;
+  font-weight: 700;
+  src: url('fonts/proximanova-boldit-webfont.eot');
+  src: url('fonts/proximanova-boldit-webfont.eot?#iefix') format('embedded-opentype'), url('fonts/proximanova-boldit-webfont.woff') format('woff'), url('fonts/proximanova-boldit-webfont.ttf') format('truetype'), url('fonts/proximanova-boldit-webfont.svg#ProximaNova') format('svg');
+}
+@font-face {
+  font-family: 'ProximaNova';
+  font-style: normal;
+  font-weight: 900;
+  src: url('fonts/proximanova-extrabld-webfont.eot');
+  src: url('fonts/proximanova-extrabld-webfont.eot?#iefix') format('embedded-opentype'), url('fonts/proximanova-extrabld-webfont.woff') format('woff'), url('fonts/proximanova-extrabld-webfont.ttf') format('truetype'), url('fonts/proximanova-extrabld-webfont.svg#ProximaNova') format('svg');
+}
+/* Columns
+---------------------------------------------------------------------------------------------------------------------*/
+.columns {
+  *zoom: 1;
+}
+.columns:before,
+.columns:after {
+  content: "";
+  display: table;
+}
+.columns:after {
+  clear: both;
+}
+.columns > div {
+  float: left;
+  -moz-box-sizing: border-box;
+  -ms-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+}
+.columns .col-21 {
+  width: 50%;
+}
+.columns .col-31 {
+  width: 33.33%;
+}
+.columns .col-32 {
+  width: 66.67%;
+}
+.columns .col-41 {
+  width: 25%;
+}
+/* Buttons
+---------------------------------------------------------------------------------------------------------------------*/
+.button {
+  cursor: pointer;
+  display: inline-block;
+  font-weight: 900;
+  height: 48px;
+  line-height: 48px;
+  padding: 0 32px;
+  text-align: center;
+  text-transform: uppercase;
+  -moz-box-shadow: 0 0 2px rgba(0,0,0,.15), inset 0 -1px 1px rgba(0,0,0,.15);
+  -webkit-box-shadow: 0 0 2px rgba(0,0,0,.15), inset 0 -1px 1px rgba(0,0,0,.15);
+  box-shadow: 0 0 2px rgba(0,0,0,.15), inset 0 -1px 1px rgba(0,0,0,.15);
+  -moz-border-radius: 4px;
+  -webkit-border-radius: 4px;
+  border-radius: 4px;
+}
+.button.white {
+  background: #FFF;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  color: #000;
+}
+.button.green {
+  background: #1eb305;
+  border: 1px solid #139500;
+  color: #FFF;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.7);
+}
+.button.orange {
+  background: #F7931D;
+  border: 1px solid #925812;
+  color: #FFF;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.7);
+}
+.button.small {
+  font-size: 14px;
+  font-weight: 700;
+  height: 30px;
+  line-height: 30px;
+  padding: 0 20px;
+  -moz-box-shadow: 0 0 2px rgba(0, 0, 0, 0.05);
+  -webkit-box-shadow: 0 0 2px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 0 2px rgba(0, 0, 0, 0.05);
+}
+a.button {
+  text-decoration: none;
+}

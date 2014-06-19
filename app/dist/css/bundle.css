@@ -2170,7 +2170,7 @@ body {
   font: 16px/1.5 'ProximaNova', Arial, Helvetica, sans-serif;
 }
 #body-container {
-  margin-top: 135px;
+  margin-top: 125px;
 }
 /* =1 Header
 ---------------------------------------------------------------------------------------------------------------------*/
@@ -2200,7 +2200,7 @@ body {
   -moz-box-shadow: inset 0 -1px 0 rgba(0, 0, 0, 0.1);
   -webkit-box-shadow: inset 0 -1px 0 rgba(0, 0, 0, 0.1);
   box-shadow: inset 0 -1px 0 rgba(0, 0, 0, 0.1);
-  padding: 12px 0 20px;
+  padding: 12px 0 10px;
 }
 #header .logo {
   float: left;

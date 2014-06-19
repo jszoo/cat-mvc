@@ -29,5 +29,7 @@ var bloga = angular.module('Bloga', [
 
 bloga.config(['$routeProvider', 'utils', function ($routeProvider, utils) {
     $routeProvider.when('/home', { templateUrl: utils.viewUrl('views/home.html'), controller: 'HomeCtrl' });
+    $routeProvider.when('/about', { templateUrl: utils.viewUrl('views/about.html') });
+    $routeProvider.when('/admin', { templateUrl: utils.viewUrl('views/admin.html') });
     $routeProvider.otherwise({ redirectTo: '/home' });
 }]);

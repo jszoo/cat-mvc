@@ -1,7 +1,7 @@
 {
-  "name": "bloga",
+  "name": "rulee",
   "version": "0.0.1",
-  "description": "rulee's personal blog system",
+  "description": "rulee's personal test system",
   "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"

@@ -1,19 +1,19 @@
 ﻿<!DOCTYPE HTML>
-<!--[if lt IE 7]>  <html ng-app="Bloga" class="ie ie6 lte9 lte8 lte7"> <![endif]-->
-<!--[if IE 7]>     <html ng-app="Bloga" class="ie ie7 lte9 lte8 lte7"> <![endif]-->
-<!--[if IE 8]>     <html ng-app="Bloga" class="ie ie8 lte9 lte8">      <![endif]-->
-<!--[if IE 9]>     <html ng-app="Bloga" class="ie ie9 lte9">           <![endif]-->
-<!--[if gt IE 9]>  <html ng-app="Bloga">                               <![endif]-->
-<!--[if !IE]><!--> <html ng-app="Bloga">                           <!--<![endif]-->
+<!--[if lt IE 7]>  <html ng-app="rulee" class="ie ie6 lte9 lte8 lte7"> <![endif]-->
+<!--[if IE 7]>     <html ng-app="rulee" class="ie ie7 lte9 lte8 lte7"> <![endif]-->
+<!--[if IE 8]>     <html ng-app="rulee" class="ie ie8 lte9 lte8">      <![endif]-->
+<!--[if IE 9]>     <html ng-app="rulee" class="ie ie9 lte9">           <![endif]-->
+<!--[if gt IE 9]>  <html ng-app="rulee">                               <![endif]-->
+<!--[if !IE]><!--> <html ng-app="rulee">                           <!--<![endif]-->
 <head>
-    <title>Bloga</title>
+    <title>RULEE</title>
     <meta charset="utf-8" />
     <link rel="stylesheet" href="dist/css/bundle.css" />
     <script type="text/javascript" src="dist/js/bundle.js"></script>
 </head>
 <body ng-controller="MainCtrl">
     <div id="body-container">
-        <bloga-header current="Home"></bloga-header>
+        <rulee-header current="Home"></rulee-header>
         <div id="main-container" ng-view ng-class="slide">
         </div>
         <div ng-show="testEnabled" class="block">
@@ -21,7 +21,7 @@
             <div>{{tests.factory}}</div>
             <div>{{tests.service}}</div>
         </div>
-        <bloga-footer></bloga-footer>
+        <rulee-footer></rulee-footer>
     </div>
 </body>
 </html>

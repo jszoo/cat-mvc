@@ -4,7 +4,7 @@
 * create date: 2014.5.4
 */
 
-var name = module.exports.name = 'Bloga.test1';
+var name = module.exports.name = 'rulee.test1';
 
 angular.module(name, [])
 .provider('testProvider', require('./test1-provider'))

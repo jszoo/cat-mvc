@@ -1,4 +1,4 @@
-Bloga
+Rulee
 ====
 
-My personal blog system, build base on nodejs platform.
+My personal test system, build base on nodejs platform.

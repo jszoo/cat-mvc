@@ -12,14 +12,16 @@
     <script type="text/javascript" src="dist/js/bundle.js"></script>
 </head>
 <body ng-controller="MainCtrl">
-    <bloga-header current="Page2"></bloga-header>
-    <div id="body-container" ng-view ng-class="slide">
+    <div id="body-container">
+        <bloga-header current="Page1"></bloga-header>
+        <div id="main-container" ng-view ng-class="slide">
+        </div>
+        <div ng-show="testEnabled" class="block">
+            <div>{{tests.provider}}</div>
+            <div>{{tests.factory}}</div>
+            <div>{{tests.service}}</div>
+        </div>
+        <bloga-footer></bloga-footer>
     </div>
-    <div ng-show="testEnabled">
-        <div>{{tests.provider}}</div>
-        <div>{{tests.factory}}</div>
-    	<div>{{tests.service}}</div>
-    </div>
-    <bloga-footer></bloga-footer>
 </body>
 </html>

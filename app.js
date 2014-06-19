@@ -1,6 +1,6 @@
-var webserver = require('./lib/webserver');
+var webServer = require('./lib/webServer');
 
 var DEFAULT_PORT = 1337;
 var argv_port = process.env.PORT;
 
-webserver.create(argv_port || DEFAULT_PORT);
+webServer.create(argv_port || DEFAULT_PORT);

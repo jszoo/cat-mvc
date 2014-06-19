@@ -5,20 +5,14 @@
 */
 
 module.exports = ['utils', function(utils) {
-    var menuController = function($scope) {
-        this.scope = $scope;
-    };
-    menuController.prototype = {
-        scope: null,
-        constructor: menuController,
-        showPage: function(page) {
-            alert(page);
-        }
-    };
     // ret
     return {
         scope: { current: '@' },
-        controller: menuController,
+        controller: ['$scope', function($scope) {
+            $scope.showPage = function(page) {
+                $scope.current = page;
+            };
+        }],
         templateUrl: utils.viewUrl('views/directives/menu.html'),
         restrict: 'E',
         replace: true

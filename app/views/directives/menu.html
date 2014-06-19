@@ -1,5 +1,7 @@
-<ul>
-	<li ng-class="{ active: (current==='Page1') }" ng-click="showPage1('Page1')">Page1</li>
-	<li ng-class="{ active: (current==='Page2') }" ng-click="showPage1('Page2')">Page2</li>
-	<li ng-class="{ active: (current==='Page3') }" ng-click="showPage1('Page3')">Page3</li>
-</ul>
+<nav class="nav global-width">
+	<ul>
+		<li ng-class="{ active: (current==='Page1') }" ng-click="showPage('Page1')">Page1</li>
+		<li ng-class="{ active: (current==='Page2') }" ng-click="showPage('Page2')">Page2</li>
+		<li ng-class="{ active: (current==='Page3') }" ng-click="showPage('Page3')">Page3</li>
+	</ul>
+</nav>

@@ -1,0 +1,214 @@
+@call-black: "0 0 20px 24px";
+@call-white: "0 -24px 19px 22px";
+@facebook-black: "0 -46px 14px 26px";
+@facebook-green: "0 -72px 18px 32px";
+@facebook-s: "0 -104px 24px 24px";
+@facebook: "0 -128px 32px 32px";
+@flag-belgium: "0 -160px 14px 11px";
+@flag-holland: "0 -171px 14px 11px";
+@google-s: "0 -182px 24px 24px";
+@google: "0 -206px 32px 32px";
+@minus: "0 -238px 24px 24px";
+@pinterest-s: "0 -262px 24px 24px";
+@pinterest: "0 -286px 32px 32px";
+@plus: "0 -318px 24px 24px";
+@radio-active: "0 -342px 26px 26px";
+@radio: "0 -368px 26px 26px";
+@search: "0 -394px 16px 16px";
+@tab-arrow: "0 -410px 16px 10px";
+@tag-s: "0 -420px 103px 48px";
+@tag: "0 -468px 128px 64px";
+@tick-small: "0 -532px 18px 12px";
+@tick: "0 -544px 24px 16px";
+@tip-arrow: "0 -560px 21px 12px";
+@tweet: "0 -572px 24px 20px";
+@twitter-s: "0 -592px 24px 24px";
+@twitter: "0 -616px 32px 32px";
+@video: "0 -648px 48px 32px";
+@youtube-s: "0 -680px 24px 24px";
+@youtube: "0 -704px 32px 32px";
+
+.sprite (@sprite) {
+	background: url(./images/sprites.png) no-repeat e( `@{sprite}.split(' ')[0]` ) e( `@{sprite}.split(' ')[1]` );
+	width: e( `@{sprite}.split(' ')[2]` );
+	height: e( `@{sprite}.split(' ')[3]` );
+}
+
+.icon {
+	background: url(./images/sprites.png) no-repeat -999em -999em;
+	display: inline-block;
+
+	&.call-black {
+		background-position: 0 0;
+		height: 24px;
+		width: 20px;
+	}
+
+	&.call-white {
+		background-position: 0 -24px;
+		height: 22px;
+		width: 19px;
+	}
+
+	&.facebook-black {
+		background-position: 0 -46px;
+		height: 26px;
+		width: 14px;
+	}
+
+	&.facebook-green {
+		background-position: 0 -72px;
+		height: 32px;
+		width: 18px;
+	}
+
+	&.facebook-s {
+		background-position: 0 -104px;
+		height: 24px;
+		width: 24px;
+	}
+
+	&.facebook {
+		background-position: 0 -128px;
+		height: 32px;
+		width: 32px;
+	}
+
+	&.flag-belgium {
+		background-position: 0 -160px;
+		height: 11px;
+		width: 14px;
+	}
+
+	&.flag-holland {
+		background-position: 0 -171px;
+		height: 11px;
+		width: 14px;
+	}
+
+	&.google-s {
+		background-position: 0 -182px;
+		height: 24px;
+		width: 24px;
+	}
+
+	&.google {
+		background-position: 0 -206px;
+		height: 32px;
+		width: 32px;
+	}
+
+	&.minus {
+		background-position: 0 -238px;
+		height: 24px;
+		width: 24px;
+	}
+
+	&.pinterest-s {
+		background-position: 0 -262px;
+		height: 24px;
+		width: 24px;
+	}
+
+	&.pinterest {
+		background-position: 0 -286px;
+		height: 32px;
+		width: 32px;
+	}
+
+	&.plus {
+		background-position: 0 -318px;
+		height: 24px;
+		width: 24px;
+	}
+
+	&.radio-active {
+		background-position: 0 -342px;
+		height: 26px;
+		width: 26px;
+	}
+
+	&.radio {
+		background-position: 0 -368px;
+		height: 26px;
+		width: 26px;
+	}
+
+	&.search {
+		background-position: 0 -394px;
+		height: 16px;
+		width: 16px;
+	}
+
+	&.tab-arrow {
+		background-position: 0 -410px;
+		height: 10px;
+		width: 16px;
+	}
+
+	&.tag-s {
+		background-position: 0 -420px;
+		height: 48px;
+		width: 103px;
+	}
+
+	&.tag {
+		background-position: 0 -468px;
+		height: 64px;
+		width: 128px;
+	}
+
+	&.tick-small {
+		background-position: 0 -532px;
+		height: 12px;
+		width: 18px;
+	}
+
+	&.tick {
+		background-position: 0 -544px;
+		height: 16px;
+		width: 24px;
+	}
+
+	&.tip-arrow {
+		background-position: 0 -560px;
+		height: 12px;
+		width: 21px;
+	}
+
+	&.tweet {
+		background-position: 0 -572px;
+		height: 20px;
+		width: 24px;
+	}
+
+	&.twitter-s {
+		background-position: 0 -592px;
+		height: 24px;
+		width: 24px;
+	}
+
+	&.twitter {
+		background-position: 0 -616px;
+		height: 32px;
+		width: 32px;
+	}
+
+	&.video {
+		background-position: 0 -648px;
+		height: 32px;
+		width: 48px;
+	}
+
+	&.youtube-s {
+		background-position: 0 -680px;
+		height: 24px;
+		width: 24px;
+	}
+
+	&.youtube {
+		background-position: 0 -704px;
+		height: 32px;
+		width: 32px;
+	}
+}

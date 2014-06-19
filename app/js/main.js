@@ -29,6 +29,7 @@ var rulee = angular.module('rulee', [
 
 rulee.config(['$routeProvider', 'utils', function ($routeProvider, utils) {
     $routeProvider.when('/home', { templateUrl: utils.viewUrl('views/home.html'), controller: 'HomeCtrl' });
+    $routeProvider.when('/blog', { templateUrl: utils.viewUrl('views/blog.html') });
     $routeProvider.when('/about', { templateUrl: utils.viewUrl('views/about.html') });
     $routeProvider.when('/admin', { templateUrl: utils.viewUrl('views/admin.html') });
     $routeProvider.otherwise({ redirectTo: '/home' });

@@ -12,11 +12,10 @@
   },
   "keywords": [
     "node",
-    "blog"
+    "rulee",
+    "test"
   ],
   "author": "rulee",
-  "license": "BSD",
-  "gitHead": "a4c182a5121aa047e62f13be1135e6fb309dae4f",
   "dependencies": {},
   "devDependencies": {
     "tiny-lr": "0.0.5",

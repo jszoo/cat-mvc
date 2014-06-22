@@ -155,7 +155,7 @@ module.exports = {
 
     unique: function(len) {
         return this.guid().substr(0, len);
-    };
+    },
 
     padLeft: function(str, len, chr, reverse) {
         if (str !== null && str !== undefined) {

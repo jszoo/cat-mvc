@@ -4,13 +4,13 @@
 * create date: 2014.5.4
 */
 
-var common = require('../utilities');
+var common = require('../../jsg/utilities');
 
 module.exports = common.extend({}, common, {
 
     dom: {
-        parseUrl: require('./dom/parseUrl'),
-        hasScroll: require('./dom/hasScroll'),
+        parseUrl: require('./parseUrl'),
+        hasScroll: require('./hasScroll'),
         isAncestor: function (p, c) {
             var ret = false;
             if (p && c) {

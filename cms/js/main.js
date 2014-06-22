@@ -6,9 +6,9 @@
 
 'use strict';
 
-require('../lib/angular/all');
+require('./libs/angular/all');
 var utilitiesName = 'cms.utilities';
-angular.module(utilitiesName, []).constant('utils', require('../lib/utilities/all'));
+angular.module(utilitiesName, []).constant('utils', require('./libs/utilities'));
 
 var filters = require('./filters/all');
 var directives = require('./directives/all');

@@ -6,7 +6,7 @@
 
 var fs = require('fs'),
 	events = require('events'),
-	utils = require('../lib/utils');
+	utils = require('../jsg/utilities');
 
 
 var setting = function (path) {

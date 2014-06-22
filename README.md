@@ -1,4 +1,4 @@
 Rulee
 ====
 
-My personal test system, build base on nodejs platform.
+My personal practice system, build base on nodejs platform.

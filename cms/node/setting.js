@@ -42,7 +42,7 @@ setting.prototype = {
     },
 
     set: function (ns, val) {
-    	if (arguments.length === 1){
+    	if (arguments.length === 1) {
     		this.innerObj = ns;
     	} else {
     		utils.mapObj(this.innerObj, ns, val);

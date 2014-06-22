@@ -5,6 +5,7 @@
 */
 
 var fs = require('fs'),
+    io = require('./io'),
 	events = require('events'),
 	utils = require('../jsg/utilities');
 
@@ -51,6 +52,7 @@ setting.prototype = {
     },
 
     save: function () {
+        io.ensureDirectory(this.filePath);
     	var json = setting.serialize(this.innerObj);
 		fs.writeFile(this.filePath, json, function (err) {
 		  if (err) { throw err; }
@@ -73,7 +75,6 @@ setting.prototype = {
     }
 };
 
-/*
-* export
-*/
+// export
 module.exports = setting;
+

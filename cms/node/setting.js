@@ -9,16 +9,14 @@ var fs = require('fs'),
 	utils = require('../jsg/utilities');
 
 
-var setting = function (path) {
+var setting = function (path, cb) {
     this.events = new events.EventEmitter();
     this.filePath = path;
-    this.reload();
+    this.reload(cb);
 };
 
 setting.load = function (path, cb) {
-    var set = new setting(path);
-    set.events.on('load', cb);
-    return set;
+    return new setting(path, cb);
 };
 
 setting.serialize = function (obj) {
@@ -67,6 +65,7 @@ setting.prototype = {
 			fs.readFile(self.filePath, function (err, data) {
 				if (err) { throw err; }
 				self.innerObj = setting.deserialize(data);
+                if (cb) { self.events.once('load', cb); }
 				self.events.emit('load', self.innerObj);
 			});
 		});

@@ -8,35 +8,32 @@ var express = require('express');
 var router = express.Router();
 
 //
-var pageRoutes = function(app) {
-    //
-    return [
+var pages = [
 
-        router.get('/', function(req, res) {
-            res.render('index', {
-                title: 'Express'
-            });
-        }),
+    router.get('/', function(req, res) {
+        res.render('index', {
+            title: 'Express'
+        });
+    }),
 
-        router.get('/users', function(req, res) {
-            res.render('users', {
-                users: [{
-                    username: 'Wilson'
-                }, {
-                    username: 'Wilson Zhong'
-                },{
-                    username: 'Zhong Wei'
-                }]
-            })
-        }),
-
-        router.get('/:type(p1|p2)/:id', function(req, res) {
-            res.send(req.params.id);
+    router.get('/users', function(req, res) {
+        res.render('users', {
+            users: [{
+                username: 'Wilson'
+            }, {
+                username: 'Wilson Zhong'
+            },{
+                username: 'Zhong Wei'
+            }]
         })
-    ];
-};
+    }),
 
-var errorRoutes = function(app) {
+    router.get('/:type(p1|p2)/:id', function(req, res) {
+        res.send(req.params.id);
+    })
+];
+
+var errors = function(app) {
 
     // catch 404 and forward to error handler
     app.use(function(req, res, next) {
@@ -67,6 +64,10 @@ var errorRoutes = function(app) {
 };
 
 module.exports = {
-    page: pageRoutes,
-    error: errorRoutes
+    pages: function (app) {
+        return pages;
+    },
+    errors: function (app) {
+        return errors(app);
+    }
 };

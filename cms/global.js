@@ -40,8 +40,8 @@ app.use(express.static(abs('fe')));
 
 // load routes
 var routes = require('./routes');
-utils.each(routes.page(app), function() { app.use(this); });
-utils.each(routes.error(app), function() { app.use(this); });
+utils.each(routes.pages(app), function() { app.use(this); });
+utils.each(routes.errors(app), function() { app.use(this); });
 
 // export
 module.exports = app;

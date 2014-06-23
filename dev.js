@@ -11,7 +11,6 @@ var argv_port = process.argv[2];
 //webServer.create(argv_port || DEFAULT_PORT);
 
 var webServer = require('./cms/global');
-webServer.set('env', 'development');
 webServer.listen(argv_port || DEFAULT_PORT, function(){
     console.log('DEV Server Start!');
 });

@@ -16,7 +16,15 @@
     "practice"
   ],
   "author": "rulee",
-  "dependencies": {},
+  "dependencies": {
+    "express": "~4.2.0",
+    "morgan": "~1.0.0",
+    "cookie-parser": "~1.0.1",
+    "body-parser": "~1.0.0",
+    "debug": "~0.7.4",
+    "vash": "~0.7.12-1",
+    "serve-favicon": "~2.0.1"
+  },
   "devDependencies": {
     "tiny-lr": "0.0.7",
     "gulp": "^3.8.1",

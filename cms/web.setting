@@ -1,7 +1,0 @@
-{
-	test: true,
-	testObj: {
-		item1: 1,
-		item2: 2
-	}
-}

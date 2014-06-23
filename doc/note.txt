@@ -1,0 +1,9 @@
+DEV
+$ node dev
+$ node --debug dev
+$ node-inspector
+http://localhost:8080/debug?port=5858
+
+
+PROD
+$ node cms

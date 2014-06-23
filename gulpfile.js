@@ -17,20 +17,20 @@ var gulp = require('gulp');
 // js
 gulp.task('js', function(){
   gulp
-    .src('cms/js/main.js')
+    .src('cms/fe/js/main.js')
     .pipe(browserify({
       insertGlobals : true,
       debug : true
     }))
     .pipe(concat('bundle.js'))
-    .pipe(gulp.dest('./cms/js'))
+    .pipe(gulp.dest('./cms/fe/js'))
     .pipe(livereload(server));
 });
 
 // js min
 gulp.task('js-min', function () {
   gulp
-    .src('cms/js/main.js')
+    .src('cms/fe/js/main.js')
     .pipe(plumber({
       errorHandler: notify.onError("js error: <%= error.message %>")
     }))
@@ -42,13 +42,13 @@ gulp.task('js-min', function () {
     .pipe(rename({ suffix: '.min' }))
     .pipe(ngmin())
     // .pipe(uglify())
-    .pipe(gulp.dest('./cms/js'));
+    .pipe(gulp.dest('./cms/fe/js'));
 });
 
 // css
 gulp.task('css', function () {
   gulp
-    .src('cms/css/main.less')
+    .src('cms/fe/css/main.less')
     .pipe(plumber({
       errorHandler: notify.onError("css error: <%= error.message %>")
     }))
@@ -56,21 +56,21 @@ gulp.task('css', function () {
       sourceMap: false
     }))
     .pipe(concat('bundle.css'))
-    .pipe(gulp.dest('./cms/css'))
+    .pipe(gulp.dest('./cms/fe/css'))
     .pipe(livereload(server));
 });
 
 // css min
 gulp.task('css-min', function () {
   gulp
-    .src('cms/css/main.less')
+    .src('cms/fe/css/main.less')
     .pipe(less({
       sourceMap: false
     }))
     .pipe(concat('bundle.css'))
     .pipe(rename({ suffix: '.min' }))
     .pipe(minifycss())
-    .pipe(gulp.dest('./cms/css'));
+    .pipe(gulp.dest('./cms/fe/css'));
 });
 
 
@@ -82,10 +82,10 @@ gulp.task('publish', ['js', 'js-min', 'css', 'css-min'], function () {
 
 // clean
 gulp.task('clean', function() {
-  gulp.src(['./cms/js/bundle.js',
-            './cms/js/bundle.min.js',
-            './cms/css/bundle.css',
-            './cms/css/bundle.min.css'], {read: false})
+  gulp.src(['./cms/fe/js/bundle.js',
+            './cms/fe/js/bundle.min.js',
+            './cms/fe/css/bundle.css',
+            './cms/fe/css/bundle.min.css'], {read: false})
     .pipe(clean());
 });
 
@@ -93,8 +93,8 @@ gulp.task('clean', function() {
 // watch
 gulp.task('watch', function () {
   var paths = {
-    js: ['cms/js/*/*.js'], //js: ['cms/js/**/*.js'],
-    css: ['cms/css/**/*.less'] //css: ['cms/css/**/*.less', 'cms/css/**/*.css']
+    js: ['cms/fe/js/*/*.js'], //js: ['cms/fe/js/**/*.js'],
+    css: ['cms/fe/css/**/*.less'] //css: ['cms/fe/css/**/*.less', 'cms/css/**/*.css']
   };
   server.listen(35729, function (err) {
     if (err) {

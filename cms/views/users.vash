@@ -1,0 +1,10 @@
+@html.extend('_layout', function(model) {
+
+    @html.block('content', function(model) {
+
+    	@model.users.forEach(function(user){
+    		<h1 class="name">Welcome @user.username</h1>
+    	})
+    })
+
+})

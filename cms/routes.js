@@ -9,15 +9,15 @@ module.exports = function(app) {
     var express = require('express');
     var router = express.Router();
     //
-    return {
+    return [
 
-        '/': router.get('/', function(req, res) {
+        router.get('/', function(req, res) {
             res.render('index', {
                 title: 'Express'
             });
         }),
 
-        '/users': router.get('/users', function(req, res) {
+        router.get('/users', function(req, res) {
             res.render('users', {
                 users: [{
                     username: 'Wilson'
@@ -27,6 +27,10 @@ module.exports = function(app) {
                     username: 'Zhong Wei'
                 }]
             })
+        }),
+
+        router.get('/:type(p1|p2)/:id', function(req, res) {
+            res.send(req.params.id);
         })
-    };
+    ];
 };

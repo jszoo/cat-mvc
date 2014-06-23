@@ -3,7 +3,7 @@
 * author: ronglin
 * create date: 2014.6.23
 */
-
+var utils = require('./jsg/utilities');
 var express = require('express');
 var app = express();
 
@@ -39,9 +39,9 @@ app.use(express.static(abs('fe')));
 
 // load routes
 var routes = require('./routes')(app);
-for (var key in routes) {
-    app.use(key, routes[key]);
-}
+utils.each(routes, function(){
+    app.use(this);
+});
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

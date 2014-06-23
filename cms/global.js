@@ -3,6 +3,7 @@
 * author: ronglin
 * create date: 2014.6.23
 */
+
 var utils = require('./jsg/utilities');
 var express = require('express');
 var app = express();
@@ -39,10 +40,8 @@ app.use(express.static(abs('fe')));
 
 // load routes
 var routes = require('./routes');
-var pageRoutes = routes.page(app);
-var errorRoutes = routes.error(app);
-utils.each(routes, function() { app.use(this); });
-utils.each(errorRoutes, function() { app.use(this); });
+utils.each(routes.page(app), function() { app.use(this); });
+utils.each(routes.error(app), function() { app.use(this); });
 
 // export
 module.exports = app;

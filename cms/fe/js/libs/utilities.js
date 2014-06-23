@@ -4,7 +4,7 @@
 * create date: 2014.5.4
 */
 
-var common = require('../../jsg/utilities');
+var common = require('../../../jsg/utilities');
 
 module.exports = common.extend({}, common, {
 

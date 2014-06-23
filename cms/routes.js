@@ -4,10 +4,11 @@
 * create date: 2014.6.23
 */
 
+var express = require('express');
+var router = express.Router();
+
+//
 var pageRoutes = function(app) {
-    //
-    var express = require('express');
-    var router = express.Router();
     //
     return [
 

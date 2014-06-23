@@ -61,6 +61,8 @@ module.exports = {
     },
 
     each: function( obj, callback, args ) {
+        if (!obj) { return; }
+        //
         var name,
             i = 0,
             length = obj.length,

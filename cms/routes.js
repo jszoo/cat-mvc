@@ -17,7 +17,7 @@ module.exports = function(app) {
             });
         }),
 
-        '/users': router.get('/users', function(req, res) {
+        '/users': router.get('/', function(req, res) {
             res.render('users', {
                 users: [{
                     username: 'Wilson'

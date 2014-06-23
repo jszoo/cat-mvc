@@ -13,7 +13,7 @@ var fs = require('fs'),
 
 var setting = function (path, cb) {
     this.events = new events.EventEmitter();
-    this.filePath = path;
+    this._filePath = path;
     this.reload(cb);
 };
 
@@ -31,31 +31,31 @@ setting.deserialize = function (str) {
 
 setting.prototype = {
 
-    filePath: null, innerObj: null,
+    _filePath: null, _innerObj: null,
 
     events: null, constructor: setting,
 
     get: function (ns) {
         if (arguments.length === 0) {
-            return this.innerObj;
+            return this._innerObj;
         } else {
-            return utils.readObj(this.innerObj, ns);
+            return utils.readObj(this._innerObj, ns);
         }
     },
 
     set: function (ns, val) {
         if (arguments.length === 1) {
-            this.innerObj = ns;
+            this._innerObj = ns;
         } else {
-            utils.mapObj(this.innerObj, ns, val);
+            utils.mapObj(this._innerObj, ns, val);
         }
         return this;
     },
 
     save: function () {
-        io.ensureDirectory(path.dirname(this.filePath));
-        var json = setting.serialize(this.innerObj);
-        fs.writeFile(this.filePath, json, { encoding: 'utf-8' }, function (err) {
+        io.ensureDirectory(path.dirname(this._filePath));
+        var json = setting.serialize(this._innerObj);
+        fs.writeFile(this._filePath, json, { encoding: 'utf-8' }, function (err) {
             if (err) { throw err; }
             self.events.emit('save', json);
         });
@@ -63,11 +63,11 @@ setting.prototype = {
     },
 
     reload: function (cb) {
-        if (fs.existsSync(this.filePath)) {
-            var data = fs.readFileSync(this.filePath, { encoding: 'utf-8' });
-            this.innerObj = setting.deserialize(data);
+        if (fs.existsSync(this._filePath)) {
+            var data = fs.readFileSync(this._filePath, { encoding: 'utf-8' });
+            this._innerObj = setting.deserialize(data);
             if (cb) { this.events.once('load', cb); }
-            this.events.emit('load', this.innerObj);
+            this.events.emit('load', this._innerObj);
         }
         return this;
     }

@@ -24,8 +24,9 @@ app.use(logger('dev'));
 
 //
 var bodyParser = require('body-parser');
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded());
+app.use(bodyParser.json()); // parse application/json
+app.use(bodyParser.json({ type: 'application/hal+json' })); // parse application/hal+json as json
+app.use(bodyParser.urlencoded()); // parse application/x-www-form-urlencoded
 
 // cookie
 var cookieParser = require('cookie-parser');

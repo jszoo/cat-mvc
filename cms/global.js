@@ -4,22 +4,16 @@
 * create date: 2014.6.23
 */
 
-var utils = require('./jsg/utilities');
+var utils = require('./node/utilities');
 var express = require('express');
 var app = express();
 
-var path = require('path');
-var abs = function(rel) { 
-	rel = rel.replace(/\//g, '\\');
-	return path.join(__dirname, rel);
-};
-
 // web config
 var setting = require('./node/setting');
-var config = setting.load(abs('web.config'));
+var config = setting.load('/web.config');
 
 // view engine
-app.set('views', abs('views'));
+app.set('views', utils.absPath('views'));
 app.set('view engine', config.get('viewEngine.name'));
 
 // log
@@ -38,8 +32,8 @@ app.use(cookieParser());
 
 // dir mapping
 var favicon = require('serve-favicon');
-app.use(favicon(abs(config.get('favicon.source'))));
-app.use(express.static(abs('fe')));
+app.use(favicon(utils.absPath(config.get('favicon.source'))));
+app.use(express.static(utils.absPath('fe')));
 
 // load routes
 var routes = require('.' + config.get('routeTable.source'));

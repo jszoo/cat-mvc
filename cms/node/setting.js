@@ -11,12 +11,14 @@ var fs = require('fs'),
     events = require('events'),
     io = require('./io'),
     cache = require('./cache'),
-    utils = require('../jsg/utilities');
+    utils = require('./utilities');
 
 
 var settCache = cache.region('all-setting-instances');
 
 var setting = function (path, cb) {
+    path = utils.absPath(path);
+    //
     var sett = settCache.get(path);
     if (sett) { return sett; }
     settCache.set(path, this);

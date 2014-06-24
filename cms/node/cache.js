@@ -6,7 +6,7 @@
 
 'use strict';
 
-var utils = require('../jsg/utilities');
+var utils = require('./utilities');
 var fmKey = function(key) { return utils.trim(key).toLowerCase(); };
 
 
@@ -100,7 +100,12 @@ cache.prototype = {
         var g = global.get(this._region);
         if (g) {
             var k = fmKey(key), c = g[k];
-            if (utils.isFunction(c.notify)) { c.notify(c.val); }
+            if (utils.isFunction(c.notify)) { 
+                c.notify({
+                    value: c.val,
+                    action: 'remove'
+                });
+            }
             return (delete g[k]);
         }
         return false;

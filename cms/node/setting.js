@@ -10,12 +10,30 @@ var fs = require('fs'),
     io = require('./io'),
     utils = require('../jsg/utilities');
 
+var cache = {
+    _data: {},
+    _key: function(key) {
+        return (key || '').toLowerCase();
+    },
+    get: function(key) {
+        return this._data[this._key(key)];
+    },
+    set: function(key, val) {
+        this._data[this._key(key)] = val;
+    }
+};
 
 var setting = function (path, cb) {
+    var sett = cache.get(path);
+    if (sett) { return sett; }
+    cache.set(path, this);
+    //
     this.events = new events.EventEmitter();
     this._filePath = path;
     this.reload(cb);
 };
+
+setting.cache = cache;
 
 setting.load = function (path, cb) {
     return new setting(path, cb);

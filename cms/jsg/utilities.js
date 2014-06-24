@@ -24,7 +24,11 @@ module.exports = {
         };
     }(),
 
-    isArray: function(obj){
+    isDate: function(obj) {
+        return this.type(obj) === 'date';
+    },
+
+    isArray: function(obj) {
         return this.type(obj) === 'array';
     },
 
@@ -32,8 +36,12 @@ module.exports = {
         return this.type(obj) === 'function';
     },
 
+    isNumber: function(obj) {
+        return this.type(obj) === 'number';
+    },
+
     isNumeric: function (obj) {
-        return !isNaN(parseFloat(obj)) && isFinite(obj)
+        return !isNaN(parseFloat(obj)) && isFinite(obj);
     },
 
     isPlainObject: function (obj) {

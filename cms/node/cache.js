@@ -79,7 +79,15 @@ cache.prototype = {
     get: function(key) {
         var g = global.get(this._region);
         var c = g ? g[fmKey(key)] : null;
-        return c ? c.val : null;
+        if (c) {
+            if (utils.isDate(c.expire) && c.expire > new Date()) {
+                this.remove(key);
+                return null;
+            } else {
+                return c.val;
+            }
+        }
+        return null;
     },
 
     set: function(key, val, expire, notify) {
@@ -91,23 +99,21 @@ cache.prototype = {
     remove: function(key) {
         var g = global.get(this._region);
         if (g) {
-            return (delete g[fmKey(key)]);
-        } else {
-            return false;
+            var k = fmKey(key), c = g[k];
+            if (utils.isFunction(c.notify)) { c.notify(c.val); }
+            return (delete g[k]);
         }
+        return false;
     },
 
     exists: function(key) {
         var g = global.get(this._region);
-        if (g) {
-            return (fmKey(key) in g);
-        } else {
-            return false;
-        }
+        if (g) { return (fmKey(key) in g); }
+        else { return false; }
     },
 
     clear: function() {
-        global.remove(this._region);
+        return global.remove(this._region);
     }
 };
 

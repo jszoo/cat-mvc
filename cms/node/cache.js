@@ -10,7 +10,7 @@ var utils = require('./utilities');
 var fmKey = function(key) { return utils.trim(key).toLowerCase(); };
 
 
-var global = {
+var storage = {
 
     _data: {},
 
@@ -59,10 +59,10 @@ var cache = function(set) {
     instances.set(region, this);
     //
     this._region = region;
-    global.set(region, {});
+    storage.set(region, {});
 };
 
-cache.global = global;
+cache.storage = storage;
 
 cache.instances = instances;
 
@@ -77,7 +77,7 @@ cache.prototype = {
     constructor: cache,
 
     get: function(key) {
-        var g = global.get(this._region);
+        var g = storage.get(this._region);
         var c = g ? g[fmKey(key)] : null;
         if (c) {
             if (utils.isDate(c.expire) && c.expire > new Date()) {
@@ -91,13 +91,13 @@ cache.prototype = {
     },
 
     set: function(key, val, expire, notify) {
-        var g = global.get(this._region);
-        if (!g) { g = global.set(this._region, {}); }
+        var g = storage.get(this._region);
+        if (!g) { g = storage.set(this._region, {}); }
         g[fmKey(key)] = { val: val, expire: expire, notify: notify };
     },
 
     remove: function(key) {
-        var g = global.get(this._region);
+        var g = storage.get(this._region);
         if (g) {
             var k = fmKey(key), c = g[k];
             if (utils.isFunction(c.notify)) { 
@@ -112,13 +112,13 @@ cache.prototype = {
     },
 
     exists: function(key) {
-        var g = global.get(this._region);
+        var g = storage.get(this._region);
         if (g) { return (fmKey(key) in g); }
         else { return false; }
     },
 
     clear: function() {
-        return global.remove(this._region);
+        return storage.remove(this._region);
     }
 };
 

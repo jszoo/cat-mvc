@@ -20,7 +20,7 @@ var config = setting.load(abs('web.config'));
 
 // view engine
 app.set('views', abs('views'));
-app.set('view engine', config.get('viewEngineName'));
+app.set('view engine', config.get('viewEngine.name'));
 
 // log
 var logger = require('morgan');
@@ -38,11 +38,11 @@ app.use(cookieParser());
 
 // dir mapping
 var favicon = require('serve-favicon');
-app.use(favicon(abs(config.get('favicon'))));
+app.use(favicon(abs(config.get('favicon.source'))));
 app.use(express.static(abs('fe')));
 
 // load routes
-var routes = require('.' + config.get('routeTable'));
+var routes = require('.' + config.get('routeTable.source'));
 utils.each(routes.pages(app), function() { app.use(this); });
 utils.each(routes.errors(app), function() { app.use(this); });
 

@@ -4,6 +4,8 @@
 * create date: 2014.6.21
 */
 
+'use strict';
+
 module.exports = {
 
     arg2arr: function() {

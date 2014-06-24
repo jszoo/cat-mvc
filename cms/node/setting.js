@@ -4,36 +4,29 @@
 * create date: 2014.6.21
 */
 
+'use strict';
+
 var fs = require('fs'),
     path = require('path'),
     events = require('events'),
     io = require('./io'),
+    cache = require('./cache'),
     utils = require('../jsg/utilities');
 
-var cache = {
-    _data: {},
-    _key: function(key) {
-        return (key || '').toLowerCase();
-    },
-    get: function(key) {
-        return this._data[this._key(key)];
-    },
-    set: function(key, val) {
-        this._data[this._key(key)] = val;
-    }
-};
+
+var settCache = cache.region('all-setting-instances');
 
 var setting = function (path, cb) {
-    var sett = cache.get(path);
+    var sett = settCache.get(path);
     if (sett) { return sett; }
-    cache.set(path, this);
+    settCache.set(path, this);
     //
     this.events = new events.EventEmitter();
     this._filePath = path;
     this.reload(cb);
 };
 
-setting.cache = cache;
+setting.cache = settCache;
 
 setting.load = function (path, cb) {
     return new setting(path, cb);

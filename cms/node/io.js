@@ -4,6 +4,8 @@
 * create date: 2014.6.22
 */
 
+'use strict';
+
 var fs = require('fs'),
     path = require('path');
 

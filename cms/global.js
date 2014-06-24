@@ -24,7 +24,7 @@ app.set('view engine', config.get('viewEngine.name'));
 
 // log
 var logger = require('morgan');
-app.use(logger('dev'));
+app.use(logger({ format: 'dev' }));
 
 //
 var bodyParser = require('body-parser');

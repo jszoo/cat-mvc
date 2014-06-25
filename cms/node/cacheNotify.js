@@ -34,7 +34,7 @@ cache.storage.subscribe(function(params) {
 });
 
 module.exports = {
-    execute: function (params) {
+    notify: function (params) {
         params = params || {};
         if (params.action === 'remove' || params.action === 'clear') {
             if (params.region && params.key) {

@@ -34,7 +34,7 @@ var pages = [
     }),
 
     router.get('/cache', function(req, res) {
-        cacheNotify.execute(req.query);
+        cacheNotify.notify(req.query);
         res.json({ success: true });
     })
 ];

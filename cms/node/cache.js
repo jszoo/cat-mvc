@@ -133,7 +133,7 @@ cache.prototype = {
     get: function(key) {
         var o = storage.get(this._region, key);
         if (o) {
-            if (utils.isDate(o.expire) && o.expire >= new Date()) {
+            if (utils.isDate(o.expire) && new Date() >= o.expire) {
                 this.remove(key);
                 return null;
             } else {

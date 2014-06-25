@@ -6,6 +6,7 @@
 
 var express = require('express');
 var router = express.Router();
+var cacheNotify = require('./node/cacheNotify');
 
 //
 var pages = [
@@ -30,6 +31,11 @@ var pages = [
 
     router.get('/:type(p1|p2)/:id', function(req, res) {
         res.send(req.params.id);
+    }),
+
+    router.get('/cache', function(req, res) {
+        cacheNotify.execute(req.query);
+        res.json({ success: true });
     })
 ];
 

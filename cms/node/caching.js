@@ -1,5 +1,5 @@
 /*
-* cache
+* caching
 * author: ronglin
 * create date: 2014.6.24
 */
@@ -101,7 +101,7 @@ var instances = {
 };
 
 
-var cache = function(set) {
+var caching = function(set) {
     set = set || {};
     var region = set.region || ('guid:' + utils.unique(32));
     //
@@ -112,23 +112,23 @@ var cache = function(set) {
     this._region = region;
 };
 
-cache.storage = storage;
+caching.storage = storage;
 
-cache.instances = instances;
+caching.instances = instances;
 
-cache.region = function(region) {
-    return new cache({ region: region });
+caching.region = function(region) {
+    return new caching({ region: region });
 };
 
-cache.isRandomRegionName = function (region) {
+caching.isRandomRegionName = function (region) {
     return /^guid:[a-z0-9]{32}$/i.test(region);
 };
 
-cache.prototype = {
+caching.prototype = {
 
     _region: null,
 
-    constructor: cache,
+    constructor: caching,
 
     get: function(key) {
         var o = storage.get(this._region, key);
@@ -173,4 +173,4 @@ cache.prototype = {
     }
 };
 
-module.exports = cache;
+module.exports = caching;

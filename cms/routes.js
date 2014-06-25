@@ -6,7 +6,7 @@
 
 var express = require('express');
 var router = express.Router();
-var cacheNotify = require('./node/cacheNotify');
+var cachingNotifyRemote = require('./node/cachingNotifyRemote');
 
 //
 var pages = [
@@ -69,7 +69,7 @@ var pages = [
     }),
 
     router.get('/cache', function(req, res) {
-        cacheNotify.notify(req.query);
+        cachingNotifyRemote.accept(req.query);
         res.json({ success: true });
     })
 ];

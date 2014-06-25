@@ -6,9 +6,9 @@
 
 'use strict';
 
-var cache = require('./cache'),
+var caching = require('./caching'),
     utils = require('./utilities'),
-    inner = cache.region('session-store-cache');
+    inner = caching.region('session-data-caching');
 
 var defer = typeof setImmediate === 'function'
   ? setImmediate
@@ -18,16 +18,16 @@ module.exports = function(session) {
 
     var Store = session.Store;
 
-    var cacheStore = function(options) {
+    var cachingStore = function(options) {
         options = options || {};
         Store.call(this, options);
     };
 
-    utils.extend(cacheStore.prototype, {
+    utils.extend(cachingStore.prototype, {
 
         __proto__: Store.prototype,
 
-        constructor: cacheStore,
+        constructor: cachingStore,
 
         get: function(sid, callback) {
             var sess = inner.get(sid);
@@ -62,5 +62,5 @@ module.exports = function(session) {
         }
     });
 
-    return cacheStore;
+    return cachingStore;
 };

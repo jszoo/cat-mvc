@@ -32,9 +32,15 @@ app.use(cookieParser());
 
 // session
 var session = require('express-session');
-var maxAge = config.get('session.maxAge');
-var sessionStore = require('./node/cacheSessionStore')(session);
-app.use(session({ store: new sessionStore(), secret: 'rulee.cms', cookie: { maxAge: maxAge }}));
+var cachingStore = require('./node/cachingSessionStore')(session);
+app.use(session({
+	name: config.get('session.cookie.name'),
+	secret: config.get('session.secret'),
+	store: new cachingStore(),
+	cookie: {
+		maxAge: config.get('session.cookie.maxAge')
+	}
+}));
 
 // dir mapping
 var favicon = require('serve-favicon');

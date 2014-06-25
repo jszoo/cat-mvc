@@ -10,11 +10,11 @@ var fs = require('fs'),
     path = require('path'),
     events = require('events'),
     io = require('./io'),
-    cache = require('./cache'),
-    utils = require('./utilities');
+    utils = require('./utilities'),
+    caching = require('./caching');
 
 
-var instances = cache.region('setting-instances-data');
+var instances = caching.region('setting-instances-data');
 
 var setting = function (path, cb) {
     path = utils.absPath(path);

@@ -14,21 +14,21 @@ var fs = require('fs'),
     utils = require('./utilities');
 
 
-var settCache = cache.region('all-setting-instances');
+var instances = cache.region('setting-instances-data');
 
 var setting = function (path, cb) {
     path = utils.absPath(path);
     //
-    var sett = settCache.get(path);
+    var sett = instances.get(path);
     if (sett) { return sett; }
-    settCache.set(path, this);
+    instances.set(path, this);
     //
     this.events = new events.EventEmitter();
     this._filePath = path;
     this.reload(cb);
 };
 
-setting.cache = settCache;
+setting.cache = instances;
 
 setting.load = function (path, cb) {
     return new setting(path, cb);

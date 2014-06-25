@@ -227,6 +227,18 @@ module.exports = {
         return obj;
     },
 
+    propCount: function(obj) {
+        var count = 0;
+        if (obj) {
+            for (var key in obj) {
+                if (this.hasOwn(obj, key)) {
+                    count++;
+                }
+            }
+        }
+        return count;
+    },
+
     appendQuery: function() {
         var allows = { 'boolean': true, 'number': true, 'string': true }; // object types: Boolean Number String Object Array Date RegExp Function
         return function(url, name, value) {

@@ -168,6 +168,11 @@ cache.prototype = {
         return storage.remove(this._region, key);
     },
 
+    count: function() {
+        var o = storage.get(this._region);
+        return utils.propCount(o);
+    },
+
     exists: function(key) {
         return storage.exists(this._region, key);
     },

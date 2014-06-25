@@ -30,6 +30,11 @@ app.use(bodyParser.urlencoded({ extended: true })); // parse application/x-www-f
 var cookieParser = require('cookie-parser');
 app.use(cookieParser());
 
+// session
+var session = require('express-session');
+var sessionStore = require('./node/cacheSessionStore')(session);
+app.use(session({ store: new sessionStore(), secret: 'rulee.cms' }));
+
 // dir mapping
 var favicon = require('serve-favicon');
 app.use(favicon(utils.absPath(config.get('favicon.source'))));

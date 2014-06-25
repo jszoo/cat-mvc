@@ -33,6 +33,15 @@ var pages = [
         res.send(req.params.id);
     }),
 
+    router.get('/admin', function(req, res) {
+        var count = (req.session.count||0);
+        count++;
+        req.session.count = count;
+        res.render('admin', {
+            count: count
+        });
+    }),
+
     router.get('/cache', function(req, res) {
         cacheNotify.notify(req.query);
         res.json({ success: true });

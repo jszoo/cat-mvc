@@ -84,7 +84,7 @@ var storage = {
             this._data = {};
             return true;
         } else {
-            return this.remove(region);
+            return delete this._data[region];
         }
     },
 

@@ -32,7 +32,7 @@ module.exports = function(session) {
             var maxAge = session.cookie.originalMaxAge, expire;
             if (maxAge) {
                 expire = new Date();
-                expire.setSeconds(expire.getSeconds() + maxAge);
+                expire.setMilliseconds(expire.getMilliseconds() + maxAge);
             }
             callback(null, inner.set(sid, session, expire));
         },

@@ -20,19 +20,20 @@ var combineUrl = function (url, params) {
     return utils.setQuery(url, params);
 };
 
-cache.storage.subscribe(function(params) {
-    if (params.action === 'remove' || params.action === 'clear') {
-        utils.each(servers, function() {
-            var url = combineUrl(this.cacheUrl, params);
-            console.log(url);
-            request(url, function(error, response, body) {
-                if (error) {
-                    console.log('request error: ' + url);
-                }
-            });
+var notifyServers = function(params) {
+    utils.each(servers, function() {
+        var url = combineUrl(this.cacheUrl, params);
+        console.log(url);
+        request(url, function(error, response, body) {
+            if (error) {
+                console.log('request error: ' + url);
+            }
         });
-    }
-});
+    });
+};
+
+cache.storage.events.on('clear', notifyServers);
+cache.storage.events.on('remove', notifyServers);
 
 module.exports = {
     notify: function (params) {

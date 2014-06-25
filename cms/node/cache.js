@@ -6,13 +6,14 @@
 
 'use strict';
 
+var events = require('events');
 var utils = require('./utilities');
 var fmKey = function(key) { return utils.trim(key).toLowerCase(); };
 
 
 var storage = {
 
-    _data: {}, _notify: [],
+    _data: {}, events: new events.EventEmitter(),
 
     get: function(region, key) {
         region = fmKey(region);
@@ -48,8 +49,10 @@ var storage = {
         region = fmKey(region);
         key = fmKey(key);
         //
-        utils.each(this._notify, function() {
-            this.func({ action: 'remove', region: region, key: key });
+        this.events.emit('remove', {
+            action: 'remove',
+            region: region,
+            key: key
         });
         //
         if (arguments.length === 1) {
@@ -76,8 +79,9 @@ var storage = {
     clear: function(region) {
         region = fmKey(region);
         //
-        utils.each(this._notify, function() {
-            this.func({ action: 'clear', region: region });
+        this.events.emit('clear', {
+            action: 'clear',
+            region: region
         });
         //
         if (arguments.length === 0) {
@@ -85,12 +89,6 @@ var storage = {
             return true;
         } else {
             return delete this._data[region];
-        }
-    },
-
-    subscribe: function(func) {
-        if (utils.isFunction(func)) {
-            this._notify.push({ func: func });
         }
     }
 };

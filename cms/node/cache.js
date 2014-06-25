@@ -14,30 +14,78 @@ var storage = {
 
     _data: {}, _notify: [],
 
-    get: function(key) {
-        return this._data[fmKey(key)];
+    get: function(region, key) {
+        region = fmKey(region);
+        key = fmKey(key);
+        //
+        if (arguments.length === 0) {
+            return this._data;
+        } else {
+            var r = this._data[region];
+            if (arguments.length === 1) {
+                return r;
+            } else {
+                return r ? r[key] : r;
+            }
+        }
     },
 
-    set: function(key, val) {
-        return this._data[fmKey(key)] = val;
+    set: function(region, key, val) {
+        region = fmKey(region);
+        key = fmKey(key);
+        //
+        if (arguments.length === 2) {
+            return this._data[region] = key;
+        }
+        if (arguments.length === 3) {
+            var r = this._data[region];
+            if (!r) { r = this._data[region] = {}; }
+            r[key] = val;
+        }
     },
 
-    remove: function(key) {
+    remove: function(region, key) {
+        region = fmKey(region);
+        key = fmKey(key);
+        //
         utils.each(this._notify, function() {
-            this.func({ action: 'remove', key: key });
+            this.func({ action: 'remove', region: region, key: key });
         });
-        return (delete this._data[fmKey(key)]);
+        //
+        if (arguments.length === 1) {
+            return delete this._data[region];
+        } else {
+            var r = this._data[region];
+            if (r) { return delete r[key]; }
+            return false;
+        }
     },
 
-    exists: function(key) {
-        return (fmKey(key) in this._data);
+    exists: function(region, key) {
+        region = fmKey(region);
+        key = fmKey(key);
+        //
+        if (arguments.length === 1) {
+            return (region in this._data);
+        } else {
+            var r = this._data[region];
+            return (r && key in r);
+        }
     },
 
-    clear: function() {
-        this._data = {};
+    clear: function(region) {
+        region = fmKey(region);
+        //
         utils.each(this._notify, function() {
-            this.func({ action: 'clear' });
+            this.func({ action: 'clear', region: region });
         });
+        //
+        if (arguments.length === 0) {
+            this._data = {};
+            return true;
+        } else {
+            return this.remove(region);
+        }
     },
 
     subscribe: function(func) {
@@ -56,22 +104,21 @@ var instances = {
         return this._data[fmKey(key)];
     },
 
-    set: function(key, val) {
-        this._data[fmKey(key)] = val;
+    set: function(key, ins) {
+        this._data[fmKey(key)] = ins;
     }
 };
 
 
 var cache = function(set) {
     set = set || {};
-    var region = set.region || utils.guid();
+    var region = set.region || ('guid:' + utils.unique(32));
     //
     var instance = instances.get(region);
     if (instance) { return instance; }
     instances.set(region, this);
     //
     this._region = region;
-    storage.set(region, {});
 };
 
 cache.storage = storage;
@@ -82,6 +129,10 @@ cache.region = function(region) {
     return new cache({ region: region });
 };
 
+cache.isRandomRegionName = function (region) {
+    return /^guid:[a-z0-9]{32}$/i.test(region);
+};
+
 cache.prototype = {
 
     _region: null,
@@ -89,44 +140,36 @@ cache.prototype = {
     constructor: cache,
 
     get: function(key) {
-        var g = storage.get(this._region);
-        var c = g ? g[fmKey(key)] : null;
-        if (c) {
-            if (utils.isDate(c.expire) && c.expire > new Date()) {
+        var o = storage.get(this._region, key);
+        if (o) {
+            if (utils.isDate(o.expire) && o.expire > new Date()) {
                 this.remove(key);
                 return null;
             } else {
-                return c.val;
+                return o.val;
             }
         }
-        return null;
+        return undefined;
     },
 
     set: function(key, val, expire, notify) {
-        var g = storage.get(this._region);
-        if (!g) { g = storage.set(this._region, {}); }
-        g[fmKey(key)] = { val: val, expire: expire, notify: notify };
+        var o = { val: val, expire: expire, notify: notify };
+        storage.set(this._region, key, o);
     },
 
     remove: function(key) {
-        var g = storage.get(this._region);
-        if (g) {
-            var k = fmKey(key), c = g[k];
-            if (utils.isFunction(c.notify)) { 
-                c.notify({
-                    value: c.val,
-                    action: 'remove'
-                });
-            }
-            return (delete g[k]);
+        var o = storage.get(this._region, key);
+        if (o && utils.isFunction(o.notify)) {
+            o.notify({
+                value: o.val,
+                action: 'remove'
+            });
         }
-        return false;
+        return storage.remove(this._region, key);
     },
 
     exists: function(key) {
-        var g = storage.get(this._region);
-        if (g) { return (fmKey(key) in g); }
-        else { return false; }
+        return storage.exists(this._region, key);
     },
 
     clear: function() {

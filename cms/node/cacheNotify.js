@@ -15,15 +15,11 @@ var request = require('request'),
 var verify = config.get('cacheNotify.verify');
 var servers = config.get('cacheNotify.servers');
 
-var combineUrl = function (url, params) {
-    params = utils.extend({}, params, { verify: verify });
-    return utils.setQuery(url, params);
-};
 
 var notifyServers = function(params) {
+    var query = utils.extend({}, params, { verify: verify });
     utils.each(servers, function() {
-        var url = combineUrl(this.cacheUrl, params);
-        console.log(url);
+        var url = utils.setQuery(this.cacheUrl, query);
         request(url, function(error, response, body) {
             if (error) {
                 console.log('request error: ' + url);
@@ -31,9 +27,15 @@ var notifyServers = function(params) {
         });
     });
 };
+cache.storage.events.on('clear', function(params) {
+    params.action = 'clear';
+    notifyServers(params);
+});
+cache.storage.events.on('remove', function(params) {
+    params.action = 'remove';
+    notifyServers(params);
+});
 
-cache.storage.events.on('clear', notifyServers);
-cache.storage.events.on('remove', notifyServers);
 
 module.exports = {
     notify: function (params) {

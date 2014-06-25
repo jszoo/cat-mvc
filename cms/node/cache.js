@@ -49,11 +49,7 @@ var storage = {
         region = fmKey(region);
         key = fmKey(key);
         //
-        this.events.emit('remove', {
-            action: 'remove',
-            region: region,
-            key: key
-        });
+        this.events.emit('remove', { region: region, key: key });
         //
         if (arguments.length === 1) {
             return delete this._data[region];
@@ -79,10 +75,7 @@ var storage = {
     clear: function(region) {
         region = fmKey(region);
         //
-        this.events.emit('clear', {
-            action: 'clear',
-            region: region
-        });
+        this.events.emit('clear', { region: region });
         //
         if (arguments.length === 0) {
             this._data = {};

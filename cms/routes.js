@@ -64,7 +64,7 @@ var pages = [
     }),
 
     router.get('/logout', function(req, res) {
-        req.session.loggedin = false;
+        req.session.destroy();
         res.redirect('/');
     }),
 

@@ -2,6 +2,7 @@
 
     @html.block('content', function(model) {
         <p>@model.count</p>
+        <a href="/logout">logout</a>
     })
 
 })

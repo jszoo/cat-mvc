@@ -12,7 +12,7 @@ var fmKey = function(key) { return utils.trim(key).toLowerCase(); };
 
 var storage = {
 
-    _data: {},
+    _data: {}, _notify: [],
 
     get: function(key) {
         return this._data[fmKey(key)];
@@ -23,6 +23,9 @@ var storage = {
     },
 
     remove: function(key) {
+        utils.each(this._notify, function() {
+            this.func({ action: 'remove', key: key });
+        });
         return (delete this._data[fmKey(key)]);
     },
 
@@ -32,6 +35,15 @@ var storage = {
 
     clear: function() {
         this._data = {};
+        utils.each(this._notify, function() {
+            this.func({ action: 'clear' });
+        });
+    },
+
+    subscribe: function(func) {
+        if (utils.isFunction(func)) {
+            this._notify.push({ func: func });
+        }
     }
 };
 

@@ -29,7 +29,12 @@ module.exports = function(session) {
             callback(null, o);
         },
         set: function(sid, session, callback) {
-            callback(null, inner.set(sid, session));
+            var maxAge = session.cookie.originalMaxAge, expire;
+            if (maxAge) {
+                expire = new Date();
+                expire.setSeconds(expire.getSeconds() + maxAge);
+            }
+            callback(null, inner.set(sid, session, expire));
         },
         destroy: function(sid, callback) {
             callback(null, inner.remove(sid));

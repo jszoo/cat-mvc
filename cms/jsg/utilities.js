@@ -225,5 +225,63 @@ module.exports = {
         this.each(names, function (i, key) { prev = curr; curr = (curr[key] ? curr[key] : (curr[key] = isNaN(names[i + 1]) ? {} : [])); });
         if (prev) { prev[lastName] = dft; }
         return obj;
+    },
+
+    appendQuery: function() {
+        var allows = { 'boolean': true, 'number': true, 'string': true }; // object types: Boolean Number String Object Array Date RegExp Function
+        return function(url, name, value) {
+            if (url === null || url === undefined || (!name && name !== 0)) { return url; }
+            if (this.type(name) === 'object' || this.type(name) === 'array') {
+                var self = this;
+                this.each(name, function (key, val) {// here 'key' fixed to simple type and will not loop again.
+                    url = self.appendQuery(url, key, val);
+                });
+            } else if (allows[this.type(value)]) {
+                url += ((url + '').indexOf('?') > -1) ? '' : '?';
+                url += (/\?$/.test(url)) ? '' : '&';
+                url += name + '=' + encodeURIComponent(String(value));
+            }
+            return url;
+        };
+    }(),
+
+    setQuery: function(url, name, value) {
+        if (url === null || url === undefined || (!name && name !== 0)) { return url; }
+        var urlParams = this.getQuery(url), lowerParams = {}, keyMap = {}, params = {}, lower;
+        params = 'object,array'.indexOf(this.type(name)) > -1 ? name : (params[name] = value, params);
+        this.each(urlParams, function (key, val) {
+            lowerParams[key.toLowerCase()] = val;
+            keyMap[key] = key.toLowerCase();
+        });
+        this.each(params, function (key, val) {
+            lower = (key + '').toLowerCase();
+            if (lower in lowerParams) {
+                lowerParams[lower] = val;
+            } else {
+                urlParams[key] = val;
+            }
+        });
+        this.each(keyMap, function (f, t) {
+            urlParams[f] = lowerParams[t];
+        });
+        //
+        var sIndex = url.indexOf('?');
+        sIndex = (sIndex === -1) ? url.length : sIndex;
+        return this.appendQuery(url.substr(0, sIndex), urlParams);
+    },
+
+    getQuery: function(url, key) {
+        if (url === null || url === undefined) { return url; }
+        var sIndex = url.indexOf('?');
+        if (sIndex === -1) { return null; }
+        var query = url.substr(sIndex + 1), params = {};
+        var pairs = query.replace(/\+/g, ' ').split('&');
+        this.each(pairs, function(idx, pair) {
+            var parts = pair.split('=');
+            if (parts.length > 0) {
+                params[parts[0]] = decodeURIComponent(parts[1] || '');
+            }
+        });
+        return key ? params[key] : params;
     }
 };

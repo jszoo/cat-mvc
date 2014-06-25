@@ -9,8 +9,8 @@ var express = require('express');
 var app = express();
 
 // web config
-var setting = require('./node/setting');
-var config = setting.load('/web.config');
+var configuration = require('./node/configuration');
+var config = configuration.load('/web.config');
 
 // view engine
 app.set('views', utils.absPath('views'));

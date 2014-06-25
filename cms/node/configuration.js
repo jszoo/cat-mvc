@@ -1,5 +1,5 @@
 /*
-* setting
+* configuration
 * author: ronglin
 * create date: 2014.6.21
 */
@@ -14,9 +14,9 @@ var fs = require('fs'),
     caching = require('./caching');
 
 
-var instances = caching.region('setting-instances-data');
+var instances = caching.region('configuration-instances-data');
 
-var setting = function (path, cb) {
+var configuration = function (path, cb) {
     path = utils.absPath(path);
     //
     var sett = instances.get(path);
@@ -28,25 +28,25 @@ var setting = function (path, cb) {
     this.reload(cb);
 };
 
-setting.cache = instances;
+configuration.cache = instances;
 
-setting.load = function (path, cb) {
-    return new setting(path, cb);
+configuration.load = function (path, cb) {
+    return new configuration(path, cb);
 };
 
-setting.serialize = function (obj) {
+configuration.serialize = function (obj) {
     return JSON.stringify(obj, null, 4);
 };
 
-setting.deserialize = function (str) {
+configuration.deserialize = function (str) {
     return JSON.parse(str);
 };
 
-setting.prototype = {
+configuration.prototype = {
 
     _filePath: null, _innerObj: null,
 
-    events: null, constructor: setting,
+    events: null, constructor: configuration,
 
     get: function (ns) {
         if (arguments.length === 0) {
@@ -67,7 +67,7 @@ setting.prototype = {
 
     save: function () {
         io.ensureDirectory(path.dirname(this._filePath));
-        var json = setting.serialize(this._innerObj);
+        var json = configuration.serialize(this._innerObj);
         fs.writeFile(this._filePath, json, { encoding: 'utf-8' }, function (err) {
             if (err) { throw err; }
             self.events.emit('save', json);
@@ -78,7 +78,7 @@ setting.prototype = {
     reload: function (cb) {
         if (fs.existsSync(this._filePath)) {
             var data = fs.readFileSync(this._filePath, { encoding: 'utf-8' });
-            this._innerObj = setting.deserialize(data);
+            this._innerObj = configuration.deserialize(data);
             if (cb) { this.events.once('load', cb); }
             this.events.emit('load', this._innerObj);
         }
@@ -87,5 +87,5 @@ setting.prototype = {
 };
 
 // export
-module.exports = setting;
+module.exports = configuration;
 

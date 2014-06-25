@@ -9,7 +9,7 @@
 var request = require('request'),
     caching = require('./caching'),
     utils = require('./utilities'),
-    config = require('./setting').load('/web.config');
+    config = require('./configuration').load('/web.config');
 
 
 var verify = config.get('cacheNotify.verify');

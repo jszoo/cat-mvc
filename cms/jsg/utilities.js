@@ -271,10 +271,12 @@ module.exports = {
     },
 
     getQuery: function(url, key) {
-        if (url === null || url === undefined) { return url; }
+        var params = {};
+        if (url === null || url === undefined) { return params; }
         var sIndex = url.indexOf('?');
-        if (sIndex === -1) { return null; }
-        var query = url.substr(sIndex + 1), params = {};
+        if (sIndex === -1) { return params; }
+        //
+        var query = url.substr(sIndex + 1);
         var pairs = query.replace(/\+/g, ' ').split('&');
         this.each(pairs, function(idx, pair) {
             var parts = pair.split('=');
@@ -282,6 +284,7 @@ module.exports = {
                 params[parts[0]] = decodeURIComponent(parts[1] || '');
             }
         });
+        //
         return key ? params[key] : params;
     }
 };

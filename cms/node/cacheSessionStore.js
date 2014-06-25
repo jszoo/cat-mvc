@@ -10,6 +10,9 @@ var cache = require('./cache'),
     utils = require('./utilities'),
     inner = cache.region('session-store-cache');
 
+var defer = typeof setImmediate === 'function'
+  ? setImmediate
+  : function(fn){ process.nextTick(fn.bind.apply(fn, arguments)) };
 
 module.exports = function(session) {
 
@@ -20,30 +23,42 @@ module.exports = function(session) {
         Store.call(this, options);
     };
 
-    cacheStore.prototype.__proto__ = Store.prototype;
-
     utils.extend(cacheStore.prototype, {
+
+        __proto__: Store.prototype,
+
+        constructor: cacheStore,
+
         get: function(sid, callback) {
-            var o = inner.get(sid);
-            if (!o) { o = inner.set(sid, {}); }
-            callback(null, o);
+            var sess = inner.get(sid);
+            if (sess) { sess = JSON.parse(sess); }
+            defer(callback, null, sess);
         },
+
         set: function(sid, session, callback) {
             var maxAge = session.cookie.originalMaxAge, expire;
             if (maxAge) {
                 expire = new Date();
                 expire.setMilliseconds(expire.getMilliseconds() + maxAge);
             }
-            callback(null, inner.set(sid, session, expire));
+            var sess = JSON.stringify(session);
+            inner.set(sid, sess, expire);
+            defer(callback);
         },
+
         destroy: function(sid, callback) {
-            callback(null, inner.remove(sid));
+            inner.remove(sid);
+            defer(callback);
         },
+
         clear: function (callback) {
-            callback(null, inner.clear());
+            inner.clear();
+            defer(callback);
         },
+
         length: function(callback) {
-            callback(null, inner.count());
+            var len = inner.count();
+            defer(callback, null, len);
         }
     });
 

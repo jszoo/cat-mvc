@@ -34,12 +34,13 @@ app.use(cookieParser());
 var session = require('express-session');
 var cachingStore = require('./node/cachingSessionStore')(session);
 app.use(session({
-	name: config.get('session.cookie.name'),
-	secret: config.get('session.secret'),
-	store: new cachingStore(),
-	cookie: {
-		maxAge: config.get('session.cookie.maxAge')
-	}
+    name: config.get('session.cookie.name'),
+    rolling: config.get('session.rolling'),
+    secret: config.get('session.secret'),
+    store: new cachingStore(),
+    cookie: {
+        maxAge: config.get('session.cookie.maxAge')
+    }
 }));
 
 // dir mapping

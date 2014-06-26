@@ -4,17 +4,23 @@
 * create date: 2014.6.24
 */
 
+'use strict';
+
 var path = require('path'),
     utils = require('../jsg/utilities'),
     cmsDir = path.normalize(__dirname + path.sep + '..');
 
 module.exports = utils.extend({}, utils, {
 
-    absPath: function(relative) {
+    absPath: function() {
+        var args = utils.arg2arr(arguments);
         if (path.sep === '\\') {
-            relative = relative.replace(/\//g, '\\');
+            utils.each(args, function(i, val) {
+                args[i] = val.replace(/\//g, '\\');
+            });
         }
-        return path.join(cmsDir, relative);
+        args.unshift(cmsDir);
+        return path.join.apply(path, args);
     }
 
 });

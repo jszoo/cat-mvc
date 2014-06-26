@@ -19,6 +19,10 @@ var controller = function(name, impl) {
 	}
 };
 
+controller.define = function(name, impl) {
+	return new controller(name, impl);
+};
+
 controller.prototype = {
 
 	_name: null, _impl: null,
@@ -26,14 +30,16 @@ controller.prototype = {
 	constructor: controller,
 };
 
+var mvcHandler = function(set) {
+
+	return function(req, res, next) {
+		next();
+	};
+};
+
 
 module.exports = {
 	areas: areas,
-	controllerClass: controller,
-	controller: function(name, impl) {
-		return new controller(name, impl);
-	},
-	handler: function() {
-
-	}
+	handler: mvcHandler,
+	controller: controller.define
 };

@@ -48,6 +48,11 @@ var favicon = require('serve-favicon');
 app.use(favicon(utils.absPath(config.get('favicon.source'))));
 app.use(express.static(utils.absPath('fe')));
 
+// mvc
+var mvc = require('./node/mvc');
+mvc.areas.registerAll(app);
+app.use(mvc.handler());
+
 // load routes
 var routes = require('.' + config.get('routeTable.source'));
 utils.each(routes.pages(app), function() { app.use(this); });

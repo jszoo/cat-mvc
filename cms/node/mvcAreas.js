@@ -20,6 +20,8 @@ module.exports = {
 
     _areas: caching.region('mvc-areas-cache'),
 
+    rootArea: utils.unique(8).toUpperCase(),
+
     all: function() {
         return this._areas.all();
     },
@@ -29,8 +31,9 @@ module.exports = {
     },
 
     register: function(areaName) {
-        if (areaName === '$ROOTSITE$') { areaName = path.sep + '..'; }
-        var area, areaPath = path.normalize(path.join(this._areasPath, areaName));
+        var areaDirname = areaName;
+        if (areaName === this.rootArea) { areaDirname = path.sep + '..'; }
+        var area, areaPath = path.normalize(path.join(this._areasPath, areaDirname));
         if (fs.statSync(areaPath).isDirectory()) {
             // read 'areas/account/ctrls'
             var ctrlsPath = path.join(areaPath, 'ctrls');
@@ -42,17 +45,19 @@ module.exports = {
                     controllers: {}
                 };
                 // read 'areas/account/ctrls/logon.js'
-                var controllerFiles = fs.readdirSync(ctrlsPath);
-                utils.each(controllerFiles, function(i, controllerFile) {
-                    var controllerFilePath = path.join(ctrlsPath, controllerFile);
-                    if (fs.statSync(controllerFilePath).isFile()) {
+                var ctrlFiles = fs.readdirSync(ctrlsPath);
+                utils.each(ctrlFiles, function(i, ctrlFileName) {
+                    var ctrlFilePath = path.join(ctrlsPath, ctrlFileName);
+                    if (fs.statSync(ctrlFilePath).isFile()) {
                         //
-                        var ctrl = require(controllerFilePath);
-                        if (!ctrl.name()) {
-                            var baseName = path.basename(controllerFile, '.js');
-                            ctrl.name(baseName.toLowerCase());
+                        var ctrl = require(ctrlFilePath);
+                        if (ctrl && utils.isFunction(ctrl.name)) {
+                            if (!ctrl.name()) {
+                                var baseName = path.basename(ctrlFileName, '.js');
+                                ctrl.name(baseName.toLowerCase());
+                            }
+                            area.controllers[ctrl.name()] = ctrl;
                         }
-                        area.controllers[ctrl.name()] = ctrl;
                     }
                 });
             }
@@ -67,7 +72,7 @@ module.exports = {
     },
     
     registerAll: function(app) {
-        this.register('$ROOTSITE$');
+        this.register(this.rootArea);
         var self = this, areasDirs = fs.readdirSync(this._areasPath);
         utils.each(areasDirs, function(i, areaName) { self.register(areaName); });
         return this.all();

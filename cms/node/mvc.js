@@ -105,28 +105,36 @@ var mvcHandler = function(set) {
     });
 
     //
-    var match = route('/:area/:controller/:action');
+    var matches = [
+        route('/:controller/:action'),
+        route('/:area/:controller/:action')
+    ];
 
     //
     return function(req, res, next) {
-        var params = match(parse(req.url).pathname);
-        if (params !== false) {
-            var allAreas = areas.all();
-            utils.each(params, function(key, val) {
-                params[key] = val.toLowerCase();
-            });
-            var area = allAreas[params.area];
-            if (area) {
-                var ctrl = area.controllers[params.controller];
-                if (ctrl) {
-                    var scope = ctrl.initialize(req, res);
-                    var actions = scope.actions();
-                    var act = actions[params.action];
-                    debugger;
+        var allAreas = areas.all(), matched = false;
+        utils.each(matches, function(i, match) {
+            var params = match(parse(req.url).pathname);
+            if (params !== false) {
+                if (!params.area) { params.area = areas.rootArea; }
+                utils.each(params, function(key, val) {
+                    params[key] = val.toLowerCase();
+                });
+                var area = allAreas[params.area];
+                if (area) {
+                    var ctrl = area.controllers[params.controller];
+                    if (ctrl) {
+                        var scope = ctrl.initialize(req, res);
+                        var actions = scope.actions();
+                        var act = actions[params.action];
+                        debugger;
+                    }
                 }
             }
+        });
+        if (!matched) {
+            next();
         }
-        next();
     };
 };
 

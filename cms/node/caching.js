@@ -131,7 +131,12 @@ caching.prototype = {
     constructor: caching,
 
     all: function() {
-        return storage.get(this._region);
+        var ret = {}, self = this;
+        utils.each(storage.get(this._region), function(key) {
+            var val = self.get(key);
+            if (val) { ret[key] = val; }
+        });
+        return ret;
     },
 
     get: function(key) {

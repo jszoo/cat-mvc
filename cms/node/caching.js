@@ -130,6 +130,10 @@ caching.prototype = {
 
     constructor: caching,
 
+    all: function() {
+        return storage.get(this._region);
+    },
+
     get: function(key) {
         var o = storage.get(this._region, key);
         if (o) {
@@ -160,8 +164,7 @@ caching.prototype = {
     },
 
     count: function() {
-        var o = storage.get(this._region);
-        return utils.propCount(o);
+        return utils.propCount(this.all());
     },
 
     exists: function(key) {

@@ -34,13 +34,9 @@ module.exports = function(session) {
         },
 
         set: function(sid, session, callback) {
-            var maxAge = session.cookie.originalMaxAge, expire;
-            if (maxAge) {
-                expire = new Date();
-                expire.setMilliseconds(expire.getMilliseconds() + maxAge);
-            }
+            var expires = session.cookie.expires;
             var sess = JSON.stringify(session);
-            inner.set(sid, sess, expire);
+            inner.set(sid, sess, expires);
             defer(callback);
         },
 

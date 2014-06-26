@@ -8,11 +8,9 @@
 
 var caching = require('./caching'),
     utils = require('./utilities'),
-    inner = caching.region('session-data-caching');
+    inner = caching.region('session-objects-cache');
 
-var defer = typeof setImmediate === 'function'
-  ? setImmediate
-  : function(fn){ process.nextTick(fn.bind.apply(fn, arguments)) };
+var defer = (typeof setImmediate === 'function') ? setImmediate : function(fn){ process.nextTick(fn.bind.apply(fn, arguments)); };
 
 module.exports = function(session) {
 

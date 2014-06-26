@@ -14,7 +14,7 @@ var fs = require('fs'),
     caching = require('./caching');
 
 
-var instances = caching.region('configuration-instances-data');
+var instances = caching.region('configuration-instances-cache');
 
 var configuration = function (path, cb) {
     path = utils.absPath(path);

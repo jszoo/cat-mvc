@@ -1,0 +1,52 @@
+/* Buttons
+---------------------------------------------------------------------------------------------------------------------*/
+.button {
+	cursor: pointer;
+	display: inline-block;
+	font-weight: 900;
+	height: 48px;
+	line-height: 48px;
+	padding: 0 32px;
+	text-align: center;
+	text-transform: uppercase;
+	.box-shadow(e("0 0 2px rgba(0,0,0,.15), inset 0 -1px 1px rgba(0,0,0,.15)"));
+	.rounded(4px);
+
+	&.white {
+		background: #FFF;
+		border: 1px solid rgba(0,0,0,.15);
+		color: #000;
+	}
+
+	&.green {
+		background: @green;
+		border: 1px solid #139500;
+		color: #FFF;
+		text-shadow: 0 1px 2px rgba(0,0,0,.7);
+	}
+
+	&.orange {
+		background: #F7931D;
+		border: 1px solid #925812;
+		color: #FFF;
+		text-shadow: 0 1px 2px rgba(0,0,0,.7);
+	}
+
+	&.small {
+		font-size: 14px;
+		font-weight: 700;
+		height: 30px;
+		line-height: 30px;
+		padding: 0 20px;
+		.box-shadow(0 0 2px rgba(0,0,0,.05));
+	}
+
+	.lt-ie9 & {
+		&.orange {
+		}
+	}
+}
+
+a.button {
+	text-decoration: none;
+}

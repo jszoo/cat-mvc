@@ -1,0 +1,27 @@
+﻿<!DOCTYPE HTML>
+<!--[if lt IE 7]>  <html ng-app="rulee" class="ie ie6 lte9 lte8 lte7"> <![endif]-->
+<!--[if IE 7]>     <html ng-app="rulee" class="ie ie7 lte9 lte8 lte7"> <![endif]-->
+<!--[if IE 8]>     <html ng-app="rulee" class="ie ie8 lte9 lte8">      <![endif]-->
+<!--[if IE 9]>     <html ng-app="rulee" class="ie ie9 lte9">           <![endif]-->
+<!--[if gt IE 9]>  <html ng-app="rulee">                               <![endif]-->
+<!--[if !IE]><!--> <html ng-app="rulee">                           <!--<![endif]-->
+<head>
+    <title>RULEE</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="css/bundle.css" />
+    <script type="text/javascript" src="js/bundle.js"></script>
+</head>
+<body ng-controller="MainCtrl">
+    <div id="body-container">
+        <rulee-header current="Home"></rulee-header>
+        <div id="main-container" ng-view ng-class="slide">
+        </div>
+        <div ng-show="testEnabled" class="block">
+            <div>{{tests.provider}}</div>
+            <div>{{tests.factory}}</div>
+            <div>{{tests.service}}</div>
+        </div>
+        <rulee-footer></rulee-footer>
+    </div>
+</body>
+</html>

@@ -6,10 +6,13 @@
 
 var express = require('express');
 var router = express.Router();
-var cachingNotifyRemote = require('./node/cachingNotifyRemote');
 
 //
 var pages = [
+
+    router.get('/:area/:controller/:action', function(req, res) {
+        res.json({ success: true });
+    }),
 
     router.get('/', function(req, res) {
         res.render('index', {
@@ -27,10 +30,6 @@ var pages = [
                 username: 'Zhong Wei'
             }]
         })
-    }),
-
-    router.get('/:type(p1|p2)/:id', function(req, res) {
-        res.send(req.params.id);
     }),
 
     router.get('/admin', function(req, res) {
@@ -69,6 +68,7 @@ var pages = [
     }),
 
     router.get('/cache', function(req, res) {
+        var cachingNotifyRemote = require('./node/cachingNotifyRemote');
         cachingNotifyRemote.accept(req.query);
         res.json({ success: true });
     })

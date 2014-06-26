@@ -7,13 +7,13 @@
 var mvc = require('../../../node/mvc');
 var utils = require('../../../node/utilities');
 
-module.exports = new mvc.controller('logon', function(ctrl) {
+module.exports = mvc.controller('logon', function() {
 
-	ctrl.action('index', 'get' function() {
+	this.action('index', 'get' function() {
 
 	});
 
-	ctrl.action('index', 'post' function() {
+	this.action('index', 'post' function() {
 
 	});
 

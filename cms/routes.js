@@ -10,10 +10,6 @@ var router = express.Router();
 //
 var pages = [
 
-    router.get('/:area/:controller/:action', function(req, res) {
-        res.json({ success: true });
-    }),
-
     router.get('/', function(req, res) {
         res.render('index', {
             title: 'Express'

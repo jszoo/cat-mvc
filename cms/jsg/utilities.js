@@ -32,6 +32,14 @@ module.exports = {
         return this.type(obj) === 'array';
     },
 
+    isObject: function(obj) {
+        return this.type(obj) === 'object';
+    },
+
+    isString: function(obj) {
+        return this.type(obj) === 'string';
+    },
+
     isFunction: function(obj) {
         return this.type(obj) === 'function';
     },

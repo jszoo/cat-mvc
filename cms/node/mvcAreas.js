@@ -29,21 +29,22 @@ module.exports = {
     },
 
     register: function(areaName) {
-        var area, areaPath = path.join(this._areasPath, areaName);
+        if (areaName === '$ROOTSITE$') { areaName = path.sep + '..'; }
+        var area, areaPath = path.normalize(path.join(this._areasPath, areaName));
         if (fs.statSync(areaPath).isDirectory()) {
-            // read 'areas/account/controllers'
-            var controllersPath = path.join(areaPath, 'controllers');
-            if (fs.existsSync(controllersPath)) {
+            // read 'areas/account/ctrls'
+            var ctrlsPath = path.join(areaPath, 'ctrls');
+            if (fs.existsSync(ctrlsPath)) {
                 // obj
                 area = {
                     areaName: areaName,
                     areaPath: areaPath,
                     controllers: {}
                 };
-                // read 'areas/account/controllers/logon.js'
-                var controllerFiles = fs.readdirSync(controllersPath);
+                // read 'areas/account/ctrls/logon.js'
+                var controllerFiles = fs.readdirSync(ctrlsPath);
                 utils.each(controllerFiles, function(i, controllerFile) {
-                    var controllerFilePath = path.join(controllersPath, controllerFile);
+                    var controllerFilePath = path.join(ctrlsPath, controllerFile);
                     if (fs.statSync(controllerFilePath).isFile()) {
                         //
                         var ctrl = require(controllerFilePath);
@@ -66,6 +67,7 @@ module.exports = {
     },
     
     registerAll: function(app) {
+        this.register('$ROOTSITE$');
         var self = this, areasDirs = fs.readdirSync(this._areasPath);
         utils.each(areasDirs, function(i, areaName) { self.register(areaName); });
         return this.all();

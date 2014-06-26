@@ -116,7 +116,7 @@ var mvcHandler = function(set) {
         utils.each(matches, function(i, match) {
             var params = match(parse(req.url).pathname);
             if (params !== false) {
-                if (!params.area) { params.area = areas.rootArea; }
+                if (!params.area) { params.area = areas.rootAreaName; }
                 utils.each(params, function(key, val) {
                     params[key] = val.toLowerCase();
                 });

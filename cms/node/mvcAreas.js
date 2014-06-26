@@ -20,7 +20,7 @@ module.exports = {
 
     _areas: caching.region('mvc-areas-cache'),
 
-    rootArea: utils.unique(8).toUpperCase(),
+    rootAreaName: utils.unique(8).toUpperCase(),
 
     all: function() {
         return this._areas.all();
@@ -32,7 +32,7 @@ module.exports = {
 
     register: function(areaName) {
         var areaDirname = areaName;
-        if (areaName === this.rootArea) { areaDirname = path.sep + '..'; }
+        if (areaName === this.rootAreaName) { areaDirname = path.sep + '..'; }
         var area, areaPath = path.normalize(path.join(this._areasPath, areaDirname));
         if (fs.statSync(areaPath).isDirectory()) {
             // read 'areas/account/ctrls'
@@ -72,7 +72,7 @@ module.exports = {
     },
     
     registerAll: function(app) {
-        this.register(this.rootArea);
+        this.register(this.rootAreaName);
         var self = this, areasDirs = fs.readdirSync(this._areasPath);
         utils.each(areasDirs, function(i, areaName) { self.register(areaName); });
         return this.all();

@@ -9,63 +9,65 @@
 var fs = require('fs'),
     path = require('path'),
     events = require('events'),
-    express = require('express'),
-    utils = require('./utilities');
-
-var router = express.Router();
+    utils = require('./utilities'),
+    caching = require('./caching');
 
 module.exports = {
 
     events: new events.EventEmitter(),
 
-    areasPath: utils.absPath('areas'),
+    _areasPath: utils.absPath('areas'),
+
+    _areas: caching.region('mvc-areas-cache'),
+
+    all: function() {
+        return this._areas.all();
+    },
+
+    unload: function(areaName) {
+        return this._areas.remove(areaName);
+    },
 
     register: function(areaName) {
-        var area, areaPath = path.join(this.areasPath, areaName);
+        var area, areaPath = path.join(this._areasPath, areaName);
         if (fs.statSync(areaPath).isDirectory()) {
             // read 'areas/account/controllers'
             var controllersPath = path.join(areaPath, 'controllers');
             if (fs.existsSync(controllersPath)) {
-                // push
-                var routes = [], controllerInstances = [];
+                // obj
                 area = {
                     areaName: areaName,
                     areaPath: areaPath,
-                    routes: routes,
-                    controllers: controllerInstances
+                    controllers: {}
                 };
                 // read 'areas/account/controllers/logon.js'
-                var controllers = fs.readdirSync(controllersPath);
-                utils.each(controllers, function(i, controllerName) {
-                    var controllerPath = path.join(controllersPath, controllerName);
-                    if (fs.statSync(controllerPath).isFile()) {
-                        // load controller
-                        var instance = require(controllerPath);
-                        controllerInstances.push(instance);
-                        // load routes
-                        routes.push(router.get(utils.format('/{0}/{1}/{2}', areaName, controllerName, )))
+                var controllerFiles = fs.readdirSync(controllersPath);
+                utils.each(controllerFiles, function(i, controllerFile) {
+                    var controllerFilePath = path.join(controllersPath, controllerFile);
+                    if (fs.statSync(controllerFilePath).isFile()) {
+                        //
+                        var ctrl = require(controllerFilePath);
+                        if (!ctrl.name()) {
+                            var baseName = path.basename(controllerFile, '.js');
+                            ctrl.name(baseName.toLowerCase());
+                        }
+                        area.controllers[ctrl.name()] = ctrl;
                     }
                 });
-                // emit
-                this.events.emit('registerArea', area);
             }
+        }
+        //
+        if (area) {
+            this._areas.set(areaName, area);
+            this.events.emit('register', area);
         }
         // ret
         return area;
     },
     
     registerAll: function(app) {
-        var areas = [], self = this;
-        var areasDirs = fs.readdirSync(this.areasPath);
-        utils.each(areasDirs, function(i, areaName) {
-            var area = self.register(areaName);
-            if (area) { 
-                areas.push(area);
-                utils.each(area.routes, function() {
-                    app.use(this);
-                });
-            }
-        });
-        return areas;
+        var self = this, areasDirs = fs.readdirSync(this._areasPath);
+        utils.each(areasDirs, function(i, areaName) { self.register(areaName); });
+        return this.all();
     }
 };

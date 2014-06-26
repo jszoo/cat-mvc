@@ -50,7 +50,7 @@ app.use(express.static(utils.absPath('fe')));
 
 // mvc
 var mvc = require('./node/mvc');
-mvc.areas.registerAll(app);
+mvc.areas.registerAll();
 app.use(mvc.handler());
 
 // load routes

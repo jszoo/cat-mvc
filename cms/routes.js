@@ -61,12 +61,6 @@ var pages = [
     router.get('/logout', function(req, res) {
         req.session.destroy();
         res.redirect('/');
-    }),
-
-    router.get('/cache', function(req, res) {
-        var cachingNotifyRemote = require('./node/cachingNotifyRemote');
-        cachingNotifyRemote.accept(req.query);
-        res.json({ success: true });
     })
 ];
 

@@ -7,3 +7,4 @@ $ npm install -g npm-check-updates
 $ npm-check-updates -u
 $ npm install
 
+3. my current mvc implementation requires the root controller names can't be repeat to the area names.

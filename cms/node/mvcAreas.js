@@ -12,9 +12,8 @@ var fs = require('fs'),
     utils = require('./utilities'),
     caching = require('./caching');
 
-module.exports = {
 
-    events: new events.EventEmitter(),
+module.exports = {
 
     _areasPath: utils.absPath('areas'),
 
@@ -22,26 +21,34 @@ module.exports = {
 
     rootAreaName: utils.unique(8).toUpperCase(),
 
+    events: new events.EventEmitter(),
+
     all: function() {
         return this._areas.all();
     },
 
+    get: function(areaName) {
+        return this._areas.get(areaName);
+    },
+
     unload: function(areaName) {
+        this.events.emit('unload', areaName);
         return this._areas.remove(areaName);
     },
 
-    register: function(areaName) {
-        var areaDirname = areaName;
-        if (areaName === this.rootAreaName) { areaDirname = path.sep + '..'; }
-        var area, areaPath = path.normalize(path.join(this._areasPath, areaDirname));
+    register: function(areaName, areaRoute) {
+        var areaDirectory = areaName;
+        if (areaName === this.rootAreaName) { areaDirectory = path.sep + '..'; }
+        var area, areaPath = path.normalize(path.join(this._areasPath, areaDirectory));
         if (fs.statSync(areaPath).isDirectory()) {
             // read 'areas/account/ctrls'
             var ctrlsPath = path.join(areaPath, 'ctrls');
             if (fs.existsSync(ctrlsPath)) {
                 // obj
                 area = {
-                    areaName: areaName,
-                    areaPath: areaPath,
+                    name: areaName,
+                    path: areaPath,
+                    route: areaRoute,
                     controllers: {}
                 };
                 // read 'areas/account/ctrls/logon.js'
@@ -72,9 +79,12 @@ module.exports = {
     },
     
     registerAll: function(app) {
-        this.register(this.rootAreaName);
+        this.register(this.rootAreaName, ('/:controller/:action'));
         var self = this, areasDirs = fs.readdirSync(this._areasPath);
-        utils.each(areasDirs, function(i, areaName) { self.register(areaName); });
+        utils.each(areasDirs, function(i, areaName) {
+            var route = ('/' + areaName + '/:controller/:action');
+            self.register(areaName, route);
+        });
         return this.all();
     }
 };

@@ -82,8 +82,8 @@ module.exports = {
         this.register(this.rootAreaName, ('/:controller/:action'));
         var self = this, areasDirs = fs.readdirSync(this._areasPath);
         utils.each(areasDirs, function(i, areaName) {
-            var route = ('/' + areaName + '/:controller/:action');
-            self.register(areaName, route);
+            var areaRoute = ('/' + areaName + '/:controller/:action');
+            self.register(areaName, areaRoute);
         });
         return this.all();
     }

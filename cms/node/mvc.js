@@ -27,7 +27,7 @@ controller.define = function(name, impl) {
 
 controller.prototype = {
 
-    _name: null, _impl: null, _actions: null,
+    _name: null, _impl: null,
 
     constructor: controller,
 

@@ -13,9 +13,42 @@ var fs = require('fs'),
     caching = require('./caching');
 
 
+var CONST_Areas = 'areas',
+    CONST_Ctrls = 'ctrls',
+    CONST_AreaEx = 'areaEx.js';
+
+
+var mvcArea = function(set) {
+    utils.extend(this, set);
+    this.controllers = {};
+};
+
+mvcArea.prototype = {
+
+    name: null, path: null, route: null,
+
+    constructor: mvcArea, controllers: null,
+
+    loadController: function(filePath) {
+        if (fs.statSync(filePath).isFile()) {
+            var ctrl = require(filePath);
+            if (ctrl && utils.isFunction(ctrl.name)) {
+                if (!ctrl.name()) {
+                    var extname = path.extname(filePath);
+                    var baseName = path.basename(filePath, extname);
+                    ctrl.name(baseName.toLowerCase());
+                }
+                ctrl.path(filePath);
+                this.controllers[ctrl.name()] = ctrl;
+            }
+        }
+    }
+};
+
+
 module.exports = {
 
-    _areasPath: utils.absPath('areas'),
+    _areasPath: utils.absPath(CONST_Areas),
 
     _areas: caching.region('mvc-areas-cache'),
 
@@ -40,38 +73,36 @@ module.exports = {
         var areaDirectory = areaName;
         if (areaName === this.rootAreaName) { areaDirectory = path.sep + '..'; }
         var area, areaPath = path.normalize(path.join(this._areasPath, areaDirectory));
-        if (fs.statSync(areaPath).isDirectory()) {
+        if (fs.existsSync(areaPath) && fs.statSync(areaPath).isDirectory()) {
+            // area obj
+            area = new mvcArea({
+                name: areaName,
+                path: areaPath,
+                route: areaRoute
+            });
             // read 'areas/account/ctrls'
-            var ctrlsPath = path.join(areaPath, 'ctrls');
-            if (fs.existsSync(ctrlsPath)) {
-                // obj
-                area = {
-                    name: areaName,
-                    path: areaPath,
-                    route: areaRoute,
-                    controllers: {}
-                };
+            var ctrlsPath = path.join(areaPath, CONST_Ctrls);
+            if (fs.existsSync(ctrlsPath) && fs.statSync(ctrlsPath).isDirectory()) {
                 // read 'areas/account/ctrls/logon.js'
                 var ctrlFiles = fs.readdirSync(ctrlsPath);
                 utils.each(ctrlFiles, function(i, ctrlFileName) {
-                    var ctrlFilePath = path.join(ctrlsPath, ctrlFileName);
-                    if (fs.statSync(ctrlFilePath).isFile()) {
-                        //
-                        var ctrl = require(ctrlFilePath);
-                        if (ctrl && utils.isFunction(ctrl.name)) {
-                            if (!ctrl.name()) {
-                                var baseName = path.basename(ctrlFileName, '.js');
-                                ctrl.name(baseName.toLowerCase());
-                            }
-                            area.controllers[ctrl.name()] = ctrl;
-                        }
-                    }
+                    area.loadController(path.join(ctrlsPath, ctrlFileName));
                 });
+            }
+            // call areaEx if exists
+            if (area.name !== this.rootAreaName) {
+                var areaExFile = path.join(areaPath, CONST_AreaEx);
+                if (fs.existsSync(areaExFile) && fs.statSync(areaExFile).isFile()) {
+                    var areaEx = require(areaExFile);
+                    if (areaEx && utils.isFunction(areaEx.onRegister)) {
+                        areaEx.onRegister(area);
+                    }
+                }
             }
         }
         //
         if (area) {
-            this._areas.set(areaName, area);
+            this._areas.set(area.name, area);
             this.events.emit('register', area);
         }
         // ret

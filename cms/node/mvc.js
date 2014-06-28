@@ -11,7 +11,7 @@ var events = require('events'),
     utils = require('./utilities');
 
 
-var controller = function(name, impl) {
+var mvcController = function(name, impl) {
     if (utils.isFunction(name)) { 
         this._name = null;
         this._impl = name;
@@ -21,38 +21,42 @@ var controller = function(name, impl) {
     }
 };
 
-controller.define = function(name, impl) {
-    return new controller(name, impl);
+mvcController.define = function(name, impl) {
+    return new mvcController(name, impl);
 };
 
-controller.prototype = {
+mvcController.prototype = {
 
-    _name: null, _impl: null,
+    _name: null, _impl: null, _path: null,
 
-    constructor: controller,
+    constructor: mvcController,
 
     name: function(n) {
         return (n === undefined) ? (this._name) : (this._name = n);
     },
 
+    path: function(p) {
+        return (p === undefined) ? (this._path) : (this._path = p);
+    },
+
     initialize: function(req, res) {
-        var scope = new controllerScope();
+        var scope = new mvcControllerScope();
         this._impl.call(scope, req, res);
         return scope;
     }
 };
 
 
-var controllerScope = function() {
+var mvcControllerScope = function() {
     this._actions = {};
     this._events = new events.EventEmitter();
 };
 
-controllerScope.prototype = {
+mvcControllerScope.prototype = {
 
     _actions: null, _events: null, 
 
-    constructor: controllerScope,
+    constructor: mvcControllerScope,
 
     on: function() {
         var args = utils.arg2arr(arguments);
@@ -98,37 +102,28 @@ controllerScope.prototype = {
 var mvcHandler = function(set) {
 
     var parse = require('url').parse;
-    var route = require('path-match')({
+    var macher = require('path-match')({
         sensitive: false,
         strict: false,
         end: false
     });
 
     //
-    var matches = [
-        route('/:controller/:action'),
-        route('/:area/:controller/:action')
-    ];
-
-    //
     return function(req, res, next) {
         var allAreas = areas.all(), matched = false;
-        utils.each(matches, function(i, match) {
+        utils.each(allAreas, function(i, area) {
+            var match = macher(area.route);
             var params = match(parse(req.url).pathname);
             if (params !== false) {
-                if (!params.area) { params.area = areas.rootAreaName; }
                 utils.each(params, function(key, val) {
                     params[key] = val.toLowerCase();
                 });
-                var area = allAreas[params.area];
-                if (area) {
-                    var ctrl = area.controllers[params.controller];
-                    if (ctrl) {
-                        var scope = ctrl.initialize(req, res);
-                        var actions = scope.actions();
-                        var act = actions[params.action];
-                        debugger;
-                    }
+                var ctrl = area.controllers[params.controller];
+                if (ctrl) {
+                    var scope = ctrl.initialize(req, res);
+                    var actions = scope.actions();
+                    var act = actions[params.action];
+                    debugger;
                 }
             }
         });
@@ -142,6 +137,6 @@ var mvcHandler = function(set) {
 module.exports = {
     areas: areas,
     handler: mvcHandler,
-    controller: controller.define,
-    controllerScope: controllerScope
+    controller: mvcController.define,
+    controllerScope: mvcControllerScope
 };

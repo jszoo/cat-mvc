@@ -21,13 +21,16 @@ var CONST_Areas = 'areas',
 var mvcArea = function(set) {
     utils.extend(this, set);
     this.controllers = {};
+    this.extensions = {};
 };
 
 mvcArea.prototype = {
 
     name: null, path: null, route: null,
 
-    constructor: mvcArea, controllers: null,
+    controllers: null, extensions:null,
+
+    constructor: mvcArea,
 
     loadController: function(filePath) {
         if (fs.statSync(filePath).isFile()) {
@@ -42,6 +45,21 @@ mvcArea.prototype = {
                 this.controllers[ctrl.name()] = ctrl;
             }
         }
+    },
+
+    loadExtension: function(filePath) {
+        if (fs.existsSync(filePath) && fs.statSync(filePath).isFile()) {
+            this.extensions[filePath.toLowerCase()] = require(filePath);
+        }
+    },
+
+    fireExtension: function(funcName) {
+        var self = this;
+        utils.each(this.extensions, function(key, ext) {
+            if (ext && utils.isFunction(ext[funcName])) {
+                ext[funcName](self);
+            }
+        });
     }
 };
 
@@ -65,8 +83,12 @@ module.exports = {
     },
 
     unload: function(areaName) {
-        this.events.emit('unload', areaName);
-        return this._areas.remove(areaName);
+        var area = this.get(areaName);
+        if (area) {
+            area.fireExtension('onUnload');
+            this.events.emit('unload', area);
+            return this._areas.remove(areaName);
+        }
     },
 
     register: function(areaName, areaRoute) {
@@ -80,6 +102,9 @@ module.exports = {
                 path: areaPath,
                 route: areaRoute
             });
+            // call areaEx.js if exists
+            var areaExFile = path.join(area.path, CONST_AreaEx);
+            area.loadExtension(areaExFile);
             // read 'areas/account/ctrls'
             var ctrlsPath = path.join(areaPath, CONST_Ctrls);
             if (fs.existsSync(ctrlsPath) && fs.statSync(ctrlsPath).isDirectory()) {
@@ -89,21 +114,12 @@ module.exports = {
                     area.loadController(path.join(ctrlsPath, ctrlFileName));
                 });
             }
-            // call areaEx if exists
-            if (area.name !== this.rootAreaName) {
-                var areaExFile = path.join(areaPath, CONST_AreaEx);
-                if (fs.existsSync(areaExFile) && fs.statSync(areaExFile).isFile()) {
-                    var areaEx = require(areaExFile);
-                    if (areaEx && utils.isFunction(areaEx.onRegister)) {
-                        areaEx.onRegister(area);
-                    }
-                }
-            }
         }
         //
         if (area) {
-            this._areas.set(area.name, area);
+            area.fireExtension('onRegister');
             this.events.emit('register', area);
+            this._areas.set(area.name, area);
         }
         // ret
         return area;

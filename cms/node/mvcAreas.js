@@ -15,7 +15,7 @@ var fs = require('fs'),
 
 var CONST_Areas = 'areas',
     CONST_Ctrls = 'ctrls',
-    CONST_AreaEx = 'areaEx.js';
+    CONST_Events = 'areaEvents.js';
 
 
 var mvcArea = function(set) {
@@ -102,11 +102,10 @@ module.exports = {
                 path: areaPath,
                 route: areaRoute
             });
-            // call areaEx.js if exists
-            var areaExFile = path.join(area.path, CONST_AreaEx);
-            area.loadExtension(areaExFile);
+            // load default extension
+            area.loadExtension(path.join(area.path, CONST_Events));
             // read 'areas/account/ctrls'
-            var ctrlsPath = path.join(areaPath, CONST_Ctrls);
+            var ctrlsPath = path.join(area.path, CONST_Ctrls);
             if (fs.existsSync(ctrlsPath) && fs.statSync(ctrlsPath).isDirectory()) {
                 // read 'areas/account/ctrls/logon.js'
                 var ctrlFiles = fs.readdirSync(ctrlsPath);

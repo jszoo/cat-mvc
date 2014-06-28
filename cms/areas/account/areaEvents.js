@@ -8,10 +8,9 @@
 
 module.exports = {
 
-	onRegister: function(area) {
-	},
+    onRegister: function(area) {
+    },
 
-	onUnload: function(area) {
-		
-	}
+    onUnload: function(area) {
+    }
 };

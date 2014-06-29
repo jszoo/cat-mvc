@@ -11,18 +11,19 @@ var events = require('events'),
     utils = require('./utilities');
 
 
-var mvcController = function(name, impl) {
-    if (utils.isFunction(name)) { 
-        this._name = null;
-        this._impl = name;
-    } else {
-        this._name = name;
-        this._impl = impl;
-    }
+var mvcController = function(set) {
+    utils.extend(this, set);
 };
 
 mvcController.define = function(name, impl) {
-    return new mvcController(name, impl);
+    if (utils.isFunction(name)) {
+        impl = name;
+        name = null;
+    }
+    return new mvcController({
+        _name: name,
+        _impl: impl
+    });
 };
 
 mvcController.prototype = {

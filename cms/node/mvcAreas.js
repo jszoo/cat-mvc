@@ -63,7 +63,7 @@ mvcArea.prototype = {
 
     fireExtension: function(funcName) {
         var self = this;
-        utils.each(this.extensions, function(key, ext) {
+        utils.each(this.extensions, function(k, ext) {
             if (ext && utils.isFunction(ext[funcName])) {
                 ext[funcName](self);
             }

@@ -8,8 +8,8 @@ var mvc = require('../../../node/mvc');
 
 module.exports = mvc.controller(function(req, res) {
 
-    this.on('actionExecuting', function() { });
-    this.on('actionExecuted', function() { });
+    this.on('actionExecuting', function(action) { });
+    this.on('actionExecuted', function(action) { });
 
 
     this.action('index', function() {

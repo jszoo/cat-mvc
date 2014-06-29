@@ -8,11 +8,14 @@
 
 var events = require('events'),
     areas = require('./mvcAreas'),
+    inject = require('./mvcInject'),
     utils = require('./utilities');
 
 
 var mvcController = function(set) {
     utils.extend(this, set);
+    this._actions = {};
+    this._events = new events.EventEmitter();
 };
 
 mvcController.define = function(name, impl) {
@@ -30,34 +33,20 @@ mvcController.prototype = {
 
     _name: null, _impl: null, _path: null,
 
+    _actions: null, _events: null,
+
     constructor: mvcController,
 
-    name: function(n) {
-        return (n === undefined) ? (this._name) : (this._name = n, this);
-    },
-
-    path: function(p) {
-        return (p === undefined) ? (this._path) : (this._path = p, this);
-    },
+    name: function(p) { return (p === undefined) ? (this._name) : (this._name = p, this); },
+    path: function(p) { return (p === undefined) ? (this._path) : (this._path = p, this); },
+    impl: function(p) { return (p === undefined) ? (this._impl) : (this._impl = p, this); },
+    actions: function() { return this._actions; },
+    events: function() { return this._events; },
 
     initialize: function(req, res) {
-        var scope = new mvcControllerScope();
-        this._impl.call(scope, req, res);
-        return scope;
-    }
-};
-
-
-var mvcControllerScope = function() {
-    this._actions = {};
-    this._events = new events.EventEmitter();
-};
-
-mvcControllerScope.prototype = {
-
-    _actions: null, _events: null, 
-
-    constructor: mvcControllerScope,
+        this._impl.call(this, req, res);
+        return this;
+    },
 
     on: function() {
         var args = utils.arg2arr(arguments);
@@ -65,35 +54,62 @@ mvcControllerScope.prototype = {
         return this;
     },
 
-    getActions: function() {
-        return this._actions;
-    },
-
-    action: function(name, set, impl) {
+    action: function(name, sett, impl) {
         if (!name) {
             throw new Error('action name is required.');
         }
         if (arguments.length === 2) {
-            impl = set;
-            set = {};
+            impl = sett;
+            sett = {};
         } else if(arguments.length === 3) {
-            if (utils.isString(set)) {
-                set = { method: set };
-            } else if (!utils.isObject(set)) {
-                set = {};
+            if (utils.isString(sett)) {
+                sett = { method: sett };
+            } else if (!utils.isObject(sett)) {
+                sett = {};
             }
         }
         if (!utils.isFunction(impl)) {
             throw new Error('action impl is required.');
         }
-        //
-        var act = this._actions[name];
-        if (!act) { act = this._actions[name] = {}; }
-        act.name = name;
-        act.impl = impl;
-        act.method = set.method;
-        //act.filters = set.filters;
+        // new
+        this._actions[name.toLowerCase()] = new mvcAction({
+            ctrl: this,
+            name: name,
+            impl: impl,
+            sett: sett
+        });
+        // ret
         return this;
+    }
+};
+
+
+var mvcAction = function(set) {
+    utils.extend(this, set);
+};
+
+mvcAction.prototype = {
+
+    ctrl: null, name: null, impl: null, sett: null,
+    
+    constructor: mvcAction,
+
+    inject: function(req) {
+        var values = [];
+        var paramNames = inject.annotate(this.impl);
+        utils.each(paramNames, function(i, name) {
+            //TODO:
+        });
+        return values;
+    },
+
+    execute: function(req, res) {
+        if (utils.isFunction(this.impl)) {
+            var injectedValues = this.inject(req);
+            this.ctrl.events().emit('actionExecuting', this);
+            this.impl.apply(this.ctrl, injectedValues);
+            this.ctrl.events().emit('actionExecuted', this);
+        }
     }
 };
 
@@ -121,10 +137,14 @@ var mvcHandler = function(set) {
                     });
                     var ctrl = area.controllers[params.controller];
                     if (ctrl) {
-                        var scope = ctrl.initialize(req, res);
-                        var actions = scope.getActions();
+                        ctrl.initialize(req, res);
+                        var actions = ctrl.actions();
                         var act = actions[params.action];
-                        debugger;
+                        if (act) {
+                            debugger;
+                            act.execute(req, res);
+                            matched = true;
+                        }
                     }
                 }
             });
@@ -139,6 +159,5 @@ var mvcHandler = function(set) {
 module.exports = {
     areas: areas,
     handler: mvcHandler,
-    controller: mvcController.define,
-    controllerScope: mvcControllerScope
+    controller: mvcController.define
 };

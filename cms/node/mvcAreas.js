@@ -22,15 +22,24 @@ var mvcArea = function(set) {
     utils.extend(this, set);
     this.controllers = {};
     this.extensions = {};
+    this.routes = {};
 };
 
 mvcArea.prototype = {
 
-    name: null, path: null, route: null,
+    name: null, path: null,
 
-    controllers: null, extensions:null,
+    controllers: null, routes: null, extensions:null,
 
     constructor: mvcArea,
+
+    mapRoute: function(routeExp, defaultRoute) {
+        var values = utils.isObject(defaultRoute) ? defaultRoute : {};
+        this.routes[routeExp.toLowerCase()] = {
+            expression: routeExp,
+            defaultRoute: values
+        };
+    },
 
     loadController: function(filePath) {
         if (fs.statSync(filePath).isFile()) {
@@ -91,7 +100,7 @@ module.exports = {
         }
     },
 
-    register: function(areaName, areaRoute) {
+    register: function(areaName, areaRoute, defaultRoute) {
         var areaDirectory = areaName;
         if (areaName === this.rootAreaName) { areaDirectory = path.sep + '..'; }
         var area, areaPath = path.normalize(path.join(this._areasPath, areaDirectory));
@@ -99,9 +108,10 @@ module.exports = {
             // area obj
             area = new mvcArea({
                 name: areaName,
-                path: areaPath,
-                route: areaRoute
+                path: areaPath
             });
+            // map route
+            area.mapRoute(areaRoute, defaultRoute);
             // load default extension
             area.loadExtension(path.join(area.path, CONST_Events));
             // read 'areas/account/ctrls'
@@ -125,11 +135,16 @@ module.exports = {
     },
     
     registerAll: function(app) {
-        this.register(this.rootAreaName, ('/:controller/:action'));
+        this.register(this.rootAreaName, 
+            ('/:controller/:action'),
+            { controller: 'home', action: 'index' }
+        );
         var self = this, areasDirs = fs.readdirSync(this._areasPath);
         utils.each(areasDirs, function(i, areaName) {
-            var areaRoute = ('/' + areaName + '/:controller/:action');
-            self.register(areaName, areaRoute);
+            self.register(areaName, 
+                ('/' + areaName + '/:controller/:action'),
+                { controller: 'home', action: 'index' }
+            );
         });
         return this.all();
     }

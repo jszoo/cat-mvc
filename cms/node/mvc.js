@@ -61,11 +61,10 @@ mvcControllerScope.prototype = {
     on: function() {
         var args = utils.arg2arr(arguments);
         this._events.on.apply(this._events, args);
-        //
         return this;
     },
 
-    actions: function() {
+    getActions: function() {
         return this._actions;
     },
 
@@ -93,7 +92,6 @@ mvcControllerScope.prototype = {
         act.impl = impl;
         act.method = set.method;
         //act.filters = set.filters;
-        //
         return this;
     }
 };
@@ -110,22 +108,25 @@ var mvcHandler = function(set) {
 
     //
     return function(req, res, next) {
+        var pathname = parse(req.url).pathname;
         var allAreas = areas.all(), matched = false;
         utils.each(allAreas, function(i, area) {
-            var match = macher(area.route);
-            var params = match(parse(req.url).pathname);
-            if (params !== false) {
-                utils.each(params, function(key, val) {
-                    params[key] = val.toLowerCase();
-                });
-                var ctrl = area.controllers[params.controller];
-                if (ctrl) {
-                    var scope = ctrl.initialize(req, res);
-                    var actions = scope.actions();
-                    var act = actions[params.action];
-                    debugger;
+            utils.each(area.routes, function(k, route) {
+                var match = macher(route.expression);
+                var params = match(pathname);
+                if (params !== false) {
+                    utils.each(params, function(key, val) {
+                        params[key] = val.toLowerCase();
+                    });
+                    var ctrl = area.controllers[params.controller];
+                    if (ctrl) {
+                        var scope = ctrl.initialize(req, res);
+                        var actions = scope.getActions();
+                        var act = actions[params.action];
+                        debugger;
+                    }
                 }
-            }
+            });
         });
         if (!matched) {
             next();

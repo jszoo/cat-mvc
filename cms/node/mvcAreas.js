@@ -47,11 +47,10 @@ mvcArea.prototype = {
             if (ctrl && utils.isFunction(ctrl.name)) {
                 if (!ctrl.name()) {
                     var extname = path.extname(filePath);
-                    var baseName = path.basename(filePath, extname);
-                    ctrl.name(baseName.toLowerCase());
+                    ctrl.name(path.basename(filePath, extname));
                 }
                 ctrl.path(filePath);
-                this.controllers[ctrl.name()] = ctrl;
+                this.controllers[ctrl.name().toLowerCase()] = ctrl;
             }
         }
     },

@@ -32,11 +32,11 @@ mvcController.prototype = {
     constructor: mvcController,
 
     name: function(n) {
-        return (n === undefined) ? (this._name) : (this._name = n);
+        return (n === undefined) ? (this._name) : (this._name = n, this);
     },
 
     path: function(p) {
-        return (p === undefined) ? (this._path) : (this._path = p);
+        return (p === undefined) ? (this._path) : (this._path = p, this);
     },
 
     initialize: function(req, res) {

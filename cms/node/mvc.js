@@ -45,8 +45,34 @@ mvcController.prototype = {
     events: function() { return this._events; },
 
     initialize: function(req, res) {
-        this._impl.call(this, req, res);
+        var injectedParams = this.injectImpl(req, res);
+        this.impl().apply(this, injectedParams);
         return this;
+    },
+
+    injectImpl: function(req, res) {
+        var params = [], self = this, actionWrap;
+        var paramNames = inject.annotate(this.impl());
+        utils.each(paramNames, function(i, name) {
+            var loweName = name.toLowerCase();
+            if (loweName.charAt(0) === '$') {
+                loweName = loweName.substr(1);
+            }
+            switch(loweName) {
+                case 'req': params.push(req); break;
+                case 'res': params.push(res); break;
+                case 'request': params.push(req); break;
+                case 'response': params.push(res); break;
+                case 'controller': params.push(self); break;
+                case 'events': params.push(self._events); break;
+                case 'action': params.push(actionWrap || (actionWrap = function() { 
+                    var args = utils.arg2arr(arguments);
+                    self.action.apply(self, args);
+                    return actionWrap;
+                })); break;
+            }
+        });
+        return params;
     },
 
     on: function() {
@@ -96,20 +122,20 @@ mvcAction.prototype = {
     
     constructor: mvcAction,
 
-    inject: function(req) {
-        var values = [];
+    injectImpl: function(req) {
+        var params = [];
         var paramNames = inject.annotate(this.impl);
         utils.each(paramNames, function(i, name) {
             //TODO:
         });
-        return values;
+        return params;
     },
 
     execute: function(req, res) {
         if (utils.isFunction(this.impl)) {
-            var injectedValues = this.inject(req);
+            var injectedParams = this.injectImpl(req);
             this.ctrl.events().emit('actionExecuting', this);
-            this.impl.apply(this.ctrl, injectedValues);
+            this.impl.apply(this.ctrl, injectedParams);
             this.ctrl.events().emit('actionExecuted', this);
         }
     }

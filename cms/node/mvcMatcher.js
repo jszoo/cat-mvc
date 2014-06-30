@@ -2,6 +2,9 @@
 * mvcMatcher
 * author: ronglin
 * create date: 2014.6.30
+* reference:
+*   https://www.npmjs.org/package/path-to-regexp
+*   http://forbeslindesay.github.io/express-route-tester/
 */
 
 'use strict';
@@ -29,17 +32,13 @@ module.exports = function (set) {
         var keys = [], re = pathToRegexp(path, keys, set);
         //
         return function (pathname) {
-            var m = re.exec(pathname);
-            if (!m) { return false; }
+            var match = re.exec(pathname);
+            if (!match) { return false; }
             //
             var params = [];
             utils.each(keys, function(i, it) {
-                var value = decode(m[i +1]);
-                if (value && it.repeat) {
-                    value = value.split(it.delimiter);
-                }
                 params.push({
-                    value: value,
+                    value: decode(match[i +1]),
                     name: it.name.toLowerCase()
                 });
             });

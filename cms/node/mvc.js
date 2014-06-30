@@ -52,7 +52,6 @@ var mvcHandler = function(set) {
     };
 };
 
-
 module.exports = {
     areas: mvcAreas,
     handler: mvcHandler,

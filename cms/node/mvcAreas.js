@@ -42,8 +42,8 @@ module.exports = {
         if (area) {
             area.fireExtension('onUnload');
             this.events.emit('unload', area);
-            return this._areas.remove(areaName);
         }
+        return this._areas.remove(areaName);
     },
 
     register: function(areaName, areaRoute, defaultRoute) {

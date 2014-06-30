@@ -34,14 +34,15 @@ mvcArea.prototype = {
             expression: routeExp,
             defaultRoute: values
         };
+        return this;
     },
 
     removeRoute: function(routeExp) {
-        return (delete this.routes[routeExp.toLowerCase()]);
+        return (delete this.routes[routeExp.toLowerCase()], this);
     },
 
     clearRoutes: function() {
-        this.routes = {};
+        return (this.routes = {}, this);
     },
 
     loadController: function(filePath) {
@@ -64,30 +65,32 @@ mvcArea.prototype = {
                 });
             }
         }
+        return this;
     },
 
     unloadController: function(filePath) {
         var extName = path.extname(filePath);
         var ctrlName = path.basename(filePath, extName);
-        return (delete this.controllers[ctrlName.toLowerCase()]);
+        return (delete this.controllers[ctrlName.toLowerCase()], this);
     },
 
     clearControllers: function() {
-        this.controllers = {};
+        return (this.controllers = {}, this);
     },
 
     loadExtension: function(filePath) {
         if (fs.existsSync(filePath) && fs.statSync(filePath).isFile()) {
             this.extensions[filePath.toLowerCase()] = require(filePath);
         }
+        return this;
     },
 
     unloadExtension: function(filePath) {
-        return (delete this.extensions[filePath.toLowerCase()]);
+        return (delete this.extensions[filePath.toLowerCase()], this);
     },
 
     clearExtensions: function() {
-        this.extensions = {};
+        return (this.extensions = {}, this);
     },
 
     fireExtension: function(funcName) {
@@ -97,6 +100,7 @@ mvcArea.prototype = {
                 ext[funcName](self);
             }
         });
+        return this;
     }
 };
 

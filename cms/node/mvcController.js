@@ -63,7 +63,6 @@ mvcController.prototype = {
                 loweName = loweName.substr(1);
             }
             switch(loweName) {
-                default: params.push(null); break;
                 case 'req': params.push(req); break;
                 case 'res': params.push(res); break;
                 case 'request': params.push(req); break;
@@ -75,6 +74,7 @@ mvcController.prototype = {
                     self.action.apply(self, args);
                     return actionWrap;
                 })); break;
+                default: params.push(null); break;
             }
         });
         //

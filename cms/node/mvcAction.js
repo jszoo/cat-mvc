@@ -66,6 +66,7 @@ mvcAction.prototype = {
             this.impl.apply(this.ctrl, injectedParams);
             this.ctrl.events().emit('actionExecuted', this);
         }
+        return this;
     }
 };
 

@@ -26,6 +26,7 @@ var mvcArea = function(set) {
 };
 
 mvcArea.isArea = true;
+
 mvcArea.prototype = {
 
     name: null, path: null,

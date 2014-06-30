@@ -9,6 +9,7 @@
 var pathMatch = require('path-match'),
     parse = require('url').parse,
     utils = require('./utilities'),
+    mvcView = require('./mvcView'),
     mvcAreas = require('./mvcAreas'),
     mvcController = require('./mvcController');
 
@@ -54,6 +55,7 @@ var mvcHandler = function(set) {
 };
 
 module.exports = {
+    view: mvcView,
     areas: mvcAreas,
     handler: mvcHandler,
     controller: mvcController.define

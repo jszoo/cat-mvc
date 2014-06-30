@@ -17,7 +17,7 @@ var fs = require('fs'),
 var instances = caching.region('configuration-instances-cache');
 
 var configuration = function (path, cb) {
-    path = utils.absPath(path);
+    path = utils.absolutePath(path);
     //
     var sett = instances.get(path);
     if (sett) { return sett; }

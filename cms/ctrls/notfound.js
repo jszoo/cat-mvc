@@ -9,6 +9,7 @@ var mvc = require('../node/mvc');
 module.exports = mvc.controller(function(req, res) {
 
     this.action('index', function() {
+    	res.render('admin');
     });
 
 });

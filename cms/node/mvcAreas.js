@@ -21,7 +21,7 @@ var CONST_Areas = 'areas',
 
 module.exports = {
 
-    _areasPath: utils.absPath(CONST_Areas),
+    _areasPath: utils.absolutePath(CONST_Areas),
 
     _areas: caching.region('mvc-areas-cache'),
 

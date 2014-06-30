@@ -10,10 +10,10 @@ var app = express();
 
 // web config
 var configuration = require('./node/configuration');
-var config = configuration.load('/web.config');
+var config = configuration.load('web.config');
 
 // view engine
-app.set('views', utils.absPath('views'));
+app.set('views', utils.absolutePath('views'));
 app.set('view engine', config.get('viewEngine.name'));
 
 // log
@@ -45,8 +45,8 @@ app.use(session({
 
 // dir mapping
 var favicon = require('serve-favicon');
-app.use(favicon(utils.absPath(config.get('favicon.source'))));
-app.use(express.static(utils.absPath('fe')));
+app.use(favicon(utils.absolutePath(config.get('favicon.source'))));
+app.use(express.static(utils.absolutePath('fe')));
 
 // mvc
 var mvc = require('./node/mvc');

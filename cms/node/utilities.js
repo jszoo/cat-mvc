@@ -12,7 +12,7 @@ var path = require('path'),
 
 module.exports = utils.extend({}, utils, {
 
-    absPath: function() {
+    absolutePath: function() {
         var args = utils.arg2arr(arguments);
         if (path.sep === '\\') {
             utils.each(args, function(i, val) {
@@ -21,9 +21,9 @@ module.exports = utils.extend({}, utils, {
         }
         args.unshift(cmsDir);
         return path.join.apply(path, args);
-    }，
+    },
 
-    isAbsolute = function(path) {
+    isAbsolute: function(path) {
         if ('/' == path.charAt(0)) { return true; }
         if (':' == path.charAt(1) && '\\' == path.charAt(2)) { return true; }
         if ('\\\\' == path.substring(0, 2)) { return true; } // Microsoft Azure absolute path

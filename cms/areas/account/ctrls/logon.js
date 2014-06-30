@@ -15,7 +15,8 @@ module.exports = mvc.controller(function(req, res) {
     this.action('index', function() {
     });
 
-    this.action('index', 'post', function() {
+    this.action('index', 'post', function(UserName, Password, User) {
+        res.json({ Success: true });
     });
 
     this.action('forgotPassword', function() {

@@ -12,6 +12,8 @@ var mvcView = function(name, options) {
     debugger;
 };
 
+mvcView.isView = true;
+
 mvcView.prototype = {
     
     constructor: mvcView,

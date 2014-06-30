@@ -52,14 +52,22 @@ mvcArea.prototype = {
 
     loadController: function(filePath) {
         if (fs.statSync(filePath).isFile()) {
-            var ctrl = require(filePath);
-            if (ctrl && ctrl.__proto__.constructor.isController === true) {
-                if (!ctrl.name()) {
-                    var extName = path.extname(filePath);
-                    ctrl.name(path.basename(filePath, extName));
+            var self = this, coreLoad = function(ctrl) {
+                if (ctrl && ctrl.__proto__.constructor.isController === true) {
+                    if (!ctrl.name()) {
+                        var extName = path.extname(filePath);
+                        ctrl.name(path.basename(filePath, extName));
+                    }
+                    ctrl.path(filePath);
+                    self.controllers[ctrl.name().toLowerCase()] = ctrl;
+                    return true;
                 }
-                ctrl.path(filePath);
-                this.controllers[ctrl.name().toLowerCase()] = ctrl;
+            };
+            var module = require(filePath);
+            if (module && coreLoad(module) !== true) {
+                utils.each(module, function() {
+                    coreLoad(this);
+                });
             }
         }
     },

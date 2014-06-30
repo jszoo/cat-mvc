@@ -21,6 +21,13 @@ module.exports = utils.extend({}, utils, {
         }
         args.unshift(cmsDir);
         return path.join.apply(path, args);
+    }，
+
+    isAbsolute = function(path) {
+        if ('/' == path.charAt(0)) { return true; }
+        if (':' == path.charAt(1) && '\\' == path.charAt(2)) { return true; }
+        if ('\\\\' == path.substring(0, 2)) { return true; } // Microsoft Azure absolute path
+        return false;
     }
 
 });

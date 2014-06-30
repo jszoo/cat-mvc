@@ -62,15 +62,25 @@ mvcAction.prototype = {
 
     execute: function(req, res) {
         if (utils.isFunction(this.impl)) {
+            // execute action
             var injectedParams = this.injectImpl(req);
             this.ctrl.events().emit('actionExecuting', this);
             var ret = this.impl.apply(this.ctrl, injectedParams);
             this.ctrl.events().emit('actionExecuted', this);
-            if (ret instanceof actionResults.baseResult) {
-                //TODO:
-            } else {
-                //TODO:
+            // execute action result
+            if (!(ret instanceof actionResults.baseResult)) {
+                if (ret === undefined || ret === null || ret === '') {
+                    ret = new actionResults.emptyResult();
+                } else {
+                    ret = new actionResults.contentResult({
+                        content: ret.toString(),
+                        contentType: 'text/html'
+                    });
+                }
             }
+            this.ctrl.events().emit('resultExecuting', this);
+            ret.execute(req, res);
+            this.ctrl.events().emit('resultExecuted', this);
         }
         return this;
     }

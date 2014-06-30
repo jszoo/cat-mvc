@@ -24,7 +24,7 @@ mvcArea.prototype = {
 
     name: null, path: null,
 
-    controllers: null, routes: null, extensions:null,
+    controllers: null, routes: null, extensions: null,
 
     constructor: mvcArea,
 

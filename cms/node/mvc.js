@@ -6,15 +6,16 @@
 
 'use strict';
 
-var utils = require('./utilities'),
+var pathMatch = require('path-match'),
+    parse = require('url').parse,
+    utils = require('./utilities'),
     mvcAreas = require('./mvcAreas'),
     mvcController = require('./mvcController');
 
 
 var mvcHandler = function(set) {
 
-    var parse = require('url').parse;
-    var macher = require('path-match')({
+    var macher = pathMatch({
         sensitive: false,
         strict: false,
         end: false

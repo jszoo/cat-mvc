@@ -25,6 +25,7 @@ var mvcArea = function(set) {
     this.routes = {};
 };
 
+mvcArea.isArea = true;
 mvcArea.prototype = {
 
     name: null, path: null,
@@ -44,7 +45,7 @@ mvcArea.prototype = {
     loadController: function(filePath) {
         if (fs.statSync(filePath).isFile()) {
             var ctrl = require(filePath);
-            if (ctrl && utils.isFunction(ctrl.name)) {
+            if (ctrl && ctrl.__proto__.constructor.isController === true) {
                 if (!ctrl.name()) {
                     var extname = path.extname(filePath);
                     ctrl.name(path.basename(filePath, extname));
@@ -142,15 +143,17 @@ module.exports = {
     },
     
     registerAll: function(app) {
-        this.register(this.rootAreaName, 
+        this.register(
+            (this.rootAreaName),
             ('/:controller/:action'),
-            { controller: 'home', action: 'index' }
+            ({ controller: 'home', action: 'index' })
         );
         var self = this, areasDirs = fs.readdirSync(this._areasPath);
         utils.each(areasDirs, function(i, areaName) {
-            self.register(areaName, 
+            self.register(
+                (areaName),
                 ('/' + areaName + '/:controller/:action'),
-                { controller: 'home', action: 'index' }
+                ({ controller: 'home', action: 'index' })
             );
         });
         return this.all();

@@ -29,6 +29,7 @@ mvcController.define = function(name, impl) {
     });
 };
 
+mvcController.isController = true;
 mvcController.prototype = {
 
     _name: null, _impl: null, _path: null,
@@ -88,6 +89,7 @@ var mvcAction = function(set) {
     utils.extend(this, set);
 };
 
+mvcAction.isAction = true;
 mvcAction.prototype = {
 
     ctrl: null, name: null, impl: null, sett: null,

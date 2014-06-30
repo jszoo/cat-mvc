@@ -51,8 +51,11 @@ mvcController.prototype = {
     },
 
     injectImpl: function(req, res) {
-        var params = [], self = this, actionWrap;
+        var params = [];
         var paramNames = inject.annotate(this.impl());
+        if (paramNames.length === 0) { return params; }
+        //
+        var self = this, actionWrap;
         utils.each(paramNames, function(i, name) {
             var loweName = name.toLowerCase();
             if (loweName.charAt(0) === '$') {
@@ -73,6 +76,7 @@ mvcController.prototype = {
                 })); break;
             }
         });
+        //
         return params;
     },
 
@@ -124,8 +128,11 @@ mvcAction.prototype = {
     constructor: mvcAction,
 
     injectImpl: function(req) {
-        var params = [], body = {}, query = {};
+        var params = [];
         var paramNames = inject.annotate(this.impl);
+        if (paramNames.length === 0) { return params; }
+        //
+        var body = {}, query = {};
         var lowerRootNs = function(namespace) {
             var index = namespace.search(/\.|\[|\]/);
             if (index > -1) {
@@ -153,6 +160,7 @@ mvcAction.prototype = {
                 params.push(null);
             }
         });
+        //
         return params;
     },
 

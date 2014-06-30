@@ -9,12 +9,14 @@
 var events = require('events'),
 	utils = require('./utilities'),
     mvcAction = require('./mvcAction'),
-    mvcInjector = require('./mvcInjector');
+    mvcInjector = require('./mvcInjector'),
+    mvcResults = require('./mvcResults');
 
 
 var mvcController = function(set) {
     utils.extend(this, set);
     this._actions = {};
+    this._tempdata = {};
     this._events = new events.EventEmitter();
 };
 
@@ -35,13 +37,14 @@ mvcController.prototype = {
 
     _name: null, _impl: null, _path: null,
 
-    _actions: null, _events: null,
+    _actions: null, _tempdata: null, _events: null,
 
     constructor: mvcController,
 
     name: function(p) { return (p === undefined) ? (this._name) : (this._name = p, this); },
     path: function(p) { return (p === undefined) ? (this._path) : (this._path = p, this); },
     impl: function(p) { return (p === undefined) ? (this._impl) : (this._impl = p, this); },
+    tempdata: function(p) { return (p === undefined) ? (this._tempdata) : (this._tempdata = p, this); },
     actions: function() { return this._actions; },
     events: function() { return this._events; },
 
@@ -69,6 +72,7 @@ mvcController.prototype = {
                 case 'response': params.push(res); break;
                 case 'controller': params.push(self); break;
                 case 'events': params.push(self._events); break;
+                case 'tempdata': params.push(self.tempdata()); break;
                 case 'action': params.push(actionWrap || (actionWrap = function() { 
                     var args = utils.arg2arr(arguments);
                     self.action.apply(self, args);
@@ -113,6 +117,46 @@ mvcController.prototype = {
         });
         // ret
         return this;
+    },
+
+    empty: function() {
+        return new mvcResults.emptyResult();
+    },
+
+    httpNotFound: function(statusDescription) {
+        return new mvcResults.httpNotFoundResult(statusDescription);
+    },
+
+    file: function(fileBytes, contentType, fileDownloadName) {
+        return new mvcResults.fileResult(fileBytes, contentType, fileDownloadName);
+    },
+
+    json: function(data, contentType) {
+        return new mvcResults.jsonResult(data, contentType);
+    },
+
+    partialView: function(viewName) {
+        return new mvcResults.partialViewResult(viewName);
+    },
+
+    view: function(viewName, model) {
+        return new mvcResults.viewResult(viewName, model);
+    },
+
+    content: function(content, contentType) {
+        return new mvcResults.contentResult(content, contentType);
+    },
+
+    redirect: function(url) {
+        return new mvcResults.redirectResult(url);
+    },
+
+    redirectToAction: function(actionName, controllerName, routeValues) {
+        return new mvcResults.redirectToActionResult(actionName, controllerName, routeValues);
+    },
+
+    redirectToActionPermanent: function(actionName, controllerName, routeValues) {
+        return new mvcResults.redirectToActionPermanentResult(actionName, controllerName, routeValues);
     }
 };
 

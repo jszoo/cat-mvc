@@ -8,8 +8,8 @@
 
 var events = require('events'),
 	utils = require('./utilities'),
-	mvcInject = require('./mvcInject'),
-    mvcAction = require('./mvcAction');
+    mvcAction = require('./mvcAction'),
+    mvcInjector = require('./mvcInjector');
 
 
 var mvcController = function(set) {
@@ -53,7 +53,7 @@ mvcController.prototype = {
 
     injectImpl: function(req, res) {
         var params = [];
-        var paramNames = mvcInject.annotate(this.impl());
+        var paramNames = mvcInjector.annotate(this.impl());
         if (!paramNames || paramNames.length === 0) { return params; }
         //
         var self = this, actionWrap;

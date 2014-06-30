@@ -46,7 +46,7 @@ module.exports = {
         return this._areas.remove(areaName);
     },
 
-    register: function(areaName, areaRoute, defaultRoute) {
+    register: function(areaName, areaRoute, defaultRouteValues) {
         var areaDirectory = areaName;
         if (areaName === this.rootAreaName) { areaDirectory = path.sep + '..'; }
         var area, areaPath = path.normalize(path.join(this._areasPath, areaDirectory));
@@ -57,7 +57,7 @@ module.exports = {
                 path: areaPath
             });
             // map route
-            area.mapRoute(areaRoute, defaultRoute);
+            area.mapRoute(areaRoute, defaultRouteValues);
             // load default extension
             area.loadExtension(path.join(area.path, CONST_Events));
             // read 'areas/account/ctrls'
@@ -83,14 +83,14 @@ module.exports = {
     registerAll: function(app) {
         this.register(
             (this.rootAreaName),
-            ('/:controller/:action'),
+            ('/:controller?/:action?'),
             ({ controller: 'home', action: 'index' })
         );
         var self = this, areasDirs = fs.readdirSync(this._areasPath);
         utils.each(areasDirs, function(i, areaName) {
             self.register(
                 (areaName),
-                ('/' + areaName + '/:controller/:action'),
+                ('/' + areaName + '/:controller?/:action?'),
                 ({ controller: 'home', action: 'index' })
             );
         });

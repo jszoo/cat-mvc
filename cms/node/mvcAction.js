@@ -7,7 +7,7 @@
 'use strict';
 
 var utils = require('./utilities'),
-    mvcInject = require('./mvcInject');
+    injector = require('./mvcInjector');
 
 var lowerRootNs = function(namespace) {
     var index = namespace.search(/\.|\[|\]/);
@@ -32,7 +32,7 @@ mvcAction.prototype = {
 
     injectImpl: function(req) {
         var params = [];
-        var paramNames = mvcInject.annotate(this.impl);
+        var paramNames = injector.annotate(this.impl);
         if (!paramNames || paramNames.length === 0) { return params; }
         //
         var body = {}, query = {};

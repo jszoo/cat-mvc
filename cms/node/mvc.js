@@ -6,17 +6,17 @@
 
 'use strict';
 
-var pathMatch = require('path-match'),
-    parse = require('url').parse,
+var parse = require('url').parse,
     utils = require('./utilities'),
     mvcView = require('./mvcView'),
     mvcAreas = require('./mvcAreas'),
+    mvcMatcher = require('./mvcMatcher'),
     mvcController = require('./mvcController');
 
 
 var mvcHandler = function(set) {
 
-    var macher = pathMatch({
+    var macher = mvcMatcher({
         sensitive: false,
         strict: false,
         end: false
@@ -27,22 +27,26 @@ var mvcHandler = function(set) {
         var pathname = parse(req.url).pathname;
         var allAreas = mvcAreas.all(), matched = false;
         utils.each(allAreas, function(i, area) {
+            if (matched) { return false; }
             utils.each(area.routes, function(k, route) {
                 var match = macher(route.expression);
                 var params = match(pathname);
                 if (params !== false) {
-                    utils.each(params, function(key, val) {
-                        params[key] = val.toLowerCase();
-                    });
-                    var ctrl = area.controllers[params.controller];
-                    if (ctrl) {
-                        ctrl.initialize(req, res);
-                        var actions = ctrl.actions();
-                        var act = actions[params.action];
-                        if (act) {
-                            debugger;
-                            act.execute(req, res);
-                            matched = true;
+                    var ctrlParam = params[0];
+                    if (ctrlParam) {
+                        var ctrl = area.controllers[ctrlParam.value || route.defaultValues[ctrlParam.name]];
+                        if (ctrl) {
+                            var actParam = params[1];
+                            if (actParam) {
+                                ctrl.initialize(req, res);
+                                var actions = ctrl.actions();
+                                var act = actions[actParam.value || route.defaultValues[actParam.name]];
+                                if (act) {
+                                    act.execute(req, res);
+                                    matched = true;
+                                    return false;
+                                }
+                            }
                         }
                     }
                 }

@@ -28,11 +28,14 @@ mvcArea.prototype = {
 
     constructor: mvcArea,
 
-    mapRoute: function(routeExp, defaultRoute) {
-        var values = utils.isObject(defaultRoute) ? defaultRoute : {};
+    mapRoute: function(routeExp, defaultValues) {
+        var values = {};
+        utils.each(defaultValues, function(key, val) {
+            values[key.toLowerCase()] = val;
+        });
         this.routes[routeExp.toLowerCase()] = {
             expression: routeExp,
-            defaultRoute: values
+            defaultValues: values
         };
         return this;
     },

@@ -55,17 +55,19 @@ mvcArea.prototype = {
             var ctrl = require(filePath);
             if (ctrl && ctrl.__proto__.constructor.isController === true) {
                 if (!ctrl.name()) {
-                    var extname = path.extname(filePath);
-                    ctrl.name(path.basename(filePath, extname));
+                    var extName = path.extname(filePath);
+                    ctrl.name(path.basename(filePath, extName));
                 }
                 ctrl.path(filePath);
-                this.controllers[ctrl.path().toLowerCase()] = ctrl;
+                this.controllers[ctrl.name().toLowerCase()] = ctrl;
             }
         }
     },
 
     unloadController: function(filePath) {
-        return (delete this.controllers[filePath.toLowerCase()]);
+        var extName = path.extname(filePath);
+        var ctrlName = path.basename(filePath, extName);
+        return (delete this.controllers[ctrlName.toLowerCase()]);
     },
 
     clearControllers: function() {

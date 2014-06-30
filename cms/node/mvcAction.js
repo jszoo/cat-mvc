@@ -9,6 +9,14 @@
 var utils = require('./utilities'),
     mvcInject = require('./mvcInject');
 
+var lowerRootNs = function(namespace) {
+    var index = namespace.search(/\.|\[|\]/);
+    if (index > -1) {
+        return namespace.substr(0, index).toLowerCase() + namespace.substr(index);
+    } else {
+        return namespace.toLowerCase();
+    }
+};
 
 var mvcAction = function(set) {
     utils.extend(this, set);
@@ -25,17 +33,9 @@ mvcAction.prototype = {
     injectImpl: function(req) {
         var params = [];
         var paramNames = mvcInject.annotate(this.impl);
-        if (paramNames.length === 0) { return params; }
+        if (!paramNames || paramNames.length === 0) { return params; }
         //
         var body = {}, query = {};
-        var lowerRootNs = function(namespace) {
-            var index = namespace.search(/\.|\[|\]/);
-            if (index > -1) {
-                return namespace.substr(0, index).toLowerCase() + namespace.substr(index);
-            } else {
-                return namespace.toLowerCase();
-            }
-        };
         utils.each(req.body, function(key, val) {
             utils.mapObj(body, lowerRootNs(key), val);
         });

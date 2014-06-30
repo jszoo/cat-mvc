@@ -54,7 +54,7 @@ mvcController.prototype = {
     injectImpl: function(req, res) {
         var params = [];
         var paramNames = mvcInject.annotate(this.impl());
-        if (paramNames.length === 0) { return params; }
+        if (!paramNames || paramNames.length === 0) { return params; }
         //
         var self = this, actionWrap;
         utils.each(paramNames, function(i, name) {

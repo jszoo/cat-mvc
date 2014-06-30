@@ -59,6 +59,7 @@ mvcController.prototype = {
                 loweName = loweName.substr(1);
             }
             switch(loweName) {
+                default: params.push(null); break;
                 case 'req': params.push(req); break;
                 case 'res': params.push(res); break;
                 case 'request': params.push(req); break;
@@ -123,10 +124,34 @@ mvcAction.prototype = {
     constructor: mvcAction,
 
     injectImpl: function(req) {
-        var params = [];
+        var params = [], body = {}, query = {};
         var paramNames = inject.annotate(this.impl);
+        var lowerRootNs = function(namespace) {
+            var index = namespace.search(/\.|\[|\]/);
+            if (index > -1) {
+                return namespace.substr(0, index).toLowerCase() + namespace.substr(index);
+            } else {
+                return namespace.toLowerCase();
+            }
+        };
+        utils.each(req.body, function(key, val) {
+            utils.mapObj(body, lowerRootNs(key), val);
+        });
+        utils.each(req.query, function(key, val) {
+            utils.mapObj(query, lowerRootNs(key), val);
+        });
         utils.each(paramNames, function(i, name) {
-            //TODO:
+            var loweName = name.toLowerCase();
+            if (loweName.charAt(0) === '$') {
+                loweName = loweName.substr(1);
+            }
+            if (loweName in body) {
+                params.push(body[loweName]);
+            } else if (loweName in query) {
+                params.push(query[loweName]);
+            } else {
+                params.push(null);
+            }
         });
         return params;
     },

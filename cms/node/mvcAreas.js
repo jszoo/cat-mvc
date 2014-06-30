@@ -42,6 +42,14 @@ mvcArea.prototype = {
         };
     },
 
+    removeRoute: function(routeExp) {
+        return (delete this.routes[routeExp.toLowerCase()]);
+    },
+
+    clearRoutes: function() {
+        this.routes = {};
+    },
+
     loadController: function(filePath) {
         if (fs.statSync(filePath).isFile()) {
             var ctrl = require(filePath);
@@ -56,10 +64,26 @@ mvcArea.prototype = {
         }
     },
 
+    unloadController: function(filePath) {
+        return (delete this.controllers[filePath.toLowerCase()]);
+    },
+
+    clearControllers: function() {
+        this.controllers = {};
+    },
+
     loadExtension: function(filePath) {
         if (fs.existsSync(filePath) && fs.statSync(filePath).isFile()) {
             this.extensions[filePath.toLowerCase()] = require(filePath);
         }
+    },
+
+    unloadExtension: function(filePath) {
+        return (delete this.extensions[filePath.toLowerCase()]);
+    },
+
+    clearExtensions: function() {
+        this.extensions = {};
     },
 
     fireExtension: function(funcName) {
@@ -69,15 +93,7 @@ mvcArea.prototype = {
                 ext[funcName](self);
             }
         });
-    },
-
-    removeRoute: function(routeExp) { return (delete this.routes[routeExp.toLowerCase()]); },
-    unloadController: function(filePath) { return (delete this.controllers[filePath.toLowerCase()]); },
-    unloadExtension: function(filePath) { return (delete this.extensions[filePath.toLowerCase()]);},
-
-    clearRoutes: function() { this.routes = {}; },
-    clearControllers: function() { this.controllers = {}; },
-    clearExtensions: function() { this.extensions = {}; }
+    }
 };
 
 

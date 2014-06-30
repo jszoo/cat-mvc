@@ -7,7 +7,8 @@
 'use strict';
 
 var utils = require('./utilities'),
-    injector = require('./mvcInjector');
+    injector = require('./mvcInjector'),
+    actionResults = require('./mvcActionResults');
 
 var lowerRootNs = function(namespace) {
     var index = namespace.search(/\.|\[|\]/);
@@ -63,8 +64,13 @@ mvcAction.prototype = {
         if (utils.isFunction(this.impl)) {
             var injectedParams = this.injectImpl(req);
             this.ctrl.events().emit('actionExecuting', this);
-            this.impl.apply(this.ctrl, injectedParams);
+            var ret = this.impl.apply(this.ctrl, injectedParams);
             this.ctrl.events().emit('actionExecuted', this);
+            if (ret instanceof actionResults.baseResult) {
+                //TODO:
+            } else {
+                //TODO:
+            }
         }
         return this;
     }

@@ -10,7 +10,7 @@ var events = require('events'),
 	utils = require('./utilities'),
     mvcAction = require('./mvcAction'),
     mvcInjector = require('./mvcInjector'),
-    mvcResults = require('./mvcResults');
+    actionResults = require('./mvcActionResults');
 
 
 var mvcController = function(set) {
@@ -120,43 +120,43 @@ mvcController.prototype = {
     },
 
     empty: function() {
-        return new mvcResults.emptyResult();
+        return new actionResults.emptyResult();
     },
 
     httpNotFound: function(statusDescription) {
-        return new mvcResults.httpNotFoundResult(statusDescription);
+        return new actionResults.httpNotFoundResult(statusDescription);
     },
 
     file: function(fileBytes, contentType, fileDownloadName) {
-        return new mvcResults.fileResult(fileBytes, contentType, fileDownloadName);
+        return new actionResults.fileResult(fileBytes, contentType, fileDownloadName);
     },
 
     json: function(data, contentType) {
-        return new mvcResults.jsonResult(data, contentType);
+        return new actionResults.jsonResult(data, contentType);
     },
 
     partialView: function(viewName) {
-        return new mvcResults.partialViewResult(viewName);
+        return new actionResults.partialViewResult(viewName);
     },
 
     view: function(viewName, model) {
-        return new mvcResults.viewResult(viewName, model);
+        return new actionResults.viewResult(viewName, model);
     },
 
     content: function(content, contentType) {
-        return new mvcResults.contentResult(content, contentType);
+        return new actionResults.contentResult(content, contentType);
     },
 
     redirect: function(url) {
-        return new mvcResults.redirectResult(url);
+        return new actionResults.redirectResult(url);
     },
 
     redirectToAction: function(actionName, controllerName, routeValues) {
-        return new mvcResults.redirectToActionResult(actionName, controllerName, routeValues);
+        return new actionResults.redirectToActionResult(actionName, controllerName, routeValues);
     },
 
     redirectToActionPermanent: function(actionName, controllerName, routeValues) {
-        return new mvcResults.redirectToActionPermanentResult(actionName, controllerName, routeValues);
+        return new actionResults.redirectToActionPermanentResult(actionName, controllerName, routeValues);
     }
 };
 

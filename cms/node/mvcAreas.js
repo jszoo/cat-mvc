@@ -50,7 +50,7 @@ mvcArea.prototype = {
                     ctrl.name(path.basename(filePath, extname));
                 }
                 ctrl.path(filePath);
-                this.controllers[ctrl.name().toLowerCase()] = ctrl;
+                this.controllers[ctrl.path().toLowerCase()] = ctrl;
             }
         }
     },
@@ -68,7 +68,15 @@ mvcArea.prototype = {
                 ext[funcName](self);
             }
         });
-    }
+    },
+
+    removeRoute: function(routeExp) { return (delete this.routes[routeExp.toLowerCase()]); },
+    unloadController: function(filePath) { return (delete this.controllers[filePath.toLowerCase()]); },
+    unloadExtension: function(filePath) { return (delete this.extensions[filePath.toLowerCase()]);},
+
+    clearRoutes: function() { this.routes = {}; },
+    clearControllers: function() { this.controllers = {}; },
+    clearExtensions: function() { this.extensions = {}; }
 };
 
 

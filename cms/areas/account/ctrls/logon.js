@@ -31,4 +31,40 @@ module.exports = mvc.controller(function(req, res) {
     this.action('resetPassword', 'post', function() {
     });
 
+
+    this.action('admin', function() {
+        if (!req.session.loggedin) {
+            res.redirect('/login');
+        } else {
+            var count = (req.session.count||0);
+            count++;
+            req.session.count = count;
+            res.render('admin', {
+                count: count
+            });
+        }
+    });
+
+    this.action('login', function() {
+        if (req.session.loggedin) {
+            res.redirect('/admin');
+        } else {
+            res.render('login');
+        }
+    });
+
+    this.action('login', 'post', function() {
+        if (req.body['UserName'] === 'admin' && req.body['Password'] === 'admin') {
+            req.session.loggedin = true;
+            res.redirect('/admin');
+        } else {
+            res.redirect('/login');
+        }
+    });
+
+    this.action('logout', function() {
+        req.session.destroy();
+        res.redirect('/');
+    });
+
 });

@@ -55,7 +55,6 @@ app.use(mvc.handler());
 
 // load routes
 var routes = require('.' + config.get('routeTable.source'));
-utils.each(routes.pages(app), function() { app.use(this); });
 utils.each(routes.errors(app), function() { app.use(this); });
 
 // export

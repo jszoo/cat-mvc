@@ -4,66 +4,6 @@
 * create date: 2014.6.23
 */
 
-var express = require('express');
-var router = express.Router();
-
-//
-var pages = [
-
-    router.get('/', function(req, res) {
-        res.render('index', {
-            title: 'Express'
-        });
-    }),
-
-    router.get('/users', function(req, res) {
-        res.render('users', {
-            users: [{
-                username: 'Wilson'
-            }, {
-                username: 'Wilson Zhong'
-            }, {
-                username: 'Zhong Wei'
-            }]
-        })
-    }),
-
-    router.get('/admin', function(req, res) {
-        if (!req.session.loggedin) {
-            res.redirect('/login');
-        } else {
-            var count = (req.session.count||0);
-            count++;
-            req.session.count = count;
-            res.render('admin', {
-                count: count
-            });
-        }
-    }),
-
-    router.get('/login', function(req, res) {
-        if (req.session.loggedin) {
-            res.redirect('/admin');
-        } else {
-            res.render('login');
-        }
-    }),
-
-    router.post('/login', function(req, res) {
-        if (req.body['UserName'] === 'admin' && req.body['Password'] === 'admin') {
-            req.session.loggedin = true;
-            res.redirect('/admin');
-        } else {
-            res.redirect('/login');
-        }
-    }),
-
-    router.get('/logout', function(req, res) {
-        req.session.destroy();
-        res.redirect('/');
-    })
-];
-
 var errors = function(app) {
 
     // catch 404 and forward to error handler
@@ -95,9 +35,6 @@ var errors = function(app) {
 };
 
 module.exports = {
-    pages: function (app) {
-        return pages;
-    },
     errors: function (app) {
         return errors(app);
     }

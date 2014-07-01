@@ -12,12 +12,16 @@ var utils = require('./utilities');
 /* baseResult
 ***************************************/
 var baseResult = exports.baseResult = function(set) {
-    utils.extend(this, set);
+    var self = this;
+    utils.each(set, function (key, val) {
+        if (val) { self[key] = val;}
+    });
 };
 
 baseResult.prototype = {
     constructor: baseResult,
     execute: function(req, res) {
+        throw new Error('"execute" function needs override by sub classes.');
     }
 };
 
@@ -31,7 +35,8 @@ var emptyResult = exports.emptyResult = function(set) {
 utils.inherit(emptyResult, baseResult, {
 
     execute:function(req, res) {
-        
+        res.set('Content-Type', 'text/html');
+        res.send('');
     }
 });
 
@@ -72,10 +77,31 @@ var jsonResult = exports.jsonResult = function(set) {
 
 utils.inherit(jsonResult, baseResult, {
 
-    data: null, contentType: null,
+    data: null, contentType: 'application/json',
 
     execute:function(req, res) {
+        res.set('Content-Type', this.contentType);
         res.json(this.data);
+    }
+});
+
+
+/* jsonpResult
+***************************************/
+var jsonpResult = exports.jsonpResult = function(set) {
+    jsonpResult.superclass.constructor.call(this, set);
+};
+
+utils.inherit(jsonpResult, baseResult, {
+
+    data: null, contentType: 'application/json', callbackName: 'callback',
+
+    execute:function(req, res) {
+        var old = res.app.get('jsonp callback name');
+        res.app.set('jsonp callback name', this.callbackName);
+        res.set('Content-Type', this.contentType);
+        res.jsonp(this.data);
+        res.app.set('jsonp callback name', old);
     }
 });
 

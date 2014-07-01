@@ -6,7 +6,8 @@
 
 'use strict';
 
-var utils = require('./utilities');
+var utils = require('./utilities'),
+    mvcHelper = require('./mvcHelper');
 
 
 var urlHelper = function(set) {

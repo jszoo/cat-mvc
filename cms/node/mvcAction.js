@@ -43,8 +43,8 @@ mvcAction.prototype = {
         utils.each(req.query, function(key, val) {
             utils.mapObj(query, lowerRootNs(key), val);
         });
-        utils.each(req.routeData, function(key, val) {
-            utils.mapObj(routeData, lowerRootNs(key), val);
+        utils.each(req.routeData, function(i, it) {
+            utils.mapObj(routeData, lowerRootNs(it.name), it.value);
         });
         utils.each(paramNames, function(i, name) {
             var loweName = name.toLowerCase();

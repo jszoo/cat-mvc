@@ -67,10 +67,7 @@ var mvcHandler = function(set) {
                 if (!act) { return; }
                 //
                 req.routeSet = routeSet;
-                var routeData = req.routeData = {};
-                utils.each(params, function() {
-                    routeData[this.name] = this.value;
-                });
+                req.routeData = params;
                 //
                 act.execute(req, res);
                 matched = true;

@@ -22,21 +22,21 @@ var mvcHandler = function(set) {
         end: false
     });
 
-    var tryToLower = function(str) {
+    var lower = function(str) {
         if (!str) { return str };
         return str.toLowerCase();
     };
 
-    var tryGetParam = function(params, name, index) {
-        var found;
+    var getParam = function(params, findName, defaultIndex) {
+        var found; findName = lower(findName);
         utils.each(params, function() {
-            if (tryToLower(this.name) === name) {
+            if (lower(this.name) === findName) {
                 found = this;
                 return false;
             }
         });
         if (!found) {
-            found = params[index];
+            found = params[defaultIndex];
         }
         return found;
     };
@@ -52,20 +52,20 @@ var mvcHandler = function(set) {
                 var params = match(pathname);
                 if (params === false) { return; }
                 //
-                var ctrlParam = tryGetParam(params, 'controller', 0);
+                var ctrlParam = getParam(params, 'controller', 0);
                 if (!ctrlParam) { return; }
                 ctrlParam._is_path = true;
                 //
-                var ctrl = area.controllers[tryToLower(ctrlParam.value) || route.defaultValues[tryToLower(ctrlParam.name)]];
+                var ctrl = area.controllers[lower(ctrlParam.value) || route.defaultValues[lower(ctrlParam.name)]];
                 if (!ctrl) { return; }
                 //
-                var actParam = tryGetParam(params, 'action', 1);
+                var actParam = getParam(params, 'action', 1);
                 if (!actParam) { return; }
                 actParam._is_path = true;
                 //
                 ctrl.initialize(req, res);
                 var actions = ctrl.actions();
-                var act = actions[tryToLower(actParam.value) || route.defaultValues[tryToLower(actParam.name)]];
+                var act = actions[lower(actParam.value) || route.defaultValues[lower(actParam.name)]];
                 if (!act) { return; }
                 //
                 utils.each(params, function() {

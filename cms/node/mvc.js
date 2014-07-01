@@ -64,8 +64,7 @@ var mvcHandler = function(set) {
                 actParam._is_path = true;
                 //
                 ctrl.initialize(req, res);
-                var actions = ctrl.actions();
-                var act = actions[lower(actParam.value || route.defaultValues[lower(actParam.name)])];
+                var act = ctrl.actions[lower(actParam.value || route.defaultValues[lower(actParam.name)])];
                 if (!act) { return; }
                 //
                 utils.each(params, function() {

@@ -10,14 +10,17 @@ var events = require('events'),
 	utils = require('./utilities'),
     mvcAction = require('./mvcAction'),
     mvcInjector = require('./mvcInjector'),
+    mvcTempData = require('./mvcTempData'),
+    mvcViewData = require('./mvcViewData'),
     actionResults = require('./mvcActionResults');
 
 
 var mvcController = function(set) {
     utils.extend(this, set);
-    this._actions = {};
-    this._tempdata = {};
-    this._events = new events.EventEmitter();
+    this.actions = {};
+    this.viewdata = new mvcViewData();
+    this.tempdata = new mvcTempData();
+    this.events = new events.EventEmitter();
 };
 
 mvcController.define = function(name, impl) {
@@ -37,16 +40,13 @@ mvcController.prototype = {
 
     _name: null, _impl: null, _path: null,
 
-    _actions: null, _tempdata: null, _events: null,
+    actions: null, viewdata: null, tempdata: null,
 
-    constructor: mvcController,
+    constructor: mvcController, events: null,
 
     name: function(p) { return (p === undefined) ? (this._name) : (this._name = p, this); },
     path: function(p) { return (p === undefined) ? (this._path) : (this._path = p, this); },
     impl: function(p) { return (p === undefined) ? (this._impl) : (this._impl = p, this); },
-    tempdata: function(p) { return (p === undefined) ? (this._tempdata) : (this._tempdata = p, this); },
-    actions: function() { return this._actions; },
-    events: function() { return this._events; },
 
     initialize: function(req, res) {
         var injectedParams = this.injectImpl(req, res);
@@ -71,7 +71,7 @@ mvcController.prototype = {
                 case 'request': params.push(req); break;
                 case 'response': params.push(res); break;
                 case 'controller': params.push(self); break;
-                case 'events': params.push(self._events); break;
+                case 'events': params.push(self.events); break;
                 case 'tempdata': params.push(self.tempdata()); break;
                 case 'action': params.push(actionWrap || (actionWrap = function() { 
                     var args = utils.arg2arr(arguments);
@@ -87,7 +87,7 @@ mvcController.prototype = {
 
     on: function() {
         var args = utils.arg2arr(arguments);
-        this._events.on.apply(this._events, args);
+        this.events.on.apply(this.events, args);
         return this;
     },
 
@@ -109,7 +109,7 @@ mvcController.prototype = {
             throw new Error('action impl is required.');
         }
         // new
-        this._actions[name.toLowerCase()] = new mvcAction({
+        this.actions[name.toLowerCase()] = new mvcAction({
             ctrl: this,
             name: name,
             impl: impl,

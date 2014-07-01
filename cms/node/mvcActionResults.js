@@ -34,7 +34,6 @@ var emptyResult = exports.emptyResult = function(set) {
 };
 
 utils.inherit(emptyResult, baseResult, {
-
     execute: function(context) {
         context.response.set('Content-Type', 'text/html');
         context.response.send('');
@@ -49,9 +48,7 @@ var jsonResult = exports.jsonResult = function(set) {
 };
 
 utils.inherit(jsonResult, baseResult, {
-
     data: null, contentType: 'application/json',
-
     execute: function(context) {
         context.response.set('Content-Type', this.contentType);
         context.response.json(this.data);
@@ -66,9 +63,7 @@ var jsonpResult = exports.jsonpResult = function(set) {
 };
 
 utils.inherit(jsonpResult, baseResult, {
-
     data: null, contentType: 'application/json', callbackName: 'callback',
-
     execute: function(context) {
         var old = context.response.app.get('jsonp callback name');
         context.response.app.set('jsonp callback name', this.callbackName);
@@ -86,9 +81,7 @@ var partialViewResult = exports.partialViewResult = function(set) {
 };
 
 utils.inherit(partialViewResult, baseResult, {
-
     viewName: null,
-
     execute: function(context) {
         //TODO:
     }
@@ -102,9 +95,7 @@ var viewResult = exports.viewResult = function(set) {
 };
 
 utils.inherit(viewResult, baseResult, {
-
     viewName: null, model: null,
-
     execute: function(context) {
         //TODO:
     }
@@ -118,9 +109,7 @@ var fileResult = exports.fileResult = function(set) {
 };
 
 utils.inherit(fileResult, baseResult, {
-
     filePath: null, fileDownloadName: null,
-
     execute: function(context) {
         context.response.download(this.filePath, this.fileDownloadName);
     }
@@ -134,9 +123,7 @@ var contentResult = exports.contentResult = function(set) {
 };
 
 utils.inherit(contentResult, baseResult, {
-
     content: null, contentType: 'text/html',
-
     execute: function(context) {
         context.response.set('Content-Type', this.contentType);
         context.response.send(this.content);
@@ -151,9 +138,7 @@ var httpStatusCodeResult = exports.httpStatusCodeResult = function(set) {
 };
 
 utils.inherit(httpStatusCodeResult, baseResult, {
-
     statusCode: null, statusDescription: null,
-
     execute: function(context) {
         context.response.send(this.statusDescription, this.statusCode);
     }
@@ -167,7 +152,11 @@ var httpNotFoundResult = exports.httpNotFoundResult = function(set) {
     this.statusCode = 404;
 };
 
-utils.inherit(httpNotFoundResult, httpStatusCodeResult, {});
+utils.inherit(httpNotFoundResult, httpStatusCodeResult, {
+    execute: function(context) {
+        httpNotFoundResult.superclass.execute.call(this, context);
+    }
+});
 
 
 /* redirectResult
@@ -177,9 +166,7 @@ var redirectResult = exports.redirectResult = function(set) {
 };
 
 utils.inherit(redirectResult, baseResult, {
-
     url: null, permanent: false,
-
     execute: function(context) {
         if (this.permanent) {
             context.response.redirect(this.url, 301);
@@ -197,9 +184,7 @@ var redirectToRouteResult = exports.redirectToRouteResult = function(set) {
 };
 
 utils.inherit(redirectToRouteResult, baseResult, {
-
     routeValues: null, permanent: false,
-
     execute: function(context) {
         var url = mvcHelperUrl.generateUrl(null, null, this.routeValues, context.request.routeSet, context.request, false);
         if (this.permanent) {

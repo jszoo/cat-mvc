@@ -80,25 +80,23 @@ mvcAction.prototype = {
             this.ctrl.events.emit('actionExecuted', actionContext);
             // execute action result
             var ret = actionContext.result;
-            if (!(ret instanceof actionResults.baseResult)) {
-                if (ret === undefined || ret === null || ret === '') {
-                    ret = new actionResults.emptyResult();
-                } else {
+            if (ret !== undefined && ret !== null) {
+                if (!(ret instanceof actionResults.baseResult)) {
                     ret = new actionResults.contentResult({
                         content: ret.toString(),
                         contentType: 'text/plain'
                     });
                 }
+                var resultContext = {
+                    request: req,
+                    response: res,
+                    result: ret,
+                    exception: null
+                };
+                this.ctrl.events.emit('resultExecuting', resultContext);
+                ret.execute(resultContext);
+                this.ctrl.events.emit('resultExecuted', resultContext);
             }
-            var resultContext = {
-                request: req,
-                response: res,
-                result: ret,
-                exception: null
-            };
-            this.ctrl.events.emit('resultExecuting', resultContext);
-            ret.execute(resultContext);
-            this.ctrl.events.emit('resultExecuted', resultContext);
         }
         return this;
     }

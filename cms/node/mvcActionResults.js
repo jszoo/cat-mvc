@@ -6,7 +6,8 @@
 
 'use strict';
 
-var utils = require('./utilities');
+var utils = require('./utilities'),
+    mvcHelperUrl = require('./mvcHelperUrl');
 
 
 /* baseResult
@@ -37,47 +38,6 @@ utils.inherit(emptyResult, baseResult, {
     execute: function(context) {
         context.response.set('Content-Type', 'text/html');
         context.response.send('');
-    }
-});
-
-
-/* httpStatusCodeResult
-***************************************/
-var httpStatusCodeResult = exports.httpStatusCodeResult = function(set) {
-    httpStatusCodeResult.superclass.constructor.call(this, set);
-};
-
-utils.inherit(httpStatusCodeResult, baseResult, {
-
-    statusCode: null, statusDescription: null,
-
-    execute: function(context) {
-        context.response.send(this.statusDescription, this.statusCode);
-    }
-});
-
-
-/* httpNotFoundResult
-***************************************/
-var httpNotFoundResult = exports.httpNotFoundResult = function(set) {
-    httpNotFoundResult.superclass.constructor.call(this, set);
-    this.statusDescription = 404;
-};
-
-utils.inherit(httpNotFoundResult, httpStatusCodeResult, {
-});
-
-
-/* fileResult
-***************************************/
-var fileResult = exports.fileResult = function(set) {
-    fileResult.superclass.constructor.call(this, set);
-};
-
-utils.inherit(fileResult, baseResult, {
-
-    execute: function(context) {
-        
     }
 });
 
@@ -147,6 +107,20 @@ utils.inherit(viewResult, baseResult, {
 });
 
 
+/* fileResult
+***************************************/
+var fileResult = exports.fileResult = function(set) {
+    fileResult.superclass.constructor.call(this, set);
+};
+
+utils.inherit(fileResult, baseResult, {
+
+    execute: function(context) {
+        
+    }
+});
+
+
 /* contentResult
 ***************************************/
 var contentResult = exports.contentResult = function(set) {
@@ -164,6 +138,33 @@ utils.inherit(contentResult, baseResult, {
 });
 
 
+/* httpStatusCodeResult
+***************************************/
+var httpStatusCodeResult = exports.httpStatusCodeResult = function(set) {
+    httpStatusCodeResult.superclass.constructor.call(this, set);
+};
+
+utils.inherit(httpStatusCodeResult, baseResult, {
+
+    statusCode: null, statusDescription: null,
+
+    execute: function(context) {
+        context.response.send(this.statusDescription, this.statusCode);
+    }
+});
+
+
+/* httpNotFoundResult
+***************************************/
+var httpNotFoundResult = exports.httpNotFoundResult = function(set) {
+    httpNotFoundResult.superclass.constructor.call(this, set);
+    this.statusCode = 404;
+};
+
+utils.inherit(httpNotFoundResult, httpStatusCodeResult, {
+});
+
+
 /* redirectResult
 ***************************************/
 var redirectResult = exports.redirectResult = function(set) {
@@ -172,37 +173,35 @@ var redirectResult = exports.redirectResult = function(set) {
 
 utils.inherit(redirectResult, baseResult, {
 
-    url: null, statusCode: 301,
+    url: null, permanent: false,
 
     execute: function(context) {
-        context.response.redirect(this.url, this.statusCode);
+        if (this.permanent) {
+            context.response.redirect(this.url, 301);
+        } else {
+            context.response.redirect(this.url, 302);
+        }
     }
 });
 
 
-/* redirectToActionResult
+/* redirectToRouteResult
 ***************************************/
-var redirectToActionResult = exports.redirectToActionResult = function(set) {
-    redirectToActionResult.superclass.constructor.call(this, set);
+var redirectToRouteResult = exports.redirectToRouteResult = function(set) {
+    redirectToRouteResult.superclass.constructor.call(this, set);
 };
 
-utils.inherit(redirectToActionResult, baseResult, {
+utils.inherit(redirectToRouteResult, baseResult, {
+
+    actionName: null, controllerName: null, routeValues: null, permanent: false,
 
     execute: function(context) {
-        
+        var url = mvcHelperUrl.generateUrl(null, null, context.request.routeData, this.Routes, context.request, false);
+        if (this.permanent) {
+            context.response.redirect(url, 301);
+        } else {
+            context.response.redirect(url, 302);
+        }
     }
 });
 
-
-/* redirectToActionPermanentResult
-***************************************/
-var redirectToActionPermanentResult = exports.redirectToActionPermanentResult = function(set) {
-    redirectToActionPermanentResult.superclass.constructor.call(this, set);
-};
-
-utils.inherit(redirectToActionPermanentResult, baseResult, {
-
-    execute: function(context) {
-        
-    }
-});

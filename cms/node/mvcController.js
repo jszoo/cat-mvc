@@ -123,14 +123,6 @@ mvcController.prototype = {
         return new actionResults.emptyResult();
     },
 
-    httpNotFound: function(statusDescription) {
-        return new actionResults.httpNotFoundResult({ statusDescription: statusDescription });
-    },
-
-    file: function(fileBytes, contentType, fileDownloadName) {
-        return new actionResults.fileResult(fileBytes, contentType, fileDownloadName);
-    },
-
     json: function(data, contentType) {
         return new actionResults.jsonResult({ data: data, contentType: contentType});
     },
@@ -147,20 +139,28 @@ mvcController.prototype = {
         return new actionResults.viewResult(viewName, model);
     },
 
+    file: function(fileBytes, contentType, fileDownloadName) {
+        return new actionResults.fileResult(fileBytes, contentType, fileDownloadName);
+    },
+
     content: function(content, contentType) {
         return new actionResults.contentResult({ content: content, contentType: contentType });
     },
 
-    redirect: function(url, statusCode) {
-        return new actionResults.redirectResult({ url: url, statusCode: statusCode });
+    httpNotFound: function(statusDescription) {
+        return new actionResults.httpNotFoundResult({ statusDescription: statusDescription });
+    },
+
+    redirect: function(url, permanent) {
+        return new actionResults.redirectResult({ url: url, permanent: permanent });
     },
 
     redirectToAction: function(actionName, controllerName, routeValues) {
-        return new actionResults.redirectToActionResult(actionName, controllerName, routeValues);
+        return new actionResults.redirectToActionResult({ actionName: actionName, controllerName: controllerName, routeValues: routeValues, permanent: false });
     },
 
     redirectToActionPermanent: function(actionName, controllerName, routeValues) {
-        return new actionResults.redirectToActionPermanentResult(actionName, controllerName, routeValues);
+        return new actionResults.redirectToActionResult({ actionName: actionName, controllerName: controllerName, routeValues: routeValues, permanent: true });
     }
 };
 

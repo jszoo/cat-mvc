@@ -48,17 +48,23 @@ var mvcHandler = function(set) {
                 //
                 var ctrlParam = getParam(params, 'controller', 0);
                 if (!ctrlParam) { return; }
+                if (!ctrlParam.value) {
+                    ctrlParam.value = route.defaultValues[lower(ctrlParam.name)];
+                }
                 //
-                var ctrl = area.controllers[lower(ctrlParam.value || route.defaultValues[lower(ctrlParam.name)])];
+                var ctrl = area.controllers[lower(ctrlParam.value)];
                 if (!ctrl) { return; }
                 //
                 var actParam = getParam(params, 'action', 1);
                 if (!actParam) { return; }
+                if (!actParam.value) {
+                    actParam.value = route.defaultValues[lower(actParam.name)];
+                }
                 //
                 req.routeData = params;
                 ctrl.initialize(req, res);
                 //
-                var act = ctrl.actions[lower(actParam.value || route.defaultValues[lower(actParam.name)])];
+                var act = ctrl.actions[lower(actParam.value)];
                 if (!act) { return; }
                 //
                 act.execute(req, res);

@@ -34,9 +34,25 @@ var emptyResult = exports.emptyResult = function(set) {
 
 utils.inherit(emptyResult, baseResult, {
 
-    execute:function(req, res) {
+    execute: function(req, res) {
         res.set('Content-Type', 'text/html');
         res.send('');
+    }
+});
+
+
+/* httpStatusCodeResult
+***************************************/
+var httpStatusCodeResult = exports.httpStatusCodeResult = function(set) {
+    httpStatusCodeResult.superclass.constructor.call(this, set);
+};
+
+utils.inherit(httpStatusCodeResult, baseResult, {
+
+    statusCode: null, statusDescription: null,
+
+    execute: function(req, res) {
+        res.send(this.statusDescription, this.statusCode);
     }
 });
 
@@ -45,13 +61,10 @@ utils.inherit(emptyResult, baseResult, {
 ***************************************/
 var httpNotFoundResult = exports.httpNotFoundResult = function(set) {
     httpNotFoundResult.superclass.constructor.call(this, set);
+    this.statusDescription = 404;
 };
 
-utils.inherit(httpNotFoundResult, baseResult, {
-
-    execute:function(req, res) {
-        
-    }
+utils.inherit(httpNotFoundResult, httpStatusCodeResult, {
 });
 
 
@@ -63,7 +76,7 @@ var fileResult = exports.fileResult = function(set) {
 
 utils.inherit(fileResult, baseResult, {
 
-    execute:function(req, res) {
+    execute: function(req, res) {
         
     }
 });
@@ -79,7 +92,7 @@ utils.inherit(jsonResult, baseResult, {
 
     data: null, contentType: 'application/json',
 
-    execute:function(req, res) {
+    execute: function(req, res) {
         res.set('Content-Type', this.contentType);
         res.json(this.data);
     }
@@ -96,7 +109,7 @@ utils.inherit(jsonpResult, baseResult, {
 
     data: null, contentType: 'application/json', callbackName: 'callback',
 
-    execute:function(req, res) {
+    execute: function(req, res) {
         var old = res.app.get('jsonp callback name');
         res.app.set('jsonp callback name', this.callbackName);
         res.set('Content-Type', this.contentType);
@@ -114,7 +127,7 @@ var partialViewResult = exports.partialViewResult = function(set) {
 
 utils.inherit(partialViewResult, baseResult, {
 
-    execute:function(req, res) {
+    execute: function(req, res) {
         
     }
 });
@@ -128,7 +141,7 @@ var viewResult = exports.viewResult = function(set) {
 
 utils.inherit(viewResult, baseResult, {
 
-    execute:function(req, res) {
+    execute: function(req, res) {
         
     }
 });
@@ -142,8 +155,11 @@ var contentResult = exports.contentResult = function(set) {
 
 utils.inherit(contentResult, baseResult, {
 
-    execute:function(req, res) {
-        
+    content: null, contentType: 'text/html',
+
+    execute: function(req, res) {
+        res.set('Content-Type', this.contentType);
+        res.send(this.content);
     }
 });
 
@@ -156,8 +172,10 @@ var redirectResult = exports.redirectResult = function(set) {
 
 utils.inherit(redirectResult, baseResult, {
 
-    execute:function(req, res) {
-        
+    url: null, statusCode: 301,
+
+    execute: function(req, res) {
+        res.redirect(this.url, this.statusCode);
     }
 });
 
@@ -170,7 +188,7 @@ var redirectToActionResult = exports.redirectToActionResult = function(set) {
 
 utils.inherit(redirectToActionResult, baseResult, {
 
-    execute:function(req, res) {
+    execute: function(req, res) {
         
     }
 });
@@ -184,7 +202,7 @@ var redirectToActionPermanentResult = exports.redirectToActionPermanentResult = 
 
 utils.inherit(redirectToActionPermanentResult, baseResult, {
 
-    execute:function(req, res) {
+    execute: function(req, res) {
         
     }
 });

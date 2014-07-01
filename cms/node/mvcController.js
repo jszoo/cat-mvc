@@ -124,7 +124,7 @@ mvcController.prototype = {
     },
 
     httpNotFound: function(statusDescription) {
-        return new actionResults.httpNotFoundResult(statusDescription);
+        return new actionResults.httpNotFoundResult({ statusDescription: statusDescription });
     },
 
     file: function(fileBytes, contentType, fileDownloadName) {
@@ -148,11 +148,11 @@ mvcController.prototype = {
     },
 
     content: function(content, contentType) {
-        return new actionResults.contentResult(content, contentType);
+        return new actionResults.contentResult({ content: content, contentType: contentType });
     },
 
-    redirect: function(url) {
-        return new actionResults.redirectResult(url);
+    redirect: function(url, statusCode) {
+        return new actionResults.redirectResult({ url: url, statusCode: statusCode });
     },
 
     redirectToAction: function(actionName, controllerName, routeValues) {

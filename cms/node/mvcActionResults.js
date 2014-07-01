@@ -20,7 +20,7 @@ var baseResult = exports.baseResult = function(set) {
 
 baseResult.prototype = {
     constructor: baseResult,
-    execute: function(req, res) {
+    execute: function(context) {
         throw new Error('"execute" function needs override by sub classes.');
     }
 };
@@ -34,9 +34,9 @@ var emptyResult = exports.emptyResult = function(set) {
 
 utils.inherit(emptyResult, baseResult, {
 
-    execute: function(req, res) {
-        res.set('Content-Type', 'text/html');
-        res.send('');
+    execute: function(context) {
+        context.response.set('Content-Type', 'text/html');
+        context.response.send('');
     }
 });
 
@@ -51,8 +51,8 @@ utils.inherit(httpStatusCodeResult, baseResult, {
 
     statusCode: null, statusDescription: null,
 
-    execute: function(req, res) {
-        res.send(this.statusDescription, this.statusCode);
+    execute: function(context) {
+        context.response.send(this.statusDescription, this.statusCode);
     }
 });
 
@@ -76,7 +76,7 @@ var fileResult = exports.fileResult = function(set) {
 
 utils.inherit(fileResult, baseResult, {
 
-    execute: function(req, res) {
+    execute: function(context) {
         
     }
 });
@@ -92,9 +92,9 @@ utils.inherit(jsonResult, baseResult, {
 
     data: null, contentType: 'application/json',
 
-    execute: function(req, res) {
-        res.set('Content-Type', this.contentType);
-        res.json(this.data);
+    execute: function(context) {
+        context.response.set('Content-Type', this.contentType);
+        context.response.json(this.data);
     }
 });
 
@@ -109,12 +109,12 @@ utils.inherit(jsonpResult, baseResult, {
 
     data: null, contentType: 'application/json', callbackName: 'callback',
 
-    execute: function(req, res) {
-        var old = res.app.get('jsonp callback name');
-        res.app.set('jsonp callback name', this.callbackName);
-        res.set('Content-Type', this.contentType);
-        res.jsonp(this.data);
-        res.app.set('jsonp callback name', old);
+    execute: function(context) {
+        var old = context.response.app.get('jsonp callback name');
+        context.response.app.set('jsonp callback name', this.callbackName);
+        context.response.set('Content-Type', this.contentType);
+        context.response.jsonp(this.data);
+        context.response.app.set('jsonp callback name', old);
     }
 });
 
@@ -127,7 +127,7 @@ var partialViewResult = exports.partialViewResult = function(set) {
 
 utils.inherit(partialViewResult, baseResult, {
 
-    execute: function(req, res) {
+    execute: function(context) {
         
     }
 });
@@ -141,7 +141,7 @@ var viewResult = exports.viewResult = function(set) {
 
 utils.inherit(viewResult, baseResult, {
 
-    execute: function(req, res) {
+    execute: function(context) {
         
     }
 });
@@ -157,9 +157,9 @@ utils.inherit(contentResult, baseResult, {
 
     content: null, contentType: 'text/html',
 
-    execute: function(req, res) {
-        res.set('Content-Type', this.contentType);
-        res.send(this.content);
+    execute: function(context) {
+        context.response.set('Content-Type', this.contentType);
+        context.response.send(this.content);
     }
 });
 
@@ -174,8 +174,8 @@ utils.inherit(redirectResult, baseResult, {
 
     url: null, statusCode: 301,
 
-    execute: function(req, res) {
-        res.redirect(this.url, this.statusCode);
+    execute: function(context) {
+        context.response.redirect(this.url, this.statusCode);
     }
 });
 
@@ -188,7 +188,7 @@ var redirectToActionResult = exports.redirectToActionResult = function(set) {
 
 utils.inherit(redirectToActionResult, baseResult, {
 
-    execute: function(req, res) {
+    execute: function(context) {
         
     }
 });
@@ -202,7 +202,7 @@ var redirectToActionPermanentResult = exports.redirectToActionPermanentResult = 
 
 utils.inherit(redirectToActionPermanentResult, baseResult, {
 
-    execute: function(req, res) {
+    execute: function(context) {
         
     }
 });

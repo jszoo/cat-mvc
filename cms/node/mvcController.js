@@ -132,7 +132,7 @@ mvcController.prototype = {
     },
 
     json: function(data, contentType) {
-        return new actionResults.jsonResult(data, contentType);
+        return new actionResults.jsonResult({ data: data, contentType: contentType});
     },
 
     partialView: function(viewName) {

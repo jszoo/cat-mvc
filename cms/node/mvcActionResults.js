@@ -72,8 +72,10 @@ var jsonResult = exports.jsonResult = function(set) {
 
 utils.inherit(jsonResult, baseResult, {
 
+    data: null, contentType: null,
+
     execute:function(req, res) {
-        
+        res.json(this.data);
     }
 });
 

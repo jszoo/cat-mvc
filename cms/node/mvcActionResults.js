@@ -12,7 +12,7 @@ var utils = require('./utilities');
 /* baseResult
 ***************************************/
 var baseResult = exports.baseResult = function(set) {
-    utils.extend(this, set);
+    emptyResult.superclass.constructor.call(this, set);
 };
 
 baseResult.prototype = {
@@ -25,110 +25,138 @@ baseResult.prototype = {
 /* emptyResult
 ***************************************/
 var emptyResult = exports.emptyResult = function(set) {
-    utils.extend(this, set);
+    emptyResult.superclass.constructor.call(this, set);
 };
 
-emptyResult.prototype = {
-    constructor: emptyResult
-};
+utils.inherit(emptyResult, baseResult, {
+
+    execute:function(req, res) {
+        
+    }
+});
 
 
 /* httpNotFoundResult
 ***************************************/
 var httpNotFoundResult = exports.httpNotFoundResult = function(set) {
-    utils.extend(this, set);
+    httpNotFoundResult.superclass.constructor.call(this, set);
 };
 
-httpNotFoundResult.prototype = {
-    constructor: httpNotFoundResult
-};
+utils.inherit(httpNotFoundResult, baseResult, {
+
+    execute:function(req, res) {
+        
+    }
+});
 
 
 /* fileResult
 ***************************************/
 var fileResult = exports.fileResult = function(set) {
-    utils.extend(this, set);
+    fileResult.superclass.constructor.call(this, set);
 };
 
-fileResult.prototype = {
-    constructor: fileResult
-};
+utils.inherit(fileResult, baseResult, {
+
+    execute:function(req, res) {
+        
+    }
+});
 
 
 /* jsonResult
 ***************************************/
 var jsonResult = exports.jsonResult = function(set) {
-    utils.extend(this, set);
+    jsonResult.superclass.constructor.call(this, set);
 };
 
-jsonResult.prototype = {
-    constructor: jsonResult
-};
+utils.inherit(jsonResult, baseResult, {
+
+    execute:function(req, res) {
+        
+    }
+});
 
 
 /* partialViewResult
 ***************************************/
 var partialViewResult = exports.partialViewResult = function(set) {
-    utils.extend(this, set);
+    partialViewResult.superclass.constructor.call(this, set);
 };
 
-partialViewResult.prototype = {
-    constructor: partialViewResult
-};
+utils.inherit(partialViewResult, baseResult, {
+
+    execute:function(req, res) {
+        
+    }
+});
 
 
 /* viewResult
 ***************************************/
 var viewResult = exports.viewResult = function(set) {
-    utils.extend(this, set);
+    viewResult.superclass.constructor.call(this, set);
 };
 
-viewResult.prototype = {
-    constructor: viewResult
-};
+utils.inherit(viewResult, baseResult, {
+
+    execute:function(req, res) {
+        
+    }
+});
 
 
 /* contentResult
 ***************************************/
 var contentResult = exports.contentResult = function(set) {
-    utils.extend(this, set);
+    contentResult.superclass.constructor.call(this, set);
 };
 
-contentResult.prototype = {
-    constructor: contentResult
-};
+utils.inherit(contentResult, baseResult, {
+
+    execute:function(req, res) {
+        
+    }
+});
 
 
 /* redirectResult
 ***************************************/
 var redirectResult = exports.redirectResult = function(set) {
-    utils.extend(this, set);
+    redirectResult.superclass.constructor.call(this, set);
 };
 
-redirectResult.prototype = {
-    constructor: redirectResult
-};
+utils.inherit(redirectResult, baseResult, {
+
+    execute:function(req, res) {
+        
+    }
+});
 
 
 /* redirectToActionResult
 ***************************************/
 var redirectToActionResult = exports.redirectToActionResult = function(set) {
-    utils.extend(this, set);
+    redirectToActionResult.superclass.constructor.call(this, set);
 };
 
-redirectToActionResult.prototype = {
-    constructor: redirectToActionResult
-};
+utils.inherit(redirectToActionResult, baseResult, {
+
+    execute:function(req, res) {
+        
+    }
+});
 
 
 /* redirectToActionPermanentResult
 ***************************************/
 var redirectToActionPermanentResult = exports.redirectToActionPermanentResult = function(set) {
-    utils.extend(this, set);
+    redirectToActionPermanentResult.superclass.constructor.call(this, set);
 };
 
-redirectToActionPermanentResult.prototype = {
-    constructor: redirectToActionPermanentResult
-};
+utils.inherit(redirectToActionPermanentResult, baseResult, {
 
-
+    execute:function(req, res) {
+        
+    }
+});

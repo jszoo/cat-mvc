@@ -165,6 +165,24 @@ module.exports = {
         return target;
     },
 
+    inherit: function (subc, superc, overrides) {
+        var F = function () { }, i;
+        F.prototype = superc.prototype;
+        subc.prototype = new F();
+        subc.prototype.constructor = subc;
+        subc.superclass = superc.prototype;
+        if (superc.prototype.constructor == Object.prototype.constructor) {
+            superc.prototype.constructor = superc;
+        }
+        if (overrides) {
+            for (i in overrides) {
+                if (this.hasOwn(overrides, i)) {
+                    subc.prototype[i] = overrides[i];
+                }
+            }
+        }
+    },
+
     guid: function() {
         function s4() { return (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1); }
         return function(sep) {

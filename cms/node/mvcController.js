@@ -100,7 +100,7 @@ mvcController.prototype = {
         if (arguments.length === 2) {
             impl = sett;
             sett = {};
-        } else if(arguments.length === 3) {
+        } else if (arguments.length === 3) {
             if (utils.isString(sett)) {
                 sett = { method: sett };
             } else if (!utils.isObject(sett)) {
@@ -119,6 +119,11 @@ mvcController.prototype = {
         });
         // ret
         return this;
+    },
+
+    findAction: function(name, req) {
+        //TODO:
+        return this.actions[name];
     },
 
     empty: function() {

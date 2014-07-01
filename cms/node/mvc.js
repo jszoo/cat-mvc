@@ -61,6 +61,11 @@ var mvcHandler = function(set) {
                     actParam.value = route.defaultValues[lower(actParam.name)];
                 }
                 //
+                params.push({
+                    name: 'area',
+                    value: area.name
+                });
+                //
                 req.routeData = params;
                 ctrl.initialize(req, res);
                 //

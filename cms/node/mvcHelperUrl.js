@@ -13,11 +13,11 @@ var urlHelper = function(set) {
     utils.extend(this, set);
 };
 
-var generateUrl = urlHelper.generateUrl = function(actionName, controllerName, routeValues, routes, request, includeImplicitMvcValues) {
+var generateUrl = urlHelper.generateUrl = function(actionName, controllerName, routeValues, routeSet, request, includeImplicitMvcValues) {
     //TODO:
 };
 
-var generateUrlPlus = urlHelper.generateUrlPlus = function(actionName, controllerName, protocol, hostName, fragment, routeValues, routes, request, includeImplicitMvcValues) {
+var generateUrlPlus = urlHelper.generateUrlPlus = function(actionName, controllerName, protocol, hostName, fragment, routeValues, routeSet, request, includeImplicitMvcValues) {
     //TODO:
 };
 
@@ -29,16 +29,16 @@ urlHelper.isUrlHelper = true;
 
 urlHelper.prototype = {
 
-    request: null, routes: null,
+    request: null, routeSet: null,
 
     constructor: urlHelper,
 
     action: function(actionName, controllerName, routeValues, protocol, hostName) {
-        return generateUrlPlus(actionName, controllerName, protocol, hostName, null, routeValues, this.routes, this.request, true);
+        return generateUrlPlus(actionName, controllerName, protocol, hostName, null, routeValues, this.routeSet, this.request, true);
     },
 
     routeUrl: function(routeValues, protocol, hostName) {
-        return generateUrlPlus(null, null, protocol, hostName, null, routeValues, this.routes, this.request, false);
+        return generateUrlPlus(null, null, protocol, hostName, null, routeValues, this.routeSet, this.request, false);
     },
 
     content: function(contentPath) {

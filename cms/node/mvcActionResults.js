@@ -115,8 +115,10 @@ var fileResult = exports.fileResult = function(set) {
 
 utils.inherit(fileResult, baseResult, {
 
+    filePath: null, fileDownloadName: null,
+
     execute: function(context) {
-        
+        context.response.download(this.filePath, this.fileDownloadName);
     }
 });
 
@@ -161,8 +163,7 @@ var httpNotFoundResult = exports.httpNotFoundResult = function(set) {
     this.statusCode = 404;
 };
 
-utils.inherit(httpNotFoundResult, httpStatusCodeResult, {
-});
+utils.inherit(httpNotFoundResult, httpStatusCodeResult, {});
 
 
 /* redirectResult
@@ -193,10 +194,10 @@ var redirectToRouteResult = exports.redirectToRouteResult = function(set) {
 
 utils.inherit(redirectToRouteResult, baseResult, {
 
-    actionName: null, controllerName: null, routeValues: null, permanent: false,
+    routeValues: null, permanent: false,
 
     execute: function(context) {
-        var url = mvcHelperUrl.generateUrl(null, null, context.request.routeData, this.Routes, context.request, false);
+        var url = mvcHelperUrl.generateUrl(null, null, this.routeValues, context.request.routeSet, context.request, false);
         if (this.permanent) {
             context.response.redirect(url, 301);
         } else {

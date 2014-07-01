@@ -139,8 +139,8 @@ mvcController.prototype = {
         return new actionResults.viewResult(viewName, model);
     },
 
-    file: function(fileBytes, contentType, fileDownloadName) {
-        return new actionResults.fileResult(fileBytes, contentType, fileDownloadName);
+    file: function(filePath, fileDownloadName) {
+        return new actionResults.fileResult({ filePath: filePath, fileDownloadName: fileDownloadName });
     },
 
     content: function(content, contentType) {
@@ -156,11 +156,21 @@ mvcController.prototype = {
     },
 
     redirectToAction: function(actionName, controllerName, routeValues) {
-        return new actionResults.redirectToActionResult({ actionName: actionName, controllerName: controllerName, routeValues: routeValues, permanent: false });
+        //TODO: merge routeValues
+        return this.redirectToRoute(routeValues);
     },
 
     redirectToActionPermanent: function(actionName, controllerName, routeValues) {
-        return new actionResults.redirectToActionResult({ actionName: actionName, controllerName: controllerName, routeValues: routeValues, permanent: true });
+        //TODO: merge routeValues
+        return this.redirectToRoutePermanent(routeValues);
+    },
+
+    redirectToRoute: function(routeValues) {
+        return new actionResults.redirectToRouteResult({ routeValues: routeValues, permanent: false });
+    },
+
+    redirectToRoutePermanent: function(routeValues) {
+        return new actionResults.redirectToRouteResult({ routeValues: routeValues, permanent: true });
     }
 };
 

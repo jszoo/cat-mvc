@@ -35,7 +35,10 @@ var mvcHandler = function(set) {
     return function(req, res, next) {
         var matched = false;
         var pathname = parse(req.url).pathname;
-        var allAreas = mvcAreas.all(), routeSet = mvcAreas.routeSet();
+        //
+        var allAreas = mvcAreas.all();
+        req.routeSet = mvcAreas.routeSet();
+        //
         utils.each(allAreas, function(i, area) {
             if (matched) { return false; }
             utils.each(area.routes, function(k, route) {
@@ -52,12 +55,11 @@ var mvcHandler = function(set) {
                 var actParam = getParam(params, 'action', 1);
                 if (!actParam) { return; }
                 //
+                req.routeData = params;
                 ctrl.initialize(req, res);
+                //
                 var act = ctrl.actions[lower(actParam.value || route.defaultValues[lower(actParam.name)])];
                 if (!act) { return; }
-                //
-                req.routeSet = routeSet;
-                req.routeData = params;
                 //
                 act.execute(req, res);
                 matched = true;

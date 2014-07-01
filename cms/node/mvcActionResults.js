@@ -35,7 +35,7 @@ var emptyResult = exports.emptyResult = function(set) {
 
 utils.inherit(emptyResult, baseResult, {
     execute: function(context) {
-        context.response.set('Content-Type', 'text/html');
+        context.response.header('Content-Type', 'text/plain');
         context.response.send('');
     }
 });
@@ -50,7 +50,7 @@ var jsonResult = exports.jsonResult = function(set) {
 utils.inherit(jsonResult, baseResult, {
     data: null, contentType: 'application/json',
     execute: function(context) {
-        context.response.set('Content-Type', this.contentType);
+        context.response.header('Content-Type', this.contentType);
         context.response.json(this.data);
     }
 });
@@ -67,7 +67,7 @@ utils.inherit(jsonpResult, baseResult, {
     execute: function(context) {
         var old = context.response.app.get('jsonp callback name');
         context.response.app.set('jsonp callback name', this.callbackName);
-        context.response.set('Content-Type', this.contentType);
+        context.response.header('Content-Type', this.contentType);
         context.response.jsonp(this.data);
         context.response.app.set('jsonp callback name', old);
     }
@@ -123,9 +123,9 @@ var contentResult = exports.contentResult = function(set) {
 };
 
 utils.inherit(contentResult, baseResult, {
-    content: null, contentType: 'text/html',
+    content: null, contentType: 'text/plain',
     execute: function(context) {
-        context.response.set('Content-Type', this.contentType);
+        context.response.header('Content-Type', this.contentType);
         context.response.send(this.content);
     }
 });

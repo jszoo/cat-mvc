@@ -36,12 +36,15 @@ mvcAction.prototype = {
         var paramNames = injector.annotate(this.impl);
         if (!paramNames || paramNames.length === 0) { return params; }
         //
-        var body = {}, query = {};
+        var body = {}, query = {}, routeData = {};
         utils.each(req.body, function(key, val) {
             utils.mapObj(body, lowerRootNs(key), val);
         });
         utils.each(req.query, function(key, val) {
             utils.mapObj(query, lowerRootNs(key), val);
+        });
+        utils.each(req.routeData, function(key, val) {
+            utils.mapObj(routeData, lowerRootNs(key), val);
         });
         utils.each(paramNames, function(i, name) {
             var loweName = name.toLowerCase();
@@ -52,6 +55,8 @@ mvcAction.prototype = {
                 params.push(body[loweName]);
             } else if (loweName in query) {
                 params.push(query[loweName]);
+            } else if(loweName in routeData) {
+                params.push(routeData[loweName]);
             } else {
                 params.push(null);
             }

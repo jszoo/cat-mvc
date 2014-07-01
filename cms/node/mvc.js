@@ -54,23 +54,20 @@ var mvcHandler = function(set) {
                 //
                 var ctrlParam = getParam(params, 'controller', 0);
                 if (!ctrlParam) { return; }
-                ctrlParam._is_path = true;
                 //
                 var ctrl = area.controllers[lower(ctrlParam.value || route.defaultValues[lower(ctrlParam.name)])];
                 if (!ctrl) { return; }
                 //
                 var actParam = getParam(params, 'action', 1);
                 if (!actParam) { return; }
-                actParam._is_path = true;
                 //
                 ctrl.initialize(req, res);
                 var act = ctrl.actions[lower(actParam.value || route.defaultValues[lower(actParam.name)])];
                 if (!act) { return; }
                 //
+                var routeData = req.routeData = {};
                 utils.each(params, function() {
-                    if (!this._is_path && !(this.name in req.query)) {
-                        req.query[this.name] = this.value;
-                    }
+                    routeData[this.name] = this.value;
                 });
                 //
                 act.execute(req, res);

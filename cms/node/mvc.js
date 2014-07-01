@@ -10,6 +10,7 @@ var parse = require('url').parse,
     utils = require('./utilities'),
     mvcView = require('./mvcView'),
     mvcAreas = require('./mvcAreas'),
+    mvcHelper = require('./mvcHelper'),
     mvcMatcher = require('./mvcMatcher'),
     mvcController = require('./mvcController');
 
@@ -23,22 +24,11 @@ var mvcHandler = function(set) {
     });
 
     var lower = function(str) {
-        if (!str) { return str };
-        return str.toLowerCase();
+        return mvcHelper.lower(str);
     };
 
     var getParam = function(params, findName, defaultIndex) {
-        var found; findName = lower(findName);
-        utils.each(params, function() {
-            if (lower(this.name) === findName) {
-                found = this;
-                return false;
-            }
-        });
-        if (!found) {
-            found = params[defaultIndex];
-        }
-        return found;
+        return mvcHelper.findRouteValue(params, findName, defaultIndex);
     };
 
     // route core

@@ -8,6 +8,7 @@
 
 var events = require('events'),
 	utils = require('./utilities'),
+    mvcHelper = require('./mvcHelper'),
     mvcAction = require('./mvcAction'),
     mvcInjector = require('./mvcInjector'),
     mvcTempData = require('./mvcTempData'),
@@ -40,7 +41,7 @@ mvcController.prototype = {
 
     _name: null, _impl: null, _path: null,
 
-    actions: null, viewdata: null, tempdata: null,
+    actions: null, viewdata: null, tempdata: null, routeData: null,
 
     constructor: mvcController, events: null,
 
@@ -49,6 +50,7 @@ mvcController.prototype = {
     impl: function(p) { return (p === undefined) ? (this._impl) : (this._impl = p, this); },
 
     initialize: function(req, res) {
+        this.routeData = req.routeData;
         var injectedParams = this.injectImpl(req, res);
         this.impl().apply(this, injectedParams);
         return this;
@@ -132,11 +134,11 @@ mvcController.prototype = {
     },
 
     partialView: function(viewName) {
-        return new actionResults.partialViewResult(viewName);
+        return new actionResults.partialViewResult({ viewName: viewName });
     },
 
     view: function(viewName, model) {
-        return new actionResults.viewResult(viewName, model);
+        return new actionResults.viewResult({ viewName: viewName, model: model });
     },
 
     file: function(filePath, fileDownloadName) {
@@ -156,13 +158,11 @@ mvcController.prototype = {
     },
 
     redirectToAction: function(actionName, controllerName, routeValues) {
-        //TODO: merge routeValues
-        return this.redirectToRoute(routeValues);
+        return this.redirectToRoute(mvcHelper.mergeRouteValues(actionName, controllerName, this.routeData, routeValues, true));
     },
 
     redirectToActionPermanent: function(actionName, controllerName, routeValues) {
-        //TODO: merge routeValues
-        return this.redirectToRoutePermanent(routeValues);
+        return this.redirectToRoutePermanent(mvcHelper.mergeRouteValues(actionName, controllerName, this.routeData, routeValues, true));
     },
 
     redirectToRoute: function(routeValues) {

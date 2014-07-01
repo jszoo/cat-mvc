@@ -87,8 +87,10 @@ var partialViewResult = exports.partialViewResult = function(set) {
 
 utils.inherit(partialViewResult, baseResult, {
 
+    viewName: null,
+
     execute: function(context) {
-        
+        //TODO:
     }
 });
 
@@ -101,8 +103,10 @@ var viewResult = exports.viewResult = function(set) {
 
 utils.inherit(viewResult, baseResult, {
 
+    viewName: null, model: null,
+
     execute: function(context) {
-        
+        //TODO:
     }
 });
 

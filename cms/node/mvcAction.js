@@ -66,39 +66,54 @@ mvcAction.prototype = {
     },
 
     execute: function(req, res) {
-        if (utils.isFunction(this.impl)) {
-            // execute action
-            var injectedParams = this.injectImpl(req);
-            var actionContext = {
-                request: req,
-                response: res,
-                params: injectedParams,
-                result: null
-            };
-            this.ctrl.events.emit('actionExecuting', actionContext);
-            actionContext.result = this.impl.apply(this.ctrl, injectedParams);
-            this.ctrl.events.emit('actionExecuted', actionContext);
-            // execute action result
-            var ret = actionContext.result;
-            if (ret !== undefined && ret !== null) {
-                if (!(ret instanceof actionResults.baseResult)) {
-                    ret = new actionResults.contentResult({
-                        content: ret.toString(),
-                        contentType: 'text/plain'
-                    });
-                }
-                var resultContext = {
-                    request: req,
-                    response: res,
-                    result: ret,
-                    exception: null
-                };
-                this.ctrl.events.emit('resultExecuting', resultContext);
-                ret.execute(resultContext);
-                this.ctrl.events.emit('resultExecuted', resultContext);
+        if (!utils.isFunction(this.impl)) { return; }
+        // execute action
+        var injectedParams = this.injectImpl(req);
+        var actionContext = {
+            request: req,
+            response: res,
+            params: injectedParams,
+            result: null
+        };
+        this.ctrl.events.emit('actionExecuting', actionContext);
+        actionContext.result = this.impl.apply(this.ctrl, injectedParams);
+        this.ctrl.events.emit('actionExecuted', actionContext);
+        // ret
+        return actionContext.result;
+    },
+
+    executeResult: function(req, res, result) {
+        if (result === undefined || result === null) { return; }
+        //
+        if (!(result instanceof actionResults.baseResult)) {
+            result = new actionResults.contentResult({
+                content: result.toString(),
+                contentType: 'text/plain'
+            });
+        }
+        else if (result instanceof actionResults.viewResult) {
+            if (!result.viewName) {
+                result.viewName = this.name;
+            }
+            if (!result.model) {
+                result.model = this.ctrl.viewdata;
             }
         }
-        return this;
+        else if (result instanceof actionResults.partialViewResult) {
+            if (!result.viewName) {
+                result.viewName = this.name;
+            }
+        }
+        //
+        var resultContext = {
+            request: req,
+            response: res,
+            result: result,
+            exception: null
+        };
+        this.ctrl.events.emit('resultExecuting', resultContext);
+        result.execute(resultContext);
+        this.ctrl.events.emit('resultExecuted', resultContext);
     }
 };
 

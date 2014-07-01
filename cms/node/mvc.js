@@ -72,7 +72,9 @@ var mvcHandler = function(set) {
                 var act = ctrl.findAction(lower(actParam.value), req.method);
                 if (!act) { return; }
                 //
-                act.execute(req, res);
+                var result = act.execute(req, res);
+                act.executeResult(req, res, result);
+                //
                 matched = true;
                 return false;
             });

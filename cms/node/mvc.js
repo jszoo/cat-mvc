@@ -22,10 +22,15 @@ var mvcHandler = function(set) {
         end: false
     });
 
+    var tryToLower = function(str) {
+        if (!str) { return str };
+        return str.toLowerCase();
+    };
+
     var tryGetParam = function(params, name, index) {
         var found;
         utils.each(params, function() {
-            if (this.name === name) {
+            if (tryToLower(this.name) === name) {
                 found = this;
                 return false;
             }
@@ -49,17 +54,25 @@ var mvcHandler = function(set) {
                 //
                 var ctrlParam = tryGetParam(params, 'controller', 0);
                 if (!ctrlParam) { return; }
+                ctrlParam._is_path = true;
                 //
-                var ctrl = area.controllers[ctrlParam.value || route.defaultValues[ctrlParam.name]];
+                var ctrl = area.controllers[tryToLower(ctrlParam.value) || route.defaultValues[tryToLower(ctrlParam.name)]];
                 if (!ctrl) { return; }
                 //
                 var actParam = tryGetParam(params, 'action', 1);
                 if (!actParam) { return; }
+                actParam._is_path = true;
                 //
                 ctrl.initialize(req, res);
                 var actions = ctrl.actions();
-                var act = actions[actParam.value || route.defaultValues[actParam.name]];
+                var act = actions[tryToLower(actParam.value) || route.defaultValues[tryToLower(actParam.name)]];
                 if (!act) { return; }
+                //
+                utils.each(params, function() {
+                    if (!this._is_path && !(this.name in req.query)) {
+                        req.query[this.name] = this.value;
+                    }
+                });
                 //
                 act.execute(req, res);
                 matched = true;

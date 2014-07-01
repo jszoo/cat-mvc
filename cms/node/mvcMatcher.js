@@ -38,8 +38,8 @@ module.exports = function (set) {
             var params = [];
             utils.each(keys, function(i, it) {
                 params.push({
-                    value: decode(match[i +1]),
-                    name: it.name.toLowerCase()
+                    name: it.name,
+                    value: decode(match[i +1])
                 });
             });
             // ret

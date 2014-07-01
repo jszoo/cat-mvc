@@ -31,7 +31,7 @@ mvcArea.prototype = {
     mapRoute: function(routeExp, defaultValues) {
         var values = {};
         utils.each(defaultValues, function(key, val) {
-            values[key.toLowerCase()] = val;
+            values[key.toLowerCase()] = (val && val.toLowerCase());
         });
         this.routes[routeExp.toLowerCase()] = {
             expression: routeExp,

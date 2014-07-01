@@ -43,8 +43,9 @@ var mvcHandler = function(set) {
 
     // route core
     return function(req, res, next) {
+        var matched = false;
         var pathname = parse(req.url).pathname;
-        var matched = false, allAreas = mvcAreas.all();
+        var allAreas = mvcAreas.all(), routeSet = mvcAreas.routeSet();
         utils.each(allAreas, function(i, area) {
             if (matched) { return false; }
             utils.each(area.routes, function(k, route) {
@@ -65,6 +66,7 @@ var mvcHandler = function(set) {
                 var act = ctrl.actions[lower(actParam.value || route.defaultValues[lower(actParam.name)])];
                 if (!act) { return; }
                 //
+                req.routeSet = routeSet;
                 var routeData = req.routeData = {};
                 utils.each(params, function() {
                     routeData[this.name] = this.value;

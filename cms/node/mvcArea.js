@@ -8,6 +8,7 @@
 
 var fs = require('fs'),
     path = require('path'),
+    events = require('events'),
     utils = require('./utilities');
 
 
@@ -16,6 +17,7 @@ var mvcArea = function(set) {
     this.controllers = {};
     this.extensions = {};
     this.routes = {};
+    this.events = new events.EventEmitter();
 };
 
 mvcArea.isArea = true;
@@ -26,7 +28,7 @@ mvcArea.prototype = {
 
     controllers: null, routes: null, extensions: null,
 
-    constructor: mvcArea,
+    constructor: mvcArea, events: null,
 
     mapRoute: function(routeExp, defaultValues) {
         var values = {};
@@ -37,14 +39,20 @@ mvcArea.prototype = {
             expression: routeExp,
             defaultValues: values
         };
+        this.events.emit('routeChanged');
         return this;
     },
 
     removeRoute: function(routeExp) {
-        return (delete this.routes[routeExp.toLowerCase()], this);
+        var ret = (delete this.routes[routeExp.toLowerCase()]);
+        if (ret) { this.events.emit('routeChanged'); }
+        return this;
     },
 
     clearRoutes: function() {
+        if (utils.propCount(this.routes) > 0) {
+            this.events.emit('routeChanged');
+        }
         return (this.routes = {}, this);
     },
 

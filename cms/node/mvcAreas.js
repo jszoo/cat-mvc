@@ -23,7 +23,7 @@ module.exports = {
 
     _areasPath: utils.absolutePath(CONST_Areas),
 
-    _areas: caching.region('mvc-areas-cache'),
+    _areas: caching.region('mvc-areas-cache'), _routeSet: null,
 
     rootAreaName: utils.unique(8).toUpperCase(),
 
@@ -35,6 +35,18 @@ module.exports = {
 
     get: function(areaName) {
         return this._areas.get(areaName);
+    },
+
+    routeSet: function() {
+        if (!this._routeSet) {
+            var rs = this._routeSet = {};
+            utils.each(this.all(), function() {
+                utils.each(this.routes, function(key, val) {
+                    rs[key] = val;
+                });
+            });
+        }
+        return this._routeSet;
     },
 
     unload: function(areaName) {
@@ -55,6 +67,11 @@ module.exports = {
             area = new mvcArea({
                 name: areaName,
                 path: areaPath
+            });
+            //
+            var self = this;
+            area.events.on('routeChanged', function() {
+                self._routeSet = null;
             });
             // map route
             area.mapRoute(areaRoute, defaultRouteValues);

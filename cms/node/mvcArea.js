@@ -85,7 +85,7 @@ mvcArea.prototype = {
         return (delete this.controllers[ctrlName.toLowerCase()], this);
     },
 
-    findController: function(name, req) {
+    findController: function(name) {
         return this.controllers[name];
     },
 

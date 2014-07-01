@@ -121,7 +121,7 @@ mvcController.prototype = {
         return this;
     },
 
-    findAction: function(name, req) {
+    findAction: function(name, method) {
         //TODO:
         return this.actions[name];
     },

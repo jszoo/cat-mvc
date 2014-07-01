@@ -52,7 +52,7 @@ var mvcHandler = function(set) {
                     ctrlParam.value = route.defaultValues[lower(ctrlParam.name)];
                 }
                 //
-                var ctrl = area.findController(lower(ctrlParam.value), req);
+                var ctrl = area.findController(lower(ctrlParam.value));
                 if (!ctrl) { return; }
                 //
                 var actParam = getParam(params, 'action', 1);
@@ -69,7 +69,7 @@ var mvcHandler = function(set) {
                 req.routeData = params;
                 ctrl.initialize(req, res);
                 //
-                var act = ctrl.findAction(lower(actParam.value), req);
+                var act = ctrl.findAction(lower(actParam.value), req.method);
                 if (!act) { return; }
                 //
                 act.execute(req, res);

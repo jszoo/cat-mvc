@@ -9,7 +9,11 @@ var mvc = require('../../../node/mvc');
 module.exports = mvc.controller(function(req, res) {
 
     this.action('index', function() {
-        return this.json({ accountHomeIndex: true });
+    	return this.redirectToAction('test');
+    });
+
+    this.action('test', function() {
+    	return this.json({ redirectFromAccountHomeIndex: true });
     });
 
 });

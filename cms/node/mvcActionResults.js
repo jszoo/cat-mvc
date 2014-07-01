@@ -63,7 +63,7 @@ var jsonpResult = exports.jsonpResult = function(set) {
 };
 
 utils.inherit(jsonpResult, baseResult, {
-    data: null, contentType: 'application/json', callbackName: 'callback',
+    data: null, contentType: 'text/javascript', callbackName: 'callback',
     execute: function(context) {
         var old = context.response.app.get('jsonp callback name');
         context.response.app.set('jsonp callback name', this.callbackName);

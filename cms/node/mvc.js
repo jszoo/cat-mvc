@@ -22,6 +22,20 @@ var mvcHandler = function(set) {
         end: false
     });
 
+    var tryGetParam = function(params, name, index) {
+        var found;
+        utils.each(params, function() {
+            if (this.name === name) {
+                found = this;
+                return false;
+            }
+        });
+        if (!found) {
+            found = params[index];
+        }
+        return found;
+    };
+
     //
     return function(req, res, next) {
         var pathname = parse(req.url).pathname;
@@ -33,13 +47,13 @@ var mvcHandler = function(set) {
                 var params = match(pathname);
                 if (params === false) { return; }
                 //
-                var ctrlParam = params[0];
+                var ctrlParam = tryGetParam(params, 'controller', 0);
                 if (!ctrlParam) { return; }
                 //
                 var ctrl = area.controllers[ctrlParam.value || route.defaultValues[ctrlParam.name]];
                 if (!ctrl) { return; }
                 //
-                var actParam = params[1];
+                var actParam = tryGetParam(params, 'action', 1);
                 if (!actParam) { return; }
                 //
                 ctrl.initialize(req, res);

@@ -12,7 +12,7 @@ var utils = require('./utilities');
 /* baseResult
 ***************************************/
 var baseResult = exports.baseResult = function(set) {
-    emptyResult.superclass.constructor.call(this, set);
+    utils.extend(this, set);
 };
 
 baseResult.prototype = {

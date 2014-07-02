@@ -13,6 +13,7 @@ var events = require('events'),
     mvcInjector = require('./mvcInjector'),
     mvcTempData = require('./mvcTempData'),
     mvcViewData = require('./mvcViewData'),
+    mvcHelperUrl = require('./mvcHelperUrl'),
     actionResults = require('./mvcActionResults');
 
 
@@ -41,7 +42,7 @@ mvcController.prototype = {
 
     _name: null, _impl: null, _path: null,
 
-    actions: null,  events: null,
+    actions: null,  events: null, url: null,
 
     viewData: null, tempData: null, routeData: null,
 
@@ -53,8 +54,11 @@ mvcController.prototype = {
 
     initialize: function(req, res) {
         this.routeData = req.routeData;
+        this.url = new mvcHelperUrl({ request: req });
+        //
         var injectedParams = this.injectImpl(req, res);
         this.impl().apply(this, injectedParams);
+        //
         return this;
     },
 

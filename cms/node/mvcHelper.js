@@ -66,3 +66,15 @@ var mergeRouteValues = exports.mergeRouteValues = function(actionName, controlle
     // ret
     return values;
 };
+
+var generateUrl = exports.generateUrl = function(actionName, controllerName, routeValues, routeSet, request, includeImplicitMvcValues) {
+    var values = mvcHelper.mergeRouteValues(actionName, controllerName, request.routeData, routeValues, includeImplicitMvcValues);
+};
+
+var generateUrlPlus = exports.generateUrlPlus = function(actionName, controllerName, protocol, hostName, fragment, routeValues, routeSet, request, includeImplicitMvcValues) {
+    //TODO:
+};
+
+var generateContentUrl = exports.generateContentUrl = function(contentPath, httpContext) {
+    //TODO:
+};

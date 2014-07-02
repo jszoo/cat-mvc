@@ -37,7 +37,8 @@ mvcArea.prototype = {
         });
         this.routes[routeExp.toLowerCase()] = {
             expression: routeExp,
-            defaultValues: values
+            defaultValues: values,
+            ownerAreaName: this.name
         };
         this.events.emit('routeChanged');
         return this;

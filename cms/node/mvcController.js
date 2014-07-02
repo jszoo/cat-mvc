@@ -132,12 +132,15 @@ mvcController.prototype = {
     },
 
     findAction: function(name, method) {
-        var action;
-        utils.each(this.actions, function() {
-            if (mvcHelper.lowerEqual(this.name, name) && this.hasMethod(method)) {
-                action = this;
-                return false;
-            }
+        var action, self = this;
+        utils.each([method, null], function(i, md) {
+            if (action) { return false; }
+            utils.each(self.actions, function() {
+                if (mvcHelper.lowerEqual(this.name, name) && this.hasMethod(md)) {
+                    action = this;
+                    return false;
+                }
+            });
         });
         return action;
     },

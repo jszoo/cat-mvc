@@ -7,4 +7,4 @@ OK 2. mvcController.action http method?
 7. tempData function
 8. xheaders function
 9. inject url/html helper to view engine
-10. actions that is not specify a method should accept all method type request
+OK 10. actions that is not specify a method should accept all method type request

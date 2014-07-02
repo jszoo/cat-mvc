@@ -33,20 +33,22 @@ mvcAction.prototype = {
     constructor: mvcAction,
 
     hasMethod: function(method) {
-        if (!httpMethod.exists(method)) {
+        if (method && !httpMethod.exists(method)) {
             return false;
+        }
+        if (!method && !this.sett) {
+            return true;
         }
         //
         var methodStr = ',';
-        if (!this.sett) {
-            methodStr += 'GET,';
-        } else if (utils.isString(this.sett)) {
+        if (utils.isString(this.sett)) {
             methodStr += this.sett + ',';
         } else if (utils.isObject(this.sett)) {
             utils.each(this.sett, function(key, val) {
-                if (val) { methodStr += key + ','; }
+                if (val && httpMethod.exists(key)) { methodStr += key + ','; }
             });
         }
+        method = (method || '');
         return methodStr.replace(/\s/g, '').toUpperCase().indexOf(',' + method.toUpperCase() + ',') > -1;
     },
 

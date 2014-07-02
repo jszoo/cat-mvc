@@ -28,7 +28,7 @@ mvcAction.isAction = true;
 
 mvcAction.prototype = {
 
-    ctrl: null, name: null, impl: null, sett: null,
+    controller: null, name: null, impl: null, sett: null,
     
     constructor: mvcAction,
 
@@ -94,9 +94,9 @@ mvcAction.prototype = {
             params: injectedParams,
             result: null
         };
-        this.ctrl.events.emit('actionExecuting', actionContext);
-        actionContext.result = this.impl.apply(this.ctrl, injectedParams);
-        this.ctrl.events.emit('actionExecuted', actionContext);
+        this.controller.events.emit('actionExecuting', actionContext);
+        actionContext.result = this.impl.apply(this.controller, injectedParams);
+        this.controller.events.emit('actionExecuted', actionContext);
         // ret
         return actionContext.result;
     },
@@ -115,7 +115,7 @@ mvcAction.prototype = {
                 result.viewName = this.name;
             }
             if (!result.model) {
-                result.model = this.ctrl.viewdata;
+                result.model = this.controller.viewData;
             }
         }
         else if (result instanceof actionResults.partialViewResult) {
@@ -130,9 +130,9 @@ mvcAction.prototype = {
             result: result,
             exception: null
         };
-        this.ctrl.events.emit('resultExecuting', resultContext);
+        this.controller.events.emit('resultExecuting', resultContext);
         result.execute(resultContext);
-        this.ctrl.events.emit('resultExecuted', resultContext);
+        this.controller.events.emit('resultExecuted', resultContext);
         // ret
         return resultContext.exception;
     }

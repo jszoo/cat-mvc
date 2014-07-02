@@ -145,8 +145,16 @@ mvcController.prototype = {
         return action;
     },
 
-    empty: function() {
+    async: function(result) {
+        //TODO:
+    },
+
+    emptySync: function() {
         return new actionResults.emptyResult();
+    },
+
+    empty: function() {
+        this.async(new actionResults.emptyResult());
     },
 
     json: function(data, contentType) {

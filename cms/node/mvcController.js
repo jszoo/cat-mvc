@@ -19,8 +19,8 @@ var events = require('events'),
 var mvcController = function(set) {
     utils.extend(this, set);
     this.actions = {};
-    this.viewdata = new mvcViewData();
-    this.tempdata = new mvcTempData();
+    this.viewData = new mvcViewData();
+    this.tempData = new mvcTempData();
     this.events = new events.EventEmitter();
 };
 
@@ -41,9 +41,11 @@ mvcController.prototype = {
 
     _name: null, _impl: null, _path: null,
 
-    actions: null, viewdata: null, tempdata: null, routeData: null,
+    actions: null,  events: null,
 
-    constructor: mvcController, events: null,
+    viewData: null, tempData: null, routeData: null,
+
+    constructor: mvcController,
 
     name: function(p) { return (p === undefined) ? (this._name) : (this._name = p, this); },
     path: function(p) { return (p === undefined) ? (this._path) : (this._path = p, this); },
@@ -74,7 +76,8 @@ mvcController.prototype = {
                 case 'response': params.push(res); break;
                 case 'controller': params.push(self); break;
                 case 'events': params.push(self.events); break;
-                case 'tempdata': params.push(self.tempdata()); break;
+                case 'tempdata': params.push(self.tempData); break;
+                case 'viewdata': params.push(self.viewData); break;
                 case 'action': params.push(actionWrap || (actionWrap = function() { 
                     var args = utils.arg2arr(arguments);
                     self.action.apply(self, args);
@@ -122,6 +125,7 @@ mvcController.prototype = {
     },
 
     findAction: function(name, method) {
+        name = (name || '').toLowerCase();
         //TODO:
         return this.actions[name];
     },

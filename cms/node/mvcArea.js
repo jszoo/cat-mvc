@@ -86,6 +86,7 @@ mvcArea.prototype = {
     },
 
     findController: function(name) {
+        name = (name || '').toLowerCase();
         return this.controllers[name];
     },
 

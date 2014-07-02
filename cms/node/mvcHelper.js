@@ -28,23 +28,34 @@ var findRouteValue = exports.findRouteValue = function(routeData, findName, defa
 };
 
 var mergeRouteValues = exports.mergeRouteValues = function(actionName, controllerName, implicitRouteValues, routeValues, includeImplicitMvcValues) {
-    var values = {}, controllerParamName = 'controller', actionParamName = 'action';
+    var values = {}, areaParamName = 'area', controllerParamName = 'controller', actionParamName = 'action';
     if (includeImplicitMvcValues && implicitRouteValues) {
-        var controllerParam = findRouteValue(implicitRouteValues, controllerParamName, 0);
+        var areaParam = findRouteValue(implicitRouteValues, areaParamName, 0);
+        if (areaParam) {
+            areaParamName = areaParam.name;
+            values[areaParamName] = areaParam.value;
+        }
+        var controllerParam = findRouteValue(implicitRouteValues, controllerParamName, 1);
         if (controllerParam) {
             controllerParamName = controllerParam.name;
             values[controllerParamName] = controllerParam.value;
         }
-        var actionParam = findRouteValue(implicitRouteValues, actionParamName, 1);
+        var actionParam = findRouteValue(implicitRouteValues, actionParamName, 2);
         if (actionParam) {
             actionParamName = actionParam.name;
             values[actionParamName] = actionParam.value;
         }
     }
+    //
     if (routeValues) {
         utils.each(routeValues, function(key, value) {
             values[key] = value;
         });
+    }
+    //
+    var areaName = null;
+    if (areaName) {
+        values[areaParamName] = areaName;
     }
     if (controllerName) {
         values[controllerParamName] = controllerName;
@@ -52,5 +63,6 @@ var mergeRouteValues = exports.mergeRouteValues = function(actionName, controlle
     if (actionName) {
         values[actionParamName] = actionName;
     }
+    // ret
     return values;
 };

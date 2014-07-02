@@ -46,30 +46,33 @@ var mvcHandler = function(set) {
                 var params = match(pathname);
                 if (params === false) { return; }
                 //
-                var ctrlParam = getParam(params, 'controller', 0);
+                var areaParam = getParam(params, 'area');
+                if (!areaParam) {
+                    params.unshift({
+                        name: 'area',
+                        value: area.name
+                    });
+                }
+                //
+                var ctrlParam = getParam(params, 'controller', 1);
                 if (!ctrlParam) { return; }
                 if (!ctrlParam.value) {
                     ctrlParam.value = route.defaultValues[lower(ctrlParam.name)];
                 }
                 //
-                var ctrl = area.findController(lower(ctrlParam.value));
+                var ctrl = area.findController(ctrlParam.value);
                 if (!ctrl) { return; }
                 //
-                var actParam = getParam(params, 'action', 1);
+                var actParam = getParam(params, 'action', 2);
                 if (!actParam) { return; }
                 if (!actParam.value) {
                     actParam.value = route.defaultValues[lower(actParam.name)];
                 }
                 //
-                params.push({
-                    name: 'area',
-                    value: area.name
-                });
-                //
                 req.routeData = params;
                 ctrl.initialize(req, res);
                 //
-                var act = ctrl.findAction(lower(actParam.value), req.method);
+                var act = ctrl.findAction(actParam.value, req.method);
                 if (!act) { return; }
                 //
                 var result = act.execute(req, res);

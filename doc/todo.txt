@@ -1,5 +1,5 @@
-1. httpNotFound: statusDescription header?
-2. mvcController.action http method?
+OK 1. httpNotFound: statusDescription header?
+OK 2. mvcController.action http method?
 3. implement mvc url helper
 4. implement mvc htlm helper
 5. viewResult partialViewResult

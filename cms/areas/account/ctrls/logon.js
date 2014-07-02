@@ -13,10 +13,11 @@ module.exports = mvc.controller(function(req, res) {
 
 
     this.action('index', function() {
+        res.json({ Get: true });
     });
 
     this.action('index', 'post', function(UserName, Password, User, ArticleId) {
-        res.json({ Success: true });
+        res.json({ Post: true });
     });
 
     this.action('forgotPassword', function() {

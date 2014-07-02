@@ -48,6 +48,14 @@ mvcController.prototype = {
     path: function(p) { return (p === undefined) ? (this._path) : (this._path = p, this); },
     impl: function(p) { return (p === undefined) ? (this._impl) : (this._impl = p, this); },
 
+    clone: function() {
+        return new mvcController({
+            _name: this._name,
+            _impl: this._impl,
+            _path: this._path
+        });
+    },
+
     initialize: function(req, res) {
         this.actions = [];
         this.viewData = new mvcViewData();

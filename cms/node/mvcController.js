@@ -19,10 +19,6 @@ var events = require('events'),
 
 var mvcController = function(set) {
     utils.extend(this, set);
-    this.actions = {};
-    this.viewData = new mvcViewData();
-    this.tempData = new mvcTempData();
-    this.events = new events.EventEmitter();
 };
 
 mvcController.define = function(name, impl) {
@@ -53,6 +49,11 @@ mvcController.prototype = {
     impl: function(p) { return (p === undefined) ? (this._impl) : (this._impl = p, this); },
 
     initialize: function(req, res) {
+        this.actions = [];
+        this.viewData = new mvcViewData();
+        this.tempData = new mvcTempData();
+        this.events = new events.EventEmitter();
+        //
         this.routeData = req.routeData;
         this.url = new mvcHelperUrl({ request: req });
         //
@@ -106,32 +107,31 @@ mvcController.prototype = {
         }
         if (arguments.length === 2) {
             impl = sett;
-            sett = {};
-        } else if (arguments.length === 3) {
-            if (utils.isString(sett)) {
-                sett = { method: sett };
-            } else if (!utils.isObject(sett)) {
-                sett = {};
-            }
+            sett = null;
         }
         if (!utils.isFunction(impl)) {
             throw new Error('action impl is required.');
         }
         // new
-        this.actions[name.toLowerCase()] = new mvcAction({
+        this.actions.push(new mvcAction({
             ctrl: this,
             name: name,
             impl: impl,
             sett: sett
-        });
+        }));
         // ret
         return this;
     },
 
     findAction: function(name, method) {
-        name = (name || '').toLowerCase();
-        //TODO:
-        return this.actions[name];
+        var action;
+        utils.each(this.actions, function() {
+            if (mvcHelper.lowerEqual(this.name, name) && this.hasMethod(method)) {
+                action = this;
+                return false;
+            }
+        });
+        return action;
     },
 
     empty: function() {

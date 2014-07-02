@@ -8,6 +8,7 @@
 
 var utils = require('./utilities'),
     injector = require('./mvcInjector'),
+    httpMethod = require('./mvcHttpMethod'),
     actionResults = require('./mvcActionResults');
 
 var lowerRootNs = function(namespace) {
@@ -30,6 +31,24 @@ mvcAction.prototype = {
     ctrl: null, name: null, impl: null, sett: null,
     
     constructor: mvcAction,
+
+    hasMethod: function(method) {
+        if (!httpMethod.exists(method)) {
+            return false;
+        }
+        //
+        var methodStr = ',';
+        if (!this.sett) {
+            methodStr += 'GET,';
+        } else if (utils.isString(this.sett)) {
+            methodStr += this.sett + ',';
+        } else if (utils.isObject(this.sett)) {
+            utils.each(this.sett, function(key, val) {
+                if (val) { methodStr += key + ','; }
+            });
+        }
+        return methodStr.replace(/\s/g, '').toUpperCase().indexOf(',' + method.toUpperCase() + ',') > -1;
+    },
 
     injectImpl: function(req) {
         var params = [];

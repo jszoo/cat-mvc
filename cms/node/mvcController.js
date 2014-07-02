@@ -122,7 +122,7 @@ mvcController.prototype = {
         }
         // new
         this.actions.push(new mvcAction({
-            ctrl: this,
+            controller: this,
             name: name,
             impl: impl,
             sett: sett

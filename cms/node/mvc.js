@@ -71,6 +71,7 @@ var mvcHandler = function(set) {
                 //
                 try {
                     req.routeData = params;
+                    ctrl = ctrl.clone();
                     ctrl.initialize(req, res);
                 } catch (ex) {
                     exception = ex;

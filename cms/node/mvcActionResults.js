@@ -6,7 +6,8 @@
 
 'use strict';
 
-var utils = require('./utilities'),
+var http = require('http'),
+    utils = require('./utilities'),
     mvcHelper = require('./mvcHelper');
 
 
@@ -138,9 +139,14 @@ var httpStatusCodeResult = exports.httpStatusCodeResult = function(set) {
 };
 
 utils.inherit(httpStatusCodeResult, baseResult, {
-    statusCode: null, statusDescription: null,
+    statusCode: null, statusText: null,
     execute: function(context) {
-        context.response.send(this.statusDescription, this.statusCode);
+        //
+        var message = this.statusText;
+        if (!message) { message = http.STATUS_CODES[this.statusCode];}
+        //
+        context.exception = new Error(message);
+        context.exception.status = this.statusCode;
     }
 });
 

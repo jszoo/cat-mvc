@@ -162,8 +162,8 @@ mvcController.prototype = {
         return new actionResults.contentResult({ content: content, contentType: contentType });
     },
 
-    httpNotFound: function(statusDescription) {
-        return new actionResults.httpNotFoundResult({ statusDescription: statusDescription });
+    httpNotFound: function(statusText) {
+        return new actionResults.httpNotFoundResult({ statusText: statusText });
     },
 
     redirect: function(url, permanent) {

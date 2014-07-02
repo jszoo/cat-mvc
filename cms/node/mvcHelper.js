@@ -13,6 +13,10 @@ var lower = exports.lower = function(str) {
     return str.toLowerCase();
 };
 
+var lowerEqual = exports.lowerEqual = function(str1, str2) {
+    return lower(str1) == lower(str2);
+};
+
 var findRouteValue = exports.findRouteValue = function(routeData, findName, defaultIndex) {
     var found; findName = lower(findName);
     utils.each(routeData, function() {
@@ -67,8 +71,21 @@ var mergeRouteValues = exports.mergeRouteValues = function(actionName, controlle
     return values;
 };
 
+var filterRouteSetByArea = function(routeSet, areaName) {
+    var routes = [];
+    utils.each(routeSet, function(key, route) {
+        if (lowerEqual(route.ownerAreaName, areaName)) {
+            routes.push(route);
+        }
+    });
+    return routes;
+};
+
 var generateUrl = exports.generateUrl = function(actionName, controllerName, routeValues, routeSet, request, includeImplicitMvcValues) {
-    var values = mvcHelper.mergeRouteValues(actionName, controllerName, request.routeData, routeValues, includeImplicitMvcValues);
+    var areaParam = findRouteValue(request.routeData, 'area', 0);
+    var routes = filterRouteSetByArea(routeSet, routeValues[areaParam.name]);
+    var values = mergeRouteValues(actionName, controllerName, request.routeData, routeValues, includeImplicitMvcValues);
+    //TODO:
 };
 
 var generateUrlPlus = exports.generateUrlPlus = function(actionName, controllerName, protocol, hostName, fragment, routeValues, routeSet, request, includeImplicitMvcValues) {

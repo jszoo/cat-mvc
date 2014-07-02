@@ -114,6 +114,8 @@ mvcAction.prototype = {
         this.ctrl.events.emit('resultExecuting', resultContext);
         result.execute(resultContext);
         this.ctrl.events.emit('resultExecuted', resultContext);
+        // ret
+        return resultContext.exception;
     }
 };
 

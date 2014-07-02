@@ -33,7 +33,7 @@ var mvcHandler = function(set) {
 
     // route core
     return function(req, res, next) {
-        var matched = false;
+        var matched = false, exception;
         var pathname = parse(req.url).pathname;
         //
         var allAreas = mvcAreas.all();
@@ -69,20 +69,37 @@ var mvcHandler = function(set) {
                     actParam.value = route.defaultValues[lower(actParam.name)];
                 }
                 //
-                req.routeData = params;
-                ctrl.initialize(req, res);
+                try {
+                    req.routeData = params;
+                    ctrl.initialize(req, res);
+                } catch (ex) {
+                    exception = ex;
+                    return false;
+                }
                 //
                 var act = ctrl.findAction(actParam.value, req.method);
                 if (!act) { return; }
                 //
-                var result = act.execute(req, res);
-                act.executeResult(req, res, result);
+                try {
+                    var result = act.execute(req, res);
+                    exception = act.executeResult(req, res, result);
+                } catch (ex) {
+                    exception = ex;
+                    return false;
+                }
                 //
                 matched = true;
                 return false;
             });
         });
-        if (!matched) {
+        //
+        if (exception) {
+            if (!(exception instanceof Error)) {
+                exception = new Error(exception);
+            }
+            next(exception);
+        }
+        else if (!matched) {
             next();
         }
     };

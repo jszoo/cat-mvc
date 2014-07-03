@@ -10,15 +10,15 @@ var utils = require('./utilities'),
     mvcHelper = require('./mvcHelper');
 
 
-var urlHelper = function(set) {
+var mvcUrlHelper = function(set) {
     utils.extend(this, set);
 };
 
-urlHelper.prototype = {
+mvcUrlHelper.prototype = {
 
     httpContext: null,
 
-    constructor: urlHelper, className: 'urlHelper',
+    constructor: mvcUrlHelper, className: 'mvcUrlHelper',
 
     action: function(actionName, controllerName, routeValues, protocol, hostName) {
         return mvcHelper.generateUrlPlus(actionName, controllerName, protocol, hostName, null, routeValues, this.httpContext.routeSet, this.httpContext, true);
@@ -33,4 +33,4 @@ urlHelper.prototype = {
     }
 }
 
-module.exports = urlHelper;
+module.exports = mvcUrlHelper;

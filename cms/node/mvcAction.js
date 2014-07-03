@@ -9,7 +9,7 @@
 var utils = require('./utilities'),
     injector = require('./mvcInjector'),
     httpMethod = require('./mvcHttpMethod'),
-    actionResults = require('./mvcActionResults');
+    actionResult = require('./mvcActionResult');
 
 var lowerRootNs = function(namespace) {
     var index = namespace.search(/\.|\[|\]/);
@@ -86,7 +86,7 @@ mvcAction.prototype = {
 
     execute: function(callback) {
         if (!utils.isFunction(this.impl)) { return; }
-        this.controller.resultsApi.callback = callback;
+        this.controller.resultApi.callback = callback;
         // execute action
         var injectedParams = this.injectImpl(this.controller.httpContext);
         var actionContext = utils.extend({}, this.controller.httpContext, {
@@ -103,13 +103,13 @@ mvcAction.prototype = {
     executeResult: function(result) {
         if (result === undefined || result === null) { return; }
         //
-        if (!(result instanceof actionResults.baseResult)) {
-            result = new actionResults.contentResult({
+        if (!(result instanceof actionResult.baseResult)) {
+            result = new actionResult.contentResult({
                 content: result.toString(),
                 contentType: 'text/plain'
             });
         }
-        else if (result instanceof actionResults.viewResult) {
+        else if (result instanceof actionResult.viewResult) {
             if (!result.viewName) {
                 result.viewName = this.name;
             }
@@ -117,7 +117,7 @@ mvcAction.prototype = {
                 result.model = this.controller.viewData;
             }
         }
-        else if (result instanceof actionResults.partialViewResult) {
+        else if (result instanceof actionResult.partialViewResult) {
             if (!result.viewName) {
                 result.viewName = this.name;
             }

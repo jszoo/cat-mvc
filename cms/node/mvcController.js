@@ -14,7 +14,7 @@ var events = require('events'),
     mvcTempData = require('./mvcTempData'),
     mvcViewData = require('./mvcViewData'),
     mvcHelperUrl = require('./mvcHelperUrl'),
-    mvcResultsApi = require('./mvcActionResultsApi');
+    mvcResultApi = require('./mvcActionResultApi');
 
 
 var mvcController = function(set) {
@@ -40,7 +40,7 @@ mvcController.prototype = {
 
     viewData: null, tempData: null, httpContext: null,
 
-    resultsApi: null, resultsApiSync: null,
+    resultApi: null, resultApiSync: null,
 
     constructor: mvcController, className: 'mvcController',
 
@@ -61,8 +61,8 @@ mvcController.prototype = {
         utils.each(this.actions, function() { this.controller = null; });
         this.events.removeAllListeners();
         this.url.httpContext = null;
-        this.resultsApi.httpContext = null;
-        this.resultsApiSync.httpContext = null;
+        this.resultApi.httpContext = null;
+        this.resultApiSync.httpContext = null;
         // clear reference types
         this._impl = null;
         this.actions = null;
@@ -71,8 +71,8 @@ mvcController.prototype = {
         this.viewData = null;
         this.tempData = null;
         this.httpContext = null;
-        this.resultsApi = null;
-        this.resultsApiSync = null;
+        this.resultApi = null;
+        this.resultApiSync = null;
     },
 
     initialize: function(req, res, route, routeSet, routeData) {
@@ -91,13 +91,13 @@ mvcController.prototype = {
         this.tempData = new mvcTempData();
         this.url = new mvcHelperUrl({ httpContext: this.httpContext });
         //
-        this.resultsApi = new mvcResultsApi({ httpContext: this.httpContext, sync: false });
-        this.resultsApiSync = new mvcResultsApi({ httpContext: this.httpContext, sync: true });
-        utils.each(this.resultsApiSync, function(name, func) {
+        this.resultApi = new mvcResultApi({ httpContext: this.httpContext, sync: false });
+        this.resultApiSync = new mvcResultApi({ httpContext: this.httpContext, sync: true });
+        utils.each(this.resultApiSync, function(name, func) {
             if (utils.isFunction(func) && !self[name]) {
                 self[name] = function() {
                     var args = utils.arg2arr(arguments);
-                    return self.resultsApiSync[name].apply(self.resultsApiSync, args);
+                    return self.resultApiSync[name].apply(self.resultApiSync, args);
                 };
             }
         });
@@ -127,7 +127,7 @@ mvcController.prototype = {
                 case 'events': params.push(self.events); break;
                 case 'tempdata': params.push(self.tempData); break;
                 case 'viewdata': params.push(self.viewData); break;
-                case 'end': params.push(self.resultsApi); break;
+                case 'end': params.push(self.resultApi); break;
                 case 'action': params.push(actionWrap || (actionWrap = function() { 
                     var args = utils.arg2arr(arguments);
                     self.action.apply(self, args);

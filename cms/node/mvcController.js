@@ -124,19 +124,29 @@ mvcController.prototype = {
                 loweName = loweName.substr(1);
             }
             switch(loweName) {
-                case 'req': params.push(httpContext.request); break;
-                case 'res': params.push(httpContext.response); break;
-                case 'request': params.push(httpContext.request); break;
+                case 'ctx':      params.push(httpContext); break;
+                case 'req':      params.push(httpContext.request); break;
+                case 'res':      params.push(httpContext.response); break;
+                case 'context':  params.push(httpContext); break;
+                case 'request':  params.push(httpContext.request); break;
                 case 'response': params.push(httpContext.response); break;
-                case 'events': params.push(self.events); break;
+                case 'session':  params.push(httpContext.request.session); break;
+                case 'query':    params.push(httpContext.request.query); break;
+                case 'form':     params.push(httpContext.request.body); break;
+                case 'body':     params.push(httpContext.request.body); break;
+                //
+                case 'events':   params.push(self.events); break;
                 case 'tempdata': params.push(self.tempData); break;
                 case 'viewdata': params.push(self.viewData); break;
-                case 'end': params.push(self.resultApi); break;
+                case 'end':      params.push(self.resultApi); break;
+                case 'url':      params.push(self.url); break;
+                //
                 case 'action': params.push(actionWrap || (actionWrap = function() { 
                     var args = utils.arg2arr(arguments);
                     self.action.apply(self, args);
                     return actionWrap;
                 })); break;
+                //
                 default: params.push(null); break;
             }
         });

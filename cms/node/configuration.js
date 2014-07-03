@@ -24,7 +24,7 @@ var configuration = function (path, cb) {
     instances.set(path, this);
     //
     this.events = new events.EventEmitter();
-    this._filePath = path;
+    this.filePath = path;
     this.reload(cb);
 };
 
@@ -44,31 +44,31 @@ configuration.deserialize = function (str) {
 
 configuration.prototype = {
 
-    _filePath: null, _innerObj: null,
+    filePath: null, innerObj: null, events: null,
 
-    events: null, constructor: configuration,
+    constructor: configuration, className: 'configuration',
 
     get: function (ns) {
         if (arguments.length === 0) {
-            return this._innerObj;
+            return this.innerObj;
         } else {
-            return utils.readObj(this._innerObj, ns);
+            return utils.readObj(this.innerObj, ns);
         }
     },
 
     set: function (ns, val) {
         if (arguments.length === 1) {
-            this._innerObj = ns;
+            this.innerObj = ns;
         } else {
-            utils.mapObj(this._innerObj, ns, val);
+            utils.mapObj(this.innerObj, ns, val);
         }
         return this;
     },
 
     save: function () {
-        io.ensureDirectory(path.dirname(this._filePath));
-        var json = configuration.serialize(this._innerObj);
-        fs.writeFile(this._filePath, json, { encoding: 'utf-8' }, function (err) {
+        io.ensureDirectory(path.dirname(this.filePath));
+        var json = configuration.serialize(this.innerObj);
+        fs.writeFile(this.filePath, json, { encoding: 'utf-8' }, function (err) {
             if (err) { throw err; }
             self.events.emit('save', json);
         });
@@ -76,11 +76,11 @@ configuration.prototype = {
     },
 
     reload: function (cb) {
-        if (fs.existsSync(this._filePath)) {
-            var data = fs.readFileSync(this._filePath, { encoding: 'utf-8' });
-            this._innerObj = configuration.deserialize(data);
+        if (fs.existsSync(this.filePath)) {
+            var data = fs.readFileSync(this.filePath, { encoding: 'utf-8' });
+            this.innerObj = configuration.deserialize(data);
             if (cb) { this.events.once('load', cb); }
-            this.events.emit('load', this._innerObj);
+            this.events.emit('load', this.innerObj);
         }
         return this;
     }

@@ -12,11 +12,9 @@ var mvcTempData = function(set) {
 	utils.extend(this, set);
 };
 
-mvcTempData.isTempData = true
-
 mvcTempData.prototype = {
 
-	constructor: mvcTempData
+	constructor: mvcTempData, className: 'mvcTempData',
 };
 
 module.exports = mvcTempData;

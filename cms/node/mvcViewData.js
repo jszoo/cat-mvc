@@ -12,11 +12,9 @@ var mvcViewData = function(set) {
 	utils.extend(this, set);
 };
 
-mvcViewData.isViewData = true
-
 mvcViewData.prototype = {
 
-	constructor: mvcViewData
+	constructor: mvcViewData, className: 'mvcViewData',
 };
 
 module.exports = mvcViewData;

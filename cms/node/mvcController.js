@@ -32,8 +32,6 @@ mvcController.define = function(name, impl) {
     });
 };
 
-mvcController.isController = true;
-
 mvcController.prototype = {
 
     _name: null, _impl: null, _path: null,
@@ -44,7 +42,7 @@ mvcController.prototype = {
 
     resultsApi: null, resultsApiSync: null,
 
-    constructor: mvcController,
+    constructor: mvcController, className: 'mvcController',
 
     name: function(p) { return (p === undefined) ? (this._name) : (this._name = p, this); },
     path: function(p) { return (p === undefined) ? (this._path) : (this._path = p, this); },

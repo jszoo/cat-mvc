@@ -24,13 +24,11 @@ var mvcAction = function(set) {
     utils.extend(this, set);
 };
 
-mvcAction.isAction = true;
-
 mvcAction.prototype = {
 
     controller: null, name: null, impl: null, sett: null,
     
-    constructor: mvcAction,
+    constructor: mvcAction, className: 'mvcAction',
 
     hasMethod: function(method) {
         if (method && !httpMethod.exists(method)) {

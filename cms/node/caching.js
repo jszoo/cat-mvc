@@ -128,7 +128,7 @@ caching.prototype = {
 
     _region: null,
 
-    constructor: caching,
+    constructor: caching, className: 'caching',
 
     all: function() {
         var ret = {}, self = this;

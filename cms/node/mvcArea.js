@@ -26,9 +26,9 @@ mvcArea.prototype = {
 
     name: null, path: null,
 
-    controllers: null, routes: null, extensions: null,
+    controllers: null, routes: null, extensions: null, events: null,
 
-    constructor: mvcArea, events: null,
+    constructor: mvcArea, className: 'mvcArea',
 
     mapRoute: function(routeExp, defaultValues) {
         var values = {};
@@ -60,7 +60,7 @@ mvcArea.prototype = {
     loadController: function(filePath) {
         if (fs.statSync(filePath).isFile()) {
             var self = this, coreLoad = function(ctrl) {
-                if (ctrl && ctrl.__proto__.constructor.isController === true) {
+                if (ctrl && ctrl.className === 'mvcController') {
                     if (!ctrl.name()) {
                         var extName = path.extname(filePath);
                         ctrl.name(path.basename(filePath, extName));

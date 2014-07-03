@@ -21,19 +21,16 @@ var sessionProvider = {
                 return values;
             }
         }
-        return {};
     },
     saveTempData: function(httpContext, values) {
         var session = httpContext.request.session;
         if (session) {
-            if (values && utils.propCount(values) > 0) {
+            if (utils.propCount(values) > 0) {
                 session[CONST_SessionStateKey] = values;
-                return true;
             } else {
                 delete session[CONST_SessionStateKey];
             }
         }
-        return false;
     }
 };
 
@@ -96,7 +93,7 @@ mvcTempData.prototype = {
     },
 
     load: function(httpContext) {
-        this.oldData = this.provider.loadTempData(httpContext);
+        this.oldData = (this.provider.loadTempData(httpContext) || {});
     }
 };
 

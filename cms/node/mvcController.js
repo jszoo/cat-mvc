@@ -93,7 +93,7 @@ mvcController.prototype = {
         //
         this.tempData = new mvcTempData({ provider: mvcTempData.sessionProvider });
         this.events.on('actionExecuting', function() { self.tempData.load(self.httpContext); });
-        this.events.on('resultExecuted', function() { self.tempData.save(self.httpContext); });
+        this.events.on('resultExecuting', function() { self.tempData.save(self.httpContext); });
         //
         this.resultApi = new mvcResultApi({ httpContext: this.httpContext, sync: false });
         this.resultApiSync = new mvcResultApi({ httpContext: this.httpContext, sync: true });

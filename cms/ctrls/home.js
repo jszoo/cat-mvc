@@ -6,10 +6,13 @@
 
 var mvc = require('../node/mvc');
 
-module.exports = mvc.controller(function(req, res) {
+module.exports = mvc.controller(function(req, res, end) {
 
     this.action('index', function() {
-        res.json({ homeIndex: true });
+    	setTimeout(function(){
+    		end.json({ timeoutHomeIndex: true });
+    	}, 1);
+    	//return this.json({ homeIndex: true });
     });
 
 });

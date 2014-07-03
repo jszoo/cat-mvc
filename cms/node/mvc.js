@@ -34,13 +34,24 @@ var mvcHandler = function(set) {
     // route core
     return function(req, res, next) {
         var matched = false, exception;
-        var pathname = parse(req.url).pathname;
+        var wrapnext = function() {
+            if (exception) {
+                if (!(exception instanceof Error)) {
+                    exception = new Error(exception);
+                }
+                next(exception);
+            }
+            else if (!matched) {
+                next();
+            }
+        };
         //
         var allAreas = mvcAreas.all();
-        req.routeSet = mvcAreas.routeSet();
+        var pathname = parse(req.url).pathname;
         //
         utils.each(allAreas, function(i, area) {
-            if (matched) { return false; }
+            if (matched || exception) { return false; }
+            //
             utils.each(area.routes, function(k, route) {
                 var match = macher(route.expression);
                 var params = match(pathname);
@@ -70,9 +81,8 @@ var mvcHandler = function(set) {
                 }
                 //
                 try {
-                    req.routeData = params;
                     ctrl = ctrl.clone();
-                    ctrl.initialize(req, res);
+                    ctrl.initialize(req, res, route, mvcAreas.routeSet(), params);
                 } catch (ex) {
                     exception = ex;
                     return false;
@@ -80,29 +90,29 @@ var mvcHandler = function(set) {
                 //
                 var act = ctrl.findAction(actParam.value, req.method);
                 if (!act) { return; }
+                matched = true;
                 //
                 try {
-                    var result = act.execute(req, res);
-                    exception = act.executeResult(req, res, result);
+                    var resultSync = act.execute(function(result) {
+                        if (!resultSync) {
+                            exception = act.executeResult(result);
+                            wrapnext();
+                        }
+                    });
+                    if (resultSync) {
+                        exception = act.executeResult(resultSync);
+                        wrapnext();
+                    }
                 } catch (ex) {
                     exception = ex;
                     return false;
                 }
                 //
-                matched = true;
                 return false;
             });
         });
-        //
-        if (exception) {
-            if (!(exception instanceof Error)) {
-                exception = new Error(exception);
-            }
-            next(exception);
-        }
-        else if (!matched) {
-            next();
-        }
+        // next
+        wrapnext();
     };
 };
 

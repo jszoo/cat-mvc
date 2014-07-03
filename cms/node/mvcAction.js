@@ -52,19 +52,19 @@ mvcAction.prototype = {
         return methodStr.replace(/\s/g, '').toUpperCase().indexOf(',' + method.toUpperCase() + ',') > -1;
     },
 
-    injectImpl: function(req) {
+    injectImpl: function(httpContext) {
         var params = [];
         var paramNames = injector.annotate(this.impl);
         if (!paramNames || paramNames.length === 0) { return params; }
         //
         var body = {}, query = {}, routeData = {};
-        utils.each(req.body, function(key, val) {
+        utils.each(httpContext.request.body, function(key, val) {
             utils.mapObj(body, lowerRootNs(key), val);
         });
-        utils.each(req.query, function(key, val) {
+        utils.each(httpContext.request.query, function(key, val) {
             utils.mapObj(query, lowerRootNs(key), val);
         });
-        utils.each(req.routeData, function(i, it) {
+        utils.each(httpContext.routeData, function(i, it) {
             utils.mapObj(routeData, lowerRootNs(it.name), it.value);
         });
         utils.each(paramNames, function(i, name) {
@@ -86,16 +86,15 @@ mvcAction.prototype = {
         return params;
     },
 
-    execute: function(req, res) {
+    execute: function(callback) {
         if (!utils.isFunction(this.impl)) { return; }
+        this.controller.resultsApi.callback = callback;
         // execute action
-        var injectedParams = this.injectImpl(req);
-        var actionContext = {
-            request: req,
-            response: res,
+        var injectedParams = this.injectImpl(this.controller.httpContext);
+        var actionContext = utils.extend({}, this.controller.httpContext, {
             params: injectedParams,
             result: null
-        };
+        });
         this.controller.events.emit('actionExecuting', actionContext);
         actionContext.result = this.impl.apply(this.controller, injectedParams);
         this.controller.events.emit('actionExecuted', actionContext);
@@ -103,7 +102,7 @@ mvcAction.prototype = {
         return actionContext.result;
     },
 
-    executeResult: function(req, res, result) {
+    executeResult: function(result) {
         if (result === undefined || result === null) { return; }
         //
         if (!(result instanceof actionResults.baseResult)) {
@@ -126,12 +125,10 @@ mvcAction.prototype = {
             }
         }
         //
-        var resultContext = {
-            request: req,
-            response: res,
+        var resultContext = utils.extend({}, this.controller.httpContext, {
             result: result,
             exception: null
-        };
+        });
         this.controller.events.emit('resultExecuting', resultContext);
         result.execute(resultContext);
         this.controller.events.emit('resultExecuted', resultContext);

@@ -81,14 +81,14 @@ var filterRouteSetByArea = function(routeSet, areaName) {
     return routes;
 };
 
-var generateUrl = exports.generateUrl = function(actionName, controllerName, routeValues, routeSet, request, includeImplicitMvcValues) {
-    var areaParam = findRouteValue(request.routeData, 'area', 0);
+var generateUrl = exports.generateUrl = function(actionName, controllerName, routeValues, routeSet, httpContext, includeImplicitMvcValues) {
+    var areaParam = findRouteValue(httpContext.routeData, 'area', 0);
     var routes = filterRouteSetByArea(routeSet, routeValues[areaParam.name]);
-    var values = mergeRouteValues(actionName, controllerName, request.routeData, routeValues, includeImplicitMvcValues);
+    var values = mergeRouteValues(actionName, controllerName, httpContext.routeData, routeValues, includeImplicitMvcValues);
     //TODO:
 };
 
-var generateUrlPlus = exports.generateUrlPlus = function(actionName, controllerName, protocol, hostName, fragment, routeValues, routeSet, request, includeImplicitMvcValues) {
+var generateUrlPlus = exports.generateUrlPlus = function(actionName, controllerName, protocol, hostName, fragment, routeValues, routeSet, httpContext, includeImplicitMvcValues) {
     //TODO:
 };
 

@@ -14,7 +14,7 @@ var events = require('events'),
     mvcTempData = require('./mvcTempData'),
     mvcViewData = require('./mvcViewData'),
     mvcHelperUrl = require('./mvcHelperUrl'),
-    actionResults = require('./mvcActionResults');
+    mvcResultsApi = require('./mvcActionResultsApi');
 
 
 var mvcController = function(set) {
@@ -40,7 +40,9 @@ mvcController.prototype = {
 
     actions: null,  events: null, url: null,
 
-    viewData: null, tempData: null, routeData: null,
+    viewData: null, tempData: null, httpContext: null,
+
+    resultsApi: null, resultsApiSync: null,
 
     constructor: mvcController,
 
@@ -56,22 +58,44 @@ mvcController.prototype = {
         });
     },
 
-    initialize: function(req, res) {
+    destroy: function() {
+        //TODO:
+    },
+
+    initialize: function(req, res, route, routeSet, routeData) {
+        var self = this;
         this.actions = [];
+        this.events = new events.EventEmitter();
+        this.httpContext = {
+            request: req,
+            response: res,
+            route: route,
+            routeSet: routeSet,
+            routeData: routeData
+        };
+        //
         this.viewData = new mvcViewData();
         this.tempData = new mvcTempData();
-        this.events = new events.EventEmitter();
+        this.url = new mvcHelperUrl({ httpContext: this.httpContext });
         //
-        this.routeData = req.routeData;
-        this.url = new mvcHelperUrl({ request: req });
+        this.resultsApi = new mvcResultsApi({ httpContext: this.httpContext, sync: false });
+        this.resultsApiSync = new mvcResultsApi({ httpContext: this.httpContext, sync: true });
+        utils.each(this.resultsApiSync, function(name, func) {
+            if (utils.isFunction(func) && !self[name]) {
+                self[name] = function() {
+                    var args = utils.arg2arr(arguments);
+                    return self.resultsApiSync[name].apply(self.resultsApiSync, args);
+                };
+            }
+        });
         //
-        var injectedParams = this.injectImpl(req, res);
+        var injectedParams = this.injectImpl(this.httpContext);
         this.impl().apply(this, injectedParams);
         //
         return this;
     },
 
-    injectImpl: function(req, res) {
+    injectImpl: function(httpContext) {
         var params = [];
         var paramNames = mvcInjector.annotate(this.impl());
         if (!paramNames || paramNames.length === 0) { return params; }
@@ -83,14 +107,14 @@ mvcController.prototype = {
                 loweName = loweName.substr(1);
             }
             switch(loweName) {
-                case 'req': params.push(req); break;
-                case 'res': params.push(res); break;
-                case 'request': params.push(req); break;
-                case 'response': params.push(res); break;
-                case 'controller': params.push(self); break;
+                case 'req': params.push(httpContext.request); break;
+                case 'res': params.push(httpContext.response); break;
+                case 'request': params.push(httpContext.request); break;
+                case 'response': params.push(httpContext.response); break;
                 case 'events': params.push(self.events); break;
                 case 'tempdata': params.push(self.tempData); break;
                 case 'viewdata': params.push(self.viewData); break;
+                case 'end': params.push(self.resultsApi); break;
                 case 'action': params.push(actionWrap || (actionWrap = function() { 
                     var args = utils.arg2arr(arguments);
                     self.action.apply(self, args);
@@ -143,66 +167,6 @@ mvcController.prototype = {
             });
         });
         return action;
-    },
-
-    async: function(result) {
-        //TODO:
-    },
-
-    emptySync: function() {
-        return new actionResults.emptyResult();
-    },
-
-    empty: function() {
-        this.async(new actionResults.emptyResult());
-    },
-
-    json: function(data, contentType) {
-        return new actionResults.jsonResult({ data: data, contentType: contentType});
-    },
-
-    jsonp: function(data, callbackName) {
-        return new actionResults.jsonpResult({ data: data, callbackName: callbackName });
-    },
-
-    partialView: function(viewName) {
-        return new actionResults.partialViewResult({ viewName: viewName });
-    },
-
-    view: function(viewName, model) {
-        return new actionResults.viewResult({ viewName: viewName, model: model });
-    },
-
-    file: function(filePath, fileDownloadName) {
-        return new actionResults.fileResult({ filePath: filePath, fileDownloadName: fileDownloadName });
-    },
-
-    content: function(content, contentType) {
-        return new actionResults.contentResult({ content: content, contentType: contentType });
-    },
-
-    httpNotFound: function(statusText) {
-        return new actionResults.httpNotFoundResult({ statusText: statusText });
-    },
-
-    redirect: function(url, permanent) {
-        return new actionResults.redirectResult({ url: url, permanent: permanent });
-    },
-
-    redirectToAction: function(actionName, controllerName, routeValues) {
-        return this.redirectToRoute(mvcHelper.mergeRouteValues(actionName, controllerName, this.routeData, routeValues, true));
-    },
-
-    redirectToActionPermanent: function(actionName, controllerName, routeValues) {
-        return this.redirectToRoutePermanent(mvcHelper.mergeRouteValues(actionName, controllerName, this.routeData, routeValues, true));
-    },
-
-    redirectToRoute: function(routeValues) {
-        return new actionResults.redirectToRouteResult({ routeValues: routeValues, permanent: false });
-    },
-
-    redirectToRoutePermanent: function(routeValues) {
-        return new actionResults.redirectToRouteResult({ routeValues: routeValues, permanent: true });
     }
 };
 

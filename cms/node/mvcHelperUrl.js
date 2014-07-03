@@ -14,24 +14,22 @@ var urlHelper = function(set) {
     utils.extend(this, set);
 };
 
-urlHelper.isUrlHelper = true;
-
 urlHelper.prototype = {
 
-    request: null,
+    httpContext: null,
 
-    constructor: urlHelper,
+    constructor: urlHelper, classType: 'urlHelper',
 
     action: function(actionName, controllerName, routeValues, protocol, hostName) {
-        return mvcHelper.generateUrlPlus(actionName, controllerName, protocol, hostName, null, routeValues, this.request.routeSet, this.request, true);
+        return mvcHelper.generateUrlPlus(actionName, controllerName, protocol, hostName, null, routeValues, this.httpContext.routeSet, this.httpContext, true);
     },
 
     routeUrl: function(routeValues, protocol, hostName) {
-        return mvcHelper.generateUrlPlus(null, null, protocol, hostName, null, routeValues, this.request.routeSet, this.request, false);
+        return mvcHelper.generateUrlPlus(null, null, protocol, hostName, null, routeValues, this.httpContext.routeSet, this.httpContext, false);
     },
 
     content: function(contentPath) {
-        return mvcHelper.generateContentUrl(contentPath, this.request);
+        return mvcHelper.generateContentUrl(contentPath, this.httpContext);
     }
 }
 

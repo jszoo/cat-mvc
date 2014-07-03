@@ -8,3 +8,4 @@ OK 2. mvcController.action http method?
 8. xheaders function
 9. inject url/html helper to view engine
 OK 10. actions that is not specify a method should accept all method type request
+11. controller.destory function

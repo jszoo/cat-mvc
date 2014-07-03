@@ -34,7 +34,7 @@ var mvcHandler = function(set) {
     // route core
     return function(req, res, next) {
         var matched = false, exception;
-        var wrapnext = function() {
+        var wrapNext = function() {
             if (exception) {
                 if (!(exception instanceof Error)) {
                     exception = new Error(exception);
@@ -100,13 +100,13 @@ var mvcHandler = function(set) {
                         if (!resultSync) {
                             exception = act.executeResult(result);
                             ctrl.destroy();
-                            wrapnext();
+                            wrapNext();
                         }
                     });
                     if (resultSync) {
                         exception = act.executeResult(resultSync);
                         ctrl.destroy();
-                        wrapnext();
+                        wrapNext();
                     }
                 } catch (ex) {
                     exception = ex;
@@ -117,13 +117,37 @@ var mvcHandler = function(set) {
             });
         });
         // next
-        wrapnext();
+        wrapNext();
+    };
+};
+
+var httpRawHandler = function(set) {
+    var inner = mvcHandler(set), ct = { 'Content-Type': 'text/plain' };
+    return function(req, res) {
+        inner(req, res, function(err) {
+            if (err) {
+                res.writeHead(err.status || 500, ct);
+                res.end(err.message);
+            } else {
+                res.writeHead(404, ct);
+                res.end('Not Found');
+            }
+        });
+    };
+};
+
+var expressHandler = function(set) {
+    var inner = mvcHandler(set);
+    return function(req, res, next) {
+        inner(req, res, next);
     };
 };
 
 module.exports = {
     view: mvcView,
     areas: mvcAreas,
-    handler: mvcHandler,
-    controller: mvcController.define
+    controller: mvcController.define,
+    //
+    httpRawHandler: httpRawHandler,
+    expressHandler: expressHandler
 };

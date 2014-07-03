@@ -51,7 +51,7 @@ app.use(express.static(utils.absolutePath('fe')));
 // mvc
 var mvc = require('./node/mvc');
 mvc.areas.registerAll();
-app.use(mvc.handler());
+app.use(mvc.expressHandler());
 
 // load routes
 var routes = require('.' + config.get('routeTable.source'));

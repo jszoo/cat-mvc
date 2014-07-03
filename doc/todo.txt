@@ -4,7 +4,7 @@ OK 2. mvcController.action http method?
 4. implement mvc htlm helper
 5. viewResult partialViewResult
 6. mvcView for view engine
-7. tempData function
+OK 7. tempData function
 8. xheaders function
 9. inject url/html helper to view engine
 OK 10. actions that is not specify a method should accept all method type request

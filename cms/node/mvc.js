@@ -84,6 +84,7 @@ var mvcHandler = function(set) {
                     ctrl = ctrl.clone();
                     ctrl.initialize(req, res, route, mvcAreas.routeSet(), params);
                 } catch (ex) {
+                    ctrl.destroy();
                     exception = ex;
                     return false;
                 }
@@ -109,6 +110,7 @@ var mvcHandler = function(set) {
                         wrapNext();
                     }
                 } catch (ex) {
+                    ctrl.destroy();
                     exception = ex;
                     return false;
                 }

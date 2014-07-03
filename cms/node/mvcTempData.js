@@ -10,7 +10,7 @@ var utils = require('./utilities');
 var fmKey = function(key) { return utils.trim(key).toLowerCase(); };
 
 
-var CONST_SessionStateKey = '__ControllerTempData';
+var CONST_SessionStateKey = '__controller_tempdata';
 var sessionProvider = {
     loadTempData: function(httpContext) {
         var session = httpContext.request.session;

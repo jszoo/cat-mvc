@@ -66,6 +66,19 @@ mvcTempData.prototype = {
         }
     },
 
+    keep: function(key) {
+        if (key === undefined) {
+            for (var k in this.oldData) {
+                this.keep(k);
+            }
+        } else {
+            key = fmKey(key);
+            if (key in this.oldData && !(key in this.newData)) {
+                this.newData[key] = this.oldData[key];
+            }
+        }
+    },
+
     remove: function(key) {
         key = fmKey(key);
         delete this.newData[key];

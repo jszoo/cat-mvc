@@ -34,7 +34,7 @@ mvcController.define = function(name, impl) {
 
 mvcController.prototype = {
 
-    _name: null, _impl: null, _path: null,
+    _name: null, _path: null, _impl: null,
 
     actions: null,  events: null, url: null,
 
@@ -51,13 +51,28 @@ mvcController.prototype = {
     clone: function() {
         return new mvcController({
             _name: this._name,
-            _impl: this._impl,
-            _path: this._path
+            _path: this._path,
+            _impl: this._impl
         });
     },
 
     destroy: function() {
-        //TODO:
+        // break object leaks
+        utils.each(this.actions, function() { this.controller = null; });
+        this.events.removeAllListeners();
+        this.url.httpContext = null;
+        this.resultsApi.httpContext = null;
+        this.resultsApiSync.httpContext = null;
+        // clear reference types
+        this._impl = null;
+        this.actions = null;
+        this.events = null;
+        this.url = null;
+        this.viewData = null;
+        this.tempData = null;
+        this.httpContext = null;
+        this.resultsApi = null;
+        this.resultsApiSync = null;
     },
 
     initialize: function(req, res, route, routeSet, routeData) {

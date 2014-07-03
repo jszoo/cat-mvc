@@ -89,18 +89,23 @@ var mvcHandler = function(set) {
                 }
                 //
                 var act = ctrl.findAction(actParam.value, req.method);
-                if (!act) { return; }
-                matched = true;
+                if (!act) { 
+                    ctrl.destroy();
+                    return;
+                }
                 //
                 try {
+                    matched = true;
                     var resultSync = act.execute(function(result) {
                         if (!resultSync) {
                             exception = act.executeResult(result);
+                            ctrl.destroy();
                             wrapnext();
                         }
                     });
                     if (resultSync) {
                         exception = act.executeResult(resultSync);
+                        ctrl.destroy();
                         wrapnext();
                     }
                 } catch (ex) {

@@ -6,7 +6,7 @@
 
 var mvc = require('../node/mvc');
 
-module.exports = mvc.controller(function(req, res) {
+module.exports = mvc.controller(function(req, res, end) {
 
     this.action('index', function() {
     });

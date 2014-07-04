@@ -27,8 +27,8 @@ var mvcHandler = function(set) {
         return mvcHelper.lower(str);
     };
 
-    var getParam = function(params, findName, defaultIndex) {
-        return mvcHelper.findRouteValue(params, findName, defaultIndex);
+    var getParam = function(routeData, findName, defaultIndex) {
+        return mvcHelper.findRouteValue(routeData, findName, defaultIndex);
     };
 
     // route core
@@ -47,70 +47,70 @@ var mvcHandler = function(set) {
         };
         //
         var allAreas = mvcAreas.all();
-        var pathname = parse(req.url).pathname;
+        var pathName = parse(req.url).pathname;
         //
         utils.each(allAreas, function(i, area) {
             if (matched || exception) { return false; }
             //
             utils.each(area.routes, function(k, route) {
                 var match = macher(route.expression);
-                var params = match(pathname);
-                if (params === false) { return; }
+                var routeData = match(pathName);
+                if (routeData === false) { return; }
                 //
-                var areaParam = getParam(params, 'area');
+                var areaParam = getParam(routeData, 'area');
                 if (!areaParam) {
-                    params.unshift({
+                    routeData.unshift({
                         name: 'area',
                         value: area.name
                     });
                 }
                 //
-                var ctrlParam = getParam(params, 'controller', 1);
-                if (!ctrlParam) { return; }
-                if (!ctrlParam.value) {
-                    ctrlParam.value = route.defaultValues[lower(ctrlParam.name)];
+                var controllerParam = getParam(routeData, 'controller', 1);
+                if (!controllerParam) { return; }
+                if (!controllerParam.value) {
+                    controllerParam.value = route.defaultValues[lower(controllerParam.name)];
                 }
                 //
-                var ctrl = area.findController(ctrlParam.value);
-                if (!ctrl) { return; }
+                var controller = area.findController(controllerParam.value);
+                if (!controller) { return; }
                 //
-                var actParam = getParam(params, 'action', 2);
-                if (!actParam) { return; }
-                if (!actParam.value) {
-                    actParam.value = route.defaultValues[lower(actParam.name)];
+                var actionParam = getParam(routeData, 'action', 2);
+                if (!actionParam) { return; }
+                if (!actionParam.value) {
+                    actionParam.value = route.defaultValues[lower(actionParam.name)];
                 }
                 //
                 try {
-                    ctrl = ctrl.clone();
-                    ctrl.initialize(req, res, route, mvcAreas.routeSet(), params);
+                    controller = controller.clone();
+                    controller.initialize(req, res, route, mvcAreas.routeSet(), routeData);
                 } catch (ex) {
-                    ctrl.destroy();
+                    controller.destroy();
                     exception = ex;
                     return false;
                 }
                 //
-                var act = ctrl.findAction(actParam.value, req.method);
-                if (!act) { 
-                    ctrl.destroy();
+                var action = controller.findAction(actionParam.value, req.method);
+                if (!action) { 
+                    controller.destroy();
                     return;
                 }
                 //
                 try {
                     matched = true;
-                    var resultSync = act.execute(function(result) {
+                    var resultSync = action.execute(function(result) {
                         if (!resultSync) {
-                            exception = act.executeResult(result);
-                            ctrl.destroy();
+                            exception = action.executeResult(result);
+                            controller.destroy();
                             wrapNext();
                         }
                     });
                     if (resultSync) {
-                        exception = act.executeResult(resultSync);
-                        ctrl.destroy();
+                        exception = action.executeResult(resultSync);
+                        controller.destroy();
                         wrapNext();
                     }
                 } catch (ex) {
-                    ctrl.destroy();
+                    controller.destroy();
                     exception = ex;
                     return false;
                 }

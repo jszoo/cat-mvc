@@ -89,7 +89,18 @@ var generateUrl = exports.generateUrl = function(actionName, controllerName, rou
 };
 
 var generateUrlPlus = exports.generateUrlPlus = function(actionName, controllerName, protocol, hostName, fragment, routeValues, routeSet, httpContext, includeImplicitMvcValues) {
-    //TODO:
+    var text = generateUrl(actionName, controllerName, routeValues, routeSet, httpContext, includeImplicitMvcValues);
+    if (text) {
+        if (fragment) {
+            text = text + '#' + fragment;
+        }
+        if (protocol || hostName) {
+            protocol = protocol ? protocol : 'http:';
+            hostName = hostName ? hostName : httpContext.request.url.host;
+            text = protocol + '//' + hostName + port + text;
+        }
+    }
+    return text;
 };
 
 var generateContentUrl = exports.generateContentUrl = function(contentPath, httpContext) {

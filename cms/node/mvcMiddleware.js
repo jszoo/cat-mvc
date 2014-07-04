@@ -18,6 +18,7 @@ exports.ruleeUrl = function(set) {
         var host = req.headers.host; //eg: www.nodetest.cn:1337
         var path = req.url;          //eg: /home
         //
+        
     };
     // ret
     return { handle: process };
@@ -39,7 +40,7 @@ exports.ruleeQuery = function(set) {
 exports.xHeaders = function(set) {
     set = set || {};
     var process = function(req, res) {
-        res.setHeader('X-Powered-By', 'Rulee');
+        res.setHeader('X-Powered-By', 'RULEE');
         utils.each(set.headers, function(key, value) {
             res.setHeader(key, value);
         });

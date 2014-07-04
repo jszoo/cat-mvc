@@ -9,3 +9,4 @@ OK 7. tempData function
 9. inject url/html helper to view engine
 OK 10. actions that is not specify a method should accept all method type request
 OK 11. controller.destory function
+12. Https related: controller&action setting >>>>>>>>>> mvcFilter?

@@ -10,14 +10,14 @@ var utils = require('./utilities');
 var fmKey = function(key) { return utils.trim(key).toLowerCase(); };
 
 
-var CONST_SessionStateKey = '__controller_tempdata';
 var sessionProvider = {
+    sessionKey: '__controller_tempdata',
     loadTempData: function(httpContext) {
         var session = httpContext.request.session;
         if (session) {
-            var values = session[CONST_SessionStateKey];
+            var values = session[this.sessionKey];
             if (values) {
-                delete session[CONST_SessionStateKey];
+                delete session[this.sessionKey];
                 return values;
             }
         }
@@ -26,9 +26,9 @@ var sessionProvider = {
         var session = httpContext.request.session;
         if (session) {
             if (utils.propCount(values) > 0) {
-                session[CONST_SessionStateKey] = values;
+                session[this.sessionKey] = values;
             } else {
-                delete session[CONST_SessionStateKey];
+                delete session[this.sessionKey];
             }
         }
     }

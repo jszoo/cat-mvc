@@ -22,19 +22,30 @@ var mvcController = function(set) {
 };
 
 mvcController.define = function(name, impl) {
-    if (utils.isFunction(name)) {
-        impl = name;
-        name = null;
+    var len = arguments.length;
+    if (len === 0) {
+        return new mvcController();
+    } else if (len === 1) {
+        return new mvcController({
+            _impl: arguments[0]
+        });
+    } else if (len === 2) {
+        return new mvcController({
+            _filt: arguments[0],
+            _impl: arguments[1]
+        });
+    } else {
+        return new mvcController({
+            _name: arguments[0],
+            _filt: arguments[1],
+            _impl: arguments[2]
+        });
     }
-    return new mvcController({
-        _name: name,
-        _impl: impl
-    });
 };
 
 mvcController.prototype = {
 
-    _name: null, _path: null, _impl: null,
+    _name: null, _path: null, _filt: null, _impl: null,
 
     actions: null,  events: null, url: null,
 
@@ -46,6 +57,7 @@ mvcController.prototype = {
 
     name: function(p) { return (p === undefined) ? (this._name) : (this._name = p, this); },
     path: function(p) { return (p === undefined) ? (this._path) : (this._path = p, this); },
+    filt: function(p) { return (p === undefined) ? (this._filt) : (this._filt = p, this); },
     impl: function(p) { return (p === undefined) ? (this._impl) : (this._impl = p, this); },
 
     clone: function() {
@@ -106,8 +118,10 @@ mvcController.prototype = {
             }
         });
         //
-        var injectedParams = this.injectImpl(this.httpContext);
-        this.impl().apply(this, injectedParams);
+        if (utils.isFunction(this.impl())) {
+            var injectedParams = this.injectImpl(this.httpContext);
+            this.impl().apply(this, injectedParams);
+        }
         //
         return this;
     },
@@ -160,26 +174,29 @@ mvcController.prototype = {
         return this;
     },
 
-    action: function(name, sett, impl) {
-        if (!name) {
-            throw new Error('action name is required.');
+    action: function() {
+        var len = arguments.length, act;
+        if (len === 0) {
+            act = new mvcAction();
+        } else if (len === 1) {
+            act = new mvcAction({
+                _name: arguments[0]
+            });
+        } else if (len === 2) {
+            act = new mvcController({
+                _name: arguments[0],
+                _impl: arguments[1]
+            });
+        } else {
+            act = new mvcController({
+                _name: arguments[0],
+                _filt: arguments[1],
+                _impl: arguments[2]
+            });
         }
-        if (arguments.length === 2) {
-            impl = sett;
-            sett = null;
-        }
-        if (!utils.isFunction(impl)) {
-            throw new Error('action impl is required.');
-        }
-        // new
-        this.actions.push(new mvcAction({
-            controller: this,
-            name: name,
-            impl: impl,
-            sett: sett
-        }));
-        // ret
-        return this;
+        act.controller = this;
+        this.actions.push(act);
+        return act; //  for chain
     },
 
     findAction: function(name, method) {
@@ -187,7 +204,7 @@ mvcController.prototype = {
         utils.each([method, null], function(i, md) {
             if (action) { return false; }
             utils.each(self.actions, function() {
-                if (mvcHelper.lowerEqual(this.name, name) && this.hasMethod(md)) {
+                if (mvcHelper.lowerEqual(this.name(), name) && this.hasMethod(md)) {
                     action = this;
                     return false;
                 }

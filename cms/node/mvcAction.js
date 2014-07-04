@@ -26,23 +26,27 @@ var mvcAction = function(set) {
 
 mvcAction.prototype = {
 
-    controller: null, name: null, impl: null, sett: null,
+    controller: null, _name: null, _filt: null, _impl: null,
     
     constructor: mvcAction, className: 'mvcAction',
+
+    name: function(p) { return (p === undefined) ? (this._name) : (this._name = p, this); },
+    filt: function(p) { return (p === undefined) ? (this._filt) : (this._filt = p, this); },
+    impl: function(p) { return (p === undefined) ? (this._impl) : (this._impl = p, this); },
 
     hasMethod: function(method) {
         if (method && !httpMethod.exists(method)) {
             return false;
         }
-        if (!method && !this.sett) {
+        if (!method && !this.filt()) {
             return true;
         }
         //
         var methodStr = ',';
-        if (utils.isString(this.sett)) {
-            methodStr += this.sett + ',';
-        } else if (utils.isObject(this.sett)) {
-            utils.each(this.sett, function(key, val) {
+        if (utils.isString(this.filt())) {
+            methodStr += this.filt() + ',';
+        } else if (utils.isObject(this.filt())) {
+            utils.each(this.filt(), function(key, val) {
                 if (val && httpMethod.exists(key)) { methodStr += key + ','; }
             });
         }
@@ -52,7 +56,7 @@ mvcAction.prototype = {
 
     injectImpl: function(httpContext) {
         var params = [];
-        var paramNames = injector.annotate(this.impl);
+        var paramNames = injector.annotate(this.impl());
         if (!paramNames || paramNames.length === 0) { return params; }
         //
         var body = {}, query = {}, routeData = {};
@@ -85,7 +89,7 @@ mvcAction.prototype = {
     },
 
     execute: function(callback) {
-        if (!utils.isFunction(this.impl)) { return; }
+        if (!utils.isFunction(this.impl())) { return; }
         this.controller.resultApi.callback = callback;
         // execute action
         var injectedParams = this.injectImpl(this.controller.httpContext);
@@ -94,7 +98,7 @@ mvcAction.prototype = {
             result: null
         });
         this.controller.events.emit('actionExecuting', actionContext);
-        actionContext.result = this.impl.apply(this.controller, injectedParams);
+        actionContext.result = this.impl().apply(this.controller, injectedParams);
         this.controller.events.emit('actionExecuted', actionContext);
         // ret
         return actionContext.result;
@@ -111,7 +115,7 @@ mvcAction.prototype = {
         }
         else if (result instanceof actionResult.viewResult) {
             if (!result.viewName) {
-                result.viewName = this.name;
+                result.viewName = this.name();
             }
             if (!result.model) {
                 result.model = this.controller.viewData;
@@ -119,7 +123,7 @@ mvcAction.prototype = {
         }
         else if (result instanceof actionResult.partialViewResult) {
             if (!result.viewName) {
-                result.viewName = this.name;
+                result.viewName = this.name();
             }
         }
         //

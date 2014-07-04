@@ -12,7 +12,8 @@ var parse = require('url').parse,
     mvcAreas = require('./mvcAreas'),
     mvcHelper = require('./mvcHelper'),
     mvcMatcher = require('./mvcMatcher'),
-    mvcController = require('./mvcController');
+    mvcController = require('./mvcController'),
+    mvcMiddleware = require('./mvcMiddleware');
 
 
 var mvcHandler = function(set) {
@@ -33,6 +34,13 @@ var mvcHandler = function(set) {
 
     // route core
     return function(req, res, next) {
+        //
+        if (mvcMiddleware) {
+            mvcMiddleware.xHeaders().handle(req, res);
+            mvcMiddleware.ruleeUrl().handle(req, res);
+            mvcMiddleware.ruleeQuery().handle(req, res);
+        }
+        //
         var matched = false, exception;
         var wrapNext = function() {
             if (exception) {
@@ -50,12 +58,12 @@ var mvcHandler = function(set) {
         var pathName = parse(req.url).pathname;
         //
         utils.each(allAreas, function(i, area) {
-            if (matched || exception) { return false; }
+            if (matched || exception) { return false; } // break
             //
             utils.each(area.routes, function(k, route) {
                 var match = macher(route.expression);
                 var routeData = match(pathName);
-                if (routeData === false) { return; }
+                if (routeData === false) { return; } // continue
                 //
                 var areaParam = getParam(routeData, 'area');
                 if (!areaParam) {
@@ -66,16 +74,16 @@ var mvcHandler = function(set) {
                 }
                 //
                 var controllerParam = getParam(routeData, 'controller', 1);
-                if (!controllerParam) { return; }
+                if (!controllerParam) { return; } // continue
                 if (!controllerParam.value) {
                     controllerParam.value = route.defaultValues[lower(controllerParam.name)];
                 }
                 //
                 var controller = area.findController(controllerParam.value);
-                if (!controller) { return; }
+                if (!controller) { return; } // continue
                 //
                 var actionParam = getParam(routeData, 'action', 2);
-                if (!actionParam) { return; }
+                if (!actionParam) { return; } // continue
                 if (!actionParam.value) {
                     actionParam.value = route.defaultValues[lower(actionParam.name)];
                 }
@@ -86,13 +94,13 @@ var mvcHandler = function(set) {
                 } catch (ex) {
                     controller.destroy();
                     exception = ex;
-                    return false;
+                    return false; // break
                 }
                 //
                 var action = controller.findAction(actionParam.value, req.method);
                 if (!action) { 
                     controller.destroy();
-                    return;
+                    return; // continue
                 }
                 //
                 try {
@@ -111,10 +119,10 @@ var mvcHandler = function(set) {
                 } catch (ex) {
                     controller.destroy();
                     exception = ex;
-                    return false;
+                    return false; // break
                 }
                 //
-                return false;
+                return false; // break
             });
         });
         // next

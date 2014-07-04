@@ -97,18 +97,17 @@ var mvcHandler = function(set) {
                 //
                 try {
                     matched = true;
-                    var resultSync = action.execute(function(result) {
-                        if (!resultSync) {
-                            exception = action.executeResult(result);
+                    var executeResult = function(obj) {
+                        if (obj !== undefined && obj !== null) {
+                            executeResult = function(obj) { };
+                            exception = action.executeResult(obj);
                             controller.destroy();
                             wrapNext();
                         }
-                    });
-                    if (resultSync) {
-                        exception = action.executeResult(resultSync);
-                        controller.destroy();
-                        wrapNext();
-                    }
+                    };
+                    executeResult(action.execute(function(result) {
+                        executeResult(result);
+                    }));
                 } catch (ex) {
                     controller.destroy();
                     exception = ex;

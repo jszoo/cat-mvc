@@ -40,6 +40,10 @@ module.exports = {
         return this.type(obj) === 'string';
     },
 
+    isBoolean: function(obj) {
+        return this.type(obj) === 'boolean';
+    },
+
     isFunction: function(obj) {
         return this.type(obj) === 'function';
     },

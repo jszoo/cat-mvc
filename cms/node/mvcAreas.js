@@ -97,7 +97,7 @@ module.exports = {
         return area;
     },
     
-    registerAll: function(app) {
+    registerAll: function() {
         this.register(
             (this.rootAreaName),
             ('/:controller?/:action?'),

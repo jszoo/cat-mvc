@@ -44,9 +44,12 @@ mvcAction.prototype = {
         var controllerFilters = this.controller.resolveFilters(type);
         if (actionFilters) { filters = filters.concat(actionFilters); }
         if (controllerFilters) { filters = filters.concat(controllerFilters); }
-        utils.each(filters, function(i, filter) {
-            //TODO:
+        //
+        var mached = true;
+        utils.each(filters, function() {
+            mached = mached && this.testMatch(this.controller.httpContext);
         });
+        //return mached;
         //
         var methodStr = ',';
         if (utils.isString(this.filt())) {

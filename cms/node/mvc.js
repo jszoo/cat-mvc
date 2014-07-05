@@ -96,7 +96,7 @@ var mvcHandler = function(set) {
                     return false; // break
                 }
                 //
-                var action = controller.findAction(actionParam.value, req.method);
+                var action = controller.findAction(actionParam.value, req.method, req.secure);
                 if (!action) { 
                     controller.destroy();
                     return; // continue

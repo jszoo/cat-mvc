@@ -38,6 +38,7 @@ var mvcHandler = function(set) {
         if (mvcMiddleware) {
             mvcMiddleware.xHeaders().handle(req, res);
             mvcMiddleware.ruleeUrl().handle(req, res);
+            mvcMiddleware.ruleeForm().handle(req, res);
             mvcMiddleware.ruleeQuery().handle(req, res);
         }
         //

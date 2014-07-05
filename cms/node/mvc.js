@@ -35,12 +35,10 @@ var mvcHandler = function(set) {
     // route core
     return function(req, res, next) {
         //
-        if (mvcMiddleware) {
-            mvcMiddleware.xHeaders().handle(req, res);
-            mvcMiddleware.ruleeUrl().handle(req, res);
-            mvcMiddleware.ruleeForm().handle(req, res);
-            mvcMiddleware.ruleeQuery().handle(req, res);
-        }
+        mvcMiddleware.xHeaders().handle(req, res);
+        mvcMiddleware.ruleeUrl().handle(req, res);
+        mvcMiddleware.ruleeForm().handle(req, res);
+        mvcMiddleware.ruleeQuery().handle(req, res);
         //
         var matched = false, exception;
         var wrapNext = function() {

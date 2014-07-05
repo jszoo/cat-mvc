@@ -198,12 +198,12 @@ mvcController.prototype = {
         return act; //  for chain
     },
 
-    findAction: function(name, method) {
+    findAction: function(name, method, secure) {
         var action, self = this;
-        utils.each([method, null], function(i, md) {
+        utils.each([method, null], function(i, it) {
             if (action) { return false; }
             utils.each(self.actions, function() {
-                if (mvcHelper.lowerEqual(this.name(), name) && this.hasMethod(md)) {
+                if (mvcHelper.lowerEqual(this.name(), name) && this.isMatch(it, secure)) {
                     action = this;
                     return false;
                 }

@@ -34,7 +34,7 @@ mvcAction.prototype = {
     filt: function(p) { return (p === undefined) ? (this._filt) : (this._filt = p, this); },
     impl: function(p) { return (p === undefined) ? (this._impl) : (this._impl = p, this); },
 
-    hasMethod: function(method) {
+    isMatch: function(method, secure) {
         if (method && !httpMethod.exists(method)) {
             return false;
         }

@@ -145,9 +145,8 @@ mvcController.prototype = {
                 case 'request':  params.push(httpContext.request); break;
                 case 'response': params.push(httpContext.response); break;
                 case 'session':  params.push(httpContext.request.session); break;
-                case 'query':    params.push(httpContext.request.query); break;
-                case 'form':     params.push(httpContext.request.body); break;
-                case 'body':     params.push(httpContext.request.body); break;
+                case 'query':    params.push(httpContext.request.rulee.query); break;
+                case 'form':     params.push(httpContext.request.rulee.form); break;
                 //
                 case 'events':   params.push(self.events); break;
                 case 'tempdata': params.push(self.tempData); break;

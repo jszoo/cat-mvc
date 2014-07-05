@@ -59,11 +59,11 @@ mvcAction.prototype = {
         var paramNames = injector.annotate(this.impl());
         if (!paramNames || paramNames.length === 0) { return params; }
         //
-        var body = {}, query = {}, routeData = {};
-        utils.each(httpContext.request.body, function(key, val) {
-            utils.mapObj(body, lowerRootNs(key), val);
+        var form = {}, query = {}, routeData = {};
+        utils.each(httpContext.request.rulee.form, function(key, val) {
+            utils.mapObj(form, lowerRootNs(key), val);
         });
-        utils.each(httpContext.request.query, function(key, val) {
+        utils.each(httpContext.request.rulee.query, function(key, val) {
             utils.mapObj(query, lowerRootNs(key), val);
         });
         utils.each(httpContext.routeData, function(i, it) {
@@ -74,8 +74,8 @@ mvcAction.prototype = {
             if (loweName.charAt(0) === '$') {
                 loweName = loweName.substr(1);
             }
-            if (loweName in body) {
-                params.push(body[loweName]);
+            if (loweName in form) {
+                params.push(form[loweName]);
             } else if (loweName in query) {
                 params.push(query[loweName]);
             } else if(loweName in routeData) {

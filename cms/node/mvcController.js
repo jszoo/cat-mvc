@@ -183,12 +183,12 @@ mvcController.prototype = {
                 _name: arguments[0]
             });
         } else if (len === 2) {
-            act = new mvcController({
+            act = new mvcAction({
                 _name: arguments[0],
                 _impl: arguments[1]
             });
         } else {
-            act = new mvcController({
+            act = new mvcAction({
                 _name: arguments[0],
                 _filt: arguments[1],
                 _impl: arguments[2]

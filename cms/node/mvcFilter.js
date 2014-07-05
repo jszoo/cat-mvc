@@ -6,11 +6,12 @@
 
 'use strict';
 
-var mvcFilter = function(set) {
-
+var baseFilter = function(set) {
+	utils.extend(this, set);
 };
 
-mvcFilter.prototype = {
+baseFilter.prototype = {
 
-	constructor: mvcFilter, className: 'mvcFilter',
-}
+	constructor: baseFilter, className: 'mvcFilter'
+
+};

@@ -38,9 +38,15 @@ mvcAction.prototype = {
         if (method && !httpMethod.exists(method)) {
             return false;
         }
-        if (!method && !this.filt()) {
+        if (!method && !secure && !this.filt()) {
             return true;
         }
+        //
+        var filters = [], type = 'ActionSelect';
+        var actionFilters = this.resolveFilters(type);
+        var controllerFilters = this.controller.resolveFilters(type);
+        if (actionFilters) { filters = filters.concat(actionFilters); }
+        if (controllerFilters) { filters = filters.concat(controllerFilters); }
         //
         var methodStr = ',';
         if (utils.isString(this.filt())) {
@@ -52,6 +58,11 @@ mvcAction.prototype = {
         }
         method = (method || '');
         return methodStr.replace(/\s/g, '').toUpperCase().indexOf(',' + method.toUpperCase() + ',') > -1;
+    },
+
+    resolveFilters: function(type, filt) {
+        if (!filt) { filt = this.filt(); }
+        return this.controller.resolveFilters(type, filt);
     },
 
     injectImpl: function(httpContext) {

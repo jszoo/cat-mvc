@@ -167,6 +167,12 @@ mvcController.prototype = {
         return params;
     },
 
+    resolveFilters: function(type, filt) {
+        if (!filt) { filt = this.filt(); }
+        if (!filt) { return null; }
+        //TODO:
+    },
+
     on: function() {
         var args = utils.arg2arr(arguments);
         this.events.on.apply(this.events, args);

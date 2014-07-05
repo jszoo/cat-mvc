@@ -14,7 +14,8 @@ var events = require('events'),
     mvcTempData = require('./mvcTempData'),
     mvcViewData = require('./mvcViewData'),
     mvcHelperUrl = require('./mvcHelperUrl'),
-    mvcResultApi = require('./mvcActionResultApi');
+    mvcResultApi = require('./mvcActionResultApi'),
+    mvcFilters = require('./mvcFilter/manager');
 
 
 var mvcController = function(set) {
@@ -170,7 +171,26 @@ mvcController.prototype = {
     resolveFilters: function(type, filt) {
         if (!filt) { filt = this.filt(); }
         if (!filt) { return null; }
-        //TODO:
+        //
+        var filtObj = {};
+        if (utils.isObject(filt)) {
+            utils.each(filt, function(name, val) {
+                filtObj[name.toLowerCase()] = val;
+            });
+        }
+        else if (utils.isString(filt)) {
+            utils.each(filt.split(','), function(i, name) {
+                filtObj[utils.trim(name).toLowerCase()] = true;
+            });
+        }
+        //
+        var filters = [];
+        utils.each(filtObj, function(name, sett) {
+            var obj = mvcFilters.resolve(type, name, sett);
+            if (obj) { filters.push(obj); }
+        });
+        //
+        return filters.length ? filters : null;
     },
 
     on: function() {

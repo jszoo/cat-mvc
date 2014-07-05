@@ -6,6 +6,9 @@
 
 'use strict';
 
+var utils = require('../utilities'),
+    caching = require('../caching');
+
 module.exports = {
 
 	_filters: caching.region('mvc-filters-cache'),
@@ -33,5 +36,9 @@ module.exports = {
 			throw new Error('incorrect filter type');
 		}
 		this._filters.set(filterName, filter);
+	},
+
+	resolve: function(type, name, sett) {
+
 	}
 };

@@ -83,7 +83,7 @@ mvcArea.prototype = {
     },
 
     loadController: function(filePath) {
-        if (fs.statSync(filePath).isFile()) { return; }
+        if (!fs.statSync(filePath).isFile()) { return; }
         var self = this, load = function(ctrl) {
             if (ctrl && ctrl.className === 'mvcController') {
                 if (!ctrl.name()) {
@@ -104,7 +104,7 @@ mvcArea.prototype = {
     },
 
     unloadController: function(filePath) {
-        if (fs.statSync(filePath).isFile()) { return; }
+        if (!fs.statSync(filePath).isFile()) { return; }
         var self = this, unload = function(ctrl) {
             if (ctrl && ctrl.className === 'mvcController') {
                 var ctrlName = ctrl.name();

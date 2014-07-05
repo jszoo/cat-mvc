@@ -7,11 +7,11 @@
 'use strict';
 
 var baseFilter = function(set) {
-	utils.extend(this, set);
+    utils.extend(this, set);
 };
 
 baseFilter.prototype = {
 
-	constructor: baseFilter, className: 'mvcFilter'
+    constructor: baseFilter, className: 'mvcFilter'
 
 };

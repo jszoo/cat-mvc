@@ -35,9 +35,6 @@ mvcAction.prototype = {
     impl: function(p) { return (p === undefined) ? (this._impl) : (this._impl = p, this); },
 
     isMatch: function(method, secure) {
-        if (method && !httpMethod.exists(method)) {
-            return false;
-        }
         if (!method && !secure && !this.filt()) {
             return true;
         }
@@ -47,6 +44,9 @@ mvcAction.prototype = {
         var controllerFilters = this.controller.resolveFilters(type);
         if (actionFilters) { filters = filters.concat(actionFilters); }
         if (controllerFilters) { filters = filters.concat(controllerFilters); }
+        utils.each(filters, function(i, filter) {
+            //TODO:
+        });
         //
         var methodStr = ',';
         if (utils.isString(this.filt())) {

@@ -29,6 +29,10 @@ mvcActionResultApi.prototype = {
 
     constructor: mvcActionResultApi, className: 'mvcActionResultApi',
 
+    with: function(result) {
+        return emit.call(this, result);
+    },
+
     empty: function() {
         return emit.call(this, new actionResult.emptyResult());
     },

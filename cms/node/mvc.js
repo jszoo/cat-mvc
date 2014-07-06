@@ -35,6 +35,7 @@ var mvcHandler = function(set) {
         mvcMiddleware.ruleeUrl().handle(req, res);
         mvcMiddleware.ruleeForm().handle(req, res);
         mvcMiddleware.ruleeQuery().handle(req, res);
+        mvcMiddleware.ruleeMethod().handle(req, res);
         mvcMiddleware.ruleeSecure().handle(req, res);
         //
         var matched = false, exception;

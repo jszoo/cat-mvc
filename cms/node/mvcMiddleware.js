@@ -52,6 +52,16 @@ exports.ruleeQuery = function(set) {
     };
 };
 
+exports.ruleeMethod = function(set) {
+    set = set || {};
+    return {
+        handle: function(req, res) {
+            var rulee = req.rulee || (req.rulee = {});
+            rulee.method = req.method;
+        }
+    };
+};
+
 exports.ruleeSecure = function(set) {
     set = set || {};
     return {

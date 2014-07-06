@@ -11,8 +11,6 @@ var events = require('events'),
     caching = require('./caching'),
     pathToRegexp = require('path-to-regexp');
 
-var macher = mvcMatcher();
-
 var mvcRoutes = function(set) {
     utils.extend(this, set);
     if (!this.ownerAreaName) { throw new Error('ownerAreaName is required'); }

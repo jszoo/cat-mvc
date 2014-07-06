@@ -40,7 +40,7 @@ module.exports = {
         this._filters.set(filterName, filter);
     },
 
-    resolve: function(type, name, sett) {
+    resolve: function(type, name) {
         type = utils.trim(type).toLowerCase();
         name = utils.trim(name).toLowerCase();
         //TODO:
@@ -63,8 +63,13 @@ module.exports = {
         //
         var filters = [];
         utils.each(filtersSett, function(name, sett) {
-            var obj = mvcFilters.resolve(type, name, sett);
-            if (obj) { filters.push(obj); }
+            var cls = mvcFilters.resolve(type, name);
+            if (cls) {
+                filters.push({
+                    filterClass: cls,
+                    filterParams: sett
+                });
+            }
         });
         //
         return filters.length ? filters : null;

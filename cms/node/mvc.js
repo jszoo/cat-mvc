@@ -11,18 +11,11 @@ var parse = require('url').parse,
     mvcView = require('./mvcView'),
     mvcAreas = require('./mvcAreas'),
     mvcHelper = require('./mvcHelper'),
-    mvcMatcher = require('./mvcMatcher'),
     mvcController = require('./mvcController'),
     mvcMiddleware = require('./mvcMiddleware');
 
 
 var mvcHandler = function(set) {
-
-    var macher = mvcMatcher({
-        sensitive: false,
-        strict: false,
-        end: false
-    });
 
     var getParam = function(routeData, findName, defaultIndex) {
         return mvcHelper.findRouteValue(routeData, findName, defaultIndex);
@@ -57,9 +50,8 @@ var mvcHandler = function(set) {
         utils.each(allAreas, function(i, area) {
             if (matched || exception) { return false; } // break
             //
-            utils.each(area.routes, function(k, route) {
-                var match = macher(route.expression);
-                var routeData = match(pathName);
+            utils.each(area.routes.all(), function(k, route) {
+                var routeData = route.regexp(pathName);
                 if (routeData === false) { return; } // continue
                 //
                 utils.each(routeData, function() {

@@ -41,7 +41,7 @@ module.exports = {
         if (!this._routeSet) {
             var rs = this._routeSet = {};
             utils.each(this.all(), function() {
-                utils.each(this.routes, function(key, val) {
+                utils.each(this.routes.all(), function(key, val) {
                     rs[key] = val;
                 });
             });
@@ -70,11 +70,11 @@ module.exports = {
             });
             //
             var self = this;
-            area.events.on('routeChanged', function() {
+            area.routes.events.on('changed', function() {
                 self._routeSet = null;
             });
             // map route
-            area.mapRoute(areaRoute, defaultRouteValues);
+            area.routes.set(areaName, areaRoute, defaultRouteValues);
             // load default extension
             area.loadExtension(path.join(area.path, CONST_Events));
             // read 'areas/account/ctrls'

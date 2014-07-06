@@ -8,16 +8,17 @@
 
 var fs = require('fs'),
     path = require('path'),
-    events = require('events'),
-    utils = require('./utilities');
+    utils = require('./utilities'),
+    mvcRoutes = require('./mvcRoutes');
 
 
 var mvcArea = function(set) {
     utils.extend(this, set);
+    if (!this.name) { throw new Error('name is required'); }
+    //
     this.controllers = {};
     this.extensions = {};
-    this.routes = {};
-    this.events = new events.EventEmitter();
+    this.routes = new mvcRoutes({ ownerAreaName: this.name });
 };
 
 mvcArea.isArea = true;
@@ -26,36 +27,9 @@ mvcArea.prototype = {
 
     name: null, path: null,
 
-    controllers: null, routes: null, extensions: null, events: null,
+    controllers: null, routes: null, extensions: null,
 
     constructor: mvcArea, className: 'mvcArea',
-
-    mapRoute: function(routeExp, defaultValues) {
-        var values = {};
-        utils.each(defaultValues, function(key, val) {
-            values[key.toLowerCase()] = (val && val.toLowerCase());
-        });
-        this.routes[routeExp.toLowerCase()] = {
-            expression: routeExp,
-            defaultValues: values,
-            ownerAreaName: this.name
-        };
-        this.events.emit('routeChanged');
-        return this;
-    },
-
-    removeRoute: function(routeExp) {
-        var ret = (delete this.routes[routeExp.toLowerCase()]);
-        if (ret) { this.events.emit('routeChanged'); }
-        return this;
-    },
-
-    clearRoutes: function() {
-        if (utils.propCount(this.routes) > 0) {
-            this.events.emit('routeChanged');
-        }
-        return (this.routes = {}, this);
-    },
 
     registerController: function(controllerName, controller) {
         if (arguments.length === 1) {

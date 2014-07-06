@@ -39,7 +39,7 @@ module.exports = function (set) {
             utils.each(keys, function(i, it) {
                 params.push({
                     name: it.name,
-                    value: decode(match[i +1])
+                    value: decode(match[i + 1])
                 });
             });
             // ret

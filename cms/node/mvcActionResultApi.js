@@ -7,6 +7,7 @@
 'use strict';
 
 var utils = require('./utilities'),
+    mvcHelper = require('./mvcHelper'),
     actionResult = require('./mvcActionResult');
 
 

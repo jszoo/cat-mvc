@@ -21,6 +21,19 @@ var mvcHandler = function(set) {
         return mvcHelper.findRouteValue(routeData, findName, defaultIndex);
     };
 
+    var decode = function(param) {
+        if (!param) {
+            return param;
+        }
+        try {
+            return decodeURIComponent(param);
+        } catch (ex) {
+            var err = new Error('failed to decode param "' + param + '"');
+            err.status = 400;
+            throw err;
+        }
+    };
+
     // route core
     return function(req, res, next) {
         //
@@ -51,16 +64,22 @@ var mvcHandler = function(set) {
             if (matched || exception) { return false; } // break
             //
             utils.each(area.routes.all(), function(k, route) {
-                var routeData = route.regexp(pathName);
-                if (routeData === false) { return; } // continue
+                var match = route.regexp.exec(pathName);
+                if (!match) { return; } // continue
                 //
-                utils.each(routeData, function() {
-                    if (!this.value) {
-                        var lowerName = this.name.toLowerCase();
+                var routeData = [];
+                utils.each(route.keys, function(i, it) {
+                    var val = decode(match[i + 1]);
+                    if (!val) {
+                        var lowerName = it.name.toLowerCase();
                         if (lowerName in route.defaultValues) {
-                            this.value = route.defaultValues[lowerName];
+                            val = route.defaultValues[lowerName];
                         }
                     }
+                    routeData.push({
+                        name: it.name,
+                        value: val
+                    });
                 });
                 //
                 var areaParam = getParam(routeData, 'area');

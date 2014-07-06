@@ -24,10 +24,6 @@ var mvcHandler = function(set) {
         end: false
     });
 
-    var lower = function(str) {
-        return mvcHelper.lower(str);
-    };
-
     var getParam = function(routeData, findName, defaultIndex) {
         return mvcHelper.findRouteValue(routeData, findName, defaultIndex);
     };
@@ -65,6 +61,15 @@ var mvcHandler = function(set) {
                 var routeData = match(pathName);
                 if (routeData === false) { return; } // continue
                 //
+                utils.each(routeData, function() {
+                    if (!this.value) {
+                        var lowerName = this.name.toLowerCase();
+                        if (lowerName in route.defaultValues) {
+                            this.value = route.defaultValues[lowerName];
+                        }
+                    }
+                });
+                //
                 var areaParam = getParam(routeData, 'area');
                 if (!areaParam) {
                     routeData.unshift({
@@ -75,18 +80,12 @@ var mvcHandler = function(set) {
                 //
                 var controllerParam = getParam(routeData, 'controller', 1);
                 if (!controllerParam) { return; } // continue
-                if (!controllerParam.value) {
-                    controllerParam.value = route.defaultValues[lower(controllerParam.name)];
-                }
                 //
                 var controller = area.findController(controllerParam.value);
                 if (!controller) { return; } // continue
                 //
                 var actionParam = getParam(routeData, 'action', 2);
                 if (!actionParam) { return; } // continue
-                if (!actionParam.value) {
-                    actionParam.value = route.defaultValues[lower(actionParam.name)];
-                }
                 //
                 try {
                     controller = controller.clone();

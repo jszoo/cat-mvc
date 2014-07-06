@@ -102,7 +102,7 @@ mvcAction.prototype = {
         return params;
     },
 
-    execute: function(callback) {
+    executeImpl: function(callback) {
         if (!utils.isFunction(this.impl())) { return; }
         this.controller.resultApi.callback = callback;
         // execute action

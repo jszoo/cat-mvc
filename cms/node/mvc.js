@@ -90,6 +90,7 @@ var mvcHandler = function(set) {
                 try {
                     controller = controller.clone();
                     controller.initialize(req, res, route, mvcAreas.routeSet(), routeData);
+                    controller.executeImpl();
                 } catch (ex) {
                     controller.destroy();
                     exception = ex;
@@ -112,7 +113,7 @@ var mvcHandler = function(set) {
                             wrapNext();
                         }
                     };
-                    executeResult(action.execute(function(result) {
+                    executeResult(action.executeImpl(function(result) {
                         executeResult(result);
                     }));
                 } catch (ex) {

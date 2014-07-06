@@ -119,11 +119,6 @@ mvcController.prototype = {
             }
         });
         //
-        if (utils.isFunction(this.impl())) {
-            var injectedParams = this.injectImpl(this.httpContext);
-            this.impl().apply(this, injectedParams);
-        }
-        //
         return this;
     },
 
@@ -166,6 +161,13 @@ mvcController.prototype = {
         });
         //
         return params;
+    },
+
+    executeImpl: function() {
+        if (utils.isFunction(this.impl())) {
+            var injectedParams = this.injectImpl(this.httpContext);
+            this.impl().apply(this, injectedParams);
+        }
     },
 
     resolveFilters: function(type, filt) {

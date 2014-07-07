@@ -10,21 +10,22 @@ module.exports = mvc.controller(function(req, res, end, tempdata, session) {
 
     this.action('index', function() {
 
-    	//
-    	var text = tempdata.get('text');
-    	if (!text) { tempdata.set('text', 'aaa'); }
+        //
+        var text = tempdata.get('text');
+        if (!text) { tempdata.set('text', 'aaa'); }
 
-    	//
-    	var count = session.count;
-    	if (!count) { count = session.count = 1; }
-    	else { count = ++session.count; }
+        //
+        var count = session.count;
+        if (!count) { count = session.count = 1; }
+        else { count = ++session.count; }
 
-    	//
-        setTimeout(function(){
-            end.json({ 
-            	sessionCount: count,
-            	tempdataText: text || 'none'
-            });
+        //
+        setTimeout(function() {
+            end.view();
+            //end.json({ 
+            //    sessionCount: count,
+            //    tempdataText: text || 'none'
+            //});
         }, 1);
 
         //

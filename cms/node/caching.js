@@ -126,16 +126,22 @@ caching.isRandomRegionName = function (region) {
 
 caching.prototype = {
 
-    _region: null,
+    _region: null, _cachedAll: null, _hasExpireItem: false,
 
     constructor: caching, className: 'caching',
 
     all: function() {
+        if (!this._hasExpireItem && this._cachedAll) {
+            return this._cachedAll;
+        }
         var ret = {}, self = this;
         utils.each(storage.get(this._region), function(key) {
             var val = self.get(key);
             if (val) { ret[key] = val; }
         });
+        if (!this._hasExpireItem) {
+            this._cachedAll = ret;
+        }
         return ret;
     },
 
@@ -155,6 +161,8 @@ caching.prototype = {
     set: function(key, val, expire, notify) {
         var o = { val: val, expire: expire, notify: notify };
         storage.set(this._region, key, o);
+        this._hasExpireItem = (this._hasExpireItem || !!expire);
+        this._cachedAll = null;
     },
 
     remove: function(key) {
@@ -165,6 +173,7 @@ caching.prototype = {
                 action: 'remove'
             });
         }
+        this._cachedAll = null;
         return storage.remove(this._region, key);
     },
 
@@ -177,6 +186,7 @@ caching.prototype = {
     },
 
     clear: function() {
+        this._cachedAll = null;
         return storage.remove(this._region);
     }
 };

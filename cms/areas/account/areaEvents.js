@@ -9,7 +9,8 @@
 module.exports = {
 
     onRegister: function(area) {
-    	area.mapRoute(
+    	area.routes.set(
+    		'account1',
     		('/' + area.name + '/:acTIon?/:conTRoller?/:ArticleId?'),
             ({ controller: 'home', action: 'index' })
         );

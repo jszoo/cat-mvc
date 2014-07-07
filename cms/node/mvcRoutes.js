@@ -17,13 +17,12 @@ var mvcRoutes = function(set) {
     //
     var self = this;
     this.events = new events.EventEmitter();
-    this.events.on('changed', function() { self._all = null; });
     this._inner = caching.region('mvc-' + this.ownerAreaName + '-routes-cache');
 };
 
 mvcRoutes.prototype = {
 
-    ownerAreaName: null, events: null, _inner: null, _all: null,
+    ownerAreaName: null, events: null, _inner: null,
 
     constructor: mvcRoutes, className: 'mvcRoutes',
 
@@ -50,7 +49,7 @@ mvcRoutes.prototype = {
     },
 
     all: function() {
-        return this._all ? this._all : (this._all = this._inner.all());
+        return this._inner.all();
     },
 
     get: function(name) {

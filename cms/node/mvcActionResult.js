@@ -98,7 +98,10 @@ var viewResult = exports.viewResult = function(set) {
 utils.inherit(viewResult, baseResult, {
     viewName: null, model: null,
     execute: function(context) {
-        //TODO:
+        var areaParam = findRouteValue(context.routeData, 'area', 0);
+        var controllerParam = findRouteValue(context.routeData, 'controller', 1);
+        var actionParam = findRouteValue(context.routeData, 'action', 2);
+        var viewPath = areaPath + '/' + controllerParam.value + '/' + actionParam.value;
     }
 });
 

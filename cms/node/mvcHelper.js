@@ -83,28 +83,27 @@ var filterRouteSetByArea = function(routeSet, areaName) {
 };
 
 var generateRouteUrl = function(route, values) {
-    var delimiter = route.keys[0].delimiter;
-    var parts = route.expression.split(delimiter);
     var query = utils.extend({}, values);
     var matchCount = 0;
-    utils.each(parts, function(i, part) {
-        if (!part || part.charAt(0) !== ':') { return; }
-        utils.each(route.keys, function() {
-            if (part.indexOf(':' + this.name) === 0) {
-                var fname = utils.formalStr(this.name);
-                parts[i] = values[fname] || route.defaultValues[fname];
-                if (fname in query) {
-                    delete query[fname];
-                    matchCount++;
-                }
-                return false;
-            }
-        });
+    //
+    var expstr = route.expression;
+    utils.each(route.keys, function() {
+        var fname = utils.formalStr(this.name);
+        var value = values[fname] || route.defaultValues[fname];
+        var regstr = utils.format('{0}:{1}[^{0}]*', this.delimiter, this.name);
+        var repstr = value ? this.delimiter + value : '';
+        expstr = expstr.replace(new RegExp(regstr, 'i'), repstr);
+        if (fname in query) {
+            delete query[fname];
+            matchCount++;
+        }
     });
+    //
     delete query['area'];
     return {
         matchCount: matchCount,
-        url: utils.appendQuery(parts.join(delimiter), query)
+        keyCount: route.keys.length,
+        url: utils.appendQuery(expstr, query)
     };
 };
 
@@ -125,11 +124,12 @@ var generateUrl = exports.generateUrl = function(routeName, actionName, controll
         var areaName = formalValues['area'], matchCount;
         var areaRoutes = filterRouteSetByArea(routeSet, areaName);
         utils.each(areaRoutes, function() {
-            if (!this.keys || !this.keys.length) { return; }
             var ret = generateRouteUrl(this, formalValues);
             if (matchCount === undefined || ret.matchCount >  matchCount) {
-                matchCount = ret.matchCount;
-                url = ret.url;
+                if (ret.matchCount === ret.keyCount) {
+                    matchCount = ret.matchCount;
+                    url = ret.url;
+                }
             }
         });
     }

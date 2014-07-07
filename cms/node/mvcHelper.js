@@ -82,9 +82,33 @@ var filterRouteSetByArea = function(routeSet, areaName) {
 };
 
 var generateUrl = exports.generateUrl = function(routeName, actionName, controllerName, routeValues, routeSet, httpContext, includeImplicitMvcValues) {
+    var values = mergeRouteValues(actionName, controllerName, httpContext.routeData, routeValues, includeImplicitMvcValues);
+    if (routeName) {
+        var route = routeSet[utils.formalStr(routeName)];
+        if (route) {
+            var query = utils.extend({}, values);
+            var parts = route.expression.split('/');
+            utils.each(parts, function(i, part) {
+                if (!part || part.charAt(0) !== ':') { return; }
+                utils.each(route.keys, function() {
+                    if (part.indexOf(':' + this.name) === 0) {
+                        var fname = utils.formalStr(this.name);
+                        parts[i] = values[fname] || route.defaultValues[fname];
+                        delete query[fname];
+                        return false;
+                    }
+                });
+            });
+            return utils.appendQuery(parts.join('/'), query);
+        }
+    } else {
+        utils.each(routeSet, function(k, route) {
+
+        });
+    }
+
     var areaParam = findRouteValue(httpContext.routeData, 'area', 0);
     var routes = filterRouteSetByArea(routeSet, routeValues[areaParam.name]);
-    var values = mergeRouteValues(actionName, controllerName, httpContext.routeData, routeValues, includeImplicitMvcValues);
     //TODO:
 };
 

@@ -84,4 +84,4 @@ mvcControllers.prototype = {
     }
 };
 
-module.mvcControllers = mvcControllers;
+module.exports = mvcControllers;

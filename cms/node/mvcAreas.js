@@ -58,7 +58,7 @@ module.exports = {
 
     register: function(areaName, areaRoute, defaultRouteValues) {
         var areaDirectory = areaName;
-        if (areaName === 'root*') { areaDirectory = path.sep + '..'; }
+        if (areaName === '*root') { areaDirectory = path.sep + '..'; }
         var area, areaPath = path.normalize(path.join(this._areasPath, areaDirectory));
         if (fs.existsSync(areaPath) && fs.statSync(areaPath).isDirectory()) {
             // area obj
@@ -97,7 +97,7 @@ module.exports = {
     
     registerAll: function() {
         this.register(
-            ('root*'),
+            ('*root'),
             ('/:controller?/:action?'),
             ({ controller: 'home', action: 'index' })
         );

@@ -83,8 +83,9 @@ var filterRouteSetByArea = function(routeSet, areaName) {
 };
 
 var generateRouteUrl = function(route, values) {
+    var delimiter = route.keys[0].delimiter;
+    var parts = route.expression.split(delimiter);
     var query = utils.extend({}, values);
-    var parts = route.expression.split('/');
     var matchCount = 0;
     utils.each(parts, function(i, part) {
         if (!part || part.charAt(0) !== ':') { return; }
@@ -103,7 +104,7 @@ var generateRouteUrl = function(route, values) {
     delete query['area'];
     return {
         matchCount: matchCount,
-        url: utils.appendQuery(parts.join('/'), query)
+        url: utils.appendQuery(parts.join(delimiter), query)
     };
 };
 
@@ -124,6 +125,7 @@ var generateUrl = exports.generateUrl = function(routeName, actionName, controll
         var areaName = formalValues['area'], matchCount;
         var areaRoutes = filterRouteSetByArea(routeSet, areaName);
         utils.each(areaRoutes, function() {
+            if (!this.keys || !this.keys.length) { return; }
             var ret = generateRouteUrl(this, formalValues);
             if (matchCount === undefined || ret.matchCount >  matchCount) {
                 matchCount = ret.matchCount;

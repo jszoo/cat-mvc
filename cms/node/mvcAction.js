@@ -123,8 +123,7 @@ mvcAction.prototype = {
         //
         if (!(result instanceof actionResult.baseResult)) {
             result = new actionResult.contentResult({
-                content: result.toString(),
-                contentType: 'text/plain'
+                content: result.toString()
             });
         }
         else if (result instanceof actionResult.viewResult) {

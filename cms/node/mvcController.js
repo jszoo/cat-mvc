@@ -77,6 +77,7 @@ mvcController.prototype = {
         this.url.httpContext = null;
         this.resultApi.httpContext = null;
         this.resultApiSync.httpContext = null;
+        this.httpContext.controller = null;
         // clear reference types
         this._impl = null;
         this.actions = null;
@@ -98,7 +99,8 @@ mvcController.prototype = {
             response: res,
             route: route,
             routeSet: routeSet,
-            routeData: routeData
+            routeData: routeData,
+            controller: this
         };
         //
         this.url = new mvcHelperUrl({ httpContext: this.httpContext });

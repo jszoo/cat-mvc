@@ -193,6 +193,7 @@ utils.inherit(redirectToRouteResult, baseResult, {
     routeName: null, routeValues: null, permanent: false,
     execute: function(context) {
         var url = mvcHelper.generateUrl(this.routeName, null, null, this.routeValues, context.routeSet, context, false);
+        context.controller.tempData.keep();
         if (this.permanent) {
             context.response.redirect(url, 301);
         } else {

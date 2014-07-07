@@ -81,11 +81,7 @@ var filterRouteSetByArea = function(routeSet, areaName) {
     return routes;
 };
 
-var generateRouteUrl = function(route, routeValues) {
-    var values = {};
-    utils.each(routeValues, function(key, val) {
-        values[utils.formalStr(key)] = val;
-    });
+var generateRouteUrl = function(route, values) {
     var query = utils.extend({}, values);
     var parts = route.expression.split('/');
     var matchCount = 0;
@@ -112,18 +108,22 @@ var generateRouteUrl = function(route, routeValues) {
 
 var generateUrl = exports.generateUrl = function(routeName, actionName, controllerName, routeValues, routeSet, httpContext, includeImplicitMvcValues) {
     var url, values = mergeRouteValues(actionName, controllerName, httpContext.routeData, routeValues, includeImplicitMvcValues);
+    var formalValues = {};
+    utils.each(values, function(key, val) {
+        formalValues[utils.formalStr(key)] = val;
+    });
     if (routeName) {
         var route = routeSet[utils.formalStr(routeName)];
         if (!route) {
             throw new Error(utils.format('Can not find routeName: "{0}"', routeName));
         } else {
-            url = generateRouteUrl(route, values).url;
+            url = generateRouteUrl(route, formalValues).url;
         }
     } else {
-        var areaName = values['area'], matchCount;
+        var areaName = formalValues['area'], matchCount;
         var areaRoutes = filterRouteSetByArea(routeSet, areaName);
         utils.each(areaRoutes, function() {
-            var ret = generateRouteUrl(this, values);
+            var ret = generateRouteUrl(this, formalValues);
             if (matchCount === undefined || ret.matchCount >  matchCount) {
                 matchCount = ret.matchCount;
                 url = ret.url;

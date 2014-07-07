@@ -6,6 +6,11 @@
 
 'use strict';
 
+var fs = require('fs'),
+    path = require('path'),
+    utils = require('./utilities'),
+    caching = require('./caching');
+
 var mvcControllers = function(set) {
     utils.extend(this, set);
     if (!this.ownerAreaName) { throw new Error('ownerAreaName is required'); }
@@ -42,7 +47,7 @@ mvcControllers.prototype = {
     },
 
     load: function(filePath) {
-        if (!fs.statSync(filePath).isFile()) { return; }
+        if (!fs.existsSync(filePath) || !fs.statSync(filePath).isFile()) { return; }
         var self = this, load = function(ctrl) {
             if (ctrl && ctrl.className === 'mvcController') {
                 if (!ctrl.name()) {
@@ -63,7 +68,7 @@ mvcControllers.prototype = {
     },
 
     unload: function(filePath) {
-        if (!fs.statSync(filePath).isFile()) { return; }
+        if (!fs.existsSync(filePath) || !fs.statSync(filePath).isFile()) { return; }
         var self = this, unload = function(ctrl) {
             if (ctrl && ctrl.className === 'mvcController') {
                 var ctrlName = ctrl.name();

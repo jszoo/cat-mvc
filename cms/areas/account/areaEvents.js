@@ -9,9 +9,9 @@
 module.exports = {
 
     onRegister: function(area) {
-    	area.routes.set(
-    		'account1',
-    		('/' + area.name + '/:acTIon?/:conTRoller?/:ArticleId?'),
+        area.routes.set(
+            'account1',
+            ('/' + area.name + '/:acTIon?/:conTRoller?/:ArticleId?'),
             ({ controller: 'home', action: 'index' })
         );
     },

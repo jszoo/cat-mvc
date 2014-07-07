@@ -82,31 +82,28 @@ var filterRouteSetByArea = function(routeSet, areaName) {
 };
 
 var generateRouteUrl = function(route, routeValues) {
-    var query = utils.extend({}, routeValues);
+    var values = {};
+    utils.each(routeValues, function(key, val) {
+        values[utils.formalStr(key)] = val;
+    });
+    var query = utils.extend({}, values);
     var parts = route.expression.split('/');
     var matchCount = 0;
     utils.each(parts, function(i, part) {
-        if (!part) { return; }
-        if (part.charAt(0) !== ':') {
-            utils.each(routeValues, function(key, val) {
-                if (val === part) {
-                    matchCount++;
-                    delete query[key];
-                    return false;
-                }
-            });
-            return;
-        }
+        if (!part || part.charAt(0) !== ':') { return; }
         utils.each(route.keys, function() {
             if (part.indexOf(':' + this.name) === 0) {
                 var fname = utils.formalStr(this.name);
-                parts[i] = routeValues[fname] || route.defaultValues[fname];
-                delete query[this.name];
-                matchCount++;
+                parts[i] = values[fname] || route.defaultValues[fname];
+                if (fname in query) {
+                    delete query[fname];
+                    matchCount++;
+                }
                 return false;
             }
         });
     });
+    delete query['area'];
     return {
         matchCount: matchCount,
         url: utils.appendQuery(parts.join('/'), query)

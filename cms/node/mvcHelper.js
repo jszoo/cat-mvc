@@ -84,18 +84,32 @@ var filterRouteSetByArea = function(routeSet, areaName) {
 var generateRouteUrl = function(route, routeValues) {
     var query = utils.extend({}, routeValues);
     var parts = route.expression.split('/');
+    var matchedCount = 0;
     utils.each(parts, function(i, part) {
         if (!part) { return; }
+        if (part.charAt(0) !== ':') {
+            utils.each(routeValues, function(key, val) {
+                if (val === part) {
+                    matchedCount++;
+                    delete query[key];
+                }
+            });
+            return;
+        }
         utils.each(route.keys, function() {
             if (part.indexOf(':' + this.name) === 0) {
                 var fname = utils.formalStr(this.name);
                 parts[i] = routeValues[fname] || route.defaultValues[fname];
                 delete query[this.name];
+                matchedCount++;
                 return false;
             }
         });
     });
-    return utils.appendQuery(parts.join('/'), query);
+    return {
+        matchs: matchedCount,
+        url: utils.appendQuery(parts.join('/'), query)
+    };
 };
 
 var generateUrl = exports.generateUrl = function(routeName, actionName, controllerName, routeValues, routeSet, httpContext, includeImplicitMvcValues) {
@@ -105,17 +119,16 @@ var generateUrl = exports.generateUrl = function(routeName, actionName, controll
         if (!route) {
             throw new Error(utils.format('Can not find routeName: "{0}"', routeName));
         } else {
-            url = generateRouteUrl(route, values);
+            url = generateRouteUrl(route, values).url;
         }
     } else {
-        var areaName = values['area'];
+        var areaName = values['area'], matchs;
         var areaRoutes = filterRouteSetByArea(routeSet, areaName);
         utils.each(areaRoutes, function() {
             var ret = generateRouteUrl(this, values);
-            if (!url) {
-                url = ret;
-            } else if(ret.length < url.length) {
-                url = ret;
+            if (matchs === undefined || ret.matchs >  matchs) {
+                matchs = ret.matchs;
+                url = ret.url;
             }
         });
     }

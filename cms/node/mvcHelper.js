@@ -73,6 +73,7 @@ var mergeRouteValues = exports.mergeRouteValues = function(actionName, controlle
 
 var filterRouteSetByArea = function(routeSet, areaName) {
     var routes = [];
+    if (!areaName) { areaName = 'root*'; }
     utils.each(routeSet, function(key, route) {
         if (lowerEqual(route.ownerAreaName, areaName)) {
             routes.push(route);

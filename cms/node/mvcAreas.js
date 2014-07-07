@@ -25,8 +25,6 @@ module.exports = {
 
     _areas: caching.region('mvc-areas-cache'), _routeSet: null,
 
-    rootAreaName: utils.unique(8).toUpperCase(),
-
     events: new events.EventEmitter(),
 
     all: function() {
@@ -60,7 +58,7 @@ module.exports = {
 
     register: function(areaName, areaRoute, defaultRouteValues) {
         var areaDirectory = areaName;
-        if (areaName === this.rootAreaName) { areaDirectory = path.sep + '..'; }
+        if (areaName === 'root*') { areaDirectory = path.sep + '..'; }
         var area, areaPath = path.normalize(path.join(this._areasPath, areaDirectory));
         if (fs.existsSync(areaPath) && fs.statSync(areaPath).isDirectory()) {
             // area obj
@@ -99,7 +97,7 @@ module.exports = {
     
     registerAll: function() {
         this.register(
-            (this.rootAreaName),
+            ('root*'),
             ('/:controller?/:action?'),
             ({ controller: 'home', action: 'index' })
         );

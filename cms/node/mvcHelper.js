@@ -81,15 +81,15 @@ var filterRouteSetByArea = function(routeSet, areaName) {
     return routes;
 };
 
-var generateUrl = exports.generateUrl = function(actionName, controllerName, routeValues, routeSet, httpContext, includeImplicitMvcValues) {
+var generateUrl = exports.generateUrl = function(routeName, actionName, controllerName, routeValues, routeSet, httpContext, includeImplicitMvcValues) {
     var areaParam = findRouteValue(httpContext.routeData, 'area', 0);
     var routes = filterRouteSetByArea(routeSet, routeValues[areaParam.name]);
     var values = mergeRouteValues(actionName, controllerName, httpContext.routeData, routeValues, includeImplicitMvcValues);
     //TODO:
 };
 
-var generateUrlPlus = exports.generateUrlPlus = function(actionName, controllerName, protocol, hostName, fragment, routeValues, routeSet, httpContext, includeImplicitMvcValues) {
-    var text = generateUrl(actionName, controllerName, routeValues, routeSet, httpContext, includeImplicitMvcValues);
+var generateUrlPlus = exports.generateUrlPlus = function(routeName, actionName, controllerName, protocol, hostName, fragment, routeValues, routeSet, httpContext, includeImplicitMvcValues) {
+    var text = generateUrl(routeName, actionName, controllerName, routeValues, routeSet, httpContext, includeImplicitMvcValues);
     if (text) {
         if (fragment) {
             text = text + '#' + fragment;
@@ -98,11 +98,16 @@ var generateUrlPlus = exports.generateUrlPlus = function(actionName, controllerN
             protocol = protocol ? protocol : 'http:';
             hostName = hostName ? hostName : httpContext.request.url.host;
             text = protocol + '//' + hostName + port + text;
+            //TODO: use req.rulee.url?
         }
     }
     return text;
 };
 
 var generateContentUrl = exports.generateContentUrl = function(contentPath, httpContext) {
-    //TODO:
+    if (contentPath && contentPath.charAt(0) === '~') {
+        return contentPath.substr(1);
+    } else {
+        return contentPath;
+    }
 };

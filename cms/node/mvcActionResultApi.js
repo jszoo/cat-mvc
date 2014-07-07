@@ -78,12 +78,14 @@ mvcActionResultApi.prototype = {
         return this.redirectToRoutePermanent(mvcHelper.mergeRouteValues(actionName, controllerName, this.httpContext.routeData, routeValues, true));
     },
 
-    redirectToRoute: function(routeValues) {
-        return emit.call(this, new actionResult.redirectToRouteResult({ routeValues: routeValues, permanent: false }));
+    redirectToRoute: function(routeName, routeValues) {
+        if (!utils.isString(routeName)) { routeValues = routeName; routeName = null; }
+        return emit.call(this, new actionResult.redirectToRouteResult({ routeName: routeName, routeValues: routeValues, permanent: false }));
     },
 
-    redirectToRoutePermanent: function(routeValues) {
-        return emit.call(this, new actionResult.redirectToRouteResult({ routeValues: routeValues, permanent: true }));
+    redirectToRoutePermanent: function(routeName, routeValues) {
+        if (!utils.isString(routeName)) { routeValues = routeName; routeName = null; }
+        return emit.call(this, new actionResult.redirectToRouteResult({ routeName: routeName, routeValues: routeValues, permanent: true }));
     }
 };
 

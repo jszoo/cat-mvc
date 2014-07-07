@@ -84,14 +84,15 @@ var filterRouteSetByArea = function(routeSet, areaName) {
 var generateRouteUrl = function(route, routeValues) {
     var query = utils.extend({}, routeValues);
     var parts = route.expression.split('/');
-    var matchedCount = 0;
+    var matchCount = 0;
     utils.each(parts, function(i, part) {
         if (!part) { return; }
         if (part.charAt(0) !== ':') {
             utils.each(routeValues, function(key, val) {
                 if (val === part) {
-                    matchedCount++;
+                    matchCount++;
                     delete query[key];
+                    return false;
                 }
             });
             return;
@@ -101,13 +102,13 @@ var generateRouteUrl = function(route, routeValues) {
                 var fname = utils.formalStr(this.name);
                 parts[i] = routeValues[fname] || route.defaultValues[fname];
                 delete query[this.name];
-                matchedCount++;
+                matchCount++;
                 return false;
             }
         });
     });
     return {
-        matchs: matchedCount,
+        matchCount: matchCount,
         url: utils.appendQuery(parts.join('/'), query)
     };
 };
@@ -122,12 +123,12 @@ var generateUrl = exports.generateUrl = function(routeName, actionName, controll
             url = generateRouteUrl(route, values).url;
         }
     } else {
-        var areaName = values['area'], matchs;
+        var areaName = values['area'], matchCount;
         var areaRoutes = filterRouteSetByArea(routeSet, areaName);
         utils.each(areaRoutes, function() {
             var ret = generateRouteUrl(this, values);
-            if (matchs === undefined || ret.matchs >  matchs) {
-                matchs = ret.matchs;
+            if (matchCount === undefined || ret.matchCount >  matchCount) {
+                matchCount = ret.matchCount;
                 url = ret.url;
             }
         });

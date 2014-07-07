@@ -18,12 +18,12 @@ var mvcRoutes = function(set) {
     var self = this;
     this.events = new events.EventEmitter();
     this.events.on('changed', function() { self._all = null; });
-    this.inner = caching.region('mvc-' + this.ownerAreaName + '-routes-cache');
+    this._inner = caching.region('mvc-' + this.ownerAreaName + '-routes-cache');
 };
 
 mvcRoutes.prototype = {
 
-    ownerAreaName: null, events: null, inner: null, _all: null,
+    ownerAreaName: null, events: null, _inner: null, _all: null,
 
     constructor: mvcRoutes, className: 'mvcRoutes',
 
@@ -39,7 +39,7 @@ mvcRoutes.prototype = {
             end: false
         });
         //
-        this.inner.set(name, {
+        this._inner.set(name, {
             expression: expression,
             defaultValues: values,
             regexp: re,
@@ -50,20 +50,20 @@ mvcRoutes.prototype = {
     },
 
     all: function() {
-        return this._all ? this._all : (this._all = this.inner.all());
+        return this._all ? this._all : (this._all = this._inner.all());
     },
 
     get: function(name) {
-        return this.inner.get(name);
+        return this._inner.get(name);
     },
 
     remove: function(name) {
-        this.inner.remove(name);
+        this._inner.remove(name);
         this.events.emit('changed');
     },
 
     clear: function() {
-        this.inner.clear();
+        this._inner.clear();
         this.events.emit('changed');
     }
 };

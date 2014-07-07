@@ -99,16 +99,16 @@ var generateRouteUrl = function(route, routeValues) {
 };
 
 var generateUrl = exports.generateUrl = function(routeName, actionName, controllerName, routeValues, routeSet, httpContext, includeImplicitMvcValues) {
-    var values = mergeRouteValues(actionName, controllerName, httpContext.routeData, routeValues, includeImplicitMvcValues);
+    var url, values = mergeRouteValues(actionName, controllerName, httpContext.routeData, routeValues, includeImplicitMvcValues);
     if (routeName) {
         var route = routeSet[utils.formalStr(routeName)];
         if (!route) {
             throw new Error(utils.format('Can not find routeName: "{0}"', routeName));
         } else {
-            return generateRouteUrl(route, values);
+            url = generateRouteUrl(route, values);
         }
     } else {
-        var areaName = values['area'], url;
+        var areaName = values['area'];
         var areaRoutes = filterRouteSetByArea(routeSet, areaName);
         utils.each(areaRoutes, function() {
             var ret = generateRouteUrl(this, values);
@@ -118,8 +118,8 @@ var generateUrl = exports.generateUrl = function(routeName, actionName, controll
                 url = ret;
             }
         });
-        return url;
     }
+    return url;
 };
 
 var generateUrlPlus = exports.generateUrlPlus = function(routeName, actionName, controllerName, protocol, hostName, fragment, routeValues, routeSet, httpContext, includeImplicitMvcValues) {

@@ -9,7 +9,7 @@
 var events = require('events'),
     utils = require('./utilities'),
     caching = require('./caching'),
-    pathToRegexp = require('path-to-regexp');
+    mvcRoute = require('./mvcRoute');
 
 var mvcRoutes = function(set) {
     utils.extend(this, set);
@@ -26,24 +26,13 @@ mvcRoutes.prototype = {
     constructor: mvcRoutes, className: 'mvcRoutes',
 
     set: function(name, expression, defaultValues) {
-        var values = {};
-        utils.each(defaultValues, function(key, val) {
-            values[key.toLowerCase()] = (val && val.toLowerCase());
-        });
-        //
-        var keys = [], re = pathToRegexp(expression, keys, {
-            sensitive: false,
-            strict: false,
-            end: false
-        });
-        //
-        this._inner.set(name, {
+        if (!name) { throw new Error('name is required'); }
+        this._inner.set(name, new mvcRoute({
+            name: name,
             expression: expression,
-            defaultValues: values,
-            regexp: re,
-            keys: keys,
+            defaultValues: defaultValues,
             ownerAreaName: this.ownerAreaName
-        });
+        }));
         this.events.emit('changed');
     },
 

@@ -82,53 +82,20 @@ var filterRouteSetByArea = function(routeSet, areaName) {
     return routes;
 };
 
-var generateRouteUrl = function(route, values) {
-    var query = utils.extend({}, values);
-    var matchCount = 0, requireCount = 0;
-    //
-    var expstr = route.expression;
-    utils.each(route.keys, function() {
-        var fname = utils.formalStr(this.name);
-        var value = values[fname] || route.defaultValues[fname];
-        var regstr = utils.format('{0}:{1}[^{0}]*', this.delimiter, this.name);
-        var repstr = value ? this.delimiter + value : '';
-        expstr = expstr.replace(new RegExp(regstr, 'i'), repstr);
-        if (!this.optional) {
-            requireCount++;
-        }
-        if (fname in query) {
-            delete query[fname];
-            matchCount++;
-        }
-    });
-    //
-    delete query['area'];
-    return {
-        keyCount: route.keys.length,
-        matchCount: matchCount,
-        requireCount: requireCount,
-        url: utils.appendQuery(expstr, query)
-    };
-};
-
 var generateUrl = exports.generateUrl = function(routeName, actionName, controllerName, routeValues, routeSet, httpContext, includeImplicitMvcValues) {
     var url, values = mergeRouteValues(actionName, controllerName, httpContext.routeData, routeValues, includeImplicitMvcValues);
-    var formalValues = {};
-    utils.each(values, function(key, val) {
-        formalValues[utils.formalStr(key)] = val;
-    });
     if (routeName) {
         var route = routeSet[utils.formalStr(routeName)];
-        if (!route) {
-            throw new Error(utils.format('Can not find routeName: "{0}"', routeName));
+        if (route) {
+            url = route.resolveUrl(routeValues).url;
         } else {
-            url = generateRouteUrl(route, formalValues).url;
+            throw new Error(utils.format('Can not find routeName: "{0}"', routeName));
         }
     } else {
-        var areaName = formalValues['area'], matchCount;
+        var areaName = routeValues['area'], matchCount;
         var areaRoutes = filterRouteSetByArea(routeSet, areaName);
         utils.each(areaRoutes, function() {
-            var ret = generateRouteUrl(this, formalValues);
+            var ret = this.resolveUrl(routeValues);
             if (matchCount === undefined || ret.matchCount >  matchCount) {
                 if (ret.matchCount === ret.keyCount) {
                     matchCount = ret.matchCount;

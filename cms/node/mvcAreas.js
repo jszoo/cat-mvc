@@ -83,7 +83,7 @@ module.exports = {
                 // read 'areas/account/ctrls/logon.js'
                 var ctrlFiles = fs.readdirSync(ctrlsPath);
                 utils.each(ctrlFiles, function(i, ctrlFileName) {
-                    area.loadController(path.join(ctrlsPath, ctrlFileName));
+                    area.controllers.load(path.join(ctrlsPath, ctrlFileName));
                 });
             }
         }

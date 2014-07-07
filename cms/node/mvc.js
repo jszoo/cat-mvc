@@ -93,7 +93,7 @@ var mvcHandler = function(set) {
                 var controllerParam = getParam(routeData, 'controller', 1);
                 if (!controllerParam) { return; } // continue
                 //
-                var controller = area.findController(controllerParam.value);
+                var controller = area.controllers.find(controllerParam.value);
                 if (!controller) { return; } // continue
                 //
                 var actionParam = getParam(routeData, 'action', 2);

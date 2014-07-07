@@ -8,7 +8,6 @@
 
 var events = require('events');
 var utils = require('./utilities');
-var fmKey = function(key) { return utils.trim(key).toLowerCase(); };
 
 
 var storage = {
@@ -16,8 +15,8 @@ var storage = {
     _data: {}, events: new events.EventEmitter(),
 
     get: function(region, key) {
-        region = fmKey(region);
-        key = fmKey(key);
+        region = utils.formalStr(region);
+        key = utils.formalStr(key);
         //
         if (arguments.length === 0) {
             return this._data;
@@ -32,8 +31,8 @@ var storage = {
     },
 
     set: function(region, key, val) {
-        region = fmKey(region);
-        key = fmKey(key);
+        region = utils.formalStr(region);
+        key = utils.formalStr(key);
         //
         if (arguments.length === 2) {
             return this._data[region] = key;
@@ -46,8 +45,8 @@ var storage = {
     },
 
     remove: function(region, key) {
-        region = fmKey(region);
-        key = fmKey(key);
+        region = utils.formalStr(region);
+        key = utils.formalStr(key);
         //
         this.events.emit('remove', { region: region, key: key });
         //
@@ -61,8 +60,8 @@ var storage = {
     },
 
     exists: function(region, key) {
-        region = fmKey(region);
-        key = fmKey(key);
+        region = utils.formalStr(region);
+        key = utils.formalStr(key);
         //
         if (arguments.length === 1) {
             return (region in this._data);
@@ -73,7 +72,7 @@ var storage = {
     },
 
     clear: function(region) {
-        region = fmKey(region);
+        region = utils.formalStr(region);
         //
         this.events.emit('clear', { region: region });
         //
@@ -92,11 +91,11 @@ var instances = {
     _data: {},
 
     get: function(key) {
-        return this._data[fmKey(key)];
+        return this._data[utils.formalStr(key)];
     },
 
     set: function(key, ins) {
-        this._data[fmKey(key)] = ins;
+        this._data[utils.formalStr(key)] = ins;
     }
 };
 

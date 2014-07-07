@@ -28,6 +28,11 @@ module.exports = utils.extend({}, utils, {
         if (':' == path.charAt(1) && '\\' == path.charAt(2)) { return true; }
         if ('\\\\' == path.substring(0, 2)) { return true; } // Microsoft Azure absolute path
         return false;
+    },
+
+    formalStr: function(str) {
+        if (!str) { return str; }
+        return str.replace(/^\s+|\s+$/g, '').toLowerCase();
     }
 
 });

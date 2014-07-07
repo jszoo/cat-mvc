@@ -81,35 +81,45 @@ var filterRouteSetByArea = function(routeSet, areaName) {
     return routes;
 };
 
+var generateRouteUrl = function(route, routeValues) {
+    var query = utils.extend({}, routeValues);
+    var parts = route.expression.split('/');
+    utils.each(parts, function(i, part) {
+        if (!part) { return; }
+        utils.each(route.keys, function() {
+            if (part.indexOf(':' + this.name) === 0) {
+                var fname = utils.formalStr(this.name);
+                parts[i] = routeValues[fname] || route.defaultValues[fname];
+                delete query[this.name];
+                return false;
+            }
+        });
+    });
+    return utils.appendQuery(parts.join('/'), query);
+};
+
 var generateUrl = exports.generateUrl = function(routeName, actionName, controllerName, routeValues, routeSet, httpContext, includeImplicitMvcValues) {
     var values = mergeRouteValues(actionName, controllerName, httpContext.routeData, routeValues, includeImplicitMvcValues);
     if (routeName) {
         var route = routeSet[utils.formalStr(routeName)];
-        if (route) {
-            var query = utils.extend({}, values);
-            var parts = route.expression.split('/');
-            utils.each(parts, function(i, part) {
-                if (!part || part.charAt(0) !== ':') { return; }
-                utils.each(route.keys, function() {
-                    if (part.indexOf(':' + this.name) === 0) {
-                        var fname = utils.formalStr(this.name);
-                        parts[i] = values[fname] || route.defaultValues[fname];
-                        delete query[fname];
-                        return false;
-                    }
-                });
-            });
-            return utils.appendQuery(parts.join('/'), query);
+        if (!route) {
+            throw new Error(utils.format('Can not find routeName: "{0}"', routeName));
+        } else {
+            return generateRouteUrl(route, values);
         }
     } else {
-        utils.each(routeSet, function(k, route) {
-
+        var areaName = values['area'], url;
+        var areaRoutes = filterRouteSetByArea(routeSet, areaName);
+        utils.each(areaRoutes, function() {
+            var ret = generateRouteUrl(this, values);
+            if (!url) {
+                url = ret;
+            } else if(ret.length < url.length) {
+                url = ret;
+            }
         });
+        return url;
     }
-
-    var areaParam = findRouteValue(httpContext.routeData, 'area', 0);
-    var routes = filterRouteSetByArea(routeSet, routeValues[areaParam.name]);
-    //TODO:
 };
 
 var generateUrlPlus = exports.generateUrlPlus = function(routeName, actionName, controllerName, protocol, hostName, fragment, routeValues, routeSet, httpContext, includeImplicitMvcValues) {

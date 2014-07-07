@@ -84,7 +84,7 @@ var filterRouteSetByArea = function(routeSet, areaName) {
 
 var generateRouteUrl = function(route, values) {
     var query = utils.extend({}, values);
-    var matchCount = 0;
+    var matchCount = 0, requireCount = 0;
     //
     var expstr = route.expression;
     utils.each(route.keys, function() {
@@ -93,6 +93,9 @@ var generateRouteUrl = function(route, values) {
         var regstr = utils.format('{0}:{1}[^{0}]*', this.delimiter, this.name);
         var repstr = value ? this.delimiter + value : '';
         expstr = expstr.replace(new RegExp(regstr, 'i'), repstr);
+        if (!this.optional) {
+            requireCount++;
+        }
         if (fname in query) {
             delete query[fname];
             matchCount++;
@@ -101,8 +104,9 @@ var generateRouteUrl = function(route, values) {
     //
     delete query['area'];
     return {
-        matchCount: matchCount,
         keyCount: route.keys.length,
+        matchCount: matchCount,
+        requireCount: requireCount,
         url: utils.appendQuery(expstr, query)
     };
 };

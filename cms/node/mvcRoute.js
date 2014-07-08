@@ -11,16 +11,7 @@ var utils = require('./utilities'),
 
 var mvcRoute = function(set) {
     utils.extend(this, set);
-    //
-    if (this.defaultValues) {
-        var values = {};
-        utils.each(this.defaultValues, function(key, val) {
-            values[utils.formalStr(key)] = val;
-        });
-        this.defaultValues = values;
-    } else {
-        this.defaultValues = {};
-    }
+    this.defaultValues = utils.formalObj(this.defaultValues || {});
 };
 
 mvcRoute.prototype = {

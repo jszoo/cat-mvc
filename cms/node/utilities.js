@@ -33,6 +33,14 @@ module.exports = utils.extend({}, utils, {
     formalStr: function(str) {
         if (!str) { return str; }
         return str.replace(/^\s+|\s+$/g, '').toLowerCase();
+    },
+
+    formalObj: function(obj) {
+        var ret = {}, self = this;
+        utils.each(obj, function(key, val) {
+            ret[self.formalStr(key)] = val;
+        });
+        return ret;
     }
 
 });

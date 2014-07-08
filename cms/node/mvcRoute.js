@@ -27,10 +27,24 @@ mvcRoute.prototype = {
 
     constructor: mvcRoute, className: 'mvcRoute',
 
+    /*
+    * urlPath: url path which is without query string
+    *   eg:/home/index
+    *
+    * return: name value object array
+    *   eg:[{ name: 'acton', value: 'index'}, { name: 'controller', value: 'home'}...]
+    */
     routeData: function(urlPath) {
         return routeSeed.routeData(this.expression, this.defaultValues, urlPath);
     },
 
+    /*
+    * routeValues: plain object data
+    *   eg: { action: 'index', controller: 'home', id: 1 }
+    *
+    * return: resolved url
+    *   eg: /home/index?id=1
+    */
     resolveUrl: function(routeValues) {
         return routeSeed.resolveUrl(this.expression, this.defaultValues, routeValues);
     }

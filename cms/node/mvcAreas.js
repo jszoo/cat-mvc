@@ -15,8 +15,8 @@ var fs = require('fs'),
 
 
 var CONST_Areas = 'areas',
-    CONST_Ctrls = 'ctrls',
-    CONST_Events = 'areaEvents.js';
+    CONST_Controllers = 'ctrls',
+    CONST_Subscribes = 'areaEvents.js';
 
 
 module.exports = {
@@ -39,7 +39,7 @@ module.exports = {
         if (!this._routeSet) {
             var rs = this._routeSet = {};
             utils.each(this.all(), function() {
-                utils.each(this.routes.all(), function(key, val) {
+                utils.each(this.ownedRoutes(), function(key, val) {
                     rs[key] = val;
                 });
             });
@@ -50,7 +50,7 @@ module.exports = {
     unload: function(areaName) {
         var area = this.get(areaName);
         if (area) {
-            area.fireExtension('onUnload');
+            area.fireSubscribes('onUnload');
             this.events.emit('unload', area);
         }
         return this._areas.remove(areaName);
@@ -73,10 +73,10 @@ module.exports = {
             });
             // map route
             area.routes.set(areaName, areaRoute, defaultRouteValues);
-            // load default extension
-            area.loadExtension(path.join(area.path, CONST_Events));
+            // load default subscribes
+            area.subscribes.load(path.join(area.path, CONST_Subscribes));
             // read 'areas/account/ctrls'
-            var ctrlsPath = path.join(area.path, CONST_Ctrls);
+            var ctrlsPath = path.join(area.path, CONST_Controllers);
             if (fs.existsSync(ctrlsPath) && fs.statSync(ctrlsPath).isDirectory()) {
                 // read 'areas/account/ctrls/logon.js'
                 var ctrlFiles = fs.readdirSync(ctrlsPath);
@@ -87,7 +87,7 @@ module.exports = {
         }
         //
         if (area) {
-            area.fireExtension('onRegister');
+            area.fireSubscribes('onRegister');
             this.events.emit('register', area);
             this._areas.set(area.name, area);
         }

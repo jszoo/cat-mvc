@@ -19,9 +19,9 @@ var mvcControllers = function(set) {
 
 mvcControllers.prototype = {
 
-	ownerAreaName: null, _inner: null,
+    ownerAreaName: null, _inner: null,
 
-	constructor: mvcControllers, className: 'mvcControllers',
+    constructor: mvcControllers, className: 'mvcControllers',
 
     register: function(name, controller) {
         if (arguments.length === 1) {
@@ -35,15 +35,15 @@ mvcControllers.prototype = {
     },
 
     remove: function(name) {
-    	return this._inner.remove(name);
+        return this._inner.remove(name);
     },
 
-    find: function(name) {
-    	return this._inner.get(name);
+    get: function(name) {
+        return this._inner.get(name);
     },
 
     clear: function() {
-    	return this._inner.clear();
+        return this._inner.clear();
     },
 
     load: function(filePath) {

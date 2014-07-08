@@ -9,6 +9,7 @@
 var fs = require('fs'),
     utils = require('./utilities'),
     mvcRoutes = require('./mvcRoutes'),
+    mvcAreaSubs = require('./mvcAreaSubs'),
     mvcControllers = require('./mvcControllers');
 
 
@@ -16,8 +17,8 @@ var mvcArea = function(set) {
     utils.extend(this, set);
     if (!this.name) { throw new Error('Parameter "name" is required'); }
     //
-    this.extensions = {};
     this.routes = new mvcRoutes({ ownerAreaName: this.name });
+    this.subscribes = new mvcAreaSubs({ ownerAreaName: this.name });
     this.controllers = new mvcControllers({ ownerAreaName: this.name });
 };
 
@@ -25,30 +26,23 @@ mvcArea.prototype = {
 
     name: null, path: null,
 
-    controllers: null, routes: null, extensions: null,
+    routes: null, subscribes: null, controllers: null,
 
     constructor: mvcArea, className: 'mvcArea',
 
-    loadExtension: function(filePath) {
-        if (fs.existsSync(filePath) && fs.statSync(filePath).isFile()) {
-            this.extensions[filePath.toLowerCase()] = require(filePath);
-        }
-        return this;
+    ownedRoutes: function() {
+        return this.routes.all();
     },
 
-    unloadExtension: function(filePath) {
-        return (delete this.extensions[filePath.toLowerCase()], this);
+    findController: function(controllerName) {
+        return this.controllers.get(controllerName);
     },
 
-    clearExtensions: function() {
-        return (this.extensions = {}, this);
-    },
-
-    fireExtension: function(funcName) {
+    fireSubscribes: function(funcName) {
         var self = this;
-        utils.each(this.extensions, function(k, ext) {
-            if (ext && utils.isFunction(ext[funcName])) {
-                ext[funcName](self);
+        utils.each(this.subscribes.all(), function(k, sub) {
+            if (sub && utils.isFunction(sub[funcName])) {
+                sub[funcName](self);
             }
         });
         return this;

@@ -50,7 +50,7 @@ var mvcHandler = function(set) {
         utils.each(allAreas, function(i, area) {
             if (matched || exception) { return false; } // break
             //
-            utils.each(area.routes.all(), function(k, route) {
+            utils.each(area.ownedRoutes(), function(k, route) {
                 var routeData = route.routeData(urlPath);
                 if (!routeData) { return; } // continue
                 //
@@ -65,7 +65,7 @@ var mvcHandler = function(set) {
                 var controllerParam = getParam(routeData, 'controller', 1);
                 if (!controllerParam) { return; } // continue
                 //
-                var controller = area.controllers.find(controllerParam.value);
+                var controller = area.findController(controllerParam.value);
                 if (!controller) { return; } // continue
                 //
                 var actionParam = getParam(routeData, 'action', 2);

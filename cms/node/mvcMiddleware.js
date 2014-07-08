@@ -13,7 +13,7 @@ exports.xHeaders = function(set) {
     set = set || {};
     return {
         handle: function(req, res) {
-            res.setHeader('X-Powered-By', 'RULEE');
+            res.setHeader('X-Powered-By', 'RULEE-MVC');
             utils.each(set.headers, function(key, value) {
                 res.setHeader(key, value);
             });

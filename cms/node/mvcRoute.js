@@ -23,9 +23,29 @@ var mvcRoute = function(set) {
 
 mvcRoute.prototype = {
 
-    name: null, expression: null, defaultValues: null, ownerAreaName: null,
-
     constructor: mvcRoute, className: 'mvcRoute',
+
+    /*
+    * the specified route name
+    */
+    name: null,
+
+    /*
+    * the owner area name
+    */
+    ownerAreaName: null,
+
+    /*
+    * the route expression
+    *   eg:/:controller?/:action?
+    */
+    expression: null,
+
+    /*
+    * plain object data as default route for expression
+    *   eg: { action: 'index', controller: 'home' }
+    */
+    defaultValues: null,
 
     /*
     * urlPath: url path which is without query string

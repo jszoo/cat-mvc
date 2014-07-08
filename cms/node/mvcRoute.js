@@ -18,6 +18,8 @@ var mvcRoute = function(set) {
             values[utils.formalStr(key)] = val;
         });
         this.defaultValues = values;
+    } else {
+        this.defaultValues = {};
     }
 };
 

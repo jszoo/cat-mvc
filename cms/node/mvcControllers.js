@@ -14,7 +14,7 @@ var fs = require('fs'),
 var mvcControllers = function(set) {
     utils.extend(this, set);
     if (!this.ownerAreaName) { throw new Error('Parameter "ownerAreaName" is required'); }
-    this._inner = caching.region('mvc-' + this.ownerAreaName + 'controllers-cache');
+    this._inner = caching.region('mvc-' + this.ownerAreaName + '-controllers-cache');
 };
 
 mvcControllers.prototype = {
@@ -29,7 +29,7 @@ mvcControllers.prototype = {
             name = null;
         }
         if (controller && controller.className === 'mvcController') {
-            name = name || controller.name();
+            name = (name || controller.name());
             this._inner.set(name, controller);
         }
     },

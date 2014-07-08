@@ -28,7 +28,7 @@ exports.ruleeUrl = function() {
             var prot = req.secure ? 'https' : 'http'; //eg: http
             var host = req.headers.host;              //eg: www.nodetest.cn:1337
             var path = req.url;                       //eg: /home?a=1
-            rulee.url = url.parse(prot + '://' + host + path);
+            rulee.url = url.parse(prot + '://' + host + path, true);
         }
     };
 };
@@ -46,7 +46,11 @@ exports.ruleeQuery = function() {
     return {
         handle: function(req, res) {
             var rulee = req.rulee || (req.rulee = {});
-            rulee.query = utils.getQuery(rulee.url.search);
+            if (utils.isObject(rulee.url.query)) {
+                rulee.query = utils.extend({}, rulee.url.query);
+            } else {
+                rulee.query = utils.getQuery(rulee.url.search);
+            }
         }
     };
 };

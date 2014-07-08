@@ -7,7 +7,7 @@
 'use strict';
 
 var utils = require('./utilities'),
-    provider = require('./mvcRouteProvider');
+    routeSeed = require('./mvcRouteSeed');
 
 var mvcRoute = function(set) {
     utils.extend(this, set);
@@ -28,11 +28,11 @@ mvcRoute.prototype = {
     constructor: mvcRoute, className: 'mvcRoute',
 
     routeData: function(urlPath) {
-        return provider.routeData(this.expression, this.defaultValues, urlPath);
+        return routeSeed.routeData(this.expression, this.defaultValues, urlPath);
     },
 
     resolveUrl: function(routeValues) {
-        return provider.resolveUrl(this.expression, this.defaultValues, routeValues);
+        return routeSeed.resolveUrl(this.expression, this.defaultValues, routeValues);
     }
 };
 

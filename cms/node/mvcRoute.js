@@ -31,7 +31,7 @@ mvcRoute.prototype = {
     name: null,
 
     /*
-    * the owner area name
+    * the name of area which owned this route
     */
     ownerAreaName: null,
 

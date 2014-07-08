@@ -67,36 +67,32 @@ module.exports = {
     },
 
     resolveUrl: function(expression, defaultValues, routeValues) {
-        var values = {};
+        var values = {}, querys = {};
         utils.each(routeValues, function(key, val) {
-            values[utils.formalStr(key)] = val;
+            key = utils.formalStr(key);
+            values[key] = val;
+            querys[key] = val;
         });
-        var query = utils.extend({}, values);
         //
         var item = this._getOrCreate(expression);
-        var matchCount = 0, requireCount = 0;
-        var expstr = expression;
+        var expstr = expression, matchCount = 0;
         utils.each(item.keys, function() {
             var fname = utils.formalStr(this.name);
             var value = values[fname] || defaultValues[fname];
             var regstr = utils.format('{0}:{1}[^{0}]*', this.delimiter, this.name);
             var repstr = value ? this.delimiter + value : '';
             expstr = expstr.replace(new RegExp(regstr, 'i'), repstr);
-            if (!this.optional) {
-                requireCount++;
-            }
-            if (fname in query) {
-                delete query[fname];
+            if (fname in querys) {
+                delete querys[fname];
                 matchCount++;
             }
         });
         //
-        delete query['area'];
+        delete querys['area'];
         return {
             keyCount: item.keys.length,
             matchCount: matchCount,
-            requireCount: requireCount,
-            url: utils.appendQuery(expstr, query)
+            url: utils.appendQuery(expstr, querys)
         };
     }
 

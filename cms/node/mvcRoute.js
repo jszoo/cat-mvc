@@ -77,6 +77,24 @@ mvcRoute.prototype = {
     */
     resolveKeys: function() {
         return routeSeed.resolveKeys(this.expression);
+    },
+
+    /*
+    * routeValues: plain object data
+    *   eg: { action: 'index', controller: 'home', id: 1 }
+    *
+    * return: the number of specified route values that is matched to this route
+    *   eg: 3
+    */
+    matchedCount: function(routeValues) {
+        var keys = this.resolveKeys(), count = 0;
+        var keysStr = (',' + keys.join(',') + ',').toLowerCase();
+        utils.each(routeValues, function(key) {
+            if (key && ~keysStr.indexOf(',' + key.toLowerCase() + ',')) {
+                count++;
+            }
+        });
+        return count;
     }
 };
 

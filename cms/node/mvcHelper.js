@@ -95,15 +95,9 @@ var generateUrl = exports.generateUrl = function(routeName, actionName, controll
         var areaName = routeValues['area'], matchedCount = null, matchedRoute;
         var areaRoutes = filterRouteSetByArea(routeSet, areaName);
         utils.each(areaRoutes, function() {
-            var keys = this.resolveKeys(), existsCount = 0;
-            var keysStr = (',' + keys.join(',') + ',').toLowerCase();
-            utils.each(routeValues, function(key) {
-                if (key && ~keysStr.indexOf(',' + key.toLowerCase() + ',')) {
-                    existsCount++;
-                }
-            });
-            if (matchedCount === null || existsCount > matchedCount){
-                matchedCount = existsCount;
+            var count = this.matchedCount(routeValues);
+            if (matchedCount === null || count > matchedCount){
+                matchedCount = count;
                 matchedRoute = this;
             }
         });

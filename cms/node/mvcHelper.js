@@ -111,19 +111,23 @@ var generateUrl = exports.generateUrl = function(routeName, actionName, controll
 };
 
 var generateUrlPlus = exports.generateUrlPlus = function(routeName, actionName, controllerName, protocol, hostName, fragment, routeValues, routeSet, httpContext, includeImplicitMvcValues) {
-    var text = generateUrl(routeName, actionName, controllerName, routeValues, routeSet, httpContext, includeImplicitMvcValues);
-    if (text) {
+    var url = generateUrl(routeName, actionName, controllerName, routeValues, routeSet, httpContext, includeImplicitMvcValues);
+    if (url) {
         if (fragment) {
-            text = text + '#' + fragment;
+            url = url + '#' + fragment;
         }
         if (protocol || hostName) {
-            protocol = protocol ? protocol : 'http:';
-            hostName = hostName ? hostName : httpContext.request.url.host;
-            text = protocol + '//' + hostName + port + text;
-            //TODO: use req.rulee.url?
+            var url = httpContext.request.url;
+            protocol = protocol ? protocol : url.protocol;
+            hostName = hostName ? hostName : url.host;
+            if (url.port && url.port !== '80') {
+                url = protocol + '://' + hostName + ':' + port + url;
+            } else {
+                url = protocol + '://' + hostName + url;
+            }
         }
     }
-    return text;
+    return url;
 };
 
 var generateContentUrl = exports.generateContentUrl = function(contentPath, httpContext) {

@@ -24,10 +24,13 @@ exports.ruleeUrl = function(set) {
     set = set || {};
     return {
         handle: function(req, res) {
+            var start = new Date();
             var rulee = req.rulee || (req.rulee = {});
-            var url = rulee.url = {};
-            url.host = req.headers.host; //eg: www.nodetest.cn:1337
-            url.path = req.url;          //eg: /home
+            var prot = req.secure ? 'https' : 'http'; //eg: http
+            var host = req.headers.host;              //eg: www.nodetest.cn:1337
+            var path = req.url;                       //eg: /home?a=1
+            rulee.url = utils.parseUrl(prot + '://' + host + path);
+            console.log(new Date() - start);
         }
     };
 };

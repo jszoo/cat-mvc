@@ -5,6 +5,7 @@ OK 7. tempData function
 OK 8. xheaders function
 OK 10. actions that is not specify a method should accept all method type request
 OK 11. controller.destory function
+OK 13. rulee.url
 
 4. implement mvc htlm helper
 5. viewResult partialViewResult

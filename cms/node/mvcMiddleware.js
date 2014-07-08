@@ -6,7 +6,8 @@
 
 'use strict';
 
-var utils = require('./utilities');
+var url = require('url'),
+    utils = require('./utilities');
 
 exports.xHeaders = function(set) {
     set = set || {};
@@ -20,21 +21,19 @@ exports.xHeaders = function(set) {
     };
 };
 
-exports.ruleeUrl = function(set) {
-    set = set || {};
+exports.ruleeUrl = function() {
     return {
         handle: function(req, res) {
             var rulee = req.rulee || (req.rulee = {});
             var prot = req.secure ? 'https' : 'http'; //eg: http
             var host = req.headers.host;              //eg: www.nodetest.cn:1337
             var path = req.url;                       //eg: /home?a=1
-            rulee.url = utils.parseUrl(prot + '://' + host + path);
+            rulee.url = url.parse(prot + '://' + host + path);
         }
     };
 };
 
-exports.ruleeForm = function(set) {
-    set = set || {};
+exports.ruleeForm = function() {
     return {
         handle: function(req, res) {
             var rulee = req.rulee || (req.rulee = {});
@@ -43,18 +42,16 @@ exports.ruleeForm = function(set) {
     };
 };
 
-exports.ruleeQuery = function(set) {
-    set = set || {};
+exports.ruleeQuery = function() {
     return {
         handle: function(req, res) {
             var rulee = req.rulee || (req.rulee = {});
-            utils.extend(rulee.query = {}, req.query);
+            rulee.query = utils.getQuery(rulee.url.search);
         }
     };
 };
 
-exports.ruleeMethod = function(set) {
-    set = set || {};
+exports.ruleeMethod = function() {
     return {
         handle: function(req, res) {
             var rulee = req.rulee || (req.rulee = {});
@@ -63,8 +60,7 @@ exports.ruleeMethod = function(set) {
     };
 };
 
-exports.ruleeSecure = function(set) {
-    set = set || {};
+exports.ruleeSecure = function() {
     return {
         handle: function(req, res) {
             var rulee = req.rulee || (req.rulee = {});

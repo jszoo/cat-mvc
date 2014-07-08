@@ -118,13 +118,9 @@ var generateUrlPlus = exports.generateUrlPlus = function(routeName, actionName, 
         }
         if (protocol || hostName) {
             var url = httpContext.request.rulee.url;
-            protocol = protocol ? protocol : url.protocol;
-            hostName = hostName ? hostName : url.host;
-            if (url.port && url.port !== '80') {
-                urlPath = protocol + '://' + hostName + ':' + port + urlPath;
-            } else {
-                urlPath = protocol + '://' + hostName + urlPath;
-            }
+            protocol = protocol ? protocol : url.protocol; // http:
+            hostName = hostName ? hostName : url.host;     // localhost:8000
+            urlPath = protocol + '//' + hostName + urlPath;
         }
     }
     return urlPath;

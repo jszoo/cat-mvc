@@ -42,23 +42,6 @@ module.exports = utils.extend({}, utils, {
             ret[self.formalStr(key)] = val;
         });
         return ret;
-    },
-
-    parseUrl: function() {
-        var _keys = ['source', 'protocol', 'authority', 'userInfo', 'user', 'password', 'host', 'port', 'relative', 'path', 'directory', 'file', 'query', 'anchor'];
-        var _parser = {
-            strict: /^(?:([^:\/?#]+):)?(?:\/\/((?:(([^:@]*):?([^:@]*))?@)?([^:\/?#]*)(?::(\d*))?))?((((?:[^?#\/]*\/)*)([^?#]*))(?:\?([^#]*))?(?:#(.*))?)/,  //less intuitive, more accurate to the specs
-            loose:  /^(?:(?![^:@]+:[^:@\/]*@)([^:\/?#.]+):)?(?:\/\/)?((?:(([^:@]*):?([^:@]*))?@)?([^:\/?#]*)(?::(\d*))?)(((\/(?:[^?#](?![^?#\/]*\.[^?#\/.]+(?:[?#]|$)))*\/?)?([^?#\/]*))(?:\?([^#]*))?(?:#(.*))?)/ // more intuitive, fails on relative paths and deviates from specs
-        };
-        return function(url, strict) {
-            var parser = _parser[!!strict ? 'strict' : 'loose'];
-            var raw = url; url = decodeURIComponent(url);
-            var match = parser.exec(url), i = _keys.length, ret = {};
-            while (i--) {
-                ret[_keys[i]] = match[i] || '';
-            }
-            return ret;
-        };
-    }()
+    }
 
 });

@@ -6,8 +6,7 @@
 
 'use strict';
 
-var parse = require('url').parse,
-    utils = require('./utilities'),
+var utils = require('./utilities'),
     mvcView = require('./mvcView'),
     mvcAreas = require('./mvcAreas'),
     mvcHelper = require('./mvcHelper'),
@@ -45,13 +44,11 @@ var mvcHandler = function(set) {
         };
         //
         var allAreas = mvcAreas.all();
-        var urlPath = parse(req.url).pathname;
-        //
         utils.each(allAreas, function(i, area) {
             if (matched || exception) { return false; } // break
             //
             utils.each(area.ownedRoutes(), function(k, route) {
-                var routeData = route.routeData(urlPath);
+                var routeData = route.routeData(req.rulee.url.pathname);
                 if (!routeData) { return; } // continue
                 //
                 var areaParam = getParam(routeData, 'area');

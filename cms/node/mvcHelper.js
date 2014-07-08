@@ -87,22 +87,31 @@ var generateUrl = exports.generateUrl = function(routeName, actionName, controll
     if (routeName) {
         var route = routeSet[utils.formalStr(routeName)];
         if (route) {
-            url = route.resolveUrl(routeValues).url;
+            url = route.resolveUrl(routeValues);
         } else {
             throw new Error(utils.format('Can not find routeName: "{0}"', routeName));
         }
     } else {
-        var areaName = routeValues['area'], matchCount;
+        var areaName = routeValues['area'], matchedCount = null, matchedRoute;
         var areaRoutes = filterRouteSetByArea(routeSet, areaName);
         utils.each(areaRoutes, function() {
-            var ret = this.resolveUrl(routeValues);
-            if (matchCount === undefined || ret.matchCount >  matchCount) {
-                if (ret.matchCount === ret.keyCount) {
-                    matchCount = ret.matchCount;
-                    url = ret.url;
+            var keys = this.resolveKeys(), existsCount = 0;
+            var keysStr = (',' + keys.join(',') + ',').toLowerCase();
+            utils.each(routeValues, function(key) {
+                if (key && ~keysStr.indexOf(',' + key.toLowerCase() + ',')) {
+                    existsCount++;
                 }
+            });
+            if (matchedCount === null || existsCount > matchedCount){
+                matchedCount = existsCount;
+                matchedRoute = this;
             }
         });
+        if (matchedRoute) {
+            url = matchedRoute.resolveUrl(routeValues);
+        } else {
+            throw new Error(utils.format('Can not find any routes in area: "{0}"', areaName));
+        }
     }
     return url;
 };

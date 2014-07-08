@@ -69,6 +69,14 @@ mvcRoute.prototype = {
     */
     resolveUrl: function(routeValues) {
         return routeSeed.resolveUrl(this.expression, this.defaultValues, routeValues);
+    },
+
+    /*
+    * return: an array object contains all the expression key names
+    *   eg: ['controller', 'action']
+    */
+    resolveKeys: function() {
+        return routeSeed.resolveKeys(this.expression);
     }
 };
 

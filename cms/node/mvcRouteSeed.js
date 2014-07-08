@@ -74,8 +74,7 @@ module.exports = {
             querys[key] = val;
         });
         //
-        var item = this._getOrCreate(expression);
-        var expstr = expression, matchCount = 0;
+        var item = this._getOrCreate(expression), expstr = expression;
         utils.each(item.keys, function() {
             var fname = utils.formalStr(this.name);
             var value = values[fname] || defaultValues[fname];
@@ -84,16 +83,17 @@ module.exports = {
             expstr = expstr.replace(new RegExp(regstr, 'i'), repstr);
             if (fname in querys) {
                 delete querys[fname];
-                matchCount++;
             }
         });
         //
         delete querys['area'];
-        return {
-            keyCount: item.keys.length,
-            matchCount: matchCount,
-            url: utils.appendQuery(expstr, querys)
-        };
+        return utils.appendQuery(expstr, querys);
+    },
+
+    resolveKeys: function(expression) {
+        var keys = [], item = this._getOrCreate(expression);
+        utils.each(item.keys, function() { keys.push(this.name); });
+        return keys;
     }
 
 };

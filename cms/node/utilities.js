@@ -36,6 +36,7 @@ module.exports = utils.extend({}, utils, {
     },
 
     formalObj: function(obj) {
+        if (!obj) { return obj; }
         var ret = {}, self = this;
         utils.each(obj, function(key, val) {
             ret[self.formalStr(key)] = val;

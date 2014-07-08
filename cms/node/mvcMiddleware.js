@@ -72,3 +72,12 @@ exports.ruleeSecure = function() {
         }
     };
 };
+
+exports.ruleeResponse = function() {
+    return {
+        handle: function(req, res) {
+            var rulee = res.rulee || (res.rulee = {});
+            var response = rulee.response = {};
+        }
+    };
+};

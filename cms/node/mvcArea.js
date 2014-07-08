@@ -14,7 +14,7 @@ var fs = require('fs'),
 
 var mvcArea = function(set) {
     utils.extend(this, set);
-    if (!this.name) { throw new Error('name is required'); }
+    if (!this.name) { throw new Error('Parameter "name" is required'); }
     //
     this.extensions = {};
     this.routes = new mvcRoutes({ ownerAreaName: this.name });

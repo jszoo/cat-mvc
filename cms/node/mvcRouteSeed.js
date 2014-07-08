@@ -16,7 +16,7 @@ var decode = function(param) {
     try {
         return decodeURIComponent(param);
     } catch (ex) {
-        var err = new Error('failed to decode param "' + param + '"');
+        var err = new Error('Failed to decode param "' + param + '"');
         err.status = 400;
         throw err;
     }

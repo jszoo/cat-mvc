@@ -13,7 +13,7 @@ var events = require('events'),
 
 var mvcRoutes = function(set) {
     utils.extend(this, set);
-    if (!this.ownerAreaName) { throw new Error('ownerAreaName is required'); }
+    if (!this.ownerAreaName) { throw new Error('Parameter "ownerAreaName" is required'); }
     //
     this.events = new events.EventEmitter();
     this._inner = caching.region('mvc-' + this.ownerAreaName + '-routes-cache');
@@ -26,7 +26,7 @@ mvcRoutes.prototype = {
     constructor: mvcRoutes, className: 'mvcRoutes',
 
     set: function(name, expression, defaultValues) {
-        if (!name) { throw new Error('name is required'); }
+        if (!name) { throw new Error('Parameter "name" is required'); }
         this._inner.set(name, new mvcRoute({
             name: name,
             expression: expression,

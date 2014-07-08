@@ -13,7 +13,7 @@ var fs = require('fs'),
 
 var mvcControllers = function(set) {
     utils.extend(this, set);
-    if (!this.ownerAreaName) { throw new Error('ownerAreaName is required'); }
+    if (!this.ownerAreaName) { throw new Error('Parameter "ownerAreaName" is required'); }
     this._inner = caching.region('mvc-' + this.ownerAreaName + 'controllers-cache');
 };
 

@@ -111,23 +111,23 @@ var generateUrl = exports.generateUrl = function(routeName, actionName, controll
 };
 
 var generateUrlPlus = exports.generateUrlPlus = function(routeName, actionName, controllerName, protocol, hostName, fragment, routeValues, routeSet, httpContext, includeImplicitMvcValues) {
-    var url = generateUrl(routeName, actionName, controllerName, routeValues, routeSet, httpContext, includeImplicitMvcValues);
-    if (url) {
+    var urlPath = generateUrl(routeName, actionName, controllerName, routeValues, routeSet, httpContext, includeImplicitMvcValues);
+    if (urlPath) {
         if (fragment) {
-            url = url + '#' + fragment;
+            urlPath = urlPath + '#' + fragment;
         }
         if (protocol || hostName) {
-            var url = httpContext.request.url;
+            var url = httpContext.request.rulee.url;
             protocol = protocol ? protocol : url.protocol;
             hostName = hostName ? hostName : url.host;
             if (url.port && url.port !== '80') {
-                url = protocol + '://' + hostName + ':' + port + url;
+                urlPath = protocol + '://' + hostName + ':' + port + urlPath;
             } else {
-                url = protocol + '://' + hostName + url;
+                urlPath = protocol + '://' + hostName + urlPath;
             }
         }
     }
-    return url;
+    return urlPath;
 };
 
 var generateContentUrl = exports.generateContentUrl = function(contentPath, httpContext) {

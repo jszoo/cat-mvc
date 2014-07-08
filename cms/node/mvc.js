@@ -23,12 +23,9 @@ var mvcHandler = function(set) {
     // route core
     return function(req, res, next) {
         //
-        mvcMiddleware.xHeaders().handle(req, res);
-        mvcMiddleware.ruleeUrl().handle(req, res);
-        mvcMiddleware.ruleeForm().handle(req, res);
-        mvcMiddleware.ruleeQuery().handle(req, res);
-        mvcMiddleware.ruleeMethod().handle(req, res);
-        mvcMiddleware.ruleeSecure().handle(req, res);
+        mvcMiddleware.ruleeHeaders().handle(req, res);
+        mvcMiddleware.ruleeRequest().handle(req, res);
+        mvcMiddleware.ruleeResponse().handle(req, res);
         //
         var matched = false, exception;
         var wrapNext = function() {

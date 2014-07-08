@@ -16,7 +16,9 @@ var http = require('http'),
 var baseResult = exports.baseResult = function(set) {
     var self = this;
     utils.each(set, function (key, val) {
-        if (val) { self[key] = val;}
+        if (val !== undefined && val !== null) {
+            self[key] = val;
+        }
     });
 };
 
@@ -36,8 +38,8 @@ var emptyResult = exports.emptyResult = function(set) {
 
 utils.inherit(emptyResult, baseResult, {
     execute: function(context) {
-        context.response.header('Content-Type', 'text/plain');
-        context.response.send('');
+        context.response.rulee.header('Content-Type', 'text/plain');
+        context.response.rulee.send('');
     }
 });
 
@@ -51,8 +53,10 @@ var jsonResult = exports.jsonResult = function(set) {
 utils.inherit(jsonResult, baseResult, {
     data: null, contentType: 'application/json',
     execute: function(context) {
-        context.response.header('Content-Type', this.contentType);
-        context.response.json(this.data);
+        var json = JSON.stringify(this.data);
+        //
+        context.response.rulee.header('Content-Type', this.contentType);
+        context.response.rulee.send(json);
     }
 });
 
@@ -66,11 +70,12 @@ var jsonpResult = exports.jsonpResult = function(set) {
 utils.inherit(jsonpResult, baseResult, {
     data: null, contentType: 'text/javascript', callbackName: 'callback',
     execute: function(context) {
-        var old = context.response.app.get('jsonp callback name');
-        context.response.app.set('jsonp callback name', this.callbackName);
-        context.response.header('Content-Type', this.contentType);
-        context.response.jsonp(this.data);
-        context.response.app.set('jsonp callback name', old);
+        //
+        var json = JSON.stringify(this.data).replace(/\u2028/g, '\\u2028').replace(/\u2029/g, '\\u2029');
+        var jsonp = utils.format('typeof {0} === "function" && {0}({1});', this.callbackName, json);
+        //
+        context.response.rulee.header('Content-Type', this.contentType);
+        context.response.rulee.send(jsonp);
     }
 });
 
@@ -115,7 +120,7 @@ var fileResult = exports.fileResult = function(set) {
 utils.inherit(fileResult, baseResult, {
     filePath: null, fileDownloadName: null,
     execute: function(context) {
-        context.response.download(this.filePath, this.fileDownloadName);
+        context.response.rulee.download(this.filePath, this.fileDownloadName);
     }
 });
 
@@ -129,8 +134,12 @@ var contentResult = exports.contentResult = function(set) {
 utils.inherit(contentResult, baseResult, {
     content: null, contentType: 'text/plain',
     execute: function(context) {
-        context.response.header('Content-Type', this.contentType);
-        context.response.send(this.content);
+        //
+        var text = this.content;
+        if (!utils.isString(text)) { text = text + ''; }
+        //
+        context.response.rulee.header('Content-Type', this.contentType);
+        context.response.rulee.send(text);
     }
 });
 
@@ -177,11 +186,7 @@ var redirectResult = exports.redirectResult = function(set) {
 utils.inherit(redirectResult, baseResult, {
     url: null, permanent: false,
     execute: function(context) {
-        if (this.permanent) {
-            context.response.redirect(this.url, 301);
-        } else {
-            context.response.redirect(this.url, 302);
-        }
+        context.response.rulee.redirect(this.url, this.permanent);
     }
 });
 
@@ -195,13 +200,9 @@ var redirectToRouteResult = exports.redirectToRouteResult = function(set) {
 utils.inherit(redirectToRouteResult, baseResult, {
     routeName: null, routeValues: null, permanent: false,
     execute: function(context) {
-        var url = mvcHelper.generateUrl(this.routeName, null, null, this.routeValues, context.routeSet, context, false);
         context.controller.tempData.keep();
-        if (this.permanent) {
-            context.response.redirect(url, 301);
-        } else {
-            context.response.redirect(url, 302);
-        }
+        var url = mvcHelper.generateUrl(this.routeName, null, null, this.routeValues, context.routeSet, context, false);
+        context.response.rulee.redirect(url, this.permanent);
     }
 });
 

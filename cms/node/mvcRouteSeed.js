@@ -81,9 +81,7 @@ module.exports = {
             var regstr = utils.format('{0}:{1}[^{0}]*', this.delimiter, this.name);
             var repstr = value ? this.delimiter + value : '';
             expstr = expstr.replace(new RegExp(regstr, 'i'), repstr);
-            if (fname in querys) {
-                delete querys[fname];
-            }
+            delete querys[fname];
         });
         //
         delete querys['area'];

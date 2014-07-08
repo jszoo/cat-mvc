@@ -6,8 +6,7 @@
 
 'use strict';
 
-var fs = require('fs'),
-    utils = require('./utilities'),
+var utils = require('./utilities'),
     mvcRoutes = require('./mvcRoutes'),
     mvcAreaSubs = require('./mvcAreaSubs'),
     mvcControllers = require('./mvcControllers');

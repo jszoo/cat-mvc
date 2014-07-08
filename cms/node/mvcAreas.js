@@ -16,7 +16,7 @@ var fs = require('fs'),
 
 var CONST_Areas = 'areas',
     CONST_Controllers = 'ctrls',
-    CONST_Subscribes = 'areaEvents.js';
+    CONST_Subscribes = 'areaSubs.js';
 
 
 module.exports = {

@@ -101,7 +101,7 @@ var viewResult = exports.viewResult = function(set) {
 };
 
 utils.inherit(viewResult, baseResult, {
-    viewName: null, model: null,
+    viewName: null, viewData: null,
     execute: function(context) {
         var areaParam = findRouteValue(context.routeData, 'area', 0);
         var controllerParam = findRouteValue(context.routeData, 'controller', 1);

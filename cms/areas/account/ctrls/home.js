@@ -13,7 +13,9 @@ module.exports = mvc.controller(function(req, res, end) {
     });
 
     this.action('test', function() {
-        return this.json({ redirectFromAccountHomeIndex: true });
+        setTimeout(function() {
+            end.json({ redirectFromAccountHomeIndex: true });
+        }, 16);
     });
 
 });

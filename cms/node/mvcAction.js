@@ -26,7 +26,9 @@ var mvcAction = function(set) {
 
 mvcAction.prototype = {
 
-    controller: null, _name: null, _filt: null, _impl: null,
+    _name: null, _filt: null, _impl: null,
+
+    controller: null, controllerContext: null,
     
     constructor: mvcAction, className: 'mvcAction',
 
@@ -47,7 +49,7 @@ mvcAction.prototype = {
         //
         var mached = true;
         utils.each(filters, function() {
-            mached = mached && this.testMatch(this.controller.httpContext);
+            mached = mached && this.testMatch(this.controllerContext);
         });
         //return mached;
         //
@@ -106,9 +108,8 @@ mvcAction.prototype = {
         if (!utils.isFunction(this.impl())) { return; }
         this.controller.resultApi.callback = callback;
         // execute action
-        var injectedParams = this.injectImpl(this.controller.httpContext);
-        var actionContext = this.controller.httpContext.toActionContext({
-            controller: this.controller,
+        var injectedParams = this.injectImpl(this.controllerContext);
+        var actionContext = this.controllerContext.toActionContext({
             params: injectedParams,
             result: null
         });
@@ -141,8 +142,7 @@ mvcAction.prototype = {
             }
         }
         //
-        var resultContext = this.controller.httpContext.toResultContext({
-            controller: this.controller,
+        var resultContext = this.controllerContext.toResultContext({
             result: result,
             exception: null
         });

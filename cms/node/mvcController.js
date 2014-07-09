@@ -50,9 +50,11 @@ mvcController.prototype = {
 
     actions: null,  events: null, url: null,
 
-    viewData: null, tempData: null, httpContext: null,
+    viewData: null, tempData: null, 
 
     resultApi: null, resultApiSync: null,
+
+    httpContext: null, controllerContext: null,
 
     constructor: mvcController, className: 'mvcController',
 
@@ -72,12 +74,15 @@ mvcController.prototype = {
     destroy: function() {
         if (!this.actions) { return; } // already destroyed
         // break object leaks
-        utils.each(this.actions, function() { this.controller = null; });
+        utils.each(this.actions, function() {
+            this.controllerContext = null;
+            this.controller = null;
+        });
         this.events.removeAllListeners();
         this.url.httpContext = null;
         this.resultApi.httpContext = null;
         this.resultApiSync.httpContext = null;
-        this.httpContext.controller = null;
+        this.controllerContext.controller = null;
         // clear reference types
         this._impl = null;
         this.actions = null;
@@ -85,9 +90,10 @@ mvcController.prototype = {
         this.url = null;
         this.viewData = null;
         this.tempData = null;
-        this.httpContext = null;
         this.resultApi = null;
         this.resultApiSync = null;
+        this.httpContext = null;
+        this.controllerContext = null;
     },
 
     initialize: function(httpContext) {
@@ -95,6 +101,7 @@ mvcController.prototype = {
         this.actions = [];
         this.events = new events.EventEmitter();
         this.httpContext = httpContext;
+        this.controllerContext = httpContext.toControllerContext(this);
         //
         this.url = new mvcHelperUrl({ httpContext: this.httpContext });
         this.viewData = new mvcViewData();
@@ -197,6 +204,7 @@ mvcController.prototype = {
             });
         }
         act.controller = this;
+        act.controllerContext = this.controllerContext;
         this.actions.push(act);
         return act; //  for chain
     },

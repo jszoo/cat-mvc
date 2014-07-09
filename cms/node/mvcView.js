@@ -17,15 +17,18 @@ var mvcView = function(viewName) {
 
 mvcView.prototype = {
     
-    viewName: null, engineExtname: '.vash',
+    viewName: null, engineExtname: null,
 
     constructor: mvcView, className: 'mvcView',
 
     render: function(viewContext, callback) {
+        var extname = this.engineExtname;
+        if (!extname) { extname = engines.default(); }
     	var rootPath = viewContext.routeArea.viewsPath;
-    	var filePath = path.join(rootPath, this.viewName + this.engineExtname);
+    	var filePath = path.join(rootPath, this.viewName + extname);
+        //
     	if (fs.existsSync(filePath) && fs.statSync(filePath).isFile()) {
-    		var engine = engines.get(this.engineExtname);
+    		var engine = engines.get(extname);
     		if (engine) {
 	        	engine(filePath, viewContext.viewData, callback);
 	        } else {

@@ -6,7 +6,7 @@
 
 var mvc = require('../../../node/mvc');
 
-module.exports = mvc.controller(function(req, res, end) {
+module.exports = mvc.controller(function(req, res, session, end) {
 
     this.on('actionExecuting', function(context) { });
     this.on('actionExecuted', function(context) { });
@@ -34,38 +34,35 @@ module.exports = mvc.controller(function(req, res, end) {
 
 
     this.action('admin', function() {
-        if (!req.session.loggedin) {
-            res.redirect('/login');
+        if (!session.loggedin) {
+            end.redirectToAction('login');
         } else {
-            var count = (req.session.count||0);
-            count++;
-            req.session.count = count;
-            res.render('admin', {
-                count: count
-            });
+            var count = (session.count || 0);
+            session.count = (++count);
+            end.view({ count: count });
         }
     });
 
     this.action('login', function() {
-        if (req.session.loggedin) {
-            res.redirect('/admin');
+        if (session.loggedin) {
+            end.redirectToAction('admin');
         } else {
-            res.render('login');
+            end.view();
         }
     });
 
-    this.action('login', 'post', function() {
-        if (req.body['UserName'] === 'admin' && req.body['Password'] === 'admin') {
-            req.session.loggedin = true;
-            res.redirect('/admin');
+    this.action('login', 'post', function(UserName, Password) {
+        if (UserName === 'admin' && Password === 'admin') {
+            session.loggedin = true;
+            end.redirectToAction('admin');
         } else {
-            res.redirect('/login');
+            end.redirectToAction('login');
         }
     });
 
     this.action('logout', function() {
-        req.session.destroy();
-        res.redirect('/');
+        session.destroy();
+        end.redirectToAction('login');
     });
 
 });

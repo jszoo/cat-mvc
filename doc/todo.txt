@@ -6,9 +6,9 @@ OK 8. xheaders function
 OK 10. actions that is not specify a method should accept all method type request
 OK 11. controller.destory function
 OK 13. rulee.url
+OK 6. mvcView for view engine
 
 4. implement mvc htlm helper
 5. viewResult partialViewResult
-6. mvcView for view engine
 9. inject url/html helper to view engine
 12. Https related: controller&action setting >>>>>>>>>> mvcFilter?

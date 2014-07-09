@@ -34,6 +34,8 @@ exports.ruleeRequest = function() {
             //
             rulee.form = utils.extend({}, req.body);
             //
+            rulee.session = req.session;
+            //
             rulee.secure = !!req.secure;
             //
             rulee.method = req.method;

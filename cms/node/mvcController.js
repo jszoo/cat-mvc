@@ -142,7 +142,7 @@ mvcController.prototype = {
                 case 'context':  params.push(ctx); break;
                 case 'request':  params.push(ctx.request); break;
                 case 'response': params.push(ctx.response); break;
-                case 'session':  params.push(ctx.request.session); break;
+                case 'session':  params.push(ctx.rulee.request.session); break;
                 case 'query':    params.push(ctx.rulee.request.query); break;
                 case 'form':     params.push(ctx.rulee.request.form); break;
                 //

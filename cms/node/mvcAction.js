@@ -85,6 +85,7 @@ mvcAction.prototype = {
         utils.each(ctx.routeData, function(i, it) {
             utils.mapObj(routeData, lowerRootNs(it.name), it.value);
         });
+        //
         utils.each(paramNames, function(i, name) {
             var loweName = name.toLowerCase();
             if (loweName.charAt(0) === '$') {
@@ -113,6 +114,7 @@ mvcAction.prototype = {
             params: injectedParams,
             result: null
         });
+        //
         this.controller.events.emit('actionExecuting', actionContext);
         actionContext.result = this.impl().apply(this.controller, injectedParams);
         this.controller.events.emit('actionExecuted', actionContext);
@@ -133,6 +135,7 @@ mvcAction.prototype = {
             result: result,
             exception: null
         });
+        //
         this.controller.events.emit('resultExecuting', resultContext);
         result.execute(resultContext);
         this.controller.events.emit('resultExecuted', resultContext);

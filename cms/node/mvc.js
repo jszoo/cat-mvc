@@ -77,7 +77,7 @@ var mvcHandler = function(set) {
                 });
                 try {
                     controller = controller.clone();
-                    controller.initialize(req, res, route, mvcAreas.routeSet(), routeData);
+                    controller.initialize(context.controllerContext(controller));
                     controller.executeImpl();
                 } catch (ex) {
                     controller.destroy();

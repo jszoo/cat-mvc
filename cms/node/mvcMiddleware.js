@@ -10,7 +10,7 @@ var url = require('url'),
     utils = require('./utilities');
 
 exports.ruleeHeaders = function(set) {
-    if (set = set || {}, !set.headers) { set.headers['X-Powered-By'] = 'RULEE-MVC'; }
+    if (set = set || {}, !set.headers) { set.headers = { 'X-Powered-By': 'RULEE-MVC' }; }
     return {
         handle: function(req, res) {
             return utils.each(set.headers, function(key, value) {

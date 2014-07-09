@@ -51,6 +51,7 @@ mvcContext.prototype = {
     },
 
     toViewContext: function(merge) {
+        if (this.controller) { merge.controller = this.controller; }
     	return utils.extend(clone(this, 'mvcViewContext'), merge);
     }
 };

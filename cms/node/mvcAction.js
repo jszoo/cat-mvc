@@ -128,19 +128,6 @@ mvcAction.prototype = {
                 content: result.toString()
             });
         }
-        else if (result instanceof actionResult.viewResult) {
-            if (!result.viewName) {
-                result.viewName = this.name();
-            }
-            if (!result.model) {
-                result.model = this.controller.viewData;
-            }
-        }
-        else if (result instanceof actionResult.partialViewResult) {
-            if (!result.viewName) {
-                result.viewName = this.name();
-            }
-        }
         //
         var resultContext = this.controllerContext.toResultContext({
             result: result,

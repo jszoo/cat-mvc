@@ -89,6 +89,7 @@ var partialViewResult = exports.partialViewResult = function(set) {
 utils.inherit(partialViewResult, baseResult, {
     viewName: null,
     execute: function(context) {
+        if (!this.viewName) { this.viewName = mvcHelper.findRouteItem(context.routeData, 'action').value; }
         //TODO:
     }
 });
@@ -103,10 +104,9 @@ var viewResult = exports.viewResult = function(set) {
 utils.inherit(viewResult, baseResult, {
     viewName: null, viewData: null,
     execute: function(context) {
-        var areaParam = findRouteValue(context.routeData, 'area', 0);
-        var controllerParam = findRouteValue(context.routeData, 'controller', 1);
-        var actionParam = findRouteValue(context.routeData, 'action', 2);
-        var viewPath = areaPath + '/' + controllerParam.value + '/' + actionParam.value;
+        if (!this.viewData) { this.viewData = context.controller.viewData; }
+        if (!this.viewName) { this.viewName = mvcHelper.findRouteItem(context.routeData, 'action').value; }
+        context.response.render(this.viewName, this.viewData);
     }
 });
 

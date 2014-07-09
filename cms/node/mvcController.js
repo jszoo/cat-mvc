@@ -80,6 +80,7 @@ mvcController.prototype = {
         });
         this.events.removeAllListeners();
         this.url.httpContext = null;
+        this.viewData.httpContext = null;
         this.resultApi.httpContext = null;
         this.resultApiSync.httpContext = null;
         this.controllerContext.controller = null;
@@ -104,7 +105,7 @@ mvcController.prototype = {
         this.controllerContext = httpContext.toControllerContext(this);
         //
         this.url = new mvcHelperUrl({ httpContext: this.httpContext });
-        this.viewData = new mvcViewData();
+        this.viewData = new mvcViewData({ httpContext: this.httpContext });
         //
         this.tempData = new mvcTempData({ provider: mvcTempData.sessionProvider });
         this.events.on('actionExecuting', function() { self.tempData.load(self.httpContext); });

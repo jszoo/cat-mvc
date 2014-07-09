@@ -20,6 +20,7 @@ module.exports = mvc.controller(function(req, res, end, tempdata, session) {
         else { count = ++session.count; }
 
         //
+        this.viewData['title'] = 'rulee viewData';
         setTimeout(function() {
             end.view();
             //end.json({ 

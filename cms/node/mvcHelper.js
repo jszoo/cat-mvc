@@ -17,7 +17,7 @@ var lowerEqual = exports.lowerEqual = function(str1, str2) {
     return lower(str1) == lower(str2);
 };
 
-var findRouteValue = exports.findRouteValue = function(routeData, findName, defaultIndex) {
+var findRouteItem = exports.findRouteItem = function(routeData, findName, defaultIndex) {
     var found; findName = lower(findName);
     if (!utils.isNumber(defaultIndex) && defaultIndex !== false) {
         if (findName === 'area') {
@@ -43,17 +43,17 @@ var findRouteValue = exports.findRouteValue = function(routeData, findName, defa
 var mergeRouteValues = exports.mergeRouteValues = function(actionName, controllerName, implicitRouteValues, routeValues, includeImplicitMvcValues) {
     var values = {}, areaParamName = 'area', controllerParamName = 'controller', actionParamName = 'action';
     if (includeImplicitMvcValues && implicitRouteValues) {
-        var areaParam = findRouteValue(implicitRouteValues, areaParamName);
+        var areaParam = findRouteItem(implicitRouteValues, areaParamName);
         if (areaParam) {
             areaParamName = areaParam.name;
             values[areaParamName] = areaParam.value;
         }
-        var controllerParam = findRouteValue(implicitRouteValues, controllerParamName);
+        var controllerParam = findRouteItem(implicitRouteValues, controllerParamName);
         if (controllerParam) {
             controllerParamName = controllerParam.name;
             values[controllerParamName] = controllerParam.value;
         }
-        var actionParam = findRouteValue(implicitRouteValues, actionParamName);
+        var actionParam = findRouteItem(implicitRouteValues, actionParamName);
         if (actionParam) {
             actionParamName = actionParam.name;
             values[actionParamName] = actionParam.value;

@@ -19,7 +19,7 @@ var mvcHandler = function(set) {
 
     var getParam = function(routeData, findName, defaultIndex) {
         if (findName === 'area') { defaultIndex = false; }
-        return mvcHelper.findRouteValue(routeData, findName, defaultIndex);
+        return mvcHelper.findRouteItem(routeData, findName, defaultIndex);
     };
 
     // route core

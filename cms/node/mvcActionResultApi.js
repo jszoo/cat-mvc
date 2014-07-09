@@ -51,6 +51,7 @@ mvcActionResultApi.prototype = {
     },
 
     view: function(viewName, model) {
+        if (!utils.isString(viewName)) { model = viewName; viewName = null; }
         return emit.call(this, new actionResult.viewResult({ viewName: viewName, model: model }));
     },
 
@@ -71,10 +72,12 @@ mvcActionResultApi.prototype = {
     },
 
     redirectToAction: function(actionName, controllerName, routeValues) {
+        if (!utils.isString(controllerName)) { routeValues = controllerName; controllerName = null; }
         return this.redirectToRoute(mvcHelper.mergeRouteValues(actionName, controllerName, this.httpContext.routeData, routeValues, true));
     },
 
     redirectToActionPermanent: function(actionName, controllerName, routeValues) {
+        if (!utils.isString(controllerName)) { routeValues = controllerName; controllerName = null; }
         return this.redirectToRoutePermanent(mvcHelper.mergeRouteValues(actionName, controllerName, this.httpContext.routeData, routeValues, true));
     },
 

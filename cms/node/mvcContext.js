@@ -41,10 +41,12 @@ mvcContext.prototype = {
     },
 
     toActionContext: function(merge) {
+        if (this.controller) { merge.controller = controller; }
         return utils.extend(this.clone('mvcActionContext'), merge);
     },
 
     toResultContext: function(merge) {
+        if (this.controller) { merge.controller = controller; }
         return utils.extend(this.clone('mvcResultContext'), merge);
     },
 

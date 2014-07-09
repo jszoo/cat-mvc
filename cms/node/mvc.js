@@ -67,7 +67,7 @@ var mvcHandler = function(set) {
                 var actionParam = getParam(routeData, 'action', 2);
                 if (!actionParam) { return; } // continue
                 //
-                var context = new mvcContext({
+                var httpContext = new mvcContext({
                     request: req,
                     response: res,
                     route: route,
@@ -77,7 +77,7 @@ var mvcHandler = function(set) {
                 });
                 try {
                     controller = controller.clone();
-                    controller.initialize(context.toControllerContext(controller));
+                    controller.initialize(httpContext);
                     controller.executeImpl();
                 } catch (ex) {
                     controller.destroy();

@@ -90,11 +90,11 @@ mvcController.prototype = {
         this.resultApiSync = null;
     },
 
-    initialize: function(controllerContext) {
+    initialize: function(httpContext) {
         var self = this;
         this.actions = [];
         this.events = new events.EventEmitter();
-        this.httpContext = controllerContext;
+        this.httpContext = httpContext;
         //
         this.url = new mvcHelperUrl({ httpContext: this.httpContext });
         this.viewData = new mvcViewData();

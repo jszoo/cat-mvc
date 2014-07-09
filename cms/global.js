@@ -51,6 +51,8 @@ app.use(express.static(utils.absolutePath('fe')));
 // mvc
 var mvc = require('./node/mvc');
 mvc.areas.registerAll();
+mvc.engines.register(config.get('defaultViewEngine.extname'),
+	         require(config.get('defaultViewEngine.name')).__express);
 app.use(mvc.expressHandler());
 
 // load routes

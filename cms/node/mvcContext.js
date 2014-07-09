@@ -19,6 +19,7 @@ var clone = function(ins, className) {
         response: ins.response,
         route: ins.route,
         routeData: ins.routeData,
+        routeArea: ins.routeArea,
         routeSet: ins.routeSet,
         rulee: ins.rulee
     });
@@ -28,7 +29,7 @@ mvcContext.prototype = {
 
     request: null, response: null, rulee: null,
 
-    route: null, routeData: null, routeSet: null,
+    route: null, routeData: null, routeArea: null, routeSet: null,
 
     constructor: mvcContext, className: 'mvcContext',
 

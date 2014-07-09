@@ -15,6 +15,7 @@ var fs = require('fs'),
 
 
 var CONST_Areas = 'areas',
+    CONST_Views = 'views',
     CONST_Controllers = 'ctrls',
     CONST_Subscribes = 'areaSubs.js';
 
@@ -63,7 +64,9 @@ module.exports = {
             // area obj
             area = new mvcArea({
                 name: areaName,
-                path: areaPath
+                path: areaPath,
+                viewsPath: path.join(areaPath, CONST_Views),
+                controllersPath: path.join(areaPath, CONST_Controllers)
             });
             //
             area.routes.events.on('changed', function() { _routeSet = null; });
@@ -72,7 +75,7 @@ module.exports = {
             // load default subscribes
             area.subscribes.load(path.join(area.path, CONST_Subscribes));
             // read 'areas/account/ctrls'
-            var ctrlsPath = path.join(area.path, CONST_Controllers);
+            var ctrlsPath = area.controllersPath;
             if (fs.existsSync(ctrlsPath) && fs.statSync(ctrlsPath).isDirectory()) {
                 // read 'areas/account/ctrls/logon.js'
                 var ctrlFiles = fs.readdirSync(ctrlsPath);

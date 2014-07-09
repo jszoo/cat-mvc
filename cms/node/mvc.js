@@ -74,6 +74,7 @@ var mvcHandler = function(set) {
                     response: res,
                     route: route,
                     routeData: routeData,
+                    routeArea: area,
                     routeSet: mvcAreas.routeSet(),
                     rulee: rulee
                 });

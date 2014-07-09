@@ -7,12 +7,12 @@
 'use strict';
 
 var utils = require('./utilities'),
-    mvcView = require('./mvcView'),
     mvcAreas = require('./mvcAreas'),
     mvcHelper = require('./mvcHelper'),
     mvcContext = require('./mvcContext'),
     mvcController = require('./mvcController'),
-    mvcMiddleware = require('./mvcMiddleware');
+    mvcMiddleware = require('./mvcMiddleware'),
+    mvcViewEngines = require('./mvcViewEngines');
 
 
 var mvcHandler = function(set) {
@@ -143,8 +143,8 @@ var expressHandler = function(set) {
 };
 
 module.exports = {
-    view: mvcView,
     areas: mvcAreas,
+    engines: mvcViewEngines,
     controller: mvcController.define,
     //
     httpRawHandler: httpRawHandler,

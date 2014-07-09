@@ -117,7 +117,7 @@ mvcController.prototype = {
         return this;
     },
 
-    injectImpl: function(httpContext) {
+    injectImpl: function(ctx) {
         var params = [];
         var paramNames = mvcInjector.annotate(this.impl());
         if (!paramNames || paramNames.length === 0) { return params; }
@@ -129,15 +129,15 @@ mvcController.prototype = {
                 loweName = loweName.substr(1);
             }
             switch(loweName) {
-                case 'ctx':      params.push(httpContext); break;
-                case 'req':      params.push(httpContext.request); break;
-                case 'res':      params.push(httpContext.response); break;
-                case 'context':  params.push(httpContext); break;
-                case 'request':  params.push(httpContext.request); break;
-                case 'response': params.push(httpContext.response); break;
-                case 'session':  params.push(httpContext.request.session); break;
-                case 'query':    params.push(httpContext.request.rulee.query); break;
-                case 'form':     params.push(httpContext.request.rulee.form); break;
+                case 'ctx':      params.push(ctx); break;
+                case 'req':      params.push(ctx.request); break;
+                case 'res':      params.push(ctx.response); break;
+                case 'context':  params.push(ctx); break;
+                case 'request':  params.push(ctx.request); break;
+                case 'response': params.push(ctx.response); break;
+                case 'session':  params.push(ctx.request.session); break;
+                case 'query':    params.push(ctx.request.rulee.query); break;
+                case 'form':     params.push(ctx.request.rulee.form); break;
                 //
                 case 'events':   params.push(self.events); break;
                 case 'tempdata': params.push(self.tempData); break;

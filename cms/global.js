@@ -14,7 +14,7 @@ var config = configuration.load('web.config');
 
 // view engine
 app.set('views', utils.absolutePath('views'));
-app.set('view engine', config.get('viewEngine.name'));
+app.set('view engine', config.get('defaultViewEngine.name'));
 
 // log
 var logger = require('morgan');

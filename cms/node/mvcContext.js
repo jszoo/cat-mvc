@@ -20,12 +20,32 @@ mvcContext.prototype = {
 
     constructor: mvcContext, className: 'mvcContext',
 
-    controllerContext: function(controller) {
-    	return utils.extend({}, this, { controller: controller });
+    clone: function(className) {
+        return new mvcContext({
+            className: (className || this.className),
+            request: this.request,
+            response: this.response,
+            route: this.route,
+            routeData: this.routeData,
+            routeSet: this.routeSet,
+            rulee: this.rulee
+        });
     },
 
-    viewContext: function(set) {
-    	return utils.extend({}, this, set);
+    httpContext: function() {
+        return this.clone();
+    },
+
+    controllerContext: function(controller) {
+        return utils.extend(this.clone('controllerContext'), { controller: controller });
+    },
+
+    actionContext: function(merge) {
+        return utils.extend(this.clone('actionContext'), merge);
+    },
+
+    viewContext: function(merge) {
+    	return utils.extend(this.clone('viewContext'), merge);
     }
 };
 

@@ -12,9 +12,9 @@ module.exports = mvc.controller(function(req, res, end) {
         return this.redirectToAction('test','home', { id: 1 });
     });
 
-    this.action('test', function() {
+    this.action('test', function(id) {
         setTimeout(function() {
-            end.json({ redirectFromAccountHomeIndex: true });
+            end.json({ 'id is:': id });
         }, 16);
     });
 

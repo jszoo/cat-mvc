@@ -24,10 +24,11 @@ var mvcHandler = function(set) {
     // route core
     return function(req, res, next) {
         //
-        var ruleeContext  = {};
-        ruleeContext.headers = mvcMiddleware.ruleeHeaders().handle(req, res);
-        ruleeContext.request = mvcMiddleware.ruleeRequest().handle(req, res);
-        ruleeContext.response = mvcMiddleware.ruleeResponse().handle(req, res);
+        var rulee  = {
+            headers: mvcMiddleware.ruleeHeaders().handle(req, res),
+            request: mvcMiddleware.ruleeRequest().handle(req, res),
+            response: mvcMiddleware.ruleeResponse().handle(req, res)
+        };
         //
         var matched = false, exception;
         var wrapNext = function() {
@@ -47,7 +48,7 @@ var mvcHandler = function(set) {
             if (matched || exception) { return false; } // break
             //
             utils.each(area.ownedRoutes(), function(k, route) {
-                var routeData = route.routeData(req.rulee.url.pathname);
+                var routeData = route.routeData(rulee.request.url.pathname);
                 if (!routeData) { return; } // continue
                 //
                 var areaParam = getParam(routeData, 'area');
@@ -73,7 +74,7 @@ var mvcHandler = function(set) {
                     route: route,
                     routeData: routeData,
                     routeSet: mvcAreas.routeSet(),
-                    rulee: ruleeContext
+                    rulee: rulee
                 });
                 try {
                     controller = controller.clone();

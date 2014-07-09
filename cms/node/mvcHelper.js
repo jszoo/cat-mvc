@@ -19,7 +19,7 @@ var lowerEqual = exports.lowerEqual = function(str1, str2) {
 
 var findRouteValue = exports.findRouteValue = function(routeData, findName, defaultIndex) {
     var found; findName = lower(findName);
-    if (defaultIndex === true) {
+    if (!utils.isNumber(defaultIndex) && defaultIndex !== false) {
         if (findName === 'area') {
             defaultIndex = 0;
         } else if (findName === 'controller') {

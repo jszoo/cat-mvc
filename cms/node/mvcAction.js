@@ -68,19 +68,19 @@ mvcAction.prototype = {
         return this.controller.resolveFilters(type, filt);
     },
 
-    injectImpl: function(httpContext) {
+    injectImpl: function(ctx) {
         var params = [];
         var paramNames = injector.annotate(this.impl());
         if (!paramNames || paramNames.length === 0) { return params; }
         //
         var form = {}, query = {}, routeData = {};
-        utils.each(httpContext.request.rulee.form, function(key, val) {
+        utils.each(ctx.request.rulee.form, function(key, val) {
             utils.mapObj(form, lowerRootNs(key), val);
         });
-        utils.each(httpContext.request.rulee.query, function(key, val) {
+        utils.each(ctx.request.rulee.query, function(key, val) {
             utils.mapObj(query, lowerRootNs(key), val);
         });
-        utils.each(httpContext.routeData, function(i, it) {
+        utils.each(ctx.routeData, function(i, it) {
             utils.mapObj(routeData, lowerRootNs(it.name), it.value);
         });
         utils.each(paramNames, function(i, name) {
@@ -107,7 +107,8 @@ mvcAction.prototype = {
         this.controller.resultApi.callback = callback;
         // execute action
         var injectedParams = this.injectImpl(this.controller.httpContext);
-        var actionContext = utils.extend({}, this.controller.httpContext, {
+        var actionContext = this.controller.httpContext.toActionContext({
+            controller: this.controller,
             params: injectedParams,
             result: null
         });
@@ -140,7 +141,8 @@ mvcAction.prototype = {
             }
         }
         //
-        var resultContext = utils.extend({}, this.controller.httpContext, {
+        var resultContext = this.controller.httpContext.toResultContext({
+            controller: this.controller,
             result: result,
             exception: null
         });

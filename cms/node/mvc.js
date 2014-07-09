@@ -10,6 +10,7 @@ var utils = require('./utilities'),
     mvcView = require('./mvcView'),
     mvcAreas = require('./mvcAreas'),
     mvcHelper = require('./mvcHelper'),
+    mvcContext = require('./mvcContext'),
     mvcController = require('./mvcController'),
     mvcMiddleware = require('./mvcMiddleware');
 
@@ -23,9 +24,10 @@ var mvcHandler = function(set) {
     // route core
     return function(req, res, next) {
         //
-        mvcMiddleware.ruleeHeaders().handle(req, res);
-        mvcMiddleware.ruleeRequest().handle(req, res);
-        mvcMiddleware.ruleeResponse().handle(req, res);
+        var ruleeContext  = {};
+        ruleeContext.headers = mvcMiddleware.ruleeHeaders().handle(req, res);
+        ruleeContext.request = mvcMiddleware.ruleeRequest().handle(req, res);
+        ruleeContext.response = mvcMiddleware.ruleeResponse().handle(req, res);
         //
         var matched = false, exception;
         var wrapNext = function() {
@@ -65,6 +67,14 @@ var mvcHandler = function(set) {
                 var actionParam = getParam(routeData, 'action', 2);
                 if (!actionParam) { return; } // continue
                 //
+                var context = new mvcContext({
+                    request: req,
+                    response: res,
+                    route: route,
+                    routeData: routeData,
+                    routeSet: mvcAreas.routeSet(),
+                    rulee: ruleeContext
+                });
                 try {
                     controller = controller.clone();
                     controller.initialize(req, res, route, mvcAreas.routeSet(), routeData);

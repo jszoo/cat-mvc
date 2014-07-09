@@ -74,10 +74,10 @@ mvcAction.prototype = {
         if (!paramNames || paramNames.length === 0) { return params; }
         //
         var form = {}, query = {}, routeData = {};
-        utils.each(ctx.request.rulee.form, function(key, val) {
+        utils.each(ctx.rulee.request.form, function(key, val) {
             utils.mapObj(form, lowerRootNs(key), val);
         });
-        utils.each(ctx.request.rulee.query, function(key, val) {
+        utils.each(ctx.rulee.request.query, function(key, val) {
             utils.mapObj(query, lowerRootNs(key), val);
         });
         utils.each(ctx.routeData, function(i, it) {

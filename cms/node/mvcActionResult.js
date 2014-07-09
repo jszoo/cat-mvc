@@ -38,8 +38,8 @@ var emptyResult = exports.emptyResult = function(set) {
 
 utils.inherit(emptyResult, baseResult, {
     execute: function(context) {
-        context.response.rulee.header('Content-Type', 'text/plain');
-        context.response.rulee.send('');
+        context.rulee.response.header('Content-Type', 'text/plain');
+        context.rulee.response.send('');
     }
 });
 
@@ -55,8 +55,8 @@ utils.inherit(jsonResult, baseResult, {
     execute: function(context) {
         var json = JSON.stringify(this.data);
         //
-        context.response.rulee.header('Content-Type', this.contentType);
-        context.response.rulee.send(json);
+        context.rulee.response.header('Content-Type', this.contentType);
+        context.rulee.response.send(json);
     }
 });
 
@@ -74,8 +74,8 @@ utils.inherit(jsonpResult, baseResult, {
         var json = JSON.stringify(this.data).replace(/\u2028/g, '\\u2028').replace(/\u2029/g, '\\u2029');
         var jsonp = utils.format('typeof {0} === "function" && {0}({1});', this.callbackName, json);
         //
-        context.response.rulee.header('Content-Type', this.contentType);
-        context.response.rulee.send(jsonp);
+        context.rulee.response.header('Content-Type', this.contentType);
+        context.rulee.response.send(jsonp);
     }
 });
 
@@ -120,7 +120,7 @@ var fileResult = exports.fileResult = function(set) {
 utils.inherit(fileResult, baseResult, {
     filePath: null, fileDownloadName: null,
     execute: function(context) {
-        context.response.rulee.download(this.filePath, this.fileDownloadName);
+        context.rulee.response.download(this.filePath, this.fileDownloadName);
     }
 });
 
@@ -138,8 +138,8 @@ utils.inherit(contentResult, baseResult, {
         var text = this.content;
         if (!utils.isString(text)) { text = text + ''; }
         //
-        context.response.rulee.header('Content-Type', this.contentType);
-        context.response.rulee.send(text);
+        context.rulee.response.header('Content-Type', this.contentType);
+        context.rulee.response.send(text);
     }
 });
 
@@ -186,7 +186,7 @@ var redirectResult = exports.redirectResult = function(set) {
 utils.inherit(redirectResult, baseResult, {
     url: null, permanent: false,
     execute: function(context) {
-        context.response.rulee.redirect(this.url, this.permanent);
+        context.rulee.response.redirect(this.url, this.permanent);
     }
 });
 
@@ -202,7 +202,7 @@ utils.inherit(redirectToRouteResult, baseResult, {
     execute: function(context) {
         context.controller.tempData.keep();
         var url = mvcHelper.generateUrl(this.routeName, null, null, this.routeValues, context.routeSet, context, false);
-        context.response.rulee.redirect(url, this.permanent);
+        context.rulee.response.redirect(url, this.permanent);
     }
 });
 

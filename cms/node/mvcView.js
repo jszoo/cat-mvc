@@ -6,22 +6,23 @@
 
 'use strict';
 
-var utils = require('./utilities');
+var utils = require('./utilities'),
+    engines = require('./mvcViewEngines');
 
-var mvcView = function(name, options) {
-    debugger;
+var mvcView = function(viewName) {
+    this.viewName = viewName;
 };
 
 mvcView.prototype = {
     
+    viewName: null,
+
     constructor: mvcView, className: 'mvcView',
 
-    lookup: function(path) {
-        debugger;
-    },
-
-    render:function(options, fn) {
-        debugger;
+    render: function(viewContext, callback) {
+        var options = {};
+        var filePath = '';
+        this.engine(filePath, options, callback);
     }
 };
 

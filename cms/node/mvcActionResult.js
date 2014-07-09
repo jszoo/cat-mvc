@@ -8,6 +8,7 @@
 
 var http = require('http'),
     utils = require('./utilities'),
+    mvcView = require('./mvcView'),
     mvcHelper = require('./mvcHelper');
 
 
@@ -102,11 +103,25 @@ var viewResult = exports.viewResult = function(set) {
 };
 
 utils.inherit(viewResult, baseResult, {
-    viewName: null, viewData: null,
+    viewName: null, viewData: null, tempData: null,
     execute: function(context) {
         if (!this.viewData) { this.viewData = context.controller.viewData; }
+        if (!this.tempData) { this.tempData = context.controller.tempData; }
         if (!this.viewName) { this.viewName = mvcHelper.findRouteItem(context.routeData, 'action').value; }
-        context.response.render(this.viewName, this.viewData);
+        //
+        var viewContext = context.toViewContext({
+            viewData: this.viewData,
+            tempData: this.tempData
+        });
+        //
+        var view = new mvcView(this.viewName);
+        view.render(viewContext, function(err, str) {
+            if (err) {
+                context.exception = err;
+            } else {
+                context.rulee.response.send(str);
+            }
+        });
     }
 });
 

@@ -12,6 +12,18 @@ var mvcContext = function(set) {
     utils.extend(this, set);
 };
 
+var clone = function(ins, className) {
+    return new mvcContext({
+        className: (className || ins.className),
+        request: ins.request,
+        response: ins.response,
+        route: ins.route,
+        routeData: ins.routeData,
+        routeSet: ins.routeSet,
+        rulee: ins.rulee
+    });
+};
+
 mvcContext.prototype = {
 
     request: null, response: null, rulee: null,
@@ -20,38 +32,26 @@ mvcContext.prototype = {
 
     constructor: mvcContext, className: 'mvcContext',
 
-    clone: function(className) {
-        return new mvcContext({
-            className: (className || this.className),
-            request: this.request,
-            response: this.response,
-            route: this.route,
-            routeData: this.routeData,
-            routeSet: this.routeSet,
-            rulee: this.rulee
-        });
-    },
-
     toHttpContext: function() {
-        return this.clone();
+        return clone(this);
     },
 
     toControllerContext: function(controller) {
-        return utils.extend(this.clone('mvcControllerContext'), { controller: controller });
+        return utils.extend(clone(this, 'mvcControllerContext'), { controller: controller });
     },
 
     toActionContext: function(merge) {
-        if (this.controller) { merge.controller = controller; }
-        return utils.extend(this.clone('mvcActionContext'), merge);
+        if (this.controller) { merge.controller = this.controller; }
+        return utils.extend(clone(this, 'mvcActionContext'), merge);
     },
 
     toResultContext: function(merge) {
-        if (this.controller) { merge.controller = controller; }
-        return utils.extend(this.clone('mvcResultContext'), merge);
+        if (this.controller) { merge.controller = this.controller; }
+        return utils.extend(clone(this, 'mvcResultContext'), merge);
     },
 
     toViewContext: function(merge) {
-    	return utils.extend(this.clone('mvcViewContext'), merge);
+    	return utils.extend(clone(this, 'mvcViewContext'), merge);
     }
 };
 

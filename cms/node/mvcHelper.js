@@ -43,17 +43,17 @@ var findRouteValue = exports.findRouteValue = function(routeData, findName, defa
 var mergeRouteValues = exports.mergeRouteValues = function(actionName, controllerName, implicitRouteValues, routeValues, includeImplicitMvcValues) {
     var values = {}, areaParamName = 'area', controllerParamName = 'controller', actionParamName = 'action';
     if (includeImplicitMvcValues && implicitRouteValues) {
-        var areaParam = findRouteValue(implicitRouteValues, areaParamName, 0);
+        var areaParam = findRouteValue(implicitRouteValues, areaParamName);
         if (areaParam) {
             areaParamName = areaParam.name;
             values[areaParamName] = areaParam.value;
         }
-        var controllerParam = findRouteValue(implicitRouteValues, controllerParamName, 1);
+        var controllerParam = findRouteValue(implicitRouteValues, controllerParamName);
         if (controllerParam) {
             controllerParamName = controllerParam.name;
             values[controllerParamName] = controllerParam.value;
         }
-        var actionParam = findRouteValue(implicitRouteValues, actionParamName, 2);
+        var actionParam = findRouteValue(implicitRouteValues, actionParamName);
         if (actionParam) {
             actionParamName = actionParam.name;
             values[actionParamName] = actionParam.value;

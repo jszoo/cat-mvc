@@ -18,6 +18,7 @@ var utils = require('./utilities'),
 var mvcHandler = function(set) {
 
     var getParam = function(routeData, findName, defaultIndex) {
+        if (findName === 'area') { defaultIndex = false; }
         return mvcHelper.findRouteValue(routeData, findName, defaultIndex);
     };
 
@@ -59,13 +60,13 @@ var mvcHandler = function(set) {
                     });
                 }
                 //
-                var controllerParam = getParam(routeData, 'controller', 1);
+                var controllerParam = getParam(routeData, 'controller');
                 if (!controllerParam) { return; } // continue
                 //
                 var controller = area.findController(controllerParam.value);
                 if (!controller) { return; } // continue
                 //
-                var actionParam = getParam(routeData, 'action', 2);
+                var actionParam = getParam(routeData, 'action');
                 if (!actionParam) { return; } // continue
                 //
                 var httpContext = new mvcContext({

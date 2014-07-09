@@ -10,11 +10,10 @@ var url = require('url'),
     utils = require('./utilities');
 
 exports.ruleeHeaders = function(set) {
-    set = set || {};
+    if (set = set || {}, !set.headers) { set.headers['X-Powered-By'] = 'RULEE-MVC'; }
     return {
         handle: function(req, res) {
-            res.setHeader('X-Powered-By', 'RULEE-MVC');
-            utils.each(set.headers, function(key, value) {
+            return utils.each(set.headers, function(key, value) {
                 res.setHeader(key, value);
             });
         }
@@ -38,6 +37,8 @@ exports.ruleeRequest = function() {
             rulee.secure = !!req.secure;
             //
             rulee.method = req.method;
+            // ret
+            return rulee;
         }
     };
 };
@@ -59,6 +60,8 @@ exports.ruleeResponse = function() {
             rulee.send = function(content, status) {
                 return (status === undefined) ? res.send(content) : res.send(content, status);
             };
+            // ret
+            return rulee;
         }
     };
 };

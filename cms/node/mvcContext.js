@@ -37,15 +37,19 @@ mvcContext.prototype = {
     },
 
     toControllerContext: function(controller) {
-        return utils.extend(this.clone('controllerContext'), { controller: controller });
+        return utils.extend(this.clone('mvcControllerContext'), { controller: controller });
     },
 
     toActionContext: function(merge) {
-        return utils.extend(this.clone('actionContext'), merge);
+        return utils.extend(this.clone('mvcActionContext'), merge);
+    },
+
+    toResultContext: function(merge) {
+        return utils.extend(this.clone('mvcResultContext'), merge);
     },
 
     toViewContext: function(merge) {
-    	return utils.extend(this.clone('viewContext'), merge);
+    	return utils.extend(this.clone('mvcViewContext'), merge);
     }
 };
 

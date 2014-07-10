@@ -119,13 +119,13 @@ mvcAction.prototype = {
         actionContext.result = annotated.func.apply(this.controller, annotated.params);
         this.controller.events.emit('actionExecuted', actionContext);
         // ret
-        return actionContext.result;
+        callback(actionContext.result);
     },
 
     executeResult: function(result) {
         if (result === undefined || result === null) { return; }
         //
-        if (!(result instanceof actionResult.baseResult)) {
+        if (!utils.isFunction(result.execute)) { //if (!(result instanceof actionResult.baseResult)) {
             result = new actionResult.contentResult({
                 content: result.toString()
             });

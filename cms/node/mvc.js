@@ -96,17 +96,17 @@ var mvcHandler = function(set) {
                 //
                 try {
                     matched = true;
-                    var executeResult = function(obj) {
-                        if (obj !== undefined && obj !== null) {
-                            executeResult = function(obj) { };
-                            exception = action.executeResult(obj);
-                            controller.destroy();
-                            wrapNext();
-                        }
-                    };
-                    executeResult(action.executeImpl(function(result) {
-                        executeResult(result);
-                    }));
+                    var executed = false;
+                    action.executeImpl(function(obj) {
+                        if (obj === undefined) { return; }
+                        if (obj === null) { return; }
+                        if (executed) { return; }
+                        executed = true;
+                        //
+                        exception = action.executeResult(obj);
+                        controller.destroy();
+                        wrapNext();
+                    });
                 } catch (ex) {
                     controller.destroy();
                     exception = ex;

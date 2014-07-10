@@ -96,22 +96,22 @@ var generateUrl = exports.generateUrl = function(routeName, actionName, controll
     if (routeName) {
         var route = routeSet[utils.formalStr(routeName)];
         if (route) {
-            url = route.resolveUrl(routeValues);
+            url = route.resolveUrl(values);
         } else {
             throw new Error(utils.format('Can not find routeName: "{0}"', routeName));
         }
     } else {
-        var areaName = routeValues['area'], matchedCount = null, matchedRoute;
+        var areaName = values['area'], matchedCount = null, matchedRoute;
         var areaRoutes = filterRouteSetByArea(routeSet, areaName);
         utils.each(areaRoutes, function() {
-            var count = this.matchedCount(routeValues);
+            var count = this.matchedCount(values);
             if (matchedCount === null || count > matchedCount){
                 matchedCount = count;
                 matchedRoute = this;
             }
         });
         if (matchedRoute) {
-            url = matchedRoute.resolveUrl(routeValues);
+            url = matchedRoute.resolveUrl(values);
         } else {
             throw new Error(utils.format('Can not find any routes in area: "{0}"', areaName));
         }

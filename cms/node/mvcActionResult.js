@@ -104,7 +104,7 @@ var viewResult = exports.viewResult = function(set) {
 
 utils.inherit(viewResult, baseResult, {
     viewName: null, viewData: null, tempData: null,
-    execute: function(context) {
+    execute: function(context, callback) {
         if (!this.viewData) { this.viewData = context.controller.viewData; }
         if (!this.tempData) { this.tempData = context.controller.tempData; }
         if (!this.viewName) { this.viewName = mvcHelper.findRouteItem(context.routeData, 'action').value; }
@@ -116,11 +116,8 @@ utils.inherit(viewResult, baseResult, {
         //
         var view = new mvcView(this.viewName);
         view.render(viewContext, function(err, str) {
-            if (err) {
-                context.exception = err;
-            } else {
-                context.rulee.response.send(str);
-            }
+            if (!err) { context.rulee.response.send(str);}
+            callback(err);
         });
     }
 });

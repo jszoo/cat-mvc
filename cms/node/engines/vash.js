@@ -12,6 +12,8 @@ var vash = require('vash'),
     helpers = vash['helpers'];
 
 vash.config.useWith = true;
+vash.config.modelName = 'viewdata';
+vash.config.helpersName = 'html';
 
 vash.loadFile = function(filepath, options, cb){
 

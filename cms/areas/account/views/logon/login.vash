@@ -4,8 +4,8 @@
 @html.extend('_layout', function(model) {
     @html.block('content', function(model) {
         <form method="post">
-            <input type="text" name="UserName" />
-            <input type="password" name="Password" />
+            <input type="text" name="UserName" value="admin" />
+            <input type="password" name="Password" value="admin" />
             <input type="submit" value="Submit" />
         </form>
     })

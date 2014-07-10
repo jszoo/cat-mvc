@@ -37,7 +37,9 @@ mvcView.prototype = {
                         model: viewContext.viewData,
                         url: viewContext.controller.url
                     };
-                    engine(filePath, data, callback);
+                    engine(filePath, data, function(err, str) {
+                        callback(err, str);
+                    });
                 } catch (ex) {
                     callback(ex);
                 }

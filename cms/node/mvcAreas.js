@@ -13,8 +13,8 @@ var fs = require('fs'),
     caching = require('./caching'),
     mvcArea = require('./mvcArea');
 
-
-var CONST_Areas = 'areas',
+var CONST_Root = '*root',
+    CONST_Areas = 'areas',
     CONST_Views = 'views',
     CONST_Shared = 'shared',
     CONST_Controllers = 'ctrls',
@@ -34,6 +34,10 @@ module.exports = {
 
     get: function(areaName) {
         return _areas.get(areaName);
+    },
+
+    root: function() {
+        return _areas.get(CONST_Root);
     },
 
     routeSet: function() {
@@ -59,7 +63,7 @@ module.exports = {
 
     register: function(areaName, areaRoute, defaultRouteValues) {
         var areaDirectory = areaName;
-        if (areaName === '*root') { areaDirectory = path.sep + '..'; }
+        if (areaName === CONST_Root) { areaDirectory = path.sep + '..'; }
         var area, areaPath = path.normalize(path.join(_areasPath, areaDirectory));
         if (fs.existsSync(areaPath) && fs.statSync(areaPath).isDirectory()) {
             // area obj
@@ -98,7 +102,7 @@ module.exports = {
     
     registerAll: function() {
         this.register(
-            ('*root'),
+            (CONST_Root),
             ('/:controller?/:action?'),
             ({ controller: 'home', action: 'index' })
         );

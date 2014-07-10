@@ -47,7 +47,7 @@ module.exports = mvc.controller(function(req, res, session, end) {
         if (session.loggedin) {
             end.redirectToAction('admin');
         } else {
-            end.view();
+            end.view({ login:'yes'});
         }
     });
 

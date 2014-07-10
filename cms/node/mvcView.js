@@ -34,7 +34,7 @@ mvcView.prototype = {
         }
         //
         var engine = engines.get(extname);
-        if (engine) {
+        if (!engine) {
             callback(new Error('Failed to load view engine "' + this.engineExtname + '"'));
             return;
         }

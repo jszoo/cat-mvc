@@ -25,12 +25,16 @@ module.exports = {
         return (extname) ? (_default = extname) : (_default);
     },
 
-    remove: function(extname) {
-        return _inner.remove(extname);
-    },
-
     get: function(extname) {
         return _inner.get(extname);
+    },
+
+    exists: function(extname) {
+        return _inner.exists(extname);
+    },
+
+    remove: function(extname) {
+        return _inner.remove(extname);
     },
 
     clear: function() {

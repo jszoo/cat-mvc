@@ -7,37 +7,35 @@
 'use strict';
 
 var utils = require('./utilities'),
-    caching = require('./caching');
-
-var _inner = caching.region('mvc-view-engines-cache');
-var _default = null;
+    caching = require('./caching'),
+    inner = caching.region('mvc-view-engines-cache');
 
 module.exports = {
 
     register: function(extname, callback) {
         if (!extname) { throw new Error('Parameter "extname" is required'); }
         if (!utils.isFunction(callback)) { throw new Error('Parameter "callback" is required a function'); }
-        _default = extname;
-        return _inner.set(extname, callback);
+        this.default(extname);
+        return inner.set(extname, callback);
     },
 
     default: function(extname) {
-        return (extname) ? (_default = extname) : (_default);
+        return (extname) ? inner.set('_default_extname', extname) : inner.get('_default_extname');
     },
 
     get: function(extname) {
-        return _inner.get(extname);
+        return inner.get(extname);
     },
 
     exists: function(extname) {
-        return _inner.exists(extname);
+        return inner.exists(extname);
     },
 
     remove: function(extname) {
-        return _inner.remove(extname);
+        return inner.remove(extname);
     },
 
     clear: function() {
-        return _inner.clear();
+        return inner.clear();
     }
 };

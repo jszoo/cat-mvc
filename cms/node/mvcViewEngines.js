@@ -14,11 +14,11 @@ var _default = null;
 
 module.exports = {
 
-    register: function(extname, engine) {
+    register: function(extname, callback) {
         if (!extname) { throw new Error('Parameter "extname" is required'); }
-        if (!utils.isFunction(engine)) { throw new Error('Parameter "engine" is required a function'); }
+        if (!utils.isFunction(callback)) { throw new Error('Parameter "callback" is required a function'); }
         _default = extname;
-        return _inner.set(extname, engine);
+        return _inner.set(extname, callback);
     },
 
     default: function(extname) {

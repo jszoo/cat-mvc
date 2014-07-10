@@ -42,6 +42,15 @@ module.exports = utils.extend({}, utils, {
             ret[self.formalStr(key)] = val;
         });
         return ret;
-    }
+    },
+
+    defer: function() {
+        if (typeof setImmediate === 'function') {
+            return setImmediate;
+        }
+        return function(fn) {
+            process.nextTick(fn.bind.apply(fn, arguments));
+        };
+    }()
 
 });

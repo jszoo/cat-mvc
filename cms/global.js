@@ -50,9 +50,9 @@ app.use(express.static(utils.absolutePath('fe')));
 
 // mvc
 var mvc = require('./node/mvc');
+var vash = require(config.get('defaultViewEngine.name')); vash.config.useWith = true;
+mvc.engines.register(config.get('defaultViewEngine.extname'), vash.__express);
 mvc.areas.registerAll();
-mvc.engines.register(config.get('defaultViewEngine.extname'),
-	         require(config.get('defaultViewEngine.name')).__express);
 app.use(mvc.expressHandler());
 
 // load routes

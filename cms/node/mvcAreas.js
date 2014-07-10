@@ -71,7 +71,7 @@ module.exports = {
                 name: areaName,
                 path: areaPath,
                 viewsPath: path.join(areaPath, CONST_Views),
-                viewsSharedPath: path.join(areaPath, CONST_Views, CONST_Shared);
+                viewsSharedPath: path.join(areaPath, CONST_Views, CONST_Shared),
                 controllersPath: path.join(areaPath, CONST_Controllers)
             });
             //

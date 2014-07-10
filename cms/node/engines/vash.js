@@ -16,7 +16,7 @@ vash.config.useWith = true;
 vash.loadFile = function(filepath, options, cb){
 
     // extend works from right to left, using first arg as target
-    options = vQuery.extend( {}, vash.config, options || {} );
+    options = utils.extend( {}, vash.config, options || {} );
 
     var browser = helpers.config.browser
         ,tpl
@@ -34,6 +34,16 @@ vash.loadFile = function(filepath, options, cb){
             filepath += '.' + ( options.settings['view engine'] || 'vash' )
         }
     }
+
+    /*********************** rulee injected code start **********************/
+    try {
+        if (!browser && !utils.isAbsolute(filepath) && utils.isFunction(options.__RULEE_findView)) {
+            filepath = options.__RULEE_findView(filepath);
+        }
+    } catch (ex) {
+        cb (ex);
+    }
+    /*********************** rulee injected code end **********************/
 
     // TODO: auto insert 'model' into arguments
     try {

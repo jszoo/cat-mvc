@@ -9,6 +9,7 @@
 var fs = require('fs'),
     path = require('path'),
     utils = require('./utilities'),
+    areas = require('./mvcAreas'),
     engines = require('./mvcViewEngines');
 
 var mvcView = function(viewName) {
@@ -39,10 +40,25 @@ mvcView.prototype = {
             return;
         }
         //
+        var findPaths = [];
+        findPaths.push(rootPath);
+        findPaths.push(viewContext.routeArea.viewsSharedPath);
+        findPaths.push(areas.root().viewsSharedPath);
+        var findView = function(name) {
+            for(var i = 0; i < findPaths.length; i++) {
+                var file = path.join(findPaths[i], name + extname);
+                if (fs.existsSync(file) && fs.statSync(file).isFile()) {
+                    return file;
+                }
+            }
+            throw new Error('Failed to lookup view "' + name + '" in the following directories "' + findPaths.join('<br/>') + '"');
+        };
+        //
         try {
             var data = {
                 model: viewContext.viewData,
-                url: viewContext.controller.url
+                url: viewContext.controller.url,
+                __RULEE_findView: findView
             };
             engine(filePath, data, function(err, str) {
                 callback(err, str);

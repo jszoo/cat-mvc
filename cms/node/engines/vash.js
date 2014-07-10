@@ -15,6 +15,10 @@ vash.config.useWith = true;
 vash.config.modelName = 'viewdata';
 vash.config.helpersName = 'html';
 
+vash.helpers.renderView = function(viewName) {
+    //TODO:
+};
+
 vash.loadFile = function(filepath, options, cb){
 
     // extend works from right to left, using first arg as target

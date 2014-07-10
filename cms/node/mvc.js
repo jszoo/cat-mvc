@@ -32,7 +32,7 @@ var mvcHandler = function(set) {
         };
         //
         var matched = false, exception;
-        var wrapNext = function() {
+        var gotoNext = function() {
             if (exception) {
                 if (!(exception instanceof Error)) {
                     exception = new Error(exception);
@@ -105,7 +105,7 @@ var mvcHandler = function(set) {
                         //
                         exception = action.executeResult(obj);
                         controller.destroy();
-                        wrapNext();
+                        gotoNext();
                     });
                 } catch (ex) {
                     controller.destroy();
@@ -117,7 +117,7 @@ var mvcHandler = function(set) {
             });
         });
         // next
-        wrapNext();
+        gotoNext();
     };
 };
 

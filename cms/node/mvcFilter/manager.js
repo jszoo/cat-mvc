@@ -9,11 +9,10 @@
 var utils = require('../utilities'),
     caching = require('../caching');
 
+var _selectFilters = caching.region('mvc-filter-select-cache');
+var _methodfilters = caching.region('mvc-filter-method-cache');
+
 module.exports = {
-
-    _selectFilters: caching.region('mvc-filter-select-cache'),
-
-    _methodfilters: caching.region('mvc-filter-method-cache'),
 
     all: function() {
         return this._filters.all();

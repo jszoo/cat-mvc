@@ -32,7 +32,11 @@ mvcView.prototype = {
     	if (fs.existsSync(filePath) && fs.statSync(filePath).isFile()) {
     		var engine = engines.get(extname);
     		if (engine) {
-	        	engine(filePath, viewContext.viewData, callback);
+                try {
+	        	  engine(filePath, viewContext.viewData, callback);
+                } catch (ex) {
+                    callback(ex);
+                }
 	        } else {
 	        	callback(new Error('Failed to load view engine "' + this.engineExtname + '"'));
 	        }

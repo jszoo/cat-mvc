@@ -71,9 +71,9 @@ mvcAction.prototype = {
     },
 
     injectImpl: function(ctx) {
-        var params = [];
-        var paramNames = injector.annotate(this.impl());
-        if (!paramNames || paramNames.length === 0) { return params; }
+        var annotated = injector.annotate(this.impl());
+        var params = annotated.params = [];
+        if (!annotated.args || annotated.args.length === 0) { return annotated; }
         //
         var form = {}, query = {}, routeData = {};
         utils.each(ctx.rulee.request.form, function(key, val) {
@@ -86,7 +86,7 @@ mvcAction.prototype = {
             utils.mapObj(routeData, lowerRootNs(it.name), it.value);
         });
         //
-        utils.each(paramNames, function(i, name) {
+        utils.each(annotated.args, function(i, name) {
             var loweName = name.toLowerCase();
             if (loweName.charAt(0) === '$') {
                 loweName = loweName.substr(1);
@@ -102,21 +102,21 @@ mvcAction.prototype = {
             }
         });
         //
-        return params;
+        return annotated;
     },
 
     executeImpl: function(callback) {
-        if (!utils.isFunction(this.impl())) { return; }
+        var annotated = this.injectImpl(this.controllerContext);
+        if (!utils.isFunction(annotated.func)) { return; }
         this.controller.resultApi.callback = callback;
-        // execute action
-        var injectedParams = this.injectImpl(this.controllerContext);
+        //
         var actionContext = this.controllerContext.toActionContext({
-            params: injectedParams,
+            params: annotated.params,
             result: null
         });
         //
         this.controller.events.emit('actionExecuting', actionContext);
-        actionContext.result = this.impl().apply(this.controller, injectedParams);
+        actionContext.result = annotated.func.apply(this.controller, annotated.params);
         this.controller.events.emit('actionExecuted', actionContext);
         // ret
         return actionContext.result;

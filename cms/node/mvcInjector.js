@@ -8,29 +8,35 @@
 
 var utils = require('./utilities');
 
-var STRIP_COMMENTS = /((\/\/.*$)|(\/\*[\s\S]*?\*\/))/mg,
+var JS_COMMENTS = /((\/\/.*$)|(\/\*[\s\S]*?\*\/))/mg,
     FN_ARGS = /^function\s*[^\(]*\(\s*([^\)]*)\)/m,
     FN_ARG = /^\s*(_?)(.+?)\1\s*$/,
     FN_ARG_SPLIT = /,/;
 
-exports.annotate = function(fn) {
+exports.annotate = function(func) {
     var inject;
-    if (utils.isFunction(fn)) {
-        if (!(inject = fn.inject)) {
+    if (utils.isFunction(func)) {
+        if (!(inject = func.inject)) {
             inject = [];
-            var fnText = fn.toString().replace(STRIP_COMMENTS, '');
-            var argDecl = fnText.match(FN_ARGS);
-            utils.each(argDecl[1].split(FN_ARG_SPLIT), function(i, arg) {
+            var functionText = func.toString().replace(JS_COMMENTS, '');
+            var argsDeclared = functionText.match(FN_ARGS);
+            utils.each(argsDeclared[1].split(FN_ARG_SPLIT), function(i, arg) {
                 arg.replace(FN_ARG, function(all, underscore, name) {
                     inject.push(name);
                 });
             });
-            fn.inject = inject;
+            func.inject = inject;
         }
-    } else if (utils.isArray(fn)) {
-        var last = fn.length - 1;
-        inject = fn.slice(0, last);
+    } else if (utils.isArray(func)) {
+        var last = func.length - 1;
+        inject = func.slice(0, last);
+        func = func[last];
+    } else {
+        throw new Error('Inject target only support function type and array type.');
     }
     // ret
-    return inject;
+    return {
+        func: func,
+        args: inject
+    };
 };

@@ -28,26 +28,27 @@ mvcView.prototype = {
         //
         var rootPath = path.join(viewContext.routeArea.viewsPath, ctrlName);
         var filePath = path.join(rootPath, this.viewName + extname);
-        //
-        if (fs.existsSync(filePath) && fs.statSync(filePath).isFile()) {
-            var engine = engines.get(extname);
-            if (engine) {
-                try {
-                    var data = {
-                        model: viewContext.viewData,
-                        url: viewContext.controller.url
-                    };
-                    engine(filePath, data, function(err, str) {
-                        callback(err, str);
-                    });
-                } catch (ex) {
-                    callback(ex);
-                }
-            } else {
-                callback(new Error('Failed to load view engine "' + this.engineExtname + '"'));
-            }
-        } else {
+        if (!fs.existsSync(filePath) || !fs.statSync(filePath).isFile()) {
             callback(new Error('Failed to lookup view "' + this.viewName + '" in views directory "' + rootPath + '"'));
+            return;
+        }
+        //
+        var engine = engines.get(extname);
+        if (engine) {
+            callback(new Error('Failed to load view engine "' + this.engineExtname + '"'));
+            return;
+        }
+        //
+        try {
+            var data = {
+                model: viewContext.viewData,
+                url: viewContext.controller.url
+            };
+            engine(filePath, data, function(err, str) {
+                callback(err, str);
+            });
+        } catch (ex) {
+            callback(ex);
         }
     }
 };

@@ -1,8 +1,9 @@
+@{
+	
+}
 @html.extend('_layout', function(model) {
-
     @html.block('content', function(model) {
         <p>@model.count</p>
-        <a href="/logout">logout</a>
+        <a href="@url.action('logout')">logout</a>
     })
-
 })

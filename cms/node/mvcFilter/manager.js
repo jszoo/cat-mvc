@@ -61,9 +61,9 @@ module.exports = {
             });
         }
         //
-        var filters = [];
+        var filters = [], self = this;
         utils.each(filtersSett, function(name, sett) {
-            var cls = mvcFilters.resolve(type, name);
+            var cls = self.resolve(type, name);
             if (cls) {
                 filters.push({
                     filterClass: cls,

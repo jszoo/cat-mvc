@@ -8,25 +8,26 @@
 
 var utils = require('./utilities'),
     caching = require('./caching'),
-    pathToRegexp = require('path-to-regexp');
+    pathToRegexp = require('path-to-regexp'),
+    cache = caching.region('mvc-route-seed-cache');
 
-var _cache = caching.region('mvc-route-seed-cache');
-var _getOrCreate = function(expression) {
-    var item = _cache.get(expression);
+var getOrCreate = function(expression) {
+    var item = cache.get(expression);
     if (!item) {
         var keys = [], regexp = pathToRegexp(expression, keys, {
             sensitive: false,
             strict: false,
             end: false
         });
-        _cache.set(expression, item = {
+        cache.set(expression, item = {
             regexp: regexp,
             keys: keys
         });
     }
     return item;
 };
-var _decode = function(param) {
+
+var decode = function(param) {
     if (!param) {
         return param;
     }
@@ -42,13 +43,13 @@ var _decode = function(param) {
 module.exports = {
 
     routeData: function(expression, defaultValues, urlPath) {
-        var item = _getOrCreate(expression);
+        var item = getOrCreate(expression);
         var match = item.regexp.exec(urlPath);
         if (!match) { return null; }
         //
         var data = [];
         utils.each(item.keys, function(i, it) {
-            var value = _decode(match[i + 1]);
+            var value = decode(match[i + 1]);
             if (!value) {
                 var fname = utils.formalStr(it.name);
                 if (fname in defaultValues) {
@@ -72,7 +73,7 @@ module.exports = {
             querys[key] = val;
         });
         //
-        var item = _getOrCreate(expression), expstr = expression;
+        var item = getOrCreate(expression), expstr = expression;
         utils.each(item.keys, function() {
             var fname = utils.formalStr(this.name);
             var value = values[fname] || defaultValues[fname];
@@ -87,7 +88,7 @@ module.exports = {
     },
 
     resolveKeys: function(expression) {
-        var keys = [], item = _getOrCreate(expression);
+        var keys = [], item = getOrCreate(expression);
         utils.each(item.keys, function() { keys.push(this.name); });
         return keys;
     }

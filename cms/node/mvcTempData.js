@@ -8,37 +8,11 @@
 
 var utils = require('./utilities');
 
-
-var sessionProvider = {
-    sessionKey: '__controller_tempdata',
-    loadTempData: function(httpContext) {
-        var session = httpContext.rulee.request.session;
-        if (session) {
-            var values = session[this.sessionKey];
-            if (values) {
-                delete session[this.sessionKey];
-                return values;
-            }
-        }
-    },
-    saveTempData: function(httpContext, values) {
-        var session = httpContext.rulee.request.session;
-        if (session) {
-            if (utils.propCount(values) > 0) {
-                session[this.sessionKey] = values;
-            } else {
-                delete session[this.sessionKey];
-            }
-        }
-    }
-};
-
-
 var mvcTempData = function(set) {
     utils.extend(this, set);
     this.newData = {};
     this.oldData = {};
-    if (!this.provider) { this.provider = sessionProvider; }
+    if (!this.provider) { throw new Error('Inner store "provider" is require.'); }
 };
 
 mvcTempData.prototype = {
@@ -96,6 +70,4 @@ mvcTempData.prototype = {
     }
 };
 
-
-mvcTempData.sessionProvider = sessionProvider;
 module.exports = mvcTempData;

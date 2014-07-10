@@ -11,8 +11,9 @@ var events = require('events'),
     mvcHelper = require('./mvcHelper'),
     mvcAction = require('./mvcAction'),
     mvcInjector = require('./mvcInjector'),
-    mvcTempData = require('./mvcTempData'),
     mvcViewData = require('./mvcViewData'),
+    mvcTempData = require('./mvcTempData'),
+    mvcTempDataStore = require('./mvcTempDataStore'),
     mvcHelperUrl = require('./mvcHelperUrl'),
     mvcResultApi = require('./mvcActionResultApi'),
     mvcFilters = require('./mvcFilter/manager');
@@ -107,7 +108,7 @@ mvcController.prototype = {
         this.url = new mvcHelperUrl({ httpContext: this.httpContext });
         this.viewData = new mvcViewData({ httpContext: this.httpContext });
         //
-        this.tempData = new mvcTempData({ provider: mvcTempData.sessionProvider });
+        this.tempData = new mvcTempData({ provider: mvcTempDataStore.sessionProvider });
         this.events.on('actionExecuting', function() { self.tempData.load(self.httpContext); });
         this.events.on('resultExecuting', function() { self.tempData.save(self.httpContext); });
         //

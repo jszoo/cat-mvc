@@ -24,7 +24,9 @@ mvcView.prototype = {
     render: function(viewContext, callback) {
         var extname = this.engineExtname;
         if (!extname) { extname = engines.default(); }
-    	var rootPath = viewContext.routeArea.viewsPath;
+        var ctrlName = viewContext.controller.name();
+        //
+    	var rootPath = path.join(viewContext.routeArea.viewsPath, ctrlName);
     	var filePath = path.join(rootPath, this.viewName + extname);
         //
     	if (fs.existsSync(filePath) && fs.statSync(filePath).isFile()) {

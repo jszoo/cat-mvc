@@ -14,7 +14,7 @@ var config = configuration.load('web.config');
 
 // view engine
 app.set('views', utils.absolutePath('views'));
-app.set('view engine', config.get('defaultViewEngine.name'));
+app.set('view engine', 'vash');
 
 // log
 var logger = require('morgan');
@@ -48,10 +48,12 @@ var favicon = require('serve-favicon');
 app.use(favicon(utils.absolutePath(config.get('favicon.source'))));
 app.use(express.static(utils.absolutePath('fe')));
 
+//
+var extname = config.get('defaultViewEngine.extname');
+var engine = require(config.get('defaultViewEngine.name'));
 // mvc
 var mvc = require('./node/mvc');
-var vash = require(config.get('defaultViewEngine.name')); vash.config.useWith = true;
-mvc.engines.register(config.get('defaultViewEngine.extname'), vash.__express);
+mvc.engines.register(extname, engine);
 mvc.areas.registerAll();
 app.use(mvc.expressHandler());
 

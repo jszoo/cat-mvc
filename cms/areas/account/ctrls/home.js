@@ -14,7 +14,7 @@ module.exports = mvc.controller(function(req, res, end) {
 
     this.action('test', function(id) {
         setTimeout(function() {
-            end.json({ 'id is:': id });
+            end.view({ id: id });
         }, 16);
     });
 

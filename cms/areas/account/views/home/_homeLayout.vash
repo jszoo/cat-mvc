@@ -1,0 +1,14 @@
+@{
+	
+}
+@html.extend('_layout', function(ctx) {
+	@html.block('header', function(ctx) {
+		<h1>I'm the header</h1>
+	})
+    @html.block('content', function(ctx) {
+    	@html.block('content')
+    })
+	@html.block('footer', function(ctx) {
+		<h1>I'm the footer</h1>
+	})
+})

@@ -16,6 +16,7 @@ var fs = require('fs'),
 
 var CONST_Areas = 'areas',
     CONST_Views = 'views',
+    CONST_Shared = 'shared',
     CONST_Controllers = 'ctrls',
     CONST_Subscribes = 'areaSubs.js';
 
@@ -66,6 +67,7 @@ module.exports = {
                 name: areaName,
                 path: areaPath,
                 viewsPath: path.join(areaPath, CONST_Views),
+                viewsSharedPath: path.join(areaPath, CONST_Views, CONST_Shared);
                 controllersPath: path.join(areaPath, CONST_Controllers)
             });
             //

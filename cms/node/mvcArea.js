@@ -23,7 +23,7 @@ var mvcArea = function(set) {
 
 mvcArea.prototype = {
 
-    name: null, path: null, viewsPath: null, controllersPath: null,
+    name: null, path: null, viewsPath: null, viewsSharedPath: null, controllersPath: null,
 
     routes: null, subscribes: null, controllers: null,
 

@@ -20,7 +20,7 @@ var emit = function(result) {
         return result;
     } 
     if (utils.isFunction(this.callback)) {
-        this.callback(result);
+        utils.defer(this.callback, result);
     }
 };
 

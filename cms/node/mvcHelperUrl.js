@@ -21,11 +21,11 @@ mvcUrlHelper.prototype = {
     constructor: mvcUrlHelper, className: 'mvcUrlHelper',
 
     action: function(actionName, controllerName, routeValues, protocol, hostName) {
-        return mvcHelper.generateUrlPlus(actionName, controllerName, protocol, hostName, null, routeValues, this.httpContext.routeSet, this.httpContext, true);
+        return mvcHelper.generateUrlPlus(null, actionName, controllerName, protocol, hostName, null, routeValues, this.httpContext.routeSet, this.httpContext, true);
     },
 
     routeUrl: function(routeValues, protocol, hostName) {
-        return mvcHelper.generateUrlPlus(null, null, protocol, hostName, null, routeValues, this.httpContext.routeSet, this.httpContext, false);
+        return mvcHelper.generateUrlPlus(null, null, null, protocol, hostName, null, routeValues, this.httpContext.routeSet, this.httpContext, false);
     },
 
     content: function(contentPath) {

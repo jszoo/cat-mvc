@@ -19,8 +19,8 @@ exports.annotate = function(func) {
         if (!(inject = func.inject)) {
             inject = [];
             var functionText = func.toString().replace(JS_COMMENTS, '');
-            var argsDeclared = functionText.match(FN_ARGS);
-            utils.each(argsDeclared[1].split(FN_ARG_SPLIT), function(i, arg) {
+            var declaredArgs = functionText.match(FN_ARGS);
+            utils.each(declaredArgs[1].split(FN_ARG_SPLIT), function(i, arg) {
                 arg.replace(FN_ARG, function(all, underscore, name) {
                     inject.push(name);
                 });

@@ -8,7 +8,7 @@
 
 var fs = require('fs'),
     path = require('path'),
-	utils = require('./utilities'),
+    utils = require('./utilities'),
     engines = require('./mvcViewEngines');
 
 var mvcView = function(viewName) {
@@ -26,23 +26,27 @@ mvcView.prototype = {
         if (!extname) { extname = engines.default(); }
         var ctrlName = viewContext.controller.name();
         //
-    	var rootPath = path.join(viewContext.routeArea.viewsPath, ctrlName);
-    	var filePath = path.join(rootPath, this.viewName + extname);
+        var rootPath = path.join(viewContext.routeArea.viewsPath, ctrlName);
+        var filePath = path.join(rootPath, this.viewName + extname);
         //
-    	if (fs.existsSync(filePath) && fs.statSync(filePath).isFile()) {
-    		var engine = engines.get(extname);
-    		if (engine) {
+        if (fs.existsSync(filePath) && fs.statSync(filePath).isFile()) {
+            var engine = engines.get(extname);
+            if (engine) {
                 try {
-	        	  engine(filePath, viewContext.viewData, callback);
+                    var data = {
+                        model: viewContext.viewData,
+                        url: viewContext.controller.url
+                    };
+                    engine(filePath, data, callback);
                 } catch (ex) {
                     callback(ex);
                 }
-	        } else {
-	        	callback(new Error('Failed to load view engine "' + this.engineExtname + '"'));
-	        }
-    	} else {
-    		callback(new Error('Failed to lookup view "' + this.viewName + '" in views directory "' + rootPath + '"'));
-    	}
+            } else {
+                callback(new Error('Failed to load view engine "' + this.engineExtname + '"'));
+            }
+        } else {
+            callback(new Error('Failed to lookup view "' + this.viewName + '" in views directory "' + rootPath + '"'));
+        }
     }
 };
 

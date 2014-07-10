@@ -122,7 +122,7 @@ mvcAction.prototype = {
         callback(actionContext.result);
     },
 
-    executeResult: function(result) {
+    executeResult: function(result, callback) {
         if (result === undefined || result === null) { return; }
         //
         if (!utils.isFunction(result.execute)) { //if (!(result instanceof actionResult.baseResult)) {
@@ -131,16 +131,21 @@ mvcAction.prototype = {
             });
         }
         //
+        var isAsyncResult = (result.execute.length > 1);
         var resultContext = this.controllerContext.toResultContext({
             result: result,
             exception: null
         });
         //
         this.controller.events.emit('resultExecuting', resultContext);
-        result.execute(resultContext);
+        if (isAsyncResult) {
+            result.execute(resultContext, function(exception) { utils.defer(callback, exception); });
+        } else {
+            result.execute(resultContext);
+        }
         this.controller.events.emit('resultExecuted', resultContext);
         // ret
-        return resultContext.exception;
+        if (!isAsyncResult) { callback(resultContext.exception); }
     }
 };
 

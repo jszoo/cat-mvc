@@ -11,11 +11,11 @@ var events = require('events'),
     mvcHelper = require('./mvcHelper'),
     mvcAction = require('./mvcAction'),
     mvcInjector = require('./mvcInjector'),
+    mvcHelperUrl = require('./mvcHelperUrl'),
     mvcViewData = require('./mvcViewData'),
     mvcTempData = require('./mvcTempData'),
     mvcTempDataStore = require('./mvcTempDataStore'),
-    mvcHelperUrl = require('./mvcHelperUrl'),
-    mvcResultApi = require('./mvcActionResultApi'),
+    mvcActionResultApi = require('./mvcActionResultApi'),
     mvcFilters = require('./filters/manager');
 
 var mvcController = function(set) {
@@ -111,8 +111,8 @@ mvcController.prototype = {
         this.events.on('actionExecuting', function() { self.tempData.load(self.httpContext); });
         this.events.on('resultExecuting', function() { self.tempData.save(self.httpContext); });
         //
-        this.resultApi = new mvcResultApi({ httpContext: this.httpContext, sync: false });
-        this.resultApiSync = new mvcResultApi({ httpContext: this.httpContext, sync: true });
+        this.resultApi = new mvcActionResultApi({ httpContext: this.httpContext, sync: false });
+        this.resultApiSync = new mvcActionResultApi({ httpContext: this.httpContext, sync: true });
         utils.each(this.resultApiSync, function(name, func) {
             if (utils.isFunction(func) && !self[name]) {
                 self[name] = function() {

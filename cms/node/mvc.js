@@ -27,11 +27,13 @@ module.exports = {
     controller: mvcController.define,
     //
     handler: function () {
+        // initialize
+        mvcAreas.registerAll();
         handlerRouter.handle(ruleeHeader());
         handlerRouter.handle(ruleeRequest());
         handlerRouter.handle(ruleeResponse());
         handlerRouter.lastHandle(mvcHandler(setts));
-        mvcAreas.registerAll();
+        // entrance
         return function(req, res) {
             handlerRouter.execute(req, res);
         };

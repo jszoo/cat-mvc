@@ -40,7 +40,9 @@ mvc.use(session({
     store: new cachingStore(),
     cookie: {
         maxAge: config.get('session.cookie.maxAge')
-    }
+    },
+    resave: true,
+    saveUninitialized: true
 }));
 
 // favicon

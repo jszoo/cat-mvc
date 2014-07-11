@@ -13,7 +13,7 @@ var fs = require('fs'),
     caching = require('./caching'),
     mvcArea = require('./mvcArea');
 
-var CONST_Root = '*root',
+var CONST_Root = '/root',
     CONST_Areas = 'areas',
     CONST_Views = 'views',
     CONST_Shared = 'shared',

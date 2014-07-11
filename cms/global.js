@@ -46,11 +46,15 @@ mvc.use(session({
     }
 }));
 
-// dir mapping
+// favicon
 var favicon = require('serve-favicon');
 mvc.use(favicon(utils.absolutePath(config.get('favicon.source'))));
-mvc.use(express.static(utils.absolutePath('fe')));
 
+// static
+var static = require('serve-static');
+mvc.use(static(utils.absolutePath('fe')));
+
+// entrance
 app.use(mvc.handler());
 
 // export

@@ -5,18 +5,15 @@
 */
 
 var utils = require('./node/utilities');
-var express = require('express');
-var app = express();
+var mvc = require('./node/mvc');
 
 // web config
 var configuration = require('./node/configuration');
 var config = configuration.load('web.config');
 
-//
+// engine
 var extname = config.get('defaultViewEngine.extname');
 var engine = require(config.get('defaultViewEngine.name'));
-// mvc
-var mvc = require('./node/mvc');
 mvc.engines.register(extname, engine);
 
 // log
@@ -55,6 +52,8 @@ var static = require('serve-static');
 mvc.use(static(utils.absolutePath('fe')));
 
 // entrance
+var express = require('express');
+var app = express();
 app.use(mvc.handler());
 
 // export

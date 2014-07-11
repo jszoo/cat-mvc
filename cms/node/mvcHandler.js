@@ -13,14 +13,13 @@ var utils = require('./utilities'),
 
 module.exports = function(setts) {
 
-    var ct = { 'Content-Type': 'text/plain' };
     var getParam = function(routeData, findName, defaultIndex) {
         if (findName === 'area') { defaultIndex = false; }
         return mvcHelper.findRouteItem(routeData, findName, defaultIndex);
     };
 
     // route core
-    return function(req, res) {
+    return function(req, res, next) {
         //
         var rulee  = {
             setting: setts,
@@ -31,15 +30,11 @@ module.exports = function(setts) {
         var matched = false, exception;
         var gotoNext = function() {
             if (exception) {
-                if (!(exception instanceof Error)) {
-                    exception = new Error(exception);
-                }
-                res.writeHead(exception.status || 500, ct);
-                res.end(exception.message);
-            }
-            else if (!matched) {
-                res.writeHead(404, ct);
-                res.end('Not Found');
+                next(exception);
+            } else if (!matched) {
+                exception = new Error('Not Found');
+                exception.status = 404;
+                next(exception);
             }
         };
         //

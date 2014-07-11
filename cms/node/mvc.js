@@ -13,7 +13,8 @@ var caching = require('./caching'),
     mvcViewEngines = require('./mvcViewEngines'),
     mvcHandlerRouter = require('./mvcHandlerRouter');
 
-var ruleeHeader = require('./middles/rulee-header'),
+var ruleeError = require('./middles/rulee-error'),
+    ruleeHeader = require('./middles/rulee-header'),
     ruleeRequest = require('./middles/rulee-request'),
     ruleeResponse = require('./middles/rulee-response');
 
@@ -33,6 +34,7 @@ module.exports = {
         handlerRouter.handle(ruleeRequest());
         handlerRouter.handle(ruleeResponse());
         handlerRouter.lastHandle(mvcHandler(setts));
+        handlerRouter.lastHandle(ruleeError());
         // entrance
         return function(req, res) {
             handlerRouter.execute(req, res);

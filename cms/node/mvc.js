@@ -6,38 +6,20 @@
 
 'use strict';
 
-var mvcAreas = require('./mvcAreas'),
+var caching = require('./caching'),
+	mvcAreas = require('./mvcAreas'),
     mvcHandler = require('./mvcHandler'),
     mvcController = require('./mvcController'),
     mvcViewEngines = require('./mvcViewEngines');
 
-var httpRawHandler = function(set) {
-    var inner = mvcHandler(set), ct = { 'Content-Type': 'text/plain' };
-    return function(req, res) {
-        inner(req, res, function(err) {
-            if (err) {
-                res.writeHead(err.status || 500, ct);
-                res.end(err.message);
-            } else {
-                res.writeHead(404, ct);
-                res.end('Not Found');
-            }
-        });
-    };
-};
-
-var expressHandler = function(set) {
-    var inner = mvcHandler(set);
-    return function(req, res, next) {
-        inner(req, res, next);
-    };
-};
+var cache = caching.region('mvc-runtime-settings'),
+	cache.set('env' process.env.NODE_ENV || 'development');
 
 module.exports = {
     areas: mvcAreas,
     engines: mvcViewEngines,
     controller: mvcController.define,
-    //
-    httpRawHandler: httpRawHandler,
-    expressHandler: expressHandler
+    handler: mvcHandler,
+    get: function (key) { return cache.get(key); },
+    set: function (key, val) { return cache.set(key, val); }
 };

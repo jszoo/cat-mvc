@@ -55,11 +55,7 @@ var engine = require(config.get('defaultViewEngine.name'));
 var mvc = require('./node/mvc');
 mvc.engines.register(extname, engine);
 mvc.areas.registerAll();
-app.use(mvc.expressHandler());
-
-// load routes
-var routes = require('.' + config.get('routeTable.source'));
-utils.each(routes.errors(app), function() { app.use(this); });
+app.use(mvc.handler());
 
 // export
 module.exports = app;

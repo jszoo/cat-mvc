@@ -14,13 +14,14 @@ var utils = require('./utilities'),
 
 module.exports = function(set) {
 
+    var ct = { 'Content-Type': 'text/plain' };
     var getParam = function(routeData, findName, defaultIndex) {
         if (findName === 'area') { defaultIndex = false; }
         return mvcHelper.findRouteItem(routeData, findName, defaultIndex);
     };
 
     // route core
-    return function(req, res, next) {
+    return function(req, res) {
         //
         var rulee  = {
             headers: mvcMiddleware.ruleeHeaders().handle(req, res),
@@ -34,10 +35,12 @@ module.exports = function(set) {
                 if (!(exception instanceof Error)) {
                     exception = new Error(exception);
                 }
-                next(exception);
+                res.writeHead(exception.status || 500, ct);
+                res.end(exception.message);
             }
             else if (!matched) {
-                next();
+                res.writeHead(404, ct);
+                res.end('Not Found');
             }
         };
         //

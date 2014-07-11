@@ -6,8 +6,6 @@
 
 'use strict';
 
-var utils = require('../utilities');
-
 module.exports = function() {
 	//
     return function(req, res, next, err) {

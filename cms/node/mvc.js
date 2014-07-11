@@ -12,8 +12,8 @@ var caching = require('./caching'),
     mvcController = require('./mvcController'),
     mvcViewEngines = require('./mvcViewEngines');
 
-var cache = caching.region('mvc-runtime-settings'),
-	cache.set('env' process.env.NODE_ENV || 'development');
+var cache = caching.region('mvc-runtime-settings');
+cache.set('env', process.env.NODE_ENV || 'development');
 
 module.exports = {
     areas: mvcAreas,

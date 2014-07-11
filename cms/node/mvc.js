@@ -33,8 +33,8 @@ module.exports = {
         handlerRouter.handle(ruleeHeader());
         handlerRouter.handle(ruleeRequest());
         handlerRouter.handle(ruleeResponse());
-        handlerRouter.lastHandle(mvcHandler(setts));
-        handlerRouter.lastHandle(ruleeError());
+        handlerRouter.handle(mvcHandler(setts));
+        handlerRouter.handle(ruleeError());
         // entrance
         return function(req, res) {
             handlerRouter.execute(req, res);

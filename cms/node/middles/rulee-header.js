@@ -13,9 +13,9 @@ module.exports = function(set) {
         set.headers = { 'X-Powered-By': 'RULEE-MVC' };
     }
     //
-    return function(req, res, next) {
+    return function(req, res, next, err) {
         utils.each(set.headers, function(key, value) {
             res.setHeader(key, value);
-        }); next();
+        }); next(err);
     };
 };

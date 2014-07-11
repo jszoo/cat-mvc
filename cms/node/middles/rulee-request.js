@@ -11,7 +11,7 @@ var url = require('url'),
 
 module.exports = function() {
     //
-    return function(req, res, next) {
+    return function(req, res, next, err) {
         var rulee = req.rulee || (req.rulee = {});
         //
         var prot = req.secure ? 'https' : 'http'; //eg: http
@@ -29,6 +29,6 @@ module.exports = function() {
         //
         rulee.method = req.method;
         //
-        next();
+        next(err);
     };
 };

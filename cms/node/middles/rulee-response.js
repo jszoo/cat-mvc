@@ -8,7 +8,7 @@
 
 module.exports = function() {
     //
-    return function(req, res, next) {
+    return function(req, res, next, err) {
         var rulee = res.rulee || (res.rulee = {});
         //
         rulee.header = function(name, value) {
@@ -24,6 +24,6 @@ module.exports = function() {
             return (status === undefined) ? res.send(content) : res.send(content, status);
         };
         //
-        next();
+        next(err);
     };
 };

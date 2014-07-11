@@ -98,7 +98,7 @@ var mvcHandler = function(set) {
                     matched = true;
                     var actionExecuted = false;
                     action.executeImpl(function(obj) {
-                        if (obj === undefined || obj === null) { return; }
+                        if (obj === undefined) { return; }
                         if (actionExecuted) { return; }
                         actionExecuted = true;
                         //

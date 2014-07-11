@@ -123,7 +123,7 @@ mvcAction.prototype = {
     },
 
     executeResult: function(result, callback) {
-        if (result === undefined || result === null) { return; }
+        if (result === undefined) { return; }
         //
         if (!utils.isFunction(result.execute)) { //if (!(result instanceof actionResult.baseResult)) {
             result = new actionResult.contentResult({

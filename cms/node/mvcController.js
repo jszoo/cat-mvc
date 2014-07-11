@@ -18,7 +18,6 @@ var events = require('events'),
     mvcResultApi = require('./mvcActionResultApi'),
     mvcFilters = require('./mvcFilter/manager');
 
-
 var mvcController = function(set) {
     utils.extend(this, set);
 };

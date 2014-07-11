@@ -20,9 +20,9 @@ var CONST_Root = '*root',
     CONST_Controllers = 'ctrls',
     CONST_Subscribes = 'areaSubs.js';
 
-var _areas = caching.region('mvc-areas-cache');
-var _areasPath = utils.absolutePath(CONST_Areas);
-var _routeSet = null;
+var _areas = caching.region('mvc-areas-cache'),
+    _areasPath = utils.absolutePath(CONST_Areas),
+    _routeSet = null;
 
 module.exports = {
 

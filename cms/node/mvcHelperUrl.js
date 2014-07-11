@@ -9,7 +9,6 @@
 var utils = require('./utilities'),
     mvcHelper = require('./mvcHelper');
 
-
 var mvcUrlHelper = function(set) {
     utils.extend(this, set);
 };

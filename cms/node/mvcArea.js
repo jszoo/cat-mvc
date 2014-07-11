@@ -11,7 +11,6 @@ var utils = require('./utilities'),
     mvcAreaSubs = require('./mvcAreaSubs'),
     mvcControllers = require('./mvcControllers');
 
-
 var mvcArea = function(set) {
     utils.extend(this, set);
     if (!this.name) { throw new Error('Parameter "name" is required'); }

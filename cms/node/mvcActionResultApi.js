@@ -10,7 +10,6 @@ var utils = require('./utilities'),
     mvcHelper = require('./mvcHelper'),
     actionResult = require('./mvcActionResult');
 
-
 var mvcActionResultApi = function(set) {
     utils.extend(this, set);
 };

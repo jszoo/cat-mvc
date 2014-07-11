@@ -34,19 +34,19 @@ module.exports = {
         return cache.set(key, val);
     },
     use: function() {
-        return handlerRouter.handle.apply(handlerRouter, arguments);
+        return handlerRouter.register.apply(handlerRouter, arguments);
     },
-    unuse: function() {
-        return handlerRouter.unhandle.apply(handlerRouter, arguments);
+    disuse: function() {
+        return handlerRouter.unregister.apply(handlerRouter, arguments);
     },
     handler: function () {
         // initialize
         mvcAreas.registerAll();
-        handlerRouter.handle('ruleeHeader', '/', ruleeHeader());
-        handlerRouter.handle('ruleeRequest', '/', ruleeRequest());
-        handlerRouter.handle('ruleeResponse', '/', ruleeResponse());
-        handlerRouter.handle(mvcHandler(setts));
-        handlerRouter.handle('ruleeError', '/', ruleeError());
+        handlerRouter.register('ruleeHeader', '/', ruleeHeader());
+        handlerRouter.register('ruleeRequest', '/', ruleeRequest());
+        handlerRouter.register('ruleeResponse', '/', ruleeResponse());
+        handlerRouter.register(mvcHandler(setts));
+        handlerRouter.register('ruleeError', '/', ruleeError());
         // entrance
         return function(req, res) {
             handlerRouter.execute(req, res);

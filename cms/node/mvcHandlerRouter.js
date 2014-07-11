@@ -22,11 +22,11 @@ mvcHandlerRouter.prototype = {
     constructor: mvcHandlerRouter, className: 'mvcHandlerRouter',
 
     /*
-    * handle(func)
-    * handle(routeExp, func)
-    * handle(name, routeExp, func)
+    * register(func)
+    * register(routeExp, func)
+    * register(name, routeExp, func)
     */
-    handle: function(name, routeExp, func) {
+    register: function(name, routeExp, func) {
         if (utils.isFunction(name)) {
             func = name;
             routeExp = null;
@@ -48,11 +48,11 @@ mvcHandlerRouter.prototype = {
         }
     },
 
-    lastHandle: function(name, routeExp, func) {
+    registerAtLast: function(name, routeExp, func) {
         this.handle.call({ _handlers: this._lastHandlers }, name, routeExp, func);
     },
 
-    unhandle: function(name) {
+    unregister: function(name) {
         var self = this, found = false;
         if (!name) { return found; }
         utils.each(this._handlers, function(i) {

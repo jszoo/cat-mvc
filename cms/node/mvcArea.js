@@ -7,15 +7,15 @@
 'use strict';
 
 var utils = require('./utilities'),
-    mvcRoutes = require('./mvcRoutes'),
     mvcAreaSubs = require('./mvcAreaSubs'),
+    mvcAreaRoutes = require('./mvcAreaRoutes'),
     mvcControllers = require('./mvcControllers');
 
 var mvcArea = function(set) {
     utils.extend(this, set);
     if (!this.name) { throw new Error('Parameter "name" is required'); }
     //
-    this.routes = new mvcRoutes({ ownerAreaName: this.name });
+    this.routes = new mvcAreaRoutes({ ownerAreaName: this.name });
     this.subscribes = new mvcAreaSubs({ ownerAreaName: this.name });
     this.controllers = new mvcControllers({ ownerAreaName: this.name });
 };

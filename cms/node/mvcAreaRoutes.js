@@ -9,7 +9,7 @@
 var events = require('events'),
     utils = require('./utilities'),
     caching = require('./caching'),
-    mvcRoute = require('./mvcRoute');
+    mvcAreaRoute = require('./mvcAreaRoute');
 
 var mvcRoutes = function(set) {
     utils.extend(this, set);
@@ -27,7 +27,7 @@ mvcRoutes.prototype = {
 
     set: function(name, expression, defaultValues) {
         if (!name) { throw new Error('Parameter "name" is required'); }
-        this._inner.set(name, new mvcRoute({
+        this._inner.set(name, new mvcAreaRoute({
             name: name,
             expression: expression,
             defaultValues: defaultValues,

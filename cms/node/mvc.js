@@ -28,10 +28,10 @@ module.exports = {
     controller: mvcController.define,
     //
     get: function(key) {
-        return cache.get(key);
+        return setts.get(key);
     },
     set: function(key, val) {
-        return cache.set(key, val);
+        return setts.set(key, val);
     },
     use: function() {
         return handlerRouter.register.apply(handlerRouter, arguments);

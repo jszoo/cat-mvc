@@ -33,17 +33,20 @@ module.exports = {
     set: function(key, val) {
         return cache.set(key, val);
     },
-    use: function(route, func) {
-        return handlerRouter.handle(route, func);
+    use: function() {
+        return handlerRouter.handle.apply(handlerRouter, arguments);
+    },
+    unuse: function() {
+        return handlerRouter.unhandle.apply(handlerRouter, arguments);
     },
     handler: function () {
         // initialize
         mvcAreas.registerAll();
-        handlerRouter.handle(ruleeHeader());
-        handlerRouter.handle(ruleeRequest());
-        handlerRouter.handle(ruleeResponse());
+        handlerRouter.handle('ruleeHeader', '/', ruleeHeader());
+        handlerRouter.handle('ruleeRequest', '/', ruleeRequest());
+        handlerRouter.handle('ruleeResponse', '/', ruleeResponse());
         handlerRouter.handle(mvcHandler(setts));
-        handlerRouter.handle(ruleeError());
+        handlerRouter.handle('ruleeError', '/', ruleeError());
         // entrance
         return function(req, res) {
             handlerRouter.execute(req, res);

@@ -21,37 +21,49 @@ mvcHandlerRouter.prototype = {
 
     constructor: mvcHandlerRouter, className: 'mvcHandlerRouter',
 
-    handle: function(routeExp, func) {
+    /*
+    * handle(func)
+    * handle(routeExp, func)
+    * handle(name, routeExp, func)
+    */
+    handle: function(name, routeExp, func) {
+        if (utils.isFunction(name)) {
+            func = name;
+            routeExp = null;
+            name = null;
+        }
         if (utils.isFunction(routeExp)) {
             func = routeExp;
-            routeExp = '/'; // default routeExp to '/'
+            routeExp = name;
+            name = null;
         }
         if (!utils.isFunction(func)) {
             var funcType = utils.type(func);
             throw new Error('Parameter "func" requires callback function but got a ' + funcType);
         } else {
             this._handlers.push({
-                routeExp: routeExp,
-                func: func
+                name: name, func: func,
+                routeExp: (routeExp || '/') // default routeExp to '/'
             });
         }
     },
 
-    lastHandle: function(routeExp, func) {
-        this.handle.call({ _handlers: this._lastHandlers }, routeExp, func);
+    lastHandle: function(name, routeExp, func) {
+        this.handle.call({ _handlers: this._lastHandlers }, name, routeExp, func);
     },
 
-    unhandle: function(func) {
+    unhandle: function(name) {
         var self = this, found = false;
+        if (!name) { return found; }
         utils.each(this._handlers, function(i) {
-            if (func === this.func) {
+            if (name === this.name) {
                 self._handlers.splice(i, 1);
                 return (found = true, false);
             }
         });
         if (!found) {
             utils.each(this._lastHandlers, function(i) {
-                if (func === this.func) {
+                if (name === this.name) {
                     self._lastHandlers.splice(i, 1);
                     return (found = true, false);
                 }

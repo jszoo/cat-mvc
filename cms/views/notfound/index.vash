@@ -1,0 +1,10 @@
+
+@html.extend('_layout', function(ctx) {
+
+    @html.block('content', function(ctx) {
+
+        <h1>404</h1>
+
+    })
+
+})

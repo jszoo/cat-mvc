@@ -12,7 +12,7 @@ var utils = require('./utilities'),
     mvcContext = require('./mvcContext'),
     mvcMiddleware = require('./mvcMiddleware');
 
-module.exports = function(set) {
+module.exports = function(setts) {
 
     var ct = { 'Content-Type': 'text/plain' };
     var getParam = function(routeData, findName, defaultIndex) {
@@ -24,6 +24,7 @@ module.exports = function(set) {
     return function(req, res) {
         //
         var rulee  = {
+            setting: setts,
             headers: mvcMiddleware.ruleeHeaders().handle(req, res),
             request: mvcMiddleware.ruleeRequest().handle(req, res),
             response: mvcMiddleware.ruleeResponse().handle(req, res)

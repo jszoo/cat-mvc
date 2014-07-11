@@ -12,14 +12,24 @@ var caching = require('./caching'),
     mvcController = require('./mvcController'),
     mvcViewEngines = require('./mvcViewEngines');
 
-var cache = caching.region('mvc-runtime-settings');
-cache.set('env', process.env.NODE_ENV || 'development');
+var setts = caching.region('mvc-runtime-settings');
+setts.set('env', process.env.NODE_ENV || 'development');
 
 module.exports = {
     areas: mvcAreas,
     engines: mvcViewEngines,
     controller: mvcController.define,
-    handler: mvcHandler,
-    get: function (key) { return cache.get(key); },
-    set: function (key, val) { return cache.set(key, val); }
+    //
+    handler: function () {
+        var inner = mvcHandler(setts);
+        return function(req, res) {
+            inner(req, res);
+        };
+    },
+    get: function(key) {
+        return cache.get(key);
+    },
+    set: function(key, val) {
+        return cache.set(key, val);
+    }
 };

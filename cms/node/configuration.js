@@ -9,7 +9,6 @@
 var fs = require('fs'),
     path = require('path'),
     events = require('events'),
-    io = require('./io'),
     utils = require('./utilities'),
     caching = require('./caching');
 
@@ -66,7 +65,8 @@ configuration.prototype = {
     },
 
     save: function () {
-        io.ensureDirectory(path.dirname(this.filePath));
+        var dir = path.dirname(this.filePath);
+        if (!fs.existsSync(dir)) { fs.mkdirSync(dir); }
         var json = configuration.serialize(this.innerObj);
         fs.writeFile(this.filePath, json, { encoding: 'utf-8' }, function (err) {
             if (err) { throw err; }

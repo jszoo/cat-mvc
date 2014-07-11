@@ -32,9 +32,7 @@ module.exports = function(setts) {
             if (exception) {
                 next(exception);
             } else if (!matched) {
-                exception = new Error('Not Found');
-                exception.status = 404;
-                next(exception);
+                rulee.response.redirect(utils.appendQuery('/notfound', { 'return' : req.url }));
             }
         };
         //

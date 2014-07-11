@@ -1,5 +1,5 @@
 /*
-* mvcRoute
+* mvcAreaRoute
 * author: ronglin
 * create date: 2014.7.7
 */
@@ -7,16 +7,16 @@
 'use strict';
 
 var utils = require('./utilities'),
-    routeSeed = require('./mvcRouteSeed');
+    routeSeed = require('./mvcAreaRouteSeed');
 
-var mvcRoute = function(set) {
+var mvcAreaRoute = function(set) {
     utils.extend(this, set);
     this.defaultValues = utils.formalObj(this.defaultValues || {});
 };
 
-mvcRoute.prototype = {
+mvcAreaRoute.prototype = {
 
-    constructor: mvcRoute, className: 'mvcRoute',
+    constructor: mvcAreaRoute, className: 'mvcAreaRoute',
 
     /*
     * the specified route name
@@ -89,4 +89,4 @@ mvcRoute.prototype = {
     }
 };
 
-module.exports = mvcRoute;
+module.exports = mvcAreaRoute;

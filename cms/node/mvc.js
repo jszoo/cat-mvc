@@ -27,6 +27,15 @@ module.exports = {
     engines: mvcViewEngines,
     controller: mvcController.define,
     //
+    get: function(key) {
+        return cache.get(key);
+    },
+    set: function(key, val) {
+        return cache.set(key, val);
+    },
+    use: function(route, func) {
+        return handlerRouter.handle(route, func);
+    },
     handler: function () {
         // initialize
         mvcAreas.registerAll();
@@ -39,14 +48,5 @@ module.exports = {
         return function(req, res) {
             handlerRouter.execute(req, res);
         };
-    },
-    get: function(key) {
-        return cache.get(key);
-    },
-    set: function(key, val) {
-        return cache.set(key, val);
-    },
-    use: function(route, func) {
-        return handlerRouter.handle(route, func);
     }
 };

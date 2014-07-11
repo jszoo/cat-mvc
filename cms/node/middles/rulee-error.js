@@ -15,7 +15,7 @@ module.exports = function() {
             res.writeHead(err.status || 500, ct);
             res.end(err.message);
         } else {
-        	next();
+        	next(err);
         }
     };
 };

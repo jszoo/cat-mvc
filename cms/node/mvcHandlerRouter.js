@@ -22,34 +22,34 @@ mvcHandlerRouter.prototype = {
     constructor: mvcHandlerRouter, className: 'mvcHandlerRouter',
 
     /*
-    * register(func)
-    * register(routeExp, func)
-    * register(name, routeExp, func)
+    * register(handler)
+    * register(routeExp, handler)
+    * register(name, routeExp, handler)
     */
-    register: function(name, routeExp, func) {
+    register: function(name, routeExp, handler) {
         if (utils.isFunction(name)) {
-            func = name;
+            handler = name;
             routeExp = null;
             name = null;
         }
         if (utils.isFunction(routeExp)) {
-            func = routeExp;
+            handler = routeExp;
             routeExp = name;
             name = null;
         }
-        if (!utils.isFunction(func)) {
-            var funcType = utils.type(func);
-            throw new Error('Parameter "func" requires callback function but got a ' + funcType);
+        if (!utils.isFunction(handler)) {
+            var typeName = utils.type(handler);
+            throw new Error('Parameter "handler" requires callback function but got a ' + typeName);
         } else {
             this._handlers.push({
-                name: name, func: func,
+                name: name, handler: handler,
                 routeExp: (routeExp || '/') // default routeExp to '/'
             });
         }
     },
 
-    registerAtLast: function(name, routeExp, func) {
-        this.handle.call({ _handlers: this._lastHandlers }, name, routeExp, func);
+    registerAtLast: function(name, routeExp, handler) {
+        this.register.call({ _handlers: this._lastHandlers }, name, routeExp, handler);
     },
 
     unregister: function(name) {
@@ -81,19 +81,19 @@ mvcHandlerRouter.prototype = {
         var args = utils.arg2arr(arguments), index = -1;
         var allHandlers = this._handlers.concat(this._lastHandlers);
         var next = function(error) {
-            var handler = allHandlers[++index];
-            if (handler) {
+            var item = allHandlers[++index];
+            if (item) {
                 var matched = false;
-                if (utils.isString(handler.routeExp)) {
-                    matched = req.url.indexOf(handler.routeExp) === 0;
-                } else if(utils.type(handler.routeExp) === 'regexp') {
-                    matched = handler.routeExp.test(parse(req.url).pathname);
+                if (utils.isString(item.routeExp)) {
+                    matched = req.url.indexOf(item.routeExp) === 0;
+                } else if(utils.type(item.routeExp) === 'regexp') {
+                    matched = item.routeExp.test(parse(req.url).pathname);
                 }
                 //
                 if (matched) {
                     var clone = args.concat();
                     if (error) { clone.push(error); }
-                    handler.func.apply(null, clone);
+                    item.handler.apply(null, clone);
                 }
             }
         };

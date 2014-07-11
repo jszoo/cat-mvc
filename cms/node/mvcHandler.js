@@ -9,8 +9,7 @@
 var utils = require('./utilities'),
     mvcAreas = require('./mvcAreas'),
     mvcHelper = require('./mvcHelper'),
-    mvcContext = require('./mvcContext'),
-    mvcMiddleware = require('./mvcMiddleware');
+    mvcContext = require('./mvcContext');
 
 module.exports = function(setts) {
 
@@ -25,9 +24,8 @@ module.exports = function(setts) {
         //
         var rulee  = {
             setting: setts,
-            headers: mvcMiddleware.ruleeHeaders().handle(req, res),
-            request: mvcMiddleware.ruleeRequest().handle(req, res),
-            response: mvcMiddleware.ruleeResponse().handle(req, res)
+            request: req.rulee,
+            response: res.rulee
         };
         //
         var matched = false, exception;

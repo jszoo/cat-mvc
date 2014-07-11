@@ -12,28 +12,31 @@ var app = express();
 var configuration = require('./node/configuration');
 var config = configuration.load('web.config');
 
-// view engine
-app.set('views', utils.absolutePath('views'));
-app.set('view engine', 'vash');
+//
+var extname = config.get('defaultViewEngine.extname');
+var engine = require(config.get('defaultViewEngine.name'));
+// mvc
+var mvc = require('./node/mvc');
+mvc.engines.register(extname, engine);
 
 // log
 var logger = require('morgan');
-app.use(logger({ format: 'dev' }));
+mvc.use(logger({ format: 'dev' }));
 
-//
+// body
 var bodyParser = require('body-parser');
-app.use(bodyParser.json()); // parse application/json
-app.use(bodyParser.json({ type: 'application/hal+json' })); // parse application/hal+json as json
-app.use(bodyParser.urlencoded({ extended: true })); // parse application/x-www-form-urlencoded
+mvc.use(bodyParser.json()); // parse application/json
+mvc.use(bodyParser.json({ type: 'application/hal+json' })); // parse application/hal+json as json
+mvc.use(bodyParser.urlencoded({ extended: true })); // parse application/x-www-form-urlencoded
 
 // cookie
 var cookieParser = require('cookie-parser');
-app.use(cookieParser());
+mvc.use(cookieParser());
 
 // session
 var session = require('express-session');
 var cachingStore = require('./node/cachingSessionStore')(session);
-app.use(session({
+mvc.use(session({
     name: config.get('session.cookie.name'),
     rolling: config.get('session.rolling'),
     secret: config.get('session.secret'),
@@ -45,16 +48,9 @@ app.use(session({
 
 // dir mapping
 var favicon = require('serve-favicon');
-app.use(favicon(utils.absolutePath(config.get('favicon.source'))));
-app.use(express.static(utils.absolutePath('fe')));
+mvc.use(favicon(utils.absolutePath(config.get('favicon.source'))));
+mvc.use(express.static(utils.absolutePath('fe')));
 
-//
-var extname = config.get('defaultViewEngine.extname');
-var engine = require(config.get('defaultViewEngine.name'));
-// mvc
-var mvc = require('./node/mvc');
-mvc.engines.register(extname, engine);
-mvc.areas.registerAll();
 app.use(mvc.handler());
 
 // export

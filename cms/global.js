@@ -12,9 +12,9 @@ var configuration = require('./node/configuration');
 var config = configuration.load('web.config');
 
 // engine
-var extname = config.get('defaultViewEngine.extname');
-var engine = require(config.get('defaultViewEngine.name'));
-mvc.engines.register(extname, engine);
+var engineExt = config.get('defaultViewEngine.engineExt');
+var engineName = require(config.get('defaultViewEngine.engineName'));
+mvc.engines.register(engineExt, engineName);
 
 // log
 var logger = require('morgan');

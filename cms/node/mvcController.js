@@ -16,7 +16,7 @@ var events = require('events'),
     mvcTempData = require('./mvcTempData'),
     mvcTempDataStore = require('./mvcTempDataStore'),
     mvcActionResultApi = require('./mvcActionResultApi'),
-    mvcFilters = require('./filters/manager');
+    mvcAttributes = require('./attributes/index');
 
 var mvcController = function(set) {
     utils.extend(this, set);
@@ -32,13 +32,13 @@ mvcController.define = function() {
         });
     } else if (len === 2) {
         return new mvcController({
-            _filt: arguments[0],
+            _attr: arguments[0],
             _impl: arguments[1]
         });
     } else {
         return new mvcController({
             _name: arguments[0],
-            _filt: arguments[1],
+            _attr: arguments[1],
             _impl: arguments[2]
         });
     }
@@ -46,7 +46,7 @@ mvcController.define = function() {
 
 mvcController.prototype = {
 
-    _name: null, _path: null, _filt: null, _impl: null,
+    _name: null, _path: null, _attr: null, _impl: null,
 
     actions: null,  events: null, url: null,
 
@@ -60,13 +60,14 @@ mvcController.prototype = {
 
     name: function(p) { return (p === undefined) ? (this._name) : (this._name = p, this); },
     path: function(p) { return (p === undefined) ? (this._path) : (this._path = p, this); },
-    filt: function(p) { return (p === undefined) ? (this._filt) : (this._filt = p, this); },
+    attr: function(p) { return (p === undefined) ? (this._attr) : (this._attr = p, this); },
     impl: function(p) { return (p === undefined) ? (this._impl) : (this._impl = p, this); },
 
     clone: function() {
         return new mvcController({
             _name: this._name,
             _path: this._path,
+            _attr: this._attr,
             _impl: this._impl
         });
     },
@@ -172,9 +173,9 @@ mvcController.prototype = {
         annotated.func.apply(this, annotated.params);
     },
 
-    resolveFilters: function(type, filt) {
-        if (!filt) { filt = this.filt(); }
-        return mvcFilters.resolveSetts(type, filt);
+    resolveAttr: function(config) {
+        if (!config) { config = this.attr(); }
+        return mvcAttributes.resolveConfig(config);
     },
 
     on: function() {
@@ -199,7 +200,7 @@ mvcController.prototype = {
         } else {
             act = new mvcAction({
                 _name: arguments[0],
-                _filt: arguments[1],
+                _attr: arguments[1],
                 _impl: arguments[2]
             });
         }

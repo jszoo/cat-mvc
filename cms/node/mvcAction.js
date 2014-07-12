@@ -26,38 +26,26 @@ var mvcAction = function(set) {
 
 mvcAction.prototype = {
 
-    _name: null, _filt: null, _impl: null,
+    _name: null, _attr: null, _impl: null,
 
     controller: null, controllerContext: null,
     
     constructor: mvcAction, className: 'mvcAction',
 
     name: function(p) { return (p === undefined) ? (this._name) : (this._name = p, this); },
-    filt: function(p) { return (p === undefined) ? (this._filt) : (this._filt = p, this); },
+    attr: function(p) { return (p === undefined) ? (this._attr) : (this._attr = p, this); },
     impl: function(p) { return (p === undefined) ? (this._impl) : (this._impl = p, this); },
 
     isMatch: function(method, secure) {
-        if (!method && !secure && !this.filt()) {
+        if (!method && !secure && !this.attr()) {
             return true;
         }
         //
-        var filters = [], type = 'ActionSelect';
-        var actionFilters = this.resolveFilters(type);
-        var controllerFilters = this.controller.resolveFilters(type);
-        if (actionFilters) { filters = filters.concat(actionFilters); }
-        if (controllerFilters) { filters = filters.concat(controllerFilters); }
-        //
-        var mached = true;
-        utils.each(filters, function() {
-            mached = mached && this.testMatch(this.controllerContext);
-        });
-        //return mached;
-        //
         var methodStr = ',';
-        if (utils.isString(this.filt())) {
-            methodStr += this.filt() + ',';
-        } else if (utils.isObject(this.filt())) {
-            utils.each(this.filt(), function(key, val) {
+        if (utils.isString(this.attr())) {
+            methodStr += this.attr() + ',';
+        } else if (utils.isObject(this.attr())) {
+            utils.each(this.attr(), function(key, val) {
                 if (val && httpMethod.exists(key)) { methodStr += key + ','; }
             });
         }
@@ -65,9 +53,9 @@ mvcAction.prototype = {
         return methodStr.replace(/\s/g, '').toUpperCase().indexOf(',' + method.toUpperCase() + ',') > -1;
     },
 
-    resolveFilters: function(type, filt) {
-        if (!filt) { filt = this.filt(); }
-        return this.controller.resolveFilters(type, filt);
+    resolveAttr: function(config) {
+        if (!config) { config = this.attr(); }
+        return this.controller.resolveAttr(config);
     },
 
     injectImpl: function(ctx) {

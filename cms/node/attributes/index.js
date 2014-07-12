@@ -7,7 +7,7 @@
 'use strict';
 
 var utils = require('../utilities'),
-    caching = require('../caching');
+    caching = require('../caching'),
 	attributes = caching.region('mvc-attribute-types-cache');
 
 var attrs = module.exports = {
@@ -39,7 +39,7 @@ var attrs = module.exports = {
     },
 
     resolveConfig: function(config) {
-        
+        //TODO:
     }
 };
 

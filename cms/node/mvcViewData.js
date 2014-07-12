@@ -9,14 +9,14 @@
 var utils = require('./utilities');
 
 var mvcViewData = function(set) {
-	utils.extend(this, set);
+    utils.extend(this, set);
 };
 
 mvcViewData.prototype = {
 
-	httpContext: null,
+    httpContext: null,
 
-	constructor: mvcViewData, className: 'mvcViewData'
+    constructor: mvcViewData, className: 'mvcViewData'
 };
 
 module.exports = mvcViewData;

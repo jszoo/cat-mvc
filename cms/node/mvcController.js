@@ -22,7 +22,7 @@ var mvcController = function(set) {
     utils.extend(this, set);
 };
 
-mvcController.define = function(name, impl) {
+mvcController.define = function() {
     var len = arguments.length;
     if (len === 0) {
         return new mvcController();

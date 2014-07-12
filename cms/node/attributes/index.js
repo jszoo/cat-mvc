@@ -27,6 +27,7 @@ var attrs = module.exports = {
     register: function(attrName, attrClass) {
         if (!utils.isString(attrName)) { throw new Error('Parameter "attrName" is incorrect'); }
         if (!utils.isFunction(attrClass)) { throw new Error('Parameter "attrClass" is incorrect'); }
+        if (!utils.isFunction(attrClass.prototype.onAttach)) { throw new Error(attrName + ' attribute does not has onAttach prototype function'); }
         attributes.set(attrName, attrClass);
     },
 
@@ -35,6 +36,10 @@ var attrs = module.exports = {
     	if (attrClass) {
     		return new attrClass(attrSett);
     	}
+    },
+
+    resolveConfig: function(config) {
+        
     }
 };
 

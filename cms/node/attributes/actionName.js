@@ -18,6 +18,8 @@ actionName.prototype = {
 
     constructor: actionName, className: 'actionName',
 
+    onAttach: function(context, target) {
+    }
     
 };
 

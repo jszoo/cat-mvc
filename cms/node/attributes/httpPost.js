@@ -14,7 +14,10 @@ var httpPost = function(set) {
 
 httpPost.prototype = {
 
-    constructor: httpPost, className: 'httpPost'
+    constructor: httpPost, className: 'httpPost',
+
+    onAttach: function(context, target) {
+    }
 };
 
 module.exports = httpPost;

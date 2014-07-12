@@ -14,7 +14,12 @@ var httpGet = function(set) {
 
 httpGet.prototype = {
 
-    constructor: httpGet, className: 'httpGet'
+    constructor: httpGet, className: 'httpGet',
+
+
+    onAttach: function(context, target) {
+    }
+
 };
 
 module.exports = httpGet;

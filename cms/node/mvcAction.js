@@ -36,6 +36,19 @@ mvcAction.prototype = {
     attr: function(p) { return (p === undefined) ? (this._attr) : (this._attr = p, this); },
     impl: function(p) { return (p === undefined) ? (this._impl) : (this._impl = p, this); },
 
+    destroy: function() {
+        this.controller = null;
+        if (this.controllerContext) {
+            this.controllerContext.controller = null;
+            this.controllerContext = null;
+        }
+    },
+
+    initialize: function(controller) {
+        this.controller = controller;
+        this.controllerContext = controller.httpContext.toControllerContext(controller);
+    },
+
     isMatch: function(method, secure) {
         if (!method && !secure && !this.attr()) {
             return true;

@@ -54,7 +54,7 @@ mvcController.prototype = {
 
     resultApi: null, resultApiSync: null,
 
-    httpContext: null, controllerContext: null,
+    httpContext: null,
 
     constructor: mvcController, className: 'mvcController',
 
@@ -73,29 +73,34 @@ mvcController.prototype = {
     },
 
     destroy: function() {
-        if (!this.actions) { return; } // already destroyed
-        // break object leaks
-        utils.each(this.actions, function() {
-            this.controllerContext = null;
-            this.controller = null;
-        });
-        this.events.removeAllListeners();
-        this.url.httpContext = null;
-        this.viewData.httpContext = null;
-        this.resultApi.httpContext = null;
-        this.resultApiSync.httpContext = null;
-        this.controllerContext.controller = null;
+        if (this.actions) {
+            utils.each(this.actions, function() { this.destroy(); });
+            this.actions = null;
+        }
+        if (this.events) {
+            this.events.removeAllListeners();
+            this.events = null;
+        }
+        if (this.url) {
+            this.url.httpContext = null;
+            this.url = null;
+        }
+        if (this.viewData) {
+            this.viewData.httpContext = null;
+            this.viewdata = null;
+        }
+        if (this.resultApi) {
+            this.resultApi.httpContext = null;
+            this.resultApi = null;
+        }
+        if (this.resultApiSync) {
+            this.resultApiSync.httpContext = null;
+            this.resultApiSync = null;
+        }
         // clear reference types
         this._impl = null;
-        this.actions = null;
-        this.events = null;
-        this.url = null;
-        this.viewData = null;
         this.tempData = null;
-        this.resultApi = null;
-        this.resultApiSync = null;
         this.httpContext = null;
-        this.controllerContext = null;
     },
 
     initialize: function(httpContext) {
@@ -103,7 +108,6 @@ mvcController.prototype = {
         this.actions = [];
         this.events = new events.EventEmitter();
         this.httpContext = httpContext;
-        this.controllerContext = httpContext.toControllerContext(this);
         //
         this.url = new mvcHelperUrl({ httpContext: this.httpContext });
         this.viewData = new mvcViewData({ httpContext: this.httpContext });
@@ -122,8 +126,6 @@ mvcController.prototype = {
                 };
             }
         });
-        //
-        return this;
     },
 
     injectImpl: function(ctx) {
@@ -204,8 +206,7 @@ mvcController.prototype = {
                 _impl: arguments[2]
             });
         }
-        act.controller = this;
-        act.controllerContext = this.controllerContext;
+        act.initialize(this);
         this.actions.push(act);
         return act; //  for chain
     },

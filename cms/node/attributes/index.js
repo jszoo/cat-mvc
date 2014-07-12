@@ -38,7 +38,17 @@ var attrs = module.exports = {
     },
 
     resolveConfig: function(config) {
-        //TODO:
+        var ret = [], self = this;
+        if (utils.isObject(config)) {
+            utils.each(config, function(name, sett) {
+                ret.push(self.resolve(name, sett));
+            });
+        }
+        else if (utils.isString(names)) {
+            //TODO:
+        }
+        // ret
+        return ret;
     }
 };
 

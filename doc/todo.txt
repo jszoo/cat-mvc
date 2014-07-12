@@ -12,5 +12,5 @@ OK 9. inject url helper to view engine
 OK 14. vash engine layout function
 
 4. partialViewResult
-12. Https related: controller&action setting >>>>>>>>>> mvcFilter?
+12. Https related: controller&action setting ---> attributes
 15. ~/ formater url

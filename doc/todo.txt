@@ -13,3 +13,4 @@ OK 14. vash engine layout function
 
 4. partialViewResult
 12. Https related: controller&action setting >>>>>>>>>> mvcFilter?
+15. ~/ formater url

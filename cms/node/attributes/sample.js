@@ -16,22 +16,37 @@ sample.prototype = {
 
     constructor: sample, className: 'sample',
 
-    onInitialize: function(context, target) {
+    onControllerInitialized: function(controller) {
     },
 
-    onActionExecuting: function() {
+    onControllerDestroyed: function(controller) {
     },
 
-    onActionExecuted: function() {
+    onControllerInjected: function(controller, injectedParams) {
     },
 
-    onResultExecuting: function() {
+    onActionInitialized: function(action) {
     },
 
-    onResultExecuted: function() {
+    onActionDestroyed: function(action) {
     },
 
-    isRequestSupport: function() {
+    onActionInjected: function(action, injectedParams) {
+    },
+
+    isRequestSupport: function(httpContext) {
+    },
+
+    onActionExecuting: function(actionContext) {
+    },
+
+    onActionExecuted: function(actionContext) {
+    },
+
+    onResultExecuting: function(resultContext) {
+    },
+
+    onResultExecuted: function(resultContext) {
     }
 };
 

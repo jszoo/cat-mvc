@@ -1,5 +1,5 @@
 /*
-* attributes
+* manager
 * author: ronglin
 * create date: 2014.7.12
 */
@@ -8,50 +8,74 @@
 
 var utils = require('../utilities'),
     caching = require('../caching'),
-	attributes = caching.region('mvc-attribute-types-cache');
+	inner = caching.region('mvc-attribute-types-cache');
 
-var attrs = module.exports = {
+var manager = module.exports = {
 
     all: function() {
-        return attributes.all();
+        return inner.all();
     },
 
     get: function(attrName) {
-        return attributes.get(attrName);
+        return inner.get(attrName);
     },
 
     remove: function(attrName) {
-        return attributes.remove(attrName);
+        return inner.remove(attrName);
     },
 
     register: function(attrName, attrClass) {
-        if (!utils.isString(attrName)) { throw new Error('Parameter "attrName" is incorrect'); }
-        if (!utils.isFunction(attrClass)) { throw new Error('Parameter "attrClass" is incorrect'); }
-        attributes.set(attrName, attrClass);
+        if (!utils.isString(attrName)) { throw new Error('Parameter "attrName" require string type'); }
+        if (!utils.isFunction(attrClass)) { throw new Error('Parameter "attrClass" require function type'); }
+        inner.set(attrName, attrClass);
     },
 
     resolve: function(attrName, attrSett) {
     	var attrClass = this.get(attrName);
     	if (attrClass) {
     		return new attrClass(attrSett);
-    	}
+    	} else {
+            return null;
+        }
     },
 
     resolveConfig: function(config) {
-        var ret = [], self = this;
+        var attrs = [], self = this;
         if (utils.isObject(config)) {
             utils.each(config, function(name, sett) {
-                ret.push(self.resolve(name, sett));
+                attrs.push(self.resolve(name, sett));
             });
         }
         else if (utils.isString(names)) {
             //TODO:
         }
         // ret
-        return ret;
+        return new attributes({
+            _attrs: attrs
+        });
     }
 };
 
-attrs.register('httpGet', require('./httpGet'));
-attrs.register('httpPost', require('./httpPost'));
-attrs.register('actionName', require('./actionName'));
+var attributes = function(set) {
+    utils.extend(this, set);
+};
+
+attributes.prototype = {
+
+    _attrs: null,
+
+    constructor: attributes, className: 'attributes',
+
+    fire: function(eventName) {
+        var args = utils.arg2arr(arguments, 1);
+        utils.each(this._attrs, function(i, it) {
+            if (it && utils.isFunction(it[eventName])) {
+                it[eventName].apply(it, args);
+            }
+        });
+    }
+};
+
+manager.register('httpGet', require('./httpGet'));
+manager.register('httpPost', require('./httpPost'));
+manager.register('actionName', require('./actionName'));

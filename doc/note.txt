@@ -8,3 +8,6 @@ $ npm-check-updates -u
 $ npm install
 
 3. my current mvc implementation requires the root controller names can't be repeat to the area names.
+
+4. ([0-9a-z_-]+)\s*(\([^\)]*|,)
+actionName ('index'), httpPost, 1a_-({p1:'1',p2:"2"}),

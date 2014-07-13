@@ -46,8 +46,11 @@ var manager = module.exports = {
                 attrs.push(self.resolve(name, sett));
             });
         }
-        else if (utils.isString(names)) {
-            //TODO:
+        else if (utils.isString(config)) {
+            var re = /([0-9a-z_-]+)\s*(\([^\)]*|,)/i;
+            while (match = re.exec(config)) {
+                
+            }
         }
         // ret
         return new attributes({
@@ -65,6 +68,10 @@ attributes.prototype = {
     _attrs: null,
 
     constructor: attributes, className: 'attributes',
+
+    all: function() {
+        return _attrs;
+    },
 
     fire: function(eventName) {
         var args = utils.arg2arr(arguments, 1);

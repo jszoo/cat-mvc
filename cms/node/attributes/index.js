@@ -84,7 +84,7 @@ attributes.prototype = {
         return _attrs;
     },
 
-    fire: function(eventName) {
+    emit: function(eventName) {
         var args = utils.arg2arr(arguments, 1);
         utils.each(this._attrs, function(i, it) {
             if (it && utils.isFunction(it[eventName])) {

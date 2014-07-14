@@ -25,8 +25,8 @@ var baseResult = exports.baseResult = function(set) {
 
 baseResult.prototype = {
     constructor: baseResult, className: 'mvcActionResult',
-    execute: function(context) {
-        throw new Error('"execute" function needs override by sub classes.');
+    executeResult: function(context) {
+        throw new Error('"executeResult" function needs override by sub classes.');
     }
 };
 
@@ -38,7 +38,7 @@ var emptyResult = exports.emptyResult = function(set) {
 };
 
 utils.inherit(emptyResult, baseResult, {
-    execute: function(context) {
+    executeResult: function(context) {
         context.rulee.response.header('Content-Type', 'text/plain');
         context.rulee.response.send('');
     }
@@ -53,7 +53,7 @@ var jsonResult = exports.jsonResult = function(set) {
 
 utils.inherit(jsonResult, baseResult, {
     data: null, contentType: 'application/json',
-    execute: function(context) {
+    executeResult: function(context) {
         var json = JSON.stringify(this.data);
         //
         context.rulee.response.header('Content-Type', this.contentType);
@@ -70,7 +70,7 @@ var jsonpResult = exports.jsonpResult = function(set) {
 
 utils.inherit(jsonpResult, baseResult, {
     data: null, contentType: 'text/javascript', callbackName: 'callback',
-    execute: function(context) {
+    executeResult: function(context) {
         //
         var json = JSON.stringify(this.data).replace(/\u2028/g, '\\u2028').replace(/\u2029/g, '\\u2029');
         var jsonp = utils.format('typeof {0} === "function" && {0}({1});', this.callbackName, json);
@@ -89,7 +89,7 @@ var partialViewResult = exports.partialViewResult = function(set) {
 
 utils.inherit(partialViewResult, baseResult, {
     viewName: null,
-    execute: function(context) {
+    executeResult: function(context) {
         if (!this.viewName) { this.viewName = mvcHelper.findRouteItem(context.routeData, 'action').value; }
         //TODO:
     }
@@ -104,7 +104,7 @@ var viewResult = exports.viewResult = function(set) {
 
 utils.inherit(viewResult, baseResult, {
     viewName: null, viewData: null, tempData: null,
-    execute: function(context, callback) {
+    executeResult: function(context, callback) {
         if (!this.viewData) { this.viewData = context.controller.viewData; }
         if (!this.tempData) { this.tempData = context.controller.tempData; }
         if (!this.viewName) { this.viewName = mvcHelper.findRouteItem(context.routeData, 'action').value; }
@@ -131,7 +131,7 @@ var fileResult = exports.fileResult = function(set) {
 
 utils.inherit(fileResult, baseResult, {
     filePath: null, fileDownloadName: null,
-    execute: function(context) {
+    executeResult: function(context) {
         context.rulee.response.download(this.filePath, this.fileDownloadName);
     }
 });
@@ -145,7 +145,7 @@ var contentResult = exports.contentResult = function(set) {
 
 utils.inherit(contentResult, baseResult, {
     content: null, contentType: 'text/plain',
-    execute: function(context) {
+    executeResult: function(context) {
         //
         var text = this.content;
         if (!utils.isString(text)) { text = text + ''; }
@@ -164,7 +164,7 @@ var httpStatusCodeResult = exports.httpStatusCodeResult = function(set) {
 
 utils.inherit(httpStatusCodeResult, baseResult, {
     statusCode: null, statusText: null,
-    execute: function(context) {
+    executeResult: function(context) {
         //
         var message = this.statusText;
         if (!message) { message = http.STATUS_CODES[this.statusCode];}
@@ -183,8 +183,8 @@ var httpNotFoundResult = exports.httpNotFoundResult = function(set) {
 };
 
 utils.inherit(httpNotFoundResult, httpStatusCodeResult, {
-    execute: function(context) {
-        httpNotFoundResult.superclass.execute.call(this, context);
+    executeResult: function(context) {
+        httpNotFoundResult.superclass.executeResult.call(this, context);
     }
 });
 
@@ -197,7 +197,7 @@ var redirectResult = exports.redirectResult = function(set) {
 
 utils.inherit(redirectResult, baseResult, {
     url: null, permanent: false,
-    execute: function(context) {
+    executeResult: function(context) {
         context.rulee.response.redirect(this.url, this.permanent);
     }
 });
@@ -211,7 +211,7 @@ var redirectToRouteResult = exports.redirectToRouteResult = function(set) {
 
 utils.inherit(redirectToRouteResult, baseResult, {
     routeName: null, routeValues: null, permanent: false,
-    execute: function(context) {
+    executeResult: function(context) {
         context.controller.tempData.keep();
         var url = mvcHelper.generateUrl(this.routeName, null, null, this.routeValues, context.routeSet, context, false);
         context.rulee.response.redirect(url, this.permanent);

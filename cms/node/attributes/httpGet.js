@@ -16,7 +16,7 @@ httpGet.prototype = {
 
     constructor: httpGet, className: 'httpGet',
 
-    onAttach: function(context, target) {
+    isValidRequestMethod: function(httpContext) {
     }
 
 };

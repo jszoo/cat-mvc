@@ -16,7 +16,7 @@ httpPost.prototype = {
 
     constructor: httpPost, className: 'httpPost',
 
-    onAttach: function(context, target) {
+    isValidRequestMethod: function(httpContext) {
     }
 };
 

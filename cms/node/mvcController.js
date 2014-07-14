@@ -201,14 +201,14 @@ mvcController.prototype = {
                 _impl: arguments[2]
             });
         }
-        act.initialize(this);
         this.actions.push(act);
         return act; //  for chain
     },
 
     findAction: function(httpContext, actionName) {
-        var acts = [];
+        var acts = [], self = this;
         utils.each(this.actions, function() {
+            this.initialize(self);
             if (this.isValidName(actionName)) {
                 acts.push(this);
             }
@@ -228,7 +228,10 @@ mvcController.prototype = {
         utils.each(acts, function() { this.isValidSecure(secure, validCallback); });
         acts = (actsByAttr.length > 0) ? actsByAttr : actsByDft;
         actsByDft = []; actsByAttr = [];
-
+        //
+        if (acts.length > 1) {
+            
+        }
         // ret
         switch(acts.length) {
             case 0: return null;

@@ -49,6 +49,7 @@ mvcAction.prototype = {
     },
 
     initialize: function(controller) {
+        if (this.controller) { return; } // already initialized
         this.controller = controller;
         this.controllerContext = controller.httpContext.toControllerContext(controller);
         this.attributes = mvcAttributes.resolveConfig(this.attr());

@@ -107,4 +107,4 @@ attributes.prototype = {
 };
 
 manager.register('actionName', require('./actionName'));
-utils.each(require('./httpMethod'), function() { manager.register(this.prototype.className, this); });
+utils.each(require('./httpMethod'), function(name) { manager.register(name, this); });

@@ -25,6 +25,7 @@ sample.prototype = {
     onControllerInjected: function(controller, injectedParams) {
     },
 
+
     onActionInitialized: function(action) {
     },
 
@@ -34,14 +35,6 @@ sample.prototype = {
     onActionInjected: function(action, injectedParams) {
     },
 
-    isRequestSupport: function(httpContext) {
-    },
-
-    isValidActionName: function(httpContext, actionName) {
-    },
-
-    isValidRequestMethod: function(httpContext) {
-    },
 
     onActionExecuting: function(actionContext) {
     },
@@ -49,10 +42,21 @@ sample.prototype = {
     onActionExecuted: function(actionContext) {
     },
 
+
     onResultExecuting: function(resultContext) {
     },
 
     onResultExecuted: function(resultContext) {
+    },
+
+
+    isValidActionName: function(httpContext, actionName) {
+    },
+
+    isValidRequestMethod: function(httpContext, methodName) {
+    },
+
+    isValidRequestSecure: function(httpContext, isSecure) {
     }
 };
 

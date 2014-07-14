@@ -38,14 +38,15 @@ mvcAction.prototype = {
     impl: function(p) { return (p === undefined) ? (this._impl) : (this._impl = p, this); },
 
     destroy: function() {
+        this.attributes.emit('onActionDestroy', this);
+        this.controller.events.emit('actionDestroy', this);
+        this.attributes = null;
+        //
         this.controller = null;
         if (this.controllerContext) {
             this.controllerContext.controller = null;
             this.controllerContext = null;
         }
-        //
-        this.attributes.emit('onActionDestroyed', this);
-        this.attributes = null;
     },
 
     initialize: function(controller) {
@@ -53,6 +54,7 @@ mvcAction.prototype = {
         this.controllerContext = controller.httpContext.toControllerContext(controller);
         this.attributes = mvcAttributes.resolveConfig(this.attr());
         this.attributes.emit('onActionInitialized', this);
+        this.controller.events.emit('actionInitialized', this);
     },
 
     isValidName: function(name, callback) {
@@ -142,6 +144,7 @@ mvcAction.prototype = {
     executeImpl: function(callback) {
         var annotated = this.injectImpl(this.controllerContext);
         this.attributes.emit('onActionInjected', this, annotated);
+        this.controller.events.emit('actionInjected', this, annotated);
         if (!utils.isFunction(annotated.func)) { return; }
         this.controller.resultApi.callback = callback;
         //

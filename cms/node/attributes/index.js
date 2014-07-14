@@ -90,8 +90,12 @@ attributes.prototype = {
         return _attrs;
     },
 
+    len: function() {
+        return this._attrs.length;
+    },
+
     emit: function(eventName) {
-        if (!this._attrs.length) { return []; }
+        if (!this.len()) { return []; }
         var args = utils.arg2arr(arguments, 1), rets = [];
         utils.each(this._attrs, function(i, it) {
             if (it && utils.isFunction(it[eventName])) {

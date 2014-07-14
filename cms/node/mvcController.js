@@ -76,6 +76,10 @@ mvcController.prototype = {
             utils.each(this.actions, function() { this.destroy(); });
             this.actions = null;
         }
+        //
+        this.attributes.emit('onControllerDestroy', this);
+        this.attributes = null;
+        //
         if (this.events) {
             this.events.removeAllListeners();
             this.events = null;
@@ -100,9 +104,6 @@ mvcController.prototype = {
         this._impl = null;
         this.tempData = null;
         this.httpContext = null;
-        //
-        this.attributes.emit('onControllerDestroyed', this);
-        this.attributes = null;
     },
 
     initialize: function(httpContext) {
@@ -131,6 +132,15 @@ mvcController.prototype = {
         //
         this.attributes = mvcAttributes.resolveConfig(this.attr());
         this.attributes.emit('onControllerInitialized', this);
+        if (this.attributes.len() > 0) {
+            this.events.on('actionInitialized', function() { self.attributes.emit.apply(self.attributes, 'onActionInitialized', arguments); });
+            this.events.on('actionDestroy', function() { self.attributes.emit.apply(self.attributes, 'onActionDestroy', arguments); });
+            this.events.on('actionInjected', function() { self.attributes.emit.apply(self.attributes, 'onActionInjected', arguments); });
+            this.events.on('actionExecuting', function() { self.attributes.emit.apply(self.attributes, 'onActionExecuting', arguments); });
+            this.events.on('actionExecuted', function() { self.attributes.emit.apply(self.attributes, 'onActionExecuted', arguments); });
+            this.events.on('resultExecuting', function() { self.attributes.emit.apply(self.attributes, 'onResultExecuting', arguments); });
+            this.events.on('resultExecuted', function() { self.attributes.emit.apply(self.attributes, 'onResultExecuted', arguments); });
+        }
     },
 
     injectImpl: function(ctx) {

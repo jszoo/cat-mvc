@@ -10,7 +10,7 @@ OK 6. mvcView for view engine
 OK 5. viewResult
 OK 9. inject url helper to view engine
 OK 14. vash engine layout function
+OK 12. Https related: controller&action setting ---> attributes
 
 4. partialViewResult
-12. Https related: controller&action setting ---> attributes
 15. ~/ formater url

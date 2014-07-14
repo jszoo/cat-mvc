@@ -8,7 +8,6 @@
 
 var events = require('events'),
 	utils = require('./utilities'),
-    mvcHelper = require('./mvcHelper'),
     mvcAction = require('./mvcAction'),
     mvcInjector = require('./mvcInjector'),
     mvcHelperUrl = require('./mvcHelperUrl'),
@@ -216,7 +215,7 @@ mvcController.prototype = {
         utils.each([method, null], function(i, it) {
             if (action) { return false; }
             utils.each(self.actions, function() {
-                if (mvcHelper.lowerEqual(this.name(), name) && this.isMatch(it, secure)) {
+                if (utils.tryLowerEqual(this.name(), name) && this.isMatch(it, secure)) {
                     action = this;
                     return false;
                 }

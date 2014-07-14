@@ -8,17 +8,8 @@
 
 var utils = require('./utilities');
 
-var lower = exports.lower = function(str) {
-    if (!str) { return str };
-    return str.toLowerCase();
-};
-
-var lowerEqual = exports.lowerEqual = function(str1, str2) {
-    return lower(str1) == lower(str2);
-};
-
 var findRouteItem = exports.findRouteItem = function(routeData, findName, defaultIndex) {
-    var found; findName = lower(findName);
+    var found; findName = utils.tryLower(findName);
     if (!utils.isNumber(defaultIndex) && defaultIndex !== false) {
         if (findName === 'area') {
             defaultIndex = 0;
@@ -29,7 +20,7 @@ var findRouteItem = exports.findRouteItem = function(routeData, findName, defaul
         }
     }
     utils.each(routeData, function() {
-        if (lower(this.name) === findName) {
+        if (utils.tryLower(this.name) === findName) {
             found = this;
             return false;
         }
@@ -84,7 +75,7 @@ var filterRouteSetByArea = function(routeSet, areaName) {
     var routes = [];
     if (!areaName) { areaName = '*root'; }
     utils.each(routeSet, function(key, route) {
-        if (lowerEqual(route.ownerAreaName, areaName)) {
+        if (utils.tryLowerEqual(route.ownerAreaName, areaName)) {
             routes.push(route);
         }
     });

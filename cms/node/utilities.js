@@ -30,6 +30,15 @@ module.exports = utils.extend({}, utils, {
         return false;
     },
 
+    tryLower: function(str) {
+        if (!str || !this.isString(str)) { return str };
+        return str.toLowerCase();
+    },
+
+    tryLowerEqual: function(str1, str2) {
+        return this.tryLower(str1) === this.tryLower(str2);
+    },
+
     formalStr: function(str) {
         if (!str) { return str; }
         return str.replace(/^\s+|\s+$/g, '').toLowerCase();

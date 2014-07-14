@@ -21,13 +21,14 @@ var clone = function(ins, className) {
         routeData: ins.routeData,
         routeArea: ins.routeArea,
         routeSet: ins.routeSet,
-        rulee: ins.rulee
+        rulee: ins.rulee,
+        items: ins.items
     });
 };
 
 mvcContext.prototype = {
 
-    request: null, response: null, rulee: null,
+    request: null, response: null, rulee: null, items: null,
 
     route: null, routeData: null, routeArea: null, routeSet: null,
 

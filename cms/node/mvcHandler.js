@@ -38,53 +38,48 @@ module.exports = function(setts) {
         //
         var routeSet = mvcAreas.routeSet();
         utils.each(routeSet, function(n, route) {
-            var routeData = route.routeData(rulee.request.url.pathname);
-            if (!routeData) { return; } // continue
-            //
-            var area = mvcAreas.get(route.ownerAreaName);
-            var areaParam = getParam(routeData, 'area');
-            if (!areaParam) {
-                routeData.unshift({
-                    name: 'area',
-                    value: area.name
-                });
-            }
-            //
-            var controllerParam = getParam(routeData, 'controller');
-            if (!controllerParam) { return; } // continue
-            //
-            var controller = area.findController(controllerParam.value);
-            if (!controller) { return; } // continue
-            //
-            var actionParam = getParam(routeData, 'action');
-            if (!actionParam) { return; } // continue
-            //
-            var httpContext = new mvcContext({
-                request: req,
-                response: res,
-                route: route,
-                routeData: routeData,
-                routeArea: area,
-                routeSet: routeSet,
-                rulee: rulee
-            });
+            var controller;
             try {
+                var routeData = route.routeData(rulee.request.url.pathname);
+                if (!routeData) { return; } // continue
+                //
+                var area = mvcAreas.get(route.ownerAreaName);
+                var areaParam = getParam(routeData, 'area');
+                if (!areaParam) {
+                    routeData.unshift({
+                        name: 'area',
+                        value: area.name
+                    });
+                }
+                //
+                var controllerParam = getParam(routeData, 'controller');
+                if (!controllerParam) { return; } // continue
+                //
+                controller = area.findController(controllerParam.value);
+                if (!controller) { return; } // continue
+                //
+                var actionParam = getParam(routeData, 'action');
+                if (!actionParam) { return; } // continue
+                //
+                var httpContext = new mvcContext({
+                    request: req,
+                    response: res,
+                    route: route,
+                    routeData: routeData,
+                    routeArea: area,
+                    routeSet: routeSet,
+                    rulee: rulee
+                });
                 controller = controller.clone();
                 controller.initialize(httpContext);
                 controller.executeImpl();
-            } catch (ex) {
-                controller.destroy();
-                exception = ex;
-                return false; // break
-            }
-            //
-            var action = controller.findAction(httpContext, actionParam.value);
-            if (!action) { 
-                controller.destroy();
-                return; // continue
-            }
-            //
-            try {
+                //
+                var action = controller.findAction(httpContext, actionParam.value);
+                if (!action) { 
+                    controller.destroy();
+                    return; // continue
+                }
+                //
                 matched = true;
                 var actionExecuted = false;
                 action.executeImpl(function(obj) {
@@ -101,13 +96,14 @@ module.exports = function(setts) {
                         gotoNext();
                     });
                 });
-            } catch (ex) {
-                controller.destroy();
+                //
+                return false; // break
+            }
+            catch (ex) {
+                controller && controller.destroy();
                 exception = ex;
                 return false; // break
             }
-            //
-            return false; // break
         });
         // next
         gotoNext();

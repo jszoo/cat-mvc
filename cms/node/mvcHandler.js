@@ -78,7 +78,7 @@ module.exports = function(setts) {
                 return false; // break
             }
             //
-            var action = controller.findAction(actionParam.value, rulee.request.method, rulee.request.secure);
+            var action = controller.findAction(httpContext, actionParam.value);
             if (!action) { 
                 controller.destroy();
                 return; // continue

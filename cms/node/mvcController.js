@@ -53,7 +53,7 @@ mvcController.prototype = {
 
     resultApi: null, resultApiSync: null,
 
-    httpContext: null,
+    httpContext: null, attributes: null,
 
     constructor: mvcController, className: 'mvcController',
 
@@ -100,6 +100,9 @@ mvcController.prototype = {
         this._impl = null;
         this.tempData = null;
         this.httpContext = null;
+        //
+        this.attributes.emit('onControllerDestroyed', this);
+        this.attributes = null;
     },
 
     initialize: function(httpContext) {
@@ -125,6 +128,9 @@ mvcController.prototype = {
                 };
             }
         });
+        //
+        this.attributes = mvcAttributes.resolveConfig(this.attr());
+        this.attributes.emit('onControllerInitialized', this);
     },
 
     injectImpl: function(ctx) {
@@ -170,19 +176,9 @@ mvcController.prototype = {
 
     executeImpl: function() {
         var annotated = this.injectImpl(this.httpContext);
+        this.attributes.emit('onControllerInjected', this, annotated);
         if (!utils.isFunction(annotated.func)) { return; }
         annotated.func.apply(this, annotated.params);
-    },
-
-    resolveAttr: function(config) {
-        if (!config) { config = this.attr(); }
-        return mvcAttributes.resolveConfig(config);
-    },
-
-    on: function() {
-        var args = utils.arg2arr(arguments);
-        this.events.on.apply(this.events, args);
-        return this;
     },
 
     action: function() {
@@ -210,18 +206,43 @@ mvcController.prototype = {
         return act; //  for chain
     },
 
-    findAction: function(name, method, secure) {
-        var action, self = this;
-        utils.each([method, null], function(i, it) {
-            if (action) { return false; }
-            utils.each(self.actions, function() {
-                if (utils.tryLowerEqual(this.name(), name) && this.isMatch(it, secure)) {
-                    action = this;
-                    return false;
-                }
-            });
+    findAction: function(httpContext, actionName) {
+        var acts = [];
+        utils.each(this.actions, function() {
+            if (this.isValidName(actionName)) {
+                acts.push(this);
+            }
         });
-        return action;
+        //
+        var actsByDft = [], actsByAttr = [];
+        var validCallback = function(action, isAttr) {
+            (isAttr ? actsByAttr : actsByDft).push(action);
+        };
+        //
+        var method = httpContext.rulee.request.method;
+        utils.each(acts, function() { this.isValidMethod(method, validCallback); });
+        acts = (actsByAttr.length > 0) ? actsByAttr : actsByDft;
+        actsByDft = []; actsByAttr = [];
+        //
+        var secure = httpContext.rulee.request.secure;
+        utils.each(acts, function() { this.isValidSecure(secure, validCallback); });
+        acts = (actsByAttr.length > 0) ? actsByAttr : actsByDft;
+        actsByDft = []; actsByAttr = [];
+
+        // ret
+        switch(acts.length) {
+            case 0: return null;
+            case 1: return acts[0];
+            default: throw this.createAmbiguousActionsError(acts, actionName);
+        }
+    },
+
+    createAmbiguousActionsError: function(ambiguousActions, actionName) {
+        var message = [];
+        utils.each(ambiguousActions, function() {
+            message.push(this.name())
+        });
+        return new Error('The actions "' + message.join(',') + '" are ambiguous in the controller "' + this.name() + '"');
     }
 };
 

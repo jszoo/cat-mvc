@@ -10,11 +10,13 @@ var utils = require('../utilities'),
     caching = require('../caching'),
     inner = caching.region('mvc-attribute-types-cache');
 
-var tryEval = function(str) {
+var tryEval = function(str, attrName) {
     var temp;
     try {
-        eval("temp=" + (str || '') +');');
-    } catch(ex) { }
+        eval("temp=" + str + ';');
+    } catch(ex) {
+        throw new Error('Can not resolve the parameters of attribute: "' + attrName + '"');
+    }
     return temp;
 };
 
@@ -59,7 +61,7 @@ var manager = module.exports = {
             var match, re = /([0-9a-zA-Z_-]+)\s*(\([^\)]*|,|$)/g;
             while (match = re.exec(config)) {
                 var name = match[1];
-                var sett = tryEval(match[2]);
+                var sett = tryEval(name, match[2] + ')');
                 attrs.push(this.resolve(name, sett));
             }
         }

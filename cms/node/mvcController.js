@@ -6,8 +6,7 @@
 
 'use strict';
 
-var events = require('events'),
-	utils = require('./utilities'),
+var utils = require('./utilities'),
     mvcAction = require('./mvcAction'),
     mvcInjector = require('./mvcInjector'),
     mvcHelperUrl = require('./mvcHelperUrl'),
@@ -47,7 +46,7 @@ mvcController.prototype = {
 
     _name: null, _path: null, _attr: null, _impl: null,
 
-    actions: null,  events: null, url: null,
+    actions: null,  url: null,
 
     viewData: null, tempData: null, 
 
@@ -77,13 +76,9 @@ mvcController.prototype = {
             this.actions = null;
         }
         //
-        this.attributes.emit('onControllerDestroy', this);
+        this.emitAttributesEvent('onControllerDestroy', this);
         this.attributes = null;
         //
-        if (this.events) {
-            this.events.removeAllListeners();
-            this.events = null;
-        }
         if (this.url) {
             this.url.httpContext = null;
             this.url = null;
@@ -109,15 +104,11 @@ mvcController.prototype = {
     initialize: function(httpContext) {
         var self = this;
         this.actions = [];
-        this.events = new events.EventEmitter();
         this.httpContext = httpContext;
         //
         this.url = new mvcHelperUrl({ httpContext: this.httpContext });
         this.viewData = new mvcViewData({ httpContext: this.httpContext });
-        //
         this.tempData = new mvcTempData({ provider: mvcTempDataStore.sessionProvider });
-        this.events.on('actionExecuting', function() { self.tempData.load(self.httpContext); });
-        this.events.on('resultExecuting', function() { self.tempData.save(self.httpContext); });
         //
         this.resultApi = new mvcActionResultApi({ httpContext: this.httpContext, sync: false });
         this.resultApiSync = new mvcActionResultApi({ httpContext: this.httpContext, sync: true });
@@ -131,15 +122,15 @@ mvcController.prototype = {
         });
         //
         this.attributes = mvcAttributes.resolveConfig(this.attr());
-        this.attributes.emit('onControllerInitialized', this);
-        if (this.attributes.len() > 0) {
-            this.events.on('actionInitialized', function() { self.attributes.emit.apply(self.attributes, 'onActionInitialized', arguments); });
-            this.events.on('actionDestroy', function() { self.attributes.emit.apply(self.attributes, 'onActionDestroy', arguments); });
-            this.events.on('actionInjected', function() { self.attributes.emit.apply(self.attributes, 'onActionInjected', arguments); });
-            this.events.on('actionExecuting', function() { self.attributes.emit.apply(self.attributes, 'onActionExecuting', arguments); });
-            this.events.on('actionExecuted', function() { self.attributes.emit.apply(self.attributes, 'onActionExecuted', arguments); });
-            this.events.on('resultExecuting', function() { self.attributes.emit.apply(self.attributes, 'onResultExecuting', arguments); });
-            this.events.on('resultExecuted', function() { self.attributes.emit.apply(self.attributes, 'onResultExecuted', arguments); });
+        this.emitAttributesEvent('onControllerInitialized', this);
+    },
+
+    emitAttributesEvent: function(eventName) {
+        var args = utils.arg2arr(arguments);
+        this.attributes.emit.apply(this.attributes, args);
+        var internalFunc = this[eventName];
+        if (utils.isFunction(internalFunc)){
+            internalFunc.apply(this, args);
         }
     },
 
@@ -165,7 +156,6 @@ mvcController.prototype = {
                 case 'query':    params.push(ctx.rulee.request.query); break;
                 case 'form':     params.push(ctx.rulee.request.form); break;
                 //
-                case 'events':   params.push(self.events); break;
                 case 'tempdata': params.push(self.tempData); break;
                 case 'viewdata': params.push(self.viewData); break;
                 case 'end':      params.push(self.resultApi); break;
@@ -186,7 +176,7 @@ mvcController.prototype = {
 
     executeImpl: function() {
         var annotated = this.injectImpl(this.httpContext);
-        this.attributes.emit('onControllerInjected', this, annotated);
+        this.emitAttributesEvent('onControllerInjected', this, annotated);
         if (!utils.isFunction(annotated.func)) { return; }
         annotated.func.apply(this, annotated.params);
     },

@@ -38,8 +38,7 @@ mvcAction.prototype = {
     impl: function(p) { return (p === undefined) ? (this._impl) : (this._impl = p, this); },
 
     destroy: function() {
-        this.attributes.emit('onActionDestroy', this);
-        this.controller.events.emit('actionDestroy', this);
+        this.emitAttributesEvent('onActionDestroy', this);
         this.attributes = null;
         //
         this.controller = null;
@@ -53,8 +52,7 @@ mvcAction.prototype = {
         this.controller = controller;
         this.controllerContext = controller.httpContext.toControllerContext(controller);
         this.attributes = mvcAttributes.resolveConfig(this.attr());
-        this.attributes.emit('onActionInitialized', this);
-        this.controller.events.emit('actionInitialized', this);
+        this.emitAttributesEvent('onActionInitialized', this);
     },
 
     isValidName: function(name, callback) {
@@ -106,6 +104,12 @@ mvcAction.prototype = {
         return valid;
     },
 
+    emitAttributesEvent: function() {
+        var args = utils.arg2arr(arguments);
+        this.attributes.emit.apply(this.attributes, args);
+        this.controller.emitAttributesEvent.apply(this.controller, args);
+    },
+
     injectImpl: function(ctx) {
         var annotated = injector.annotate(this.impl());
         var params = annotated.params = [];
@@ -143,8 +147,7 @@ mvcAction.prototype = {
 
     executeImpl: function(callback) {
         var annotated = this.injectImpl(this.controllerContext);
-        this.attributes.emit('onActionInjected', this, annotated);
-        this.controller.events.emit('actionInjected', this, annotated);
+        this.emitAttributesEvent('onActionInjected', this, annotated);
         if (!utils.isFunction(annotated.func)) { return; }
         this.controller.resultApi.callback = callback;
         //
@@ -153,11 +156,11 @@ mvcAction.prototype = {
             result: null
         });
         //
-        this.attributes.emit('onActionExecuting', actionContext);
-        this.controller.events.emit('actionExecuting', actionContext);
+        this.controller.tempData.load(this.controllerContext);
+        //
+        this.emitAttributesEvent('onActionExecuting', actionContext);
         actionContext.result = annotated.func.apply(this.controller, annotated.params);
-        this.attributes.emit('onActionExecuted', actionContext);
-        this.controller.events.emit('actionExecuted', actionContext);
+        this.emitAttributesEvent('onActionExecuted', actionContext);
         // ret
         callback(actionContext.result);
     },
@@ -177,15 +180,15 @@ mvcAction.prototype = {
             exception: null
         });
         //
-        this.attributes.emit('onResultExecuting', resultContext);
-        this.controller.events.emit('resultExecuting', resultContext);
+        this.controller.tempData.save(this.controllerContext);
+        //
+        this.emitAttributesEvent('onResultExecuting', resultContext);
         if (isAsyncResult) {
             result.executeResult(resultContext, function(exception) { utils.defer(callback, exception); });
         } else {
             result.executeResult(resultContext);
         }
-        this.attributes.emit('onResultExecuted', resultContext);
-        this.controller.events.emit('resultExecuted', resultContext);
+        this.emitAttributesEvent('onResultExecuted', resultContext)
         // ret
         if (!isAsyncResult) { callback(resultContext.exception); }
     }

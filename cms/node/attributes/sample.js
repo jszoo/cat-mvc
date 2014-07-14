@@ -40,9 +40,9 @@ sample.prototype = {
 
 
     /************ action selector functions **************/
-    isValidActionName: function(httpContext, actionName) {},
-    isValidRequestMethod: function(httpContext, methodName) {},
-    isValidRequestSecure: function(httpContext, isSecure) {}
+    isValidActionName: function(controllerContext, actionName) {},
+    isValidRequestMethod: function(controllerContext, methodName) {},
+    isValidRequestSecure: function(controllerContext, isSecure) {}
 };
 
 module.exports = sample;

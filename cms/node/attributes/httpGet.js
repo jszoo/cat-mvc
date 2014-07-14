@@ -17,7 +17,7 @@ httpGet.prototype = {
     constructor: httpGet, className: 'httpGet',
 
     isValidRequestMethod: function(httpContext, methodName) {
-    	return utils.tryLowerEqual('get', methodName);
+        return utils.tryLowerEqual('get', methodName);
     }
 
 };

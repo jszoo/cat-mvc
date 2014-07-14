@@ -16,48 +16,33 @@ sample.prototype = {
 
     constructor: sample, className: 'sample',
 
-    onControllerInitialized: function(controller) {
-    },
 
-    onControllerDestroyed: function(controller) {
-    },
-
-    onControllerInjected: function(controller, injectedParams) {
-    },
+    /************ controller object events **************/
+    onControllerInitialized: function(controller) {},
+    onControllerDestroyed: function(controller) {},
+    onControllerInjected: function(controller, injectedParams) {},
 
 
-    onActionInitialized: function(action) {
-    },
-
-    onActionDestroyed: function(action) {
-    },
-
-    onActionInjected: function(action, injectedParams) {
-    },
+    /************ action object events **************/
+    onActionInitialized: function(action) {},
+    onActionDestroyed: function(action) {},
+    onActionInjected: function(action, injectedParams) {},
 
 
-    onActionExecuting: function(actionContext) {
-    },
-
-    onActionExecuted: function(actionContext) {
-    },
+    /************ action implementation events **************/
+    onActionExecuting: function(actionContext) {},
+    onActionExecuted: function(actionContext) {},
 
 
-    onResultExecuting: function(resultContext) {
-    },
-
-    onResultExecuted: function(resultContext) {
-    },
+    /************ action result events **************/
+    onResultExecuting: function(resultContext) {},
+    onResultExecuted: function(resultContext) {},
 
 
-    isValidActionName: function(httpContext, actionName) {
-    },
-
-    isValidRequestMethod: function(httpContext, methodName) {
-    },
-
-    isValidRequestSecure: function(httpContext, isSecure) {
-    }
+    /************ action selector functions **************/
+    isValidActionName: function(httpContext, actionName) {},
+    isValidRequestMethod: function(httpContext, methodName) {},
+    isValidRequestSecure: function(httpContext, isSecure) {}
 };
 
 module.exports = sample;

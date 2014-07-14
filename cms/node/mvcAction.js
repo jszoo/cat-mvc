@@ -117,6 +117,7 @@ mvcAction.prototype = {
         //
         annotated = injector.annotate(this.impl());
         var params = annotated.params = [];
+        params.matchNum = 0;
         //
         if (annotated.args && annotated.args.length > 0) {
             var form = {}, query = {}, routeData = {};
@@ -135,6 +136,7 @@ mvcAction.prototype = {
                 if (loweName.charAt(0) === '$') {
                     loweName = loweName.substr(1);
                 }
+                params.matchNum++;
                 if (loweName in form) {
                     params.push(form[loweName]);
                 } else if (loweName in query) {
@@ -143,6 +145,7 @@ mvcAction.prototype = {
                     params.push(routeData[loweName]);
                 } else {
                     params.push(null);
+                    params.matchNum--;
                 }
             });
         }

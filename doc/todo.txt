@@ -14,3 +14,4 @@ OK 12. Https related: controller&action setting ---> attributes
 
 4. partialViewResult
 15. ~/ formater url
+16. combine isValidxxxxxx attribute apis?

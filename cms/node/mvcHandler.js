@@ -68,7 +68,8 @@ module.exports = function(setts) {
                     routeData: routeData,
                     routeArea: area,
                     routeSet: routeSet,
-                    rulee: rulee
+                    rulee: rulee,
+                    items: {}
                 });
                 controller = controller.clone();
                 controller.initialize(httpContext);

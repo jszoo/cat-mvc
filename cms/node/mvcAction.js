@@ -111,38 +111,42 @@ mvcAction.prototype = {
     },
 
     injectImpl: function(ctx) {
-        var annotated = injector.annotate(this.impl());
+        var annotated = this.impl().annotated;
+        if (annotated) { return annotated; }
+        //
+        annotated = injector.annotate(this.impl());
         var params = annotated.params = [];
-        if (!annotated.args || annotated.args.length === 0) { return annotated; }
         //
-        var form = {}, query = {}, routeData = {};
-        utils.each(ctx.rulee.request.form, function(key, val) {
-            utils.mapObj(form, lowerRootNs(key), val);
-        });
-        utils.each(ctx.rulee.request.query, function(key, val) {
-            utils.mapObj(query, lowerRootNs(key), val);
-        });
-        utils.each(ctx.routeData, function(i, it) {
-            utils.mapObj(routeData, lowerRootNs(it.name), it.value);
-        });
+        if (annotated.args && annotated.args.length > 0) {
+            var form = {}, query = {}, routeData = {};
+            utils.each(ctx.rulee.request.form, function(key, val) {
+                utils.mapObj(form, lowerRootNs(key), val);
+            });
+            utils.each(ctx.rulee.request.query, function(key, val) {
+                utils.mapObj(query, lowerRootNs(key), val);
+            });
+            utils.each(ctx.routeData, function(i, it) {
+                utils.mapObj(routeData, lowerRootNs(it.name), it.value);
+            });
+            //
+            utils.each(annotated.args, function(i, name) {
+                var loweName = name.toLowerCase();
+                if (loweName.charAt(0) === '$') {
+                    loweName = loweName.substr(1);
+                }
+                if (loweName in form) {
+                    params.push(form[loweName]);
+                } else if (loweName in query) {
+                    params.push(query[loweName]);
+                } else if(loweName in routeData) {
+                    params.push(routeData[loweName]);
+                } else {
+                    params.push(null);
+                }
+            });
+        }
         //
-        utils.each(annotated.args, function(i, name) {
-            var loweName = name.toLowerCase();
-            if (loweName.charAt(0) === '$') {
-                loweName = loweName.substr(1);
-            }
-            if (loweName in form) {
-                params.push(form[loweName]);
-            } else if (loweName in query) {
-                params.push(query[loweName]);
-            } else if(loweName in routeData) {
-                params.push(routeData[loweName]);
-            } else {
-                params.push(null);
-            }
-        });
-        //
-        return annotated;
+        return (this.impl().annotated = annotated);
     },
 
     executeImpl: function(callback) {

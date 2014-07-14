@@ -8,28 +8,24 @@ var mvc = require('../../../node/mvc');
 
 module.exports = mvc.controller(function(req, res, session, end) {
 
-    this.on('actionExecuting', function(context) { });
-    this.on('actionExecuted', function(context) { });
-
-
     this.action('index', function() {
         res.json({ Get: true });
     });
 
-    this.action('index', 'post', function(UserName, Password, User, ArticleId) {
+    this.action('index', 'httpPost', function(UserName, Password, User, ArticleId) {
         res.json({ Post: true });
     });
 
     this.action('forgotPassword', function() {
     });
 
-    this.action('forgotPassword', 'post', function() {
+    this.action('forgotPassword', 'httpPost', function() {
     });
 
     this.action('resetPassword', function() {
     });
 
-    this.action('resetPassword', 'post', function() {
+    this.action('resetPassword', 'httpPost', function() {
     });
 
 
@@ -51,7 +47,7 @@ module.exports = mvc.controller(function(req, res, session, end) {
         }
     });
 
-    this.action('login', 'post', function(UserName, Password) {
+    this.action('login', 'httpPost', function(UserName, Password) {
         if (UserName === 'admin' && Password === 'admin') {
             session.loggedin = true;
             end.redirectToAction('admin');

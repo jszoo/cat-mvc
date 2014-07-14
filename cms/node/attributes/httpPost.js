@@ -16,7 +16,8 @@ httpPost.prototype = {
 
     constructor: httpPost, className: 'httpPost',
 
-    isValidRequestMethod: function(httpContext) {
+    isValidRequestMethod: function(httpContext, methodName) {
+    	return utils.tryLowerEqual('post', methodName);
     }
 };
 

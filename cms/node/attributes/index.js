@@ -56,7 +56,7 @@ var manager = module.exports = {
             });
         }
         else if (utils.isString(config)) {
-            var re = /([0-9a-zA-Z_-]+)\s*(\([^\)]*|,|$)/g;
+            var match, re = /([0-9a-zA-Z_-]+)\s*(\([^\)]*|,|$)/g;
             while (match = re.exec(config)) {
                 var name = match[1];
                 var sett = tryEval(match[2]);
@@ -85,12 +85,13 @@ attributes.prototype = {
     },
 
     emit: function(eventName) {
-        var args = utils.arg2arr(arguments, 1);
+        var args = utils.arg2arr(arguments, 1), rets = [];
         utils.each(this._attrs, function(i, it) {
             if (it && utils.isFunction(it[eventName])) {
-                it[eventName].apply(it, args);
+                rets.push(it[eventName].apply(it, args));
             }
         });
+        return rets;
     }
 };
 

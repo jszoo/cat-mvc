@@ -9,7 +9,14 @@
 var utils = require('../utilities');
 
 var actionName = function(set) {
-    utils.extend(this, set);
+    if (utils.isString(set)) {
+        this.name = set;
+    } else {
+        utils.extend(this, set);
+    }
+    if (!this.name) {
+        throw new Error('The action name of actionName attribute is required');
+    }
 };
 
 actionName.prototype = {
@@ -18,7 +25,8 @@ actionName.prototype = {
 
     constructor: actionName, className: 'actionName',
 
-    onAttach: function(context, target) {
+    isActionNameValid: function(httpContext, actionName) {
+        return utils.tryLowerEqual(this.name, actionName);
     }
     
 };

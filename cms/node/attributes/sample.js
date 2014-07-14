@@ -37,6 +37,9 @@ sample.prototype = {
     isRequestSupport: function(httpContext) {
     },
 
+    isActionNameValid: function(httpContext, actionName) {
+    },
+
     onActionExecuting: function(actionContext) {
     },
 

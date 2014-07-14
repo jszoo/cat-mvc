@@ -227,10 +227,19 @@ mvcController.prototype = {
         var secure = httpContext.rulee.request.secure;
         utils.each(acts, function() { this.isValidSecure(secure, validCallback); });
         acts = (actsByAttr.length > 0) ? actsByAttr : actsByDft;
-        actsByDft = []; actsByAttr = [];
+        actsByDft = null; actsByAttr = null;
         //
         if (acts.length > 1) {
-            
+            var matchNum = -1, temp;
+            utils.each((temp = acts, acts = [], temp), function() {
+                var m = this.injectImpl(httpContext).params.matchNum;
+                if (m > matchNum) {
+                    matchNum = m;
+                    acts = [this];
+                } else if (m === matchNum) {
+                    acts.push(this);
+                }
+            });
         }
         // ret
         switch(acts.length) {

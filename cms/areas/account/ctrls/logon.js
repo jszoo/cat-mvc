@@ -56,6 +56,16 @@ module.exports = mvc.controller(function(req, res, session, end) {
         }
     });
 
+    this.action('login', 'httpPost', function(UserName, Password, Remember) {
+        console.log('Remember:' + Remember);
+        if (UserName === 'admin' && Password === 'admin') {
+            session.loggedin = true;
+            end.redirectToAction('admin');
+        } else {
+            end.redirectToAction('login');
+        }
+    });
+
     this.action('logout', function() {
         session.destroy();
         end.redirectToAction('login');

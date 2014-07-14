@@ -6,6 +6,7 @@
         <form method="post">
             <input type="text" name="UserName" value="admin" />
             <input type="password" name="Password" value="admin" />
+            <input type="checkbox" name="Remember" value="true" />
             <input type="submit" value="Submit" />
         </form>
     })

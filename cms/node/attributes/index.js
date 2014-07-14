@@ -60,8 +60,12 @@ var manager = module.exports = {
         else if (utils.isString(config)) {
             var match, re = /([0-9a-zA-Z_-]+)\s*(\([^\)]*|,|$)/g;
             while (match = re.exec(config)) {
-                var name = match[1];
-                var sett = tryEval(name, match[2] + ')');
+                var name = match[1], sett = match[2];
+                if (sett && sett.length > 1) {
+                    sett = tryEval(sett + ')', name);
+                } else {
+                    sett = undefined;
+                }
                 attrs.push(this.resolve(name, sett));
             }
         }

@@ -11,7 +11,7 @@ OK 5. viewResult
 OK 9. inject url helper to view engine
 OK 14. vash engine layout function
 OK 12. Https related: controller&action setting ---> attributes
+OK 16. combine isValidxxxxxx attribute apis?
 
 4. partialViewResult
 15. ~/ formater url
-16. combine isValidxxxxxx attribute apis?

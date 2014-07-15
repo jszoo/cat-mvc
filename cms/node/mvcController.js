@@ -205,29 +205,21 @@ mvcController.prototype = {
         return act; //  for chain
     },
 
-    findAction: function(httpContext, actionName) {
+    findAction: function(actionName) {
         var acts = [], self = this;
         utils.each(this.actions, function() {
             this.initialize(self);
-            if (this.isValidName(actionName)) {
-                acts.push(this);
-            }
+            var ret = this.isValidName(actionName);
+            if (ret.deft || ret.attr) { acts.push(this); }
         });
         //
-        var actsByDft = [], actsByAttr = [];
-        var validCallback = function(action, isAttr) {
-            (isAttr ? actsByAttr : actsByDft).push(action);
-        };
-        //
-        var method = httpContext.rulee.request.method;
-        utils.each(acts, function() { this.isValidMethod(method, validCallback); });
-        acts = (actsByAttr.length > 0) ? actsByAttr : actsByDft;
-        actsByDft = []; actsByAttr = [];
-        //
-        var secure = httpContext.rulee.request.secure;
-        utils.each(acts, function() { this.isValidSecure(secure, validCallback); });
-        acts = (actsByAttr.length > 0) ? actsByAttr : actsByDft;
-        actsByDft = null; actsByAttr = null;
+        var actsByAttr = [], actsByDeft = [];
+        utils.each(acts, function() {
+            var ret = this.isValidRequest();
+            if (ret.deft) { actsByDeft.push(this); }
+            else if (ret.attr) { actsByAttr.push(this); }
+        });
+        acts = (actsByAttr.length > 0) ? actsByAttr : actsByDeft;
         // ret
         switch(acts.length) {
             case 0: return null;

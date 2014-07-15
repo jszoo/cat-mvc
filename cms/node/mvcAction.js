@@ -56,53 +56,30 @@ mvcAction.prototype = {
         this.emitAttributesEvent('onActionInitialized', this);
     },
 
-    isValidName: function(name, callback) {
+    isValidName: function(name) {
         var rets = this.attributes.emit('isValidActionName', this.controllerContext, name);
         if (rets.length === 0) {
-            var equal = utils.tryLowerEqual(this.name(), name);
-            if (equal && callback) { callback(this, false); }
-            return equal;
+            return { 'deft': utils.tryLowerEqual(this.name(), name) };
         }
         // any one valid
         var valid = false;
         utils.each(rets, function(i, ret) {
-            if (ret) {
-                valid = true;
-                return false;
-            };
+            valid = (valid || ret);
         });
-        if (valid && callback) { callback(this, true); }
-        return valid;
+        return { 'attr': valid };
     },
 
-    isValidMethod: function(method, callback) {
-        var rets  = this.attributes.emit('isValidRequestMethod', this.controllerContext, method);
+    isValidRequest: function() {
+        var rets  = this.attributes.emit('isValidActionRequest', this.controllerContext);
         if (rets.length === 0) {
-            if (callback) { callback(this, false); }
-            return true;
+            return { 'deft': true };
         }
         // all are valid
         var valid = true;
         utils.each(rets, function(i, ret) {
             valid = (valid && ret);
         });
-        if (valid && callback) { callback(this, true); }
-        return valid;
-    },
-
-    isValidSecure: function(secure, callback) {
-        var rets = this.attributes.emit('isValidRequestSecure', this.controllerContext, secure);
-        if (rets.length === 0) {
-            if (callback) { callback(this, false); }
-            return true;
-        }
-        // all are valid
-        var valid = true;
-        utils.each(rets, function(i, ret) {
-            valid = (valid && ret);
-        });
-        if (valid && callback) { callback(this, true); }
-        return valid;
+        return { 'attr': valid };
     },
 
     emitAttributesEvent: function() {

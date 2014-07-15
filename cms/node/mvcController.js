@@ -228,19 +228,6 @@ mvcController.prototype = {
         utils.each(acts, function() { this.isValidSecure(secure, validCallback); });
         acts = (actsByAttr.length > 0) ? actsByAttr : actsByDft;
         actsByDft = null; actsByAttr = null;
-        //
-        if (acts.length > 1) {
-            var matchNum = -1, temp;
-            utils.each((temp = acts, acts = [], temp), function() {
-                var m = this.injectImpl(httpContext).params.matchNum;
-                if (m > matchNum) {
-                    matchNum = m;
-                    acts = [this];
-                } else if (m === matchNum) {
-                    acts.push(this);
-                }
-            });
-        }
         // ret
         switch(acts.length) {
             case 0: return null;
@@ -252,9 +239,11 @@ mvcController.prototype = {
     createAmbiguousActionsError: function(ambiguousActions, actionName) {
         var message = [];
         utils.each(ambiguousActions, function() {
-            message.push(this.name())
+            var match = this.impl().toString().match(/^function\s*\([^\)]*/ig);
+            var fnStr = match ? (match[0] + ')') : this.impl().toString();
+            message.push(utils.format('{0} [{1}] {2}', this.name(), this.attr().toString(), fnStr));
         });
-        return new Error('The actions "' + message.join(',') + '" are ambiguous in the controller "' + this.name() + '"');
+        return new Error(utils.format('The current request for action "{0}" on controller type "{1}" is ambiguous between the following action methods:<br/>{2}', actionName, this.name(), message.join('<br/>')));
     }
 };
 

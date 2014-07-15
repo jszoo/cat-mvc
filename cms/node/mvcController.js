@@ -75,9 +75,10 @@ mvcController.prototype = {
             utils.each(this.actions, function() { this.destroy(); });
             this.actions = null;
         }
-        //
-        this.emitAttributesEvent('onControllerDestroy', this);
-        this.attributes = null;
+        if (this.attributes) {
+            this.emitAttributesEvent('onControllerDestroy', this);
+            this.attributes = null;
+        }
         //
         if (this.url) {
             this.url.httpContext = null;

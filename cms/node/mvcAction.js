@@ -38,8 +38,10 @@ mvcAction.prototype = {
     impl: function(p) { return (p === undefined) ? (this._impl) : (this._impl = p, this); },
 
     destroy: function() {
-        this.emitAttributesEvent('onActionDestroy', this);
-        this.attributes = null;
+        if (this.attributes) {
+            this.emitAttributesEvent('onActionDestroy', this);
+            this.attributes = null;
+        }
         //
         this.controller = null;
         if (this.controllerContext) {

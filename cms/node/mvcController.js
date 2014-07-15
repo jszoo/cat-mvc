@@ -79,7 +79,6 @@ mvcController.prototype = {
             this.emitAttributesEvent('onControllerDestroy', this);
             this.attributes = null;
         }
-        //
         if (this.url) {
             this.url.httpContext = null;
             this.url = null;
@@ -98,6 +97,7 @@ mvcController.prototype = {
         }
         // clear reference types
         this._impl = null;
+        this._attr = null;
         this.tempData = null;
         this.httpContext = null;
     },

@@ -42,12 +42,14 @@ mvcAction.prototype = {
             this.emitAttributesEvent('onActionDestroy', this);
             this.attributes = null;
         }
-        //
-        this.controller = null;
         if (this.controllerContext) {
             this.controllerContext.controller = null;
             this.controllerContext = null;
         }
+        // clear reference types
+        this._impl = null;
+        this._attr = null;
+        this.controller = null;
     },
 
     initialize: function(controller) {

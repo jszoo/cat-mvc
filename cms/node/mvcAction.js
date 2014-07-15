@@ -134,12 +134,16 @@ mvcAction.prototype = {
         var annotated = this.injectImpl(this.controllerContext);
         this.emitAttributesEvent('onActionInjected', this, annotated);
         if (!utils.isFunction(annotated.func)) { return; }
-        this.controller.resultApi.callback = callback;
         //
         var actionContext = this.controllerContext.toActionContext({
             params: annotated.params,
             result: undefined
         });
+        //
+        var self = this, endExecute = function(result) {
+            self.emitAttributesEvent('onActionExecuted', actionContext);
+            callback(result);
+        };
         //
         this.emitAttributesEvent('onAuthorization', actionContext, function() {
             if (actionContext.result) {
@@ -148,15 +152,15 @@ mvcAction.prototype = {
         });
         //
         if (!actionContext.result) {
+            this.controller.resultApi.callback = endExecute;
             this.controller.tempData.load(this.controllerContext);
             //
             this.emitAttributesEvent('onActionExecuting', actionContext);
             actionContext.result = annotated.func.apply(this.controller, annotated.params);
-            this.emitAttributesEvent('onActionExecuted', actionContext);
         }
         // ret
         if (actionContext.result !== undefined) {
-            callback(actionContext.result);
+            endExecute(actionContext.result);
         }
     },
 
@@ -169,23 +173,26 @@ mvcAction.prototype = {
             });
         }
         //
-        var isAsyncResult = (result.executeResult.length > 1);
         var resultContext = this.controllerContext.toResultContext({
             result: result,
             exception: undefined
         });
         //
-        this.controller.tempData.save(this.controllerContext);
+        var self = this, endExecute = function(exception) {
+            self.emitAttributesEvent('onResultExecuted', resultContext);
+            self.controller.tempData.save(self.controllerContext);
+            callback(exception);
+        };
         //
         this.emitAttributesEvent('onResultExecuting', resultContext);
+        var isAsyncResult = (result.executeResult.length > 1);
         if (isAsyncResult) {
-            result.executeResult(resultContext, function(exception) { utils.defer(callback, exception); });
+            var cb = function(ex) { utils.defer(endExecute, ex); };
+            result.executeResult(resultContext, cb);
         } else {
             result.executeResult(resultContext);
+            endExecute(resultContext.exception);
         }
-        this.emitAttributesEvent('onResultExecuted', resultContext)
-        // ret
-        if (!isAsyncResult) { callback(resultContext.exception); }
     }
 };
 

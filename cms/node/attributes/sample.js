@@ -33,6 +33,7 @@ sample.prototype = {
     onAuthorization: function(actionContext) {},
     onActionExecuting: function(actionContext) {},
     onActionExecuted: function(actionContext) {},
+    onException: function(actionContext) {},
 
 
     /************ action result events **************/

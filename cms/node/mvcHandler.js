@@ -84,7 +84,6 @@ module.exports = function(setts) {
                 matched = true;
                 var actionExecuted = false;
                 action.executeImpl(function(obj) {
-                    if (obj === undefined) { return; }
                     if (actionExecuted) { return; }
                     actionExecuted = true;
                     //

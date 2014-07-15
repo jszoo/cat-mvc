@@ -155,7 +155,9 @@ mvcAction.prototype = {
             this.emitAttributesEvent('onActionExecuted', actionContext);
         }
         // ret
-        callback(actionContext.result);
+        if (actionContext.result !== undefined) {
+            callback(actionContext.result);
+        }
     },
 
     executeResult: function(result, callback) {

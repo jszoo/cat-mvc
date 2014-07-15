@@ -128,9 +128,11 @@ mvcController.prototype = {
     emitAttributesEvent: function(eventName) {
         var args = utils.arg2arr(arguments);
         this.attributes.emit.apply(this.attributes, args);
+        //
         var internalFunc = this[eventName];
         if (utils.isFunction(internalFunc)){
-            internalFunc.apply(this, args);
+            var args1 = utils.arg2arr(arguments, 1);
+            internalFunc.apply(this, args1);
         }
     },
 

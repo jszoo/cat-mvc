@@ -141,9 +141,13 @@ mvcAction.prototype = {
             result: undefined
         });
         //
-        this.emitAttributesEvent('onAuthorization', actionContext);
-        if (actionContext.result === undefined) {
-            //
+        this.emitAttributesEvent('onAuthorization', actionContext, function() {
+            if (actionContext.result) {
+                return false;
+            }
+        });
+        //
+        if (!actionContext.result) {
             this.controller.tempData.load(this.controllerContext);
             //
             this.emitAttributesEvent('onActionExecuting', actionContext);

@@ -107,12 +107,26 @@ attributes.prototype = {
     emit: function(eventName) {
         var items = this.get(eventName), rets = [];
         if (items.length === 0) { return rets; }
-        var args = utils.arg2arr(arguments, 1);
+        //
+        var args = utils.arg2arr(arguments, 1), val, handler;
+        if (args.length > 0) {
+            handler = args[args.length - 1];
+            if (utils.isFunction(handler)) {
+                args.pop();
+            } else {
+                handler = null;
+            }
+        }
+        //
         utils.each(items, function(i, it) {
             if (it && utils.isFunction(it[eventName])) {
-                rets.push(it[eventName].apply(it, args));
+                rets.push(val = it[eventName].apply(it, args));
+                if (handler && handler.call(this, v) === false) {
+                    return false;
+                }
             }
         });
+        //
         return rets;
     }
 };

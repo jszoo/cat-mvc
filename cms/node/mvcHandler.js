@@ -75,7 +75,7 @@ module.exports = function(setts) {
                 controller.initialize(httpContext);
                 controller.executeImpl();
                 //
-                var action = controller.findAction(httpContext, actionParam.value);
+                var action = controller.findAction(actionParam.value);
                 if (!action) { 
                     controller.destroy();
                     return; // continue
@@ -84,7 +84,6 @@ module.exports = function(setts) {
                 matched = true;
                 var actionExecuted = false;
                 action.executeImpl(function(obj) {
-                    if (obj === undefined) { return; }
                     if (actionExecuted) { return; }
                     actionExecuted = true;
                     //

@@ -56,53 +56,30 @@ mvcAction.prototype = {
         this.emitAttributesEvent('onActionInitialized', this);
     },
 
-    isValidName: function(name, callback) {
+    isValidName: function(name) {
         var rets = this.attributes.emit('isValidActionName', this.controllerContext, name);
         if (rets.length === 0) {
-            var equal = utils.tryLowerEqual(this.name(), name);
-            if (equal && callback) { callback(this, false); }
-            return equal;
+            return { 'deft': utils.tryLowerEqual(this.name(), name) };
         }
         // any one valid
         var valid = false;
         utils.each(rets, function(i, ret) {
-            if (ret) {
-                valid = true;
-                return false;
-            };
+            valid = (valid || ret);
         });
-        if (valid && callback) { callback(this, true); }
-        return valid;
+        return { 'attr': valid };
     },
 
-    isValidMethod: function(method, callback) {
-        var rets  = this.attributes.emit('isValidRequestMethod', this.controllerContext, method);
+    isValidRequest: function() {
+        var rets  = this.attributes.emit('isValidActionRequest', this.controllerContext);
         if (rets.length === 0) {
-            if (callback) { callback(this, false); }
-            return true;
+            return { 'deft': true };
         }
         // all are valid
         var valid = true;
         utils.each(rets, function(i, ret) {
             valid = (valid && ret);
         });
-        if (valid && callback) { callback(this, true); }
-        return valid;
-    },
-
-    isValidSecure: function(secure, callback) {
-        var rets = this.attributes.emit('isValidRequestSecure', this.controllerContext, secure);
-        if (rets.length === 0) {
-            if (callback) { callback(this, false); }
-            return true;
-        }
-        // all are valid
-        var valid = true;
-        utils.each(rets, function(i, ret) {
-            valid = (valid && ret);
-        });
-        if (valid && callback) { callback(this, true); }
-        return valid;
+        return { 'attr': valid };
     },
 
     emitAttributesEvent: function() {
@@ -157,20 +134,34 @@ mvcAction.prototype = {
         var annotated = this.injectImpl(this.controllerContext);
         this.emitAttributesEvent('onActionInjected', this, annotated);
         if (!utils.isFunction(annotated.func)) { return; }
-        this.controller.resultApi.callback = callback;
         //
         var actionContext = this.controllerContext.toActionContext({
             params: annotated.params,
-            result: null
+            result: undefined
         });
         //
-        this.controller.tempData.load(this.controllerContext);
+        var self = this, endExecute = function(result) {
+            self.emitAttributesEvent('onActionExecuted', actionContext);
+            callback(result);
+        };
         //
-        this.emitAttributesEvent('onActionExecuting', actionContext);
-        actionContext.result = annotated.func.apply(this.controller, annotated.params);
-        this.emitAttributesEvent('onActionExecuted', actionContext);
+        this.emitAttributesEvent('onAuthorization', actionContext, function() {
+            if (actionContext.result) {
+                return false;
+            }
+        });
+        //
+        if (!actionContext.result) {
+            this.controller.resultApi.callback = endExecute;
+            this.controller.tempData.load(this.controllerContext);
+            //
+            this.emitAttributesEvent('onActionExecuting', actionContext);
+            actionContext.result = annotated.func.apply(this.controller, annotated.params);
+        }
         // ret
-        callback(actionContext.result);
+        if (actionContext.result !== undefined) {
+            endExecute(actionContext.result);
+        }
     },
 
     executeResult: function(result, callback) {
@@ -182,23 +173,26 @@ mvcAction.prototype = {
             });
         }
         //
-        var isAsyncResult = (result.executeResult.length > 1);
         var resultContext = this.controllerContext.toResultContext({
             result: result,
-            exception: null
+            exception: undefined
         });
         //
-        this.controller.tempData.save(this.controllerContext);
+        var self = this, endExecute = function(exception) {
+            self.emitAttributesEvent('onResultExecuted', resultContext);
+            self.controller.tempData.save(self.controllerContext);
+            callback(exception);
+        };
         //
         this.emitAttributesEvent('onResultExecuting', resultContext);
+        var isAsyncResult = (result.executeResult.length > 1);
         if (isAsyncResult) {
-            result.executeResult(resultContext, function(exception) { utils.defer(callback, exception); });
+            var cb = function(ex) { utils.defer(endExecute, ex); };
+            result.executeResult(resultContext, cb);
         } else {
             result.executeResult(resultContext);
+            endExecute(resultContext.exception);
         }
-        this.emitAttributesEvent('onResultExecuted', resultContext)
-        // ret
-        if (!isAsyncResult) { callback(resultContext.exception); }
     }
 };
 

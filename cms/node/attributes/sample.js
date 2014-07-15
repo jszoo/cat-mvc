@@ -30,8 +30,10 @@ sample.prototype = {
 
 
     /************ action implementation events **************/
+    onAuthorization: function(actionContext) {},
     onActionExecuting: function(actionContext) {},
     onActionExecuted: function(actionContext) {},
+    onException: function(actionContext) {},
 
 
     /************ action result events **************/
@@ -41,8 +43,7 @@ sample.prototype = {
 
     /************ action selector functions **************/
     isValidActionName: function(controllerContext, actionName) {},
-    isValidRequestMethod: function(controllerContext, methodName) {},
-    isValidRequestSecure: function(controllerContext, isSecure) {}
+    isValidActionRequest: function(controllerContext) {}
 };
 
 module.exports = sample;

@@ -87,24 +87,50 @@ attributes.prototype = {
     constructor: attributes, className: 'attributes',
 
     all: function() {
-        return _attrs;
+        return this._attrs;
     },
 
-    len: function() {
-        return this._attrs.length;
+    get: function(eventName) {
+        var rets = [];
+        if (!eventName) {
+            rets = this._attrs;
+        } else {
+            utils.each(this._attrs, function(i, it) {
+                if (it && utils.isFunction(it[eventName])) {
+                    rets.push(it);
+                }
+            });
+        }
+        return rets;
     },
 
     emit: function(eventName) {
-        if (!this.len()) { return []; }
-        var args = utils.arg2arr(arguments, 1), rets = [];
-        utils.each(this._attrs, function(i, it) {
+        var items = this.get(eventName), rets = [];
+        if (items.length === 0) { return rets; }
+        //
+        var args = utils.arg2arr(arguments, 1), val, handler;
+        if (args.length > 0) {
+            handler = args[args.length - 1];
+            if (utils.isFunction(handler)) {
+                args.pop();
+            } else {
+                handler = null;
+            }
+        }
+        //
+        utils.each(items, function(i, it) {
             if (it && utils.isFunction(it[eventName])) {
-                rets.push(it[eventName].apply(it, args));
+                rets.push(val = it[eventName].apply(it, args));
+                if (handler && handler.call(this, v) === false) {
+                    return false;
+                }
             }
         });
+        //
         return rets;
     }
 };
 
 manager.register('actionName', require('./actionName'));
+manager.register('requireHttps', require('./requireHttps'));
 utils.each(require('./httpMethod'), function(name) { manager.register(name, this); });

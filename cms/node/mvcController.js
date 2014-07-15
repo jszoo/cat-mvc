@@ -128,9 +128,11 @@ mvcController.prototype = {
     emitAttributesEvent: function(eventName) {
         var args = utils.arg2arr(arguments);
         this.attributes.emit.apply(this.attributes, args);
+        //
         var internalFunc = this[eventName];
         if (utils.isFunction(internalFunc)){
-            internalFunc.apply(this, args);
+            var args1 = utils.arg2arr(arguments, 1);
+            internalFunc.apply(this, args1);
         }
     },
 
@@ -205,33 +207,21 @@ mvcController.prototype = {
         return act; //  for chain
     },
 
-    findAction: function(httpContext, actionName) {
+    findAction: function(actionName) {
         var acts = [], self = this;
         utils.each(this.actions, function() {
             this.initialize(self);
-            if (this.isValidName(actionName)) {
-                acts.push(this);
-            }
+            var ret = this.isValidName(actionName);
+            if (ret.deft || ret.attr) { acts.push(this); }
         });
         //
-        var actsByDft = [], actsByAttr = [];
-        var validCallback = function(action, isAttr) {
-            (isAttr ? actsByAttr : actsByDft).push(action);
-        };
-        //
-        var method = httpContext.rulee.request.method;
-        utils.each(acts, function() { this.isValidMethod(method, validCallback); });
-        acts = (actsByAttr.length > 0) ? actsByAttr : actsByDft;
-        actsByDft = []; actsByAttr = [];
-        //
-        var secure = httpContext.rulee.request.secure;
-        utils.each(acts, function() { this.isValidSecure(secure, validCallback); });
-        acts = (actsByAttr.length > 0) ? actsByAttr : actsByDft;
-        actsByDft = []; actsByAttr = [];
-        //
-        if (acts.length > 1) {
-            
-        }
+        var actsByAttr = [], actsByDeft = [];
+        utils.each(acts, function() {
+            var ret = this.isValidRequest();
+            if (ret.deft) { actsByDeft.push(this); }
+            else if (ret.attr) { actsByAttr.push(this); }
+        });
+        acts = (actsByAttr.length > 0) ? actsByAttr : actsByDeft;
         // ret
         switch(acts.length) {
             case 0: return null;
@@ -243,9 +233,11 @@ mvcController.prototype = {
     createAmbiguousActionsError: function(ambiguousActions, actionName) {
         var message = [];
         utils.each(ambiguousActions, function() {
-            message.push(this.name())
+            var match = this.impl().toString().match(/^function\s*\([^\)]*/ig);
+            var fnStr = match ? (match[0] + ')') : this.impl().toString();
+            message.push(utils.format('{0} [{1}] {2}', this.name(), this.attr().toString(), fnStr));
         });
-        return new Error('The actions "' + message.join(',') + '" are ambiguous in the controller "' + this.name() + '"');
+        return new Error(utils.format('The current request for action "{0}" on controller type "{1}" is ambiguous between the following action methods:<br/>{2}', actionName, this.name(), message.join('<br/>')));
     }
 };
 

@@ -28,7 +28,6 @@ module.exports = mvc.controller(function(req, res, session, end) {
     this.action('resetPassword', 'httpPost', function() {
     });
 
-
     this.action('admin', function() {
         if (!session.loggedin) {
             end.redirectToAction('login');
@@ -47,7 +46,7 @@ module.exports = mvc.controller(function(req, res, session, end) {
         }
     });
 
-    this.action('login', 'httpPost', function(UserName, Password) {
+    this.action('login', 'httpPost', function(UserName, Password, Remember) {
         if (UserName === 'admin' && Password === 'admin') {
             session.loggedin = true;
             end.redirectToAction('admin');

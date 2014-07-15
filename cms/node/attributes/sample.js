@@ -30,6 +30,7 @@ sample.prototype = {
 
 
     /************ action implementation events **************/
+    onAuthorization: function(actionContext) {},
     onActionExecuting: function(actionContext) {},
     onActionExecuted: function(actionContext) {},
 

@@ -107,4 +107,5 @@ attributes.prototype = {
 };
 
 manager.register('actionName', require('./actionName'));
+manager.register('requireHttps', require('./requireHttps'));
 utils.each(require('./httpMethod'), function(name) { manager.register(name, this); });

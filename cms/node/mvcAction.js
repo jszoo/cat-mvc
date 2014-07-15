@@ -138,14 +138,18 @@ mvcAction.prototype = {
         //
         var actionContext = this.controllerContext.toActionContext({
             params: annotated.params,
-            result: null
+            result: undefined
         });
         //
-        this.controller.tempData.load(this.controllerContext);
-        //
-        this.emitAttributesEvent('onActionExecuting', actionContext);
-        actionContext.result = annotated.func.apply(this.controller, annotated.params);
-        this.emitAttributesEvent('onActionExecuted', actionContext);
+        this.emitAttributesEvent('onAuthorization', actionContext);
+        if (actionContext.result === undefined) {
+            //
+            this.controller.tempData.load(this.controllerContext);
+            //
+            this.emitAttributesEvent('onActionExecuting', actionContext);
+            actionContext.result = annotated.func.apply(this.controller, annotated.params);
+            this.emitAttributesEvent('onActionExecuted', actionContext);
+        }
         // ret
         callback(actionContext.result);
     },
@@ -162,7 +166,7 @@ mvcAction.prototype = {
         var isAsyncResult = (result.executeResult.length > 1);
         var resultContext = this.controllerContext.toResultContext({
             result: result,
-            exception: null
+            exception: undefined
         });
         //
         this.controller.tempData.save(this.controllerContext);

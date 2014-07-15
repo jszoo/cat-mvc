@@ -15,8 +15,6 @@ var requireHttps = module.exports = function(set) {
 
 requireHttps.prototype = {
 
-    methodName: null,
-
     constructor: requireHttps, className: 'requireHttps',
 
     onAuthorization: function(actionContext) {

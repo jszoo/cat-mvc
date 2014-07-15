@@ -45,9 +45,9 @@ mvcActionResultApi.prototype = {
         return emit.call(this, new actionResult.jsonpResult({ data: data, callbackName: callbackName }));
     },
 
-    partialView: function(viewName) {
+    /*partialView: function(viewName) {
         return emit.call(this, new actionResult.partialViewResult({ viewName: viewName }));
-    },
+    },*/
 
     view: function(viewName, viewData) {
         if (!utils.isString(viewName)) { viewData = viewName; viewName = null; }

@@ -83,7 +83,7 @@ utils.inherit(jsonpResult, baseResult, {
 
 /* partialViewResult
 ***************************************/
-var partialViewResult = exports.partialViewResult = function(set) {
+/*var partialViewResult = exports.partialViewResult = function(set) {
     partialViewResult.superclass.constructor.call(this, set);
 };
 
@@ -93,7 +93,7 @@ utils.inherit(partialViewResult, baseResult, {
         if (!this.viewName) { this.viewName = mvcHelper.findRouteItem(context.routeData, 'action').value; }
         //TODO:
     }
-});
+});*/
 
 
 /* viewResult

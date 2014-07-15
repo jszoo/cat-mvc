@@ -38,7 +38,7 @@ module.exports = mvc.controller(function(req, res, session, end) {
         }
     });
 
-    this.action('login', 'requireHttps', function() {
+    this.action('login', function() {
         if (session.loggedin) {
             end.redirectToAction('admin');
         } else {

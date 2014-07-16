@@ -23,10 +23,11 @@ module.exports = function() {
     return function(req, res, next, err) {
         var rulee = req.rulee || (req.rulee = {});
         //
-        var prot = req.secure ? 'https' : 'http'; //eg: http
+        var secure = !!req.secure;
+        var protocol = secure ? 'https' : 'http'; //eg: http
         var host = req.headers.host;              //eg: www.nodetest.cn:1337
         var path = req.url;                       //eg: /home?a=1
-        var url = parse(prot + '://' + host + path, true);
+        var url = parse(protocol + '://' + host + path, true);
         //
         getter(rulee, 'url', url);
         //
@@ -36,7 +37,7 @@ module.exports = function() {
         //
         getter(rulee, 'method', req.method);
         //
-        getter(rulee, 'secure', !!req.secure);
+        getter(rulee, 'secure', secure);
         //
         getter(rulee, 'session', req.session);
         //

@@ -4,8 +4,9 @@
 * create date: 2014.6.23
 */
 
-var utils = require('./node/utilities');
 var mvc = require('./node/mvc');
+//var mvc = require('rulee-mvc');
+mvc.set('rootPath', __dirname);
 
 // web config
 var configuration = require('./node/configuration');
@@ -47,11 +48,11 @@ mvc.use(session({
 
 // favicon
 var favicon = require('serve-favicon');
-mvc.use(favicon(utils.absolutePath(config.get('favicon.source'))));
+mvc.use(favicon(mvc.utils.absolutePath(config.get('favicon.source'))));
 
 // static
 var static = require('serve-static');
-mvc.use(static(utils.absolutePath('fe')));
+mvc.use(static(mvc.utils.absolutePath('fe')));
 
 // entrance
 var express = require('express');

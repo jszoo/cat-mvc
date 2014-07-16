@@ -9,5 +9,11 @@ $ npm install
 
 3. my current mvc implementation requires the root controller names can't be repeat to the area names.
 
-4. ([0-9a-z_-]+)\s*(\([^\)]*|,)
-actionName ('index'), httpPost, 1a_-({p1:'1',p2:"2"}),
+4.
+$ npm set init.author.name "Your Name"
+$ npm set init.author.email "you@example.com"
+$ npm set init.author.url "http://yourblog.com"
+$ npm adduser (if account not exists)
+
+cd /path/to/your-project
+$ npm publish ./ --tag beta

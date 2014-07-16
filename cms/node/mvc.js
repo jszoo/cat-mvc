@@ -11,6 +11,7 @@ var utils = require('./utilities'),
 	mvcAreas = require('./mvcAreas'),
     mvcHandler = require('./mvcHandler'),
     mvcController = require('./mvcController'),
+    mvcAttributes = require('./attributes/index'),
     mvcViewEngines = require('./mvcViewEngines'),
     mvcHandlerRouter = require('./mvcHandlerRouter');
 
@@ -28,6 +29,7 @@ module.exports = {
     areas: mvcAreas,
     engines: mvcViewEngines,
     controller: mvcController.define,
+    attributes: mvcAttributes,
     //
     get: function(key) {
         return setts.get(key);

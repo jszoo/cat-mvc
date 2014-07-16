@@ -6,8 +6,17 @@
 
 'use strict';
 
-var url = require('url'),
+var parse = require('url').parse,
     utils = require('../utilities');
+
+var getter = function(obj, name, value) {
+    Object.defineProperty(obj, name, {
+        configurable: false,
+        enumerable: true,
+        writable: false,
+        value: value
+    });
+};
 
 module.exports = function() {
     //
@@ -17,17 +26,19 @@ module.exports = function() {
         var prot = req.secure ? 'https' : 'http'; //eg: http
         var host = req.headers.host;              //eg: www.nodetest.cn:1337
         var path = req.url;                       //eg: /home?a=1
-        rulee.url = url.parse(prot + '://' + host + path, true);
+        var url = parse(prot + '://' + host + path, true);
         //
-        rulee.query = utils.isObject(rulee.url.query) ? utils.extend({}, rulee.url.query) : utils.getQuery(rulee.url.search);
+        getter(rulee, 'url', url);
         //
-        rulee.form = utils.extend({}, req.body);
+        getter(rulee, 'query', utils.isObject(url.query) ? utils.extend({}, url.query) : utils.getQuery(url.search));
         //
-        rulee.session = req.session;
+        getter(rulee, 'form', utils.extend({}, req.body));
         //
-        rulee.secure = !!req.secure;
+        getter(rulee, 'method', req.method);
         //
-        rulee.method = req.method;
+        getter(rulee, 'secure', !!req.secure);
+        //
+        getter(rulee, 'session', req.session);
         //
         next(err);
     };

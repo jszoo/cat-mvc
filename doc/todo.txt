@@ -17,3 +17,4 @@ PP 4. partialViewResult
 
 15. ~/ formater url
 17. onException attribute
+18. support multi mvc instance

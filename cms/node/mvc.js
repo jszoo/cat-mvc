@@ -33,7 +33,9 @@ module.exports = {
         return setts.get(key);
     },
     set: function(key, val) {
-        return setts.set(key, val);
+        setts.set(key, val);
+        var root = setts.get('rootPath');
+        if (root) { utils.setRootPath(root); }
     },
     use: function() {
         return handlerRouter.register.apply(handlerRouter, arguments);
@@ -44,7 +46,6 @@ module.exports = {
     handler: function () {
         // initialize
         mvcAreas.registerAll();
-        utils.setRootPath(setts.get('rootPath'));
         handlerRouter.register('midHeader', '/', midHeader());
         handlerRouter.register('midRequest', '/', midRequest());
         handlerRouter.register('midResponse', '/', midResponse());

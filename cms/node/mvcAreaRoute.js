@@ -9,7 +9,7 @@
 var utils = require('./utilities'),
     routeSeed = require('./mvcAreaRouteSeed');
 
-var mvcAreaRoute = function(set) {
+var mvcAreaRoute = module.exports = function(set) {
     utils.extend(this, set);
     this.defaultValues = utils.formalObj(this.defaultValues || {});
 };
@@ -88,5 +88,3 @@ mvcAreaRoute.prototype = {
         return count;
     }
 };
-
-module.exports = mvcAreaRoute;

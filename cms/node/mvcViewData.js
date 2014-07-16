@@ -8,7 +8,7 @@
 
 var utils = require('./utilities');
 
-var mvcViewData = function(set) {
+var mvcViewData = module.exports = function(set) {
     utils.extend(this, set);
 };
 
@@ -18,5 +18,3 @@ mvcViewData.prototype = {
 
     constructor: mvcViewData, className: 'mvcViewData'
 };
-
-module.exports = mvcViewData;

@@ -11,7 +11,7 @@ var fs = require('fs'),
     utils = require('./utilities'),
     caching = require('./caching');
 
-var mvcControllers = function(set) {
+var mvcControllers = module.exports = function(set) {
     utils.extend(this, set);
     if (!this.ownerAreaName) { throw new Error('Parameter "ownerAreaName" is required'); }
     this._inner = caching.region('mvc-' + this.ownerAreaName + '-controllers-cache');
@@ -88,5 +88,3 @@ mvcControllers.prototype = {
         }
     }
 };
-
-module.exports = mvcControllers;

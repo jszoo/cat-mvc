@@ -8,7 +8,7 @@
 
 var utils = require('./utilities');
 
-var mvcTempData = function(set) {
+var mvcTempData = module.exports = function(set) {
     utils.extend(this, set);
     this.newData = {};
     this.oldData = {};
@@ -69,5 +69,3 @@ mvcTempData.prototype = {
         this.oldData = (this.provider.loadTempData(httpContext) || {});
     }
 };
-
-module.exports = mvcTempData;

@@ -10,7 +10,7 @@ var utils = require('./utilities'),
     mvcHelper = require('./mvcHelper'),
     actionResult = require('./mvcActionResult');
 
-var mvcActionResultApi = function(set) {
+var mvcActionResultApi = module.exports = function(set) {
     utils.extend(this, set);
 };
 
@@ -90,5 +90,3 @@ mvcActionResultApi.prototype = {
         return emit.call(this, new actionResult.redirectToRouteResult({ routeName: routeName, routeValues: routeValues, permanent: true }));
     }
 };
-
-module.exports = mvcActionResultApi;

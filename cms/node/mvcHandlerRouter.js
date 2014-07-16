@@ -9,7 +9,7 @@
 var parse = require('url').parse,
     utils = require('./utilities');
 
-var mvcHandlerRouter = function(set) {
+var mvcHandlerRouter = module.exports = function(set) {
     utils.extend(this, set);
     this._handlers = [];
     this._lastHandlers = [];
@@ -100,5 +100,3 @@ mvcHandlerRouter.prototype = {
         next();
     }
 };
-
-module.exports = mvcHandlerRouter;

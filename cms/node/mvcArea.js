@@ -11,7 +11,7 @@ var utils = require('./utilities'),
     mvcAreaRoutes = require('./mvcAreaRoutes'),
     mvcControllers = require('./mvcControllers');
 
-var mvcArea = function(set) {
+var mvcArea = module.exports = function(set) {
     utils.extend(this, set);
     if (!this.name) { throw new Error('Parameter "name" is required'); }
     //
@@ -46,5 +46,3 @@ mvcArea.prototype = {
         return this;
     }
 };
-
-module.exports = mvcArea;

@@ -9,7 +9,7 @@
 var utils = require('./utilities'),
     mvcHelper = require('./mvcHelper');
 
-var mvcUrlHelper = function(set) {
+var mvcUrlHelper = module.exports = function(set) {
     utils.extend(this, set);
 };
 
@@ -30,6 +30,4 @@ mvcUrlHelper.prototype = {
     content: function(contentPath) {
         return mvcHelper.generateContentUrl(contentPath, this.httpContext);
     }
-}
-
-module.exports = mvcUrlHelper;
+};

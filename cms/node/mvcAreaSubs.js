@@ -9,7 +9,7 @@ var fs = require('fs'),
     utils = require('./utilities'),
     caching = require('./caching');
 
-var mvcAreaSubs = function(set) {
+var mvcAreaSubs = module.exports = function(set) {
     utils.extend(this, set);
     if (!this.ownerAreaName) { throw new Error('Parameter "ownerAreaName" is required'); }
     this._inner = caching.region('mvc-' + this.ownerAreaName + '-subscribes-cache');
@@ -47,5 +47,3 @@ mvcAreaSubs.prototype = {
         return this._inner.remove(filePath);
     }
 };
-
-module.exports = mvcAreaSubs;

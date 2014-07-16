@@ -13,10 +13,10 @@ var caching = require('./caching'),
     mvcViewEngines = require('./mvcViewEngines'),
     mvcHandlerRouter = require('./mvcHandlerRouter');
 
-var mError = require('./middles/error'),
-    mHeader = require('./middles/header'),
-    mRequest = require('./middles/request'),
-    mResponse = require('./middles/response');
+var midError = require('./middles/error'),
+    midHeader = require('./middles/header'),
+    midRequest = require('./middles/request'),
+    midResponse = require('./middles/response');
 
 var handlerRouter = new mvcHandlerRouter();
 var setts = caching.region('mvc-runtime-settings');
@@ -42,11 +42,11 @@ module.exports = {
     handler: function () {
         // initialize
         mvcAreas.registerAll();
-        handlerRouter.register('mHeader', '/', mHeader());
-        handlerRouter.register('mRequest', '/', mRequest());
-        handlerRouter.register('mResponse', '/', mResponse());
+        handlerRouter.register('midHeader', '/', midHeader());
+        handlerRouter.register('midRequest', '/', midRequest());
+        handlerRouter.register('midResponse', '/', midResponse());
         handlerRouter.register(mvcHandler(setts));
-        handlerRouter.register('mError', '/', mError());
+        handlerRouter.register('midError', '/', midError());
         // entrance
         return function(req, res) {
             handlerRouter.execute(req, res);

@@ -46,8 +46,8 @@ var appStart = function() {
 module.exports = {
     areas: mvcAreas,
     engines: mvcViewEngines,
-    controller: mvcController.define,
     attributes: mvcAttributes,
+    controller: mvcController.define,
     //
     get: function(key) {
         return setts.get(key);

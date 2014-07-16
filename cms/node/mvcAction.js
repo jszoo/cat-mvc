@@ -9,8 +9,7 @@
 var utils = require('./utilities'),
     injector = require('./mvcInjector'),
     httpMethod = require('./mvcHttpMethod'),
-    actionResult = require('./mvcActionResult'),
-    mvcAttributes = require('./attributes/index');
+    actionResult = require('./mvcActionResult');
 
 var lowerRootNs = function(namespace) {
     var index = namespace.search(/\.|\[|\]/);
@@ -21,7 +20,7 @@ var lowerRootNs = function(namespace) {
     }
 };
 
-var mvcAction = function(set) {
+var mvcAction = module.exports = function(set) {
     utils.extend(this, set);
 };
 
@@ -56,7 +55,7 @@ mvcAction.prototype = {
         if (this.controller) { return; } // already initialized
         this.controller = controller;
         this.controllerContext = controller.httpContext.toControllerContext(controller);
-        this.attributes = mvcAttributes.resolveConfig(this.attr());
+        this.attributes = controller.httpContext.mvc.attributes.resolveConfig(this.attr());
         this.emitAttributesEvent('onActionInitialized', this);
     },
 
@@ -199,5 +198,3 @@ mvcAction.prototype = {
         }
     }
 };
-
-module.exports = mvcAction;

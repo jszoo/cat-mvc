@@ -8,11 +8,9 @@
 
 var fs = require('fs'),
     path = require('path'),
-    utils = require('./utilities'),
-    areas = require('./mvcAreas'),
-    engines = require('./mvcViewEngines');
+    utils = require('./utilities');
 
-var mvcView = function(viewName) {
+var mvcView = module.exports = function(viewName) {
     this.viewName = viewName;
 };
 
@@ -23,6 +21,9 @@ mvcView.prototype = {
     constructor: mvcView, className: 'mvcView',
 
     render: function(viewContext, callback) {
+        var areas = viewContext.mvc.areas;
+        var engines = viewContext.mvc.engines;
+        //
         var extname = this.engineExtname;
         if (!extname) { extname = engines.default(); }
         var ctrlName = viewContext.controller.name();
@@ -68,5 +69,3 @@ mvcView.prototype = {
         }
     }
 };
-
-module.exports = mvcView;

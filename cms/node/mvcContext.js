@@ -13,22 +13,19 @@ var mvcContext = function(set) {
 };
 
 var clone = function(ins, className) {
-    return new mvcContext({
-        className: (className || ins.className),
-        request: ins.request,
-        response: ins.response,
-        route: ins.route,
-        routeData: ins.routeData,
-        routeArea: ins.routeArea,
-        routeSet: ins.routeSet,
-        rulee: ins.rulee,
-        items: ins.items
+    var obj = new mvcContext();
+    utils.each(obj, function(key) {
+        if (obj[key] === null && ins[key]) {
+            obj[key] = ins[key];
+        }
     });
+    obj.className = className || ins.className;
+    return obj;
 };
 
 mvcContext.prototype = {
 
-    request: null, response: null, rulee: null, items: null,
+    request: null, response: null, rulee: null, items: null, mvc: null,
 
     route: null, routeData: null, routeArea: null, routeSet: null,
 

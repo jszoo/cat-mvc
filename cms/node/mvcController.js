@@ -13,10 +13,9 @@ var utils = require('./utilities'),
     mvcViewData = require('./mvcViewData'),
     mvcTempData = require('./mvcTempData'),
     mvcTempDataStore = require('./mvcTempDataStore'),
-    mvcActionResultApi = require('./mvcActionResultApi'),
-    mvcAttributes = require('./attributes/index');
+    mvcActionResultApi = require('./mvcActionResultApi');
 
-var mvcController = function(set) {
+var mvcController = module.exports = function(set) {
     utils.extend(this, set);
 };
 
@@ -122,7 +121,7 @@ mvcController.prototype = {
             }
         });
         //
-        this.attributes = mvcAttributes.resolveConfig(this.attr());
+        this.attributes = httpContext.mvc.attributes.resolveConfig(this.attr());
         this.emitAttributesEvent('onControllerInitialized', this);
     },
 
@@ -241,5 +240,3 @@ mvcController.prototype = {
         return new Error(utils.format('The current request for action "{0}" on controller type "{1}" is ambiguous between the following action methods:<br/>{2}', actionName, this.name(), message.join('<br/>')));
     }
 };
-
-module.exports = mvcController;

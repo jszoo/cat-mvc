@@ -20,40 +20,43 @@ var CONST_Root = '/root',
     CONST_Controllers = 'ctrls',
     CONST_Subscribes = 'areaSubs.js';
 
-var _areas = caching.region('mvc-areas-cache'),
-    _areasPath = null,
-    _routeSet = null;
+var mvcAreas = module.exports = function(rootPath) {
+    this._inner = caching.region('mvc-areas-cache');
+    this.rootPath = rootPath;
+    this.areasPath = path.join(rootPath, CONST_Areas);
+    this.events = new events.EventEmitter();
+};
 
-module.exports = {
+mvcAreas.prototype = {
 
-    events: new events.EventEmitter(),
+    _inner: null, _routeSet: null,
+
+    rootPath: null, areasPath: null, events: null,
+
+    constructor: mvcAreas, className: 'mvcAreas',
 
     all: function() {
-        return _areas.all();
+        return this._inner.all();
     },
 
     get: function(areaName) {
-        return _areas.get(areaName);
+        return this._inner.get(areaName);
     },
 
     rootArea: function() {
-        return _areas.get(CONST_Root);
-    },
-
-    rootPath: function(p) {
-        return (p === undefined) ? (_areasPath) : (_areasPath = path.join(p, CONST_Areas), this);
+        return this._inner.get(CONST_Root);
     },
 
     routeSet: function() {
-        if (!_routeSet) {
-            var rs = _routeSet = {};
+        if (!this._routeSet) {
+            var rs = this._routeSet = {};
             utils.each(this.all(), function() {
                 utils.each(this.ownedRoutes(), function(key, val) {
                     rs[key] = val;
                 });
             });
         }
-        return _routeSet;
+        return this._routeSet;
     },
 
     unload: function(areaName) {
@@ -62,13 +65,13 @@ module.exports = {
             area.fireSubscribes('onUnload');
             this.events.emit('unload', area);
         }
-        return _areas.remove(areaName);
+        return this._inner.remove(areaName);
     },
 
     register: function(areaName, areaRoute, defaultRouteValues) {
-        var areaDirectory = areaName;
+        var areaDirectory = areaName, self = this;
         if (areaName === CONST_Root) { areaDirectory = path.sep + '..'; }
-        var area, areaPath = path.normalize(path.join(_areasPath, areaDirectory));
+        var area, areaPath = path.normalize(path.join(this.areasPath, areaDirectory));
         if (fs.existsSync(areaPath) && fs.statSync(areaPath).isDirectory()) {
             // area obj
             area = new mvcArea({
@@ -79,7 +82,7 @@ module.exports = {
                 controllersPath: path.join(areaPath, CONST_Controllers)
             });
             //
-            area.routes.events.on('changed', function() { _routeSet = null; });
+            area.routes.events.on('changed', function() { self._routeSet = null; });
             // map route
             area.routes.set(areaName, areaRoute, defaultRouteValues);
             // load default subscribes
@@ -98,7 +101,7 @@ module.exports = {
         if (area) {
             area.fireSubscribes('onRegister');
             this.events.emit('register', area);
-            _areas.set(area.name, area);
+            this._inner.set(area.name, area);
         }
         // ret
         return area;
@@ -110,7 +113,7 @@ module.exports = {
             ('/:controller?/:action?'),
             ({ controller: 'home', action: 'index' })
         );
-        var self = this, areasDirs = fs.readdirSync(_areasPath);
+        var self = this, areasDirs = fs.readdirSync(this.areasPath);
         utils.each(areasDirs, function(i, areaName) {
             self.register(
                 (areaName),

@@ -1,5 +1,5 @@
 /*
-* manager
+* attributeManager
 * author: ronglin
 * create date: 2014.7.12
 */
@@ -7,38 +7,42 @@
 'use strict';
 
 var utils = require('../utilities'),
-    caching = require('../caching'),
-    inner = caching.region('mvc-attribute-types-cache');
+    caching = require('../caching');
 
-var tryEval = function(str, attrName) {
-    var temp;
-    try {
-        eval("temp=" + str + ';');
-    } catch(ex) {
-        throw new Error('Can not resolve the parameters of attribute: "' + attrName + '"');
-    }
-    return temp;
+var attributeManager = module.exports = function() {
+    this._inner = caching.region('mvc-attribute-types-cache');
 };
 
-var manager = module.exports = {
+attributeManager.prototype = {
+
+    _inner: null,
+
+    constructor: attributeManager, className: 'attributeManager',
 
     all: function() {
-        return inner.all();
+        return this._inner.all();
     },
 
     get: function(attrName) {
-        return inner.get(attrName);
+        return this._inner.get(attrName);
     },
 
     remove: function(attrName) {
-        return inner.remove(attrName);
+        return this._inner.remove(attrName);
     },
 
     register: function(attrName, attrClass) {
         if (!utils.isString(attrName)) { throw new Error('Parameter "attrName" require string type'); }
         if (!utils.isFunction(attrClass)) { throw new Error('Parameter "attrClass" require function type'); }
         if (!/[0-9a-zA-Z_-]+/.test(attrName)) { throw new Error('Parameter "attrName" invalid attribute name'); }
-        inner.set(attrName, attrClass);
+        this._inner.set(attrName, attrClass);
+    },
+
+    registerAll: function() {
+        var self = this;
+        this.register('actionName', require('./actionName'));
+        this.register('requireHttps', require('./requireHttps'));
+        utils.each(require('./httpMethod'), function(name) { self.register(name, this); });
     },
 
     resolve: function(attrName, attrSett) {
@@ -74,6 +78,16 @@ var manager = module.exports = {
             _attrs: attrs
         });
     }
+};
+
+var tryEval = function(str, attrName) {
+    var temp;
+    try {
+        eval("temp=" + str + ';');
+    } catch(ex) {
+        throw new Error('Can not resolve the parameters of attribute: "' + attrName + '"');
+    }
+    return temp;
 };
 
 var attributes = function(set) {
@@ -127,7 +141,3 @@ attributes.prototype = {
         return rets;
     }
 };
-
-manager.register('actionName', require('./actionName'));
-manager.register('requireHttps', require('./requireHttps'));
-utils.each(require('./httpMethod'), function(name) { manager.register(name, this); });

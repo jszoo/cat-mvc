@@ -4,9 +4,8 @@
 * create date: 2014.6.23
 */
 var path = require('path');
-var mvc = require('./node/mvc');
-//var mvc = require('rulee-mvc');
-mvc.set('rootPath', __dirname);
+var ruleeMvc = require('./node/mvc');
+var mvc = ruleeMvc.create({ rootPath: __dirname });
 
 // web config
 var configuration = require('./bin/configuration');

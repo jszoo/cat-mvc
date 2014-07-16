@@ -7,11 +7,10 @@
 'use strict';
 
 var utils = require('./utilities'),
-    mvcAreas = require('./mvcAreas'),
     mvcHelper = require('./mvcHelper'),
     mvcContext = require('./mvcContext');
 
-module.exports = function(setts) {
+module.exports = function(mvc) {
 
     var getParam = function(routeData, findName, defaultIndex) {
         if (findName === 'area') { defaultIndex = false; }
@@ -22,7 +21,6 @@ module.exports = function(setts) {
     return function(req, res, next) {
         //
         var rulee  = {
-            setting: setts,
             request: req.rulee,
             response: res.rulee
         };
@@ -36,14 +34,14 @@ module.exports = function(setts) {
             }
         };
         //
-        var routeSet = mvcAreas.routeSet();
+        var routeSet = mvc.areas.routeSet();
         utils.each(routeSet, function(n, route) {
             var controller;
             try {
                 var routeData = route.routeData(rulee.request.url.pathname);
                 if (!routeData) { return; } // continue
                 //
-                var area = mvcAreas.get(route.ownerAreaName);
+                var area = mvc.areas.get(route.ownerAreaName);
                 var areaParam = getParam(routeData, 'area');
                 if (!areaParam) {
                     routeData.unshift({
@@ -62,6 +60,7 @@ module.exports = function(setts) {
                 if (!actionParam) { return; } // continue
                 //
                 var httpContext = new mvcContext({
+                    mvc: mvc,
                     request: req,
                     response: res,
                     route: route,

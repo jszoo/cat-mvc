@@ -7,35 +7,42 @@
 'use strict';
 
 var utils = require('./utilities'),
-    caching = require('./caching'),
-    inner = caching.region('mvc-view-engines-cache');
+    caching = require('./caching');
 
-module.exports = {
+var mvcViewEngines = module.exports = function() {
+    this._inner = caching.region('mvc-view-engines-cache');
+};
+
+mvcViewEngines.prototype = {
+
+    _inner: null,
+
+    constructor: mvcViewEngines, className: 'mvcViewEngines',
 
     register: function(extname, callback) {
         if (!extname) { throw new Error('Parameter "extname" is required'); }
         if (!utils.isFunction(callback)) { throw new Error('Parameter "callback" is required a function'); }
         this.default(extname);
-        return inner.set(extname, callback);
+        return this._inner.set(extname, callback);
     },
 
     default: function(extname) {
-        return (extname) ? inner.set('_default_extname', extname) : inner.get('_default_extname');
+        return (extname) ? this._inner.set('_default_extname', extname) : this._inner.get('_default_extname');
     },
 
     get: function(extname) {
-        return inner.get(extname);
+        return this._inner.get(extname);
     },
 
     exists: function(extname) {
-        return inner.exists(extname);
+        return this._inner.exists(extname);
     },
 
     remove: function(extname) {
-        return inner.remove(extname);
+        return this._inner.remove(extname);
     },
 
     clear: function() {
-        return inner.clear();
+        return this._inner.clear();
     }
 };

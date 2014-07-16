@@ -6,114 +6,23 @@
 
 'use strict';
 
-var events = require('events');
-var utils = require('./utilities');
+var utils = require('./utilities'),
+    cachingStorage = require('./cachingStorage');
 
-
-var storage = {
-
-    _data: {}, events: new events.EventEmitter(),
-
-    get: function(region, key) {
-        region = utils.formalStr(region);
-        key = utils.formalStr(key);
-        //
-        if (arguments.length === 0) {
-            return this._data;
-        } else {
-            var r = this._data[region];
-            if (arguments.length === 1) {
-                return r;
-            } else {
-                return r ? r[key] : r;
-            }
-        }
-    },
-
-    set: function(region, key, val) {
-        region = utils.formalStr(region);
-        key = utils.formalStr(key);
-        //
-        if (arguments.length === 2) {
-            return this._data[region] = key;
-        }
-        if (arguments.length === 3) {
-            var r = this._data[region];
-            if (!r) { r = this._data[region] = {}; }
-            r[key] = val;
-        }
-    },
-
-    remove: function(region, key) {
-        region = utils.formalStr(region);
-        key = utils.formalStr(key);
-        //
-        this.events.emit('remove', { region: region, key: key });
-        //
-        if (arguments.length === 1) {
-            return delete this._data[region];
-        } else {
-            var r = this._data[region];
-            if (r) { return delete r[key]; }
-            return false;
-        }
-    },
-
-    exists: function(region, key) {
-        region = utils.formalStr(region);
-        key = utils.formalStr(key);
-        //
-        if (arguments.length === 1) {
-            return (region in this._data);
-        } else {
-            var r = this._data[region];
-            return (r && key in r);
-        }
-    },
-
-    clear: function(region) {
-        region = utils.formalStr(region);
-        //
-        this.events.emit('clear', { region: region });
-        //
-        if (arguments.length === 0) {
-            this._data = {};
-            return true;
-        } else {
-            return delete this._data[region];
-        }
-    }
-};
-
-
-var instances = {
-
-    _data: {},
-
-    get: function(key) {
-        return this._data[utils.formalStr(key)];
-    },
-
-    set: function(key, ins) {
-        this._data[utils.formalStr(key)] = ins;
-    }
-};
-
+var instances, storage;
 
 var caching = function(set) {
     set = set || {};
     var region = set.region || ('guid:' + utils.unique(32));
     //
-    var instance = instances.get(region);
-    if (instance) { return instance; }
-    instances.set(region, this);
+    if (instances) {
+        var instance = instances.get(region);
+        if (instance) { return instance; }
+        instances.set(region, this);
+    }
     //
     this._region = region;
 };
-
-caching.storage = storage;
-
-caching.instances = instances;
 
 caching.region = function(region) {
     return new caching({ region: region });
@@ -190,4 +99,7 @@ caching.prototype = {
     }
 };
 
+// export
+instances = caching.instances = caching.region('caching-instances');
+storage = caching.storage = new cachingStorage();
 module.exports = caching;

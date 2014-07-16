@@ -91,16 +91,15 @@ attributes.prototype = {
     },
 
     get: function(eventName) {
-        var rets = [];
         if (!eventName) {
-            rets = this._attrs;
-        } else {
-            utils.each(this._attrs, function(i, it) {
-                if (it && utils.isFunction(it[eventName])) {
-                    rets.push(it);
-                }
-            });
+            throw new Error('Parameter "eventName" is required');
         }
+        var rets = [];
+        utils.each(this._attrs, function(i, it) {
+            if (it && utils.isFunction(it[eventName])) {
+                rets.push(it);
+            }
+        });
         return rets;
     },
 
@@ -119,11 +118,9 @@ attributes.prototype = {
         }
         //
         utils.each(items, function(i, it) {
-            if (it && utils.isFunction(it[eventName])) {
-                rets.push(val = it[eventName].apply(it, args));
-                if (handler && handler.call(this, v) === false) {
-                    return false;
-                }
+            rets.push(val = it[eventName].apply(it, args));
+            if (handler && handler.call(this, v) === false) {
+                return false;
             }
         });
         //

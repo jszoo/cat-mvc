@@ -6,7 +6,8 @@
 
 'use strict';
 
-var caching = require('./caching'),
+var utils = require('./utilities'),
+    caching = require('./caching'),
 	mvcAreas = require('./mvcAreas'),
     mvcHandler = require('./mvcHandler'),
     mvcController = require('./mvcController'),
@@ -23,6 +24,7 @@ var setts = caching.region('mvc-runtime-settings');
 setts.set('env', process.env.NODE_ENV || 'development');
 
 module.exports = {
+    utils: utils,
     areas: mvcAreas,
     engines: mvcViewEngines,
     controller: mvcController.define,

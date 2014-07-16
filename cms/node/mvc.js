@@ -44,6 +44,7 @@ module.exports = {
     handler: function () {
         // initialize
         mvcAreas.registerAll();
+        utils.setRootPath(setts.get('rootPath'));
         handlerRouter.register('midHeader', '/', midHeader());
         handlerRouter.register('midRequest', '/', midRequest());
         handlerRouter.register('midResponse', '/', midResponse());

@@ -8,9 +8,13 @@
 
 var path = require('path'),
     utils = require('../jsg/utilities'),
-    cmsDir = path.normalize(__dirname + path.sep + '..');
+    rootPath = path.normalize(__dirname + path.sep + '..');
 
 module.exports = utils.extend({}, utils, {
+
+    setRootPath: function(path) {
+        rootPath = path;
+    },
 
     absolutePath: function() {
         var args = utils.arg2arr(arguments);
@@ -19,7 +23,7 @@ module.exports = utils.extend({}, utils, {
                 args[i] = val.replace(/\//g, '\\');
             });
         }
-        args.unshift(cmsDir);
+        args.unshift(rootPath);
         return path.join.apply(path, args);
     },
 

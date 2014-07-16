@@ -8,7 +8,7 @@
 
 var utils = require('./utilities');
 
-var mvcContext = function(set) {
+var mvcContext = module.exports = function(set) {
     utils.extend(this, set);
 };
 
@@ -30,6 +30,15 @@ mvcContext.prototype = {
     route: null, routeData: null, routeArea: null, routeSet: null,
 
     constructor: mvcContext, className: 'mvcContext',
+
+    destroy: function() {
+        var self = this;
+        utils.each(this, function(key) {
+            if (utils.isObject(self[key])) {
+                self[key] = null;
+            }
+        });
+    },
 
     toHttpContext: function() {
         return clone(this);
@@ -54,5 +63,3 @@ mvcContext.prototype = {
     	return utils.extend(clone(this, 'mvcViewContext'), merge);
     }
 };
-
-module.exports = mvcContext;

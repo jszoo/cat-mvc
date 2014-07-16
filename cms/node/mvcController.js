@@ -94,11 +94,14 @@ mvcController.prototype = {
             this.resultApiSync.httpContext = null;
             this.resultApiSync = null;
         }
+        if (this.httpContext) {
+            this.httpContext.destroy();
+            this.httpContext = null;
+        }
         // clear reference types
         this._impl = null;
         this._attr = null;
         this.tempData = null;
-        this.httpContext = null;
     },
 
     initialize: function(httpContext) {

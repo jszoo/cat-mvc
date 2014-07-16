@@ -35,11 +35,12 @@ var appStart = function() {
     handlerRouter.register(bodyParser.urlencoded({ extended: true }));
     handlerRouter.register(cookieParser());
     //
-    handlerRouter.register('midHeader', '/', midHeader());
-    handlerRouter.register('midRequest', '/', midRequest());
-    handlerRouter.register('midResponse', '/', midResponse());
+    handlerRouter.register('/', 'midHeader', midHeader());
+    handlerRouter.register('/', 'midRequest', midRequest());
+    handlerRouter.register('/', 'midResponse', midResponse());
+    handlerRouter.registerAtLast('/', 'midError', midError());
+    //
     handlerRouter.register(mvcHandler(setts));
-    handlerRouter.register('midError', '/', midError());
 };
 
 module.exports = {

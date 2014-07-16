@@ -24,17 +24,16 @@ mvcHandlerRouter.prototype = {
     /*
     * register(handler)
     * register(routeExp, handler)
-    * register(name, routeExp, handler)
+    * register(routeExp, name, handler)
     */
-    register: function(name, routeExp, handler) {
-        if (utils.isFunction(name)) {
-            handler = name;
+    register: function(routeExp, name, handler) {
+        if (utils.isFunction(routeExp)) {
+            handler = routeExp;
             routeExp = null;
             name = null;
         }
-        if (utils.isFunction(routeExp)) {
-            handler = routeExp;
-            routeExp = name;
+        if (utils.isFunction(name)) {
+            handler = name;
             name = null;
         }
         if (!utils.isFunction(handler)) {
@@ -48,8 +47,8 @@ mvcHandlerRouter.prototype = {
         }
     },
 
-    registerAtLast: function(name, routeExp, handler) {
-        this.register.call({ _handlers: this._lastHandlers }, name, routeExp, handler);
+    registerAtLast: function() {
+        this.register.apply({ _handlers: this._lastHandlers }, arguments);
     },
 
     unregister: function(name) {

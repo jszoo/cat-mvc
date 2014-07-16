@@ -1,5 +1,5 @@
 /*
-* cachingStorage
+* cachingStore
 * author: ronglin
 * create date: 2014.7.16
 */
@@ -9,16 +9,16 @@
 var events = require('events');
 var utils = require('./utilities');
 
-var cachingStorage = function() {
+var cachingStore = function() {
     this._data = {};
     this.events = new events.EventEmitter();
 };
 
-cachingStorage.prototype = {
+cachingStore.prototype = {
 
     _data: null, events: null,
 
-    constructor: cachingStorage, className: 'cachingStorage',
+    constructor: cachingStore, className: 'cachingStore',
 
     get: function(region, key) {
         region = utils.formalStr(region);
@@ -91,4 +91,4 @@ cachingStorage.prototype = {
     }
 };
 
-module.exports = cachingStorage;
+module.exports = cachingStore;

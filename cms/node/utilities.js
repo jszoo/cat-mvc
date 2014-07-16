@@ -7,25 +7,9 @@
 'use strict';
 
 var path = require('path'),
-    utils = require('../jsg/utilities'),
-    rootPath = path.normalize(__dirname + path.sep + '..');
+    utils = require('../jsg/utilities');
 
 module.exports = utils.extend({}, utils, {
-
-    setRootPath: function(path) {
-        rootPath = path;
-    },
-
-    absolutePath: function() {
-        var args = utils.arg2arr(arguments);
-        if (path.sep === '\\') {
-            utils.each(args, function(i, val) {
-                args[i] = val.replace(/\//g, '\\');
-            });
-        }
-        args.unshift(rootPath);
-        return path.join.apply(path, args);
-    },
 
     isAbsolute: function(path) {
         if ('/' == path.charAt(0)) { return true; }

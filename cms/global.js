@@ -3,13 +3,13 @@
 * author: ronglin
 * create date: 2014.6.23
 */
-
+var path = require('path');
 var mvc = require('./node/mvc');
 //var mvc = require('rulee-mvc');
 mvc.set('rootPath', __dirname);
 
 // web config
-var configuration = require('./node/configuration');
+var configuration = require('./bin/configuration');
 var config = configuration.load('web.config');
 
 // engine
@@ -33,7 +33,7 @@ mvc.use(cookieParser());
 
 // session
 var session = require('express-session');
-var cachingStore = require('./node/cachingSessionStore')(session);
+var cachingStore = require('./bin/cachingSessionStore')(session);
 mvc.use(session({
     name: config.get('session.cookie.name'),
     rolling: config.get('session.rolling'),
@@ -48,11 +48,11 @@ mvc.use(session({
 
 // favicon
 var favicon = require('serve-favicon');
-mvc.use(favicon(mvc.utils.absolutePath(config.get('favicon.source'))));
+mvc.use(favicon(path.join(__dirname, config.get('favicon.source'))));
 
 // static
 var static = require('serve-static');
-mvc.use(static(mvc.utils.absolutePath('fe')));
+mvc.use(static(path.join(__dirname, 'fe')));
 
 // entrance
 var express = require('express');

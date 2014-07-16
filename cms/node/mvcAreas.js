@@ -21,7 +21,7 @@ var CONST_Root = '/root',
     CONST_Subscribes = 'areaSubs.js';
 
 var _areas = caching.region('mvc-areas-cache'),
-    _areasPath = function() { return utils.absolutePath(CONST_Areas); }, // must defer
+    _areasPath = null,
     _routeSet = null;
 
 module.exports = {
@@ -36,8 +36,12 @@ module.exports = {
         return _areas.get(areaName);
     },
 
-    root: function() {
+    rootArea: function() {
         return _areas.get(CONST_Root);
+    },
+
+    rootPath: function(p) {
+        return (p === undefined) ? (_areasPath) : (_areasPath = path.join(p, CONST_Areas), this);
     },
 
     routeSet: function() {
@@ -64,7 +68,7 @@ module.exports = {
     register: function(areaName, areaRoute, defaultRouteValues) {
         var areaDirectory = areaName;
         if (areaName === CONST_Root) { areaDirectory = path.sep + '..'; }
-        var area, areaPath = path.normalize(path.join(_areasPath(), areaDirectory));
+        var area, areaPath = path.normalize(path.join(_areasPath, areaDirectory));
         if (fs.existsSync(areaPath) && fs.statSync(areaPath).isDirectory()) {
             // area obj
             area = new mvcArea({
@@ -106,7 +110,7 @@ module.exports = {
             ('/:controller?/:action?'),
             ({ controller: 'home', action: 'index' })
         );
-        var self = this, areasDirs = fs.readdirSync(_areasPath());
+        var self = this, areasDirs = fs.readdirSync(_areasPath);
         utils.each(areasDirs, function(i, areaName) {
             self.register(
                 (areaName),

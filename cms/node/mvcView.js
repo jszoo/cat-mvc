@@ -43,7 +43,7 @@ mvcView.prototype = {
         var findPaths = [];
         findPaths.push(rootPath);
         findPaths.push(viewContext.routeArea.viewsSharedPath);
-        findPaths.push(areas.root().viewsSharedPath);
+        findPaths.push(areas.rootArea().viewsSharedPath);
         var findView = function(name) {
             for(var i = 0; i < findPaths.length; i++) {
                 var file = path.join(findPaths[i], name + extname);

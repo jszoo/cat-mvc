@@ -6,8 +6,7 @@
 
 'use strict';
 
-var utils = require('./utilities'),
-    caching = require('./caching'),
+var caching = require('./caching'),
 	mvcAreas = require('./mvcAreas'),
     mvcHandler = require('./mvcHandler'),
     mvcController = require('./mvcController'),
@@ -25,7 +24,6 @@ var setts = caching.region('mvc-runtime-settings');
 setts.set('env', process.env.NODE_ENV || 'development');
 
 module.exports = {
-    utils: utils,
     areas: mvcAreas,
     engines: mvcViewEngines,
     controller: mvcController.define,
@@ -35,9 +33,7 @@ module.exports = {
         return setts.get(key);
     },
     set: function(key, val) {
-        setts.set(key, val);
-        var root = setts.get('rootPath');
-        if (root) { utils.setRootPath(root); }
+        return setts.set(key, val);
     },
     use: function() {
         return handlerRouter.register.apply(handlerRouter, arguments);
@@ -47,7 +43,7 @@ module.exports = {
     },
     handler: function () {
         // initialize
-        mvcAreas.registerAll();
+        mvcAreas.rootPath(setts.get('rootPath')).registerAll();
         handlerRouter.register('midHeader', '/', midHeader());
         handlerRouter.register('midRequest', '/', midRequest());
         handlerRouter.register('midResponse', '/', midResponse());

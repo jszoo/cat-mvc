@@ -7,14 +7,12 @@
 'use strict';
 
 var request = require('request'),
-    caching = require('./caching'),
-    utils = require('./utilities'),
+    caching = require('../node/caching'),
+    utils = require('../node/utilities'),
     config = require('./configuration').load('web.config');
-
 
 var verify = config.get('cacheNotify.verify');
 var remotes = config.get('cacheNotify.remotes');
-
 
 var notifyRemotes = function(params) {
     var query = utils.extend({}, params, { verify: verify });
@@ -27,15 +25,14 @@ var notifyRemotes = function(params) {
         });
     });
 };
-caching.storage.events.on('clear', function(params) {
+caching.store.events.on('clear', function(params) {
     params.action = 'clear';
     notifyRemotes(params);
 });
-caching.storage.events.on('remove', function(params) {
+caching.store.events.on('remove', function(params) {
     params.action = 'remove';
     notifyRemotes(params);
 });
-
 
 module.exports = {
     accept: function (params) {
@@ -43,9 +40,9 @@ module.exports = {
         if (params.verify === verify) {
             if (params.action === 'remove' || params.action === 'clear') {
                 if (params.region && params.key) {
-                    caching.storage.remove(params.region, params.key);
+                    caching.store.remove(params.region, params.key);
                 } else if (params.region) {
-                    caching.storage.clear(params.region);
+                    caching.store.clear(params.region);
                 }
             }
         }

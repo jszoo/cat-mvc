@@ -7,16 +7,17 @@
 'use strict';
 
 var fs = require('fs'),
-    path = require('path'),
+    tpath = require('path'),
     events = require('events'),
-    utils = require('./utilities'),
-    caching = require('./caching');
-
+    utils = require('../node/utilities'),
+    caching = require('../node/caching');
 
 var instances = caching.region('configuration-instances-cache');
+var rootPath = tpath.normalize(__dirname + tpath.sep + '..');
+var absolute = function(p) { return tpath.join(rootPath, p); };
 
 var configuration = function (path, cb) {
-    path = utils.absolutePath(path);
+    path = absolute(path);
     //
     var sett = instances.get(path);
     if (sett) { return sett; }
@@ -65,7 +66,7 @@ configuration.prototype = {
     },
 
     save: function () {
-        var dir = path.dirname(this.filePath);
+        var dir = tpath.dirname(this.filePath);
         if (!fs.existsSync(dir)) { fs.mkdirSync(dir); }
         var json = configuration.serialize(this.innerObj);
         fs.writeFile(this.filePath, json, { encoding: 'utf-8' }, function (err) {

@@ -7,9 +7,9 @@
 'use strict';
 
 var utils = require('./utilities'),
-    cachingStorage = require('./cachingStorage');
+    cachingStore = require('./cachingStore');
 
-var instances, storage;
+var instances, store;
 
 var caching = function(set) {
     set = set || {};
@@ -43,7 +43,7 @@ caching.prototype = {
             return this._cachedAll;
         }
         var ret = {}, self = this;
-        utils.each(storage.get(this._region), function(key) {
+        utils.each(store.get(this._region), function(key) {
             var val = self.get(key);
             if (val) { ret[key] = val; }
         });
@@ -54,7 +54,7 @@ caching.prototype = {
     },
 
     get: function(key) {
-        var o = storage.get(this._region, key);
+        var o = store.get(this._region, key);
         if (o) {
             if (utils.isDate(o.expire) && new Date() >= o.expire) {
                 this.remove(key);
@@ -68,13 +68,13 @@ caching.prototype = {
 
     set: function(key, val, expire, notify) {
         var o = { val: val, expire: expire, notify: notify };
-        storage.set(this._region, key, o);
+        store.set(this._region, key, o);
         this._hasExpireItem = (this._hasExpireItem || !!expire);
         this._cachedAll = null;
     },
 
     remove: function(key) {
-        var o = storage.get(this._region, key);
+        var o = store.get(this._region, key);
         if (o && utils.isFunction(o.notify)) {
             o.notify({
                 value: o.val,
@@ -82,7 +82,7 @@ caching.prototype = {
             });
         }
         this._cachedAll = null;
-        return storage.remove(this._region, key);
+        return store.remove(this._region, key);
     },
 
     count: function() {
@@ -90,16 +90,16 @@ caching.prototype = {
     },
 
     exists: function(key) {
-        return storage.exists(this._region, key);
+        return store.exists(this._region, key);
     },
 
     clear: function() {
         this._cachedAll = null;
-        return storage.remove(this._region);
+        return store.remove(this._region);
     }
 };
 
 // export
 instances = caching.instances = caching.region('caching-instances');
-storage = caching.storage = new cachingStorage();
+store = caching.store = new cachingStore();
 module.exports = caching;

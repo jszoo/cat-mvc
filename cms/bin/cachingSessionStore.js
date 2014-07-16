@@ -6,8 +6,8 @@
 
 'use strict';
 
-var caching = require('./caching'),
-    utils = require('./utilities'),
+var caching = require('../node/caching'),
+    utils = require('../node/utilities'),
     inner = caching.region('session-objects-cache');
 
 module.exports = function(session) {

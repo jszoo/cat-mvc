@@ -5,7 +5,7 @@
 */
 
 var mvc = require('../node/mvc');
-var cachingNotifyRemote = require('../node/cachingNotifyRemote');
+var cachingNotifyRemote = require('../bin/cachingNotifyRemote');
 
 module.exports = mvc.controller(function(req, res, end) {
 

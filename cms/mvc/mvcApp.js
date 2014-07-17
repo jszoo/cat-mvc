@@ -36,9 +36,9 @@ var mvcApp = function(set) {
 
 mvcApp.prototype = {
 
-    _setts: null, _handlers: null, appPath: null,
+    _setts: null, _handlers: null,
 
-    areas: null, engines: null, attributes: null,
+    appPath: null, areas: null, engines: null, attributes: null,
 
     constructor: mvcApp, className: 'mvcApp',
 

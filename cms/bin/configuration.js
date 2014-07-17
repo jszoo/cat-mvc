@@ -9,8 +9,8 @@
 var fs = require('fs'),
     tpath = require('path'),
     events = require('events'),
-    utils = require('../node/utilities'),
-    caching = require('../node/caching');
+    utils = require('../mvc/utilities'),
+    caching = require('../mvc/caching');
 
 var instances = caching.region('configuration-instances-cache');
 var rootPath = tpath.normalize(__dirname + tpath.sep + '..');

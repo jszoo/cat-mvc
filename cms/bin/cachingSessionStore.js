@@ -6,8 +6,8 @@
 
 'use strict';
 
-var caching = require('../node/caching'),
-    utils = require('../node/utilities'),
+var caching = require('../mvc/caching'),
+    utils = require('../mvc/utilities'),
     inner = caching.region('session-objects-cache');
 
 module.exports = function(session) {

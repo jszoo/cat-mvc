@@ -4,7 +4,7 @@
 * create date: 2014.6.26
 */
 
-var mvc = require('../node/index');
+var mvc = require('../mvc/index');
 var cachingNotifyRemote = require('../bin/cachingNotifyRemote');
 
 module.exports = mvc.controller(function(req, res, end) {

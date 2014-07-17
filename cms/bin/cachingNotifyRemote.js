@@ -7,8 +7,8 @@
 'use strict';
 
 var request = require('request'),
-    caching = require('../node/caching'),
-    utils = require('../node/utilities'),
+    caching = require('../mvc/caching'),
+    utils = require('../mvc/utilities'),
     config = require('./configuration').load('web.config');
 
 var verify = config.get('cacheNotify.verify');

@@ -11,7 +11,7 @@ var utils = require('./utilities'),
 
 var instances, store;
 
-var caching = function(set) {
+var caching = module.exports = function(set) {
     set = set || {};
     var region = set.region || ('guid:' + utils.unique(32));
     //
@@ -23,6 +23,9 @@ var caching = function(set) {
     //
     this._region = region;
 };
+
+caching.store = store = new cachingStore();
+caching.instances = instances = caching.region('caching-instances');
 
 caching.region = function(region) {
     return new caching({ region: region });
@@ -98,8 +101,3 @@ caching.prototype = {
         return store.remove(this._region);
     }
 };
-
-// export
-instances = caching.instances = caching.region('caching-instances');
-store = caching.store = new cachingStore();
-module.exports = caching;

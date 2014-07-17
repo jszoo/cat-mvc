@@ -6,10 +6,10 @@
 
 'use strict';
 
-var events = require('events');
-var utils = require('./utilities');
+var events = require('events'),
+    utils = require('./utilities');
 
-var cachingStore = function() {
+var cachingStore = module.exports = function() {
     this._data = {};
     this.events = new events.EventEmitter();
 };
@@ -90,5 +90,3 @@ cachingStore.prototype = {
         }
     }
 };
-
-module.exports = cachingStore;

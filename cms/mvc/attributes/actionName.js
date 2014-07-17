@@ -8,7 +8,7 @@
 
 var utils = require('../utilities');
 
-var actionName = function(set) {
+var actionName = module.exports = function(set) {
     if (utils.isString(set)) {
         this.name = set;
     } else {
@@ -30,5 +30,3 @@ actionName.prototype = {
     }
     
 };
-
-module.exports = actionName;

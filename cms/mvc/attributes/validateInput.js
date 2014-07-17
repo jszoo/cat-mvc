@@ -8,7 +8,7 @@
 
 var utils = require('../utilities');
 
-var validateInput = exports.validateInput = function(set) {
+var validateInput = module.exports = function(set) {
     if (utils.isBoolean(set)) {
         this.enableValidation = set;
     } else {

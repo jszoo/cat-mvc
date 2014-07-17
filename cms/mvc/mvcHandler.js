@@ -10,7 +10,7 @@ var utils = require('./utilities'),
     mvcHelper = require('./mvcHelper'),
     mvcContext = require('./mvcContext');
 
-module.exports = function(mvc) {
+module.exports = function(app) {
 
     var getParam = function(routeData, findName, defaultIndex) {
         if (findName === 'area') { defaultIndex = false; }
@@ -34,14 +34,14 @@ module.exports = function(mvc) {
             }
         };
         //
-        var routeSet = mvc.areas.routeSet();
+        var routeSet = app.areas.routeSet();
         utils.each(routeSet, function(n, route) {
             var controller;
             try {
                 var routeData = route.routeData(rulee.request.url.pathname);
                 if (!routeData) { return; } // continue
                 //
-                var area = mvc.areas.get(route.ownerAreaName);
+                var area = app.areas.get(route.ownerAreaName);
                 var areaParam = getParam(routeData, 'area');
                 if (!areaParam) {
                     routeData.unshift({
@@ -60,15 +60,15 @@ module.exports = function(mvc) {
                 if (!actionParam) { return; } // continue
                 //
                 var httpContext = new mvcContext({
-                    mvc: mvc,
+                    app: app,
+                    items: {},
+                    rulee: rulee,
                     request: req,
                     response: res,
                     route: route,
                     routeData: routeData,
                     routeArea: area,
-                    routeSet: routeSet,
-                    rulee: rulee,
-                    items: {}
+                    routeSet: routeSet
                 });
                 controller = controller.clone();
                 controller.initialize(httpContext);

@@ -21,8 +21,8 @@ mvcView.prototype = {
     constructor: mvcView, className: 'mvcView',
 
     render: function(viewContext, callback) {
-        var areas = viewContext.mvc.areas;
-        var engines = viewContext.mvc.engines;
+        var areas = viewContext.app.areas;
+        var engines = viewContext.app.engines;
         //
         var extname = this.engineExtname;
         if (!extname) { extname = engines.default(); }

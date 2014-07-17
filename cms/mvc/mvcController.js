@@ -115,7 +115,7 @@ mvcController.prototype = {
         this.resultApi = new mvcActionResultApi({ httpContext: this.httpContext, sync: false });
         this.implScope = new controllerImplementationScope(this);
         //
-        this.attributes = httpContext.mvc.attributes.resolveConfig(this.attr());
+        this.attributes = httpContext.app.attributes.resolveConfig(this.attr());
     },
 
     emitAttributesEvent: function(eventName) {

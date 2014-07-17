@@ -25,7 +25,7 @@ var clone = function(ins, className) {
 
 mvcContext.prototype = {
 
-    request: null, response: null, rulee: null, items: null, mvc: null,
+    app: null, items: null, rulee: null, request: null, response: null,
 
     route: null, routeData: null, routeArea: null, routeSet: null,
 

@@ -235,7 +235,7 @@ var controllerImplementationScope = function(controller) {
 
 controllerImplementationScope.prototype = {
 
-    controller: null, resultApiSync: null,
+    controller: null,
     
     constructor: controllerImplementationScope, className: 'controllerImplementationScope',
 

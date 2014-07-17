@@ -57,7 +57,7 @@ mvcAction.prototype = {
         if (this.controller) { return; } // already initialized
         this.controller = controller;
         this.controllerContext = controller.httpContext.toControllerContext(controller);
-        this.attributes = controller.httpContext.mvc.attributes.resolveConfig(this.attr());
+        this.attributes = controller.httpContext.app.attributes.resolveConfig(this.attr());
     },
 
     isValidName: function(name) {

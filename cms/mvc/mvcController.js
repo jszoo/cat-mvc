@@ -247,8 +247,22 @@ controllerImplementationScope.prototype = {
         return this.controller.action.apply(this.controller, arguments);
     },
 
-    /*********** virtual event functions ************/
+
+    /************ controller object virtual events **************/
     onControllerInjected: function(controller, injectedParams) {},
     onControllerInitialized: function(controller) {},
-    onControllerDestroy: function(controller) {}
+    onControllerDestroy: function(controller) {},
+
+
+    /************ action implementation virtual events **************/
+    onAuthorization: function(actionContext) {},
+    onActionInjected: function(action, injectedParams) {},
+    onActionExecuting: function(actionContext) {},
+    onActionExecuted: function(actionContext) {},
+    onException: function(actionContext) {},
+
+
+    /************ action result virtual events **************/
+    onResultExecuting: function(resultContext) {},
+    onResultExecuted: function(resultContext) {}
 };

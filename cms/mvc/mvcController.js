@@ -255,7 +255,7 @@ controllerImplementationScope.prototype = {
 
 
     /************ action implementation events **************/
-    onActionAuthorization: function(authorizationContext) {},
+    onActionAuthorize: function(authorizeContext) {},
     onActionInjected: function(controllerContext, injectedParams) {},
     onActionExecuting: function(actionContext) {},
     onActionExecuted: function(actionContext) {},

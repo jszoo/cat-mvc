@@ -135,16 +135,16 @@ mvcAction.prototype = {
     },
 
     executeImpl: function(callback) {
-        var authorizationContext = this.controllerContext.toAuthorizationContext({
+        var authorizeContext = this.controllerContext.toAuthorizeContext({
             result: undefined
         });
-        this.emitAttributesEvent('onActionAuthorization', authorizationContext, function() {
-            if (authorizationContext.result) {
+        this.emitAttributesEvent('onActionAuthorize', authorizeContext, function() {
+            if (authorizeContext.result) {
                 return false;
             }
         });
-        if (authorizationContext.result !== undefined) {
-            callback(authorizationContext.result);
+        if (authorizeContext.result !== undefined) {
+            callback(authorizeContext.result);
             return;
         }
         //

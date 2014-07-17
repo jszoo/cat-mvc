@@ -17,21 +17,21 @@ requireHttps.prototype = {
 
     constructor: requireHttps, className: 'requireHttps',
 
-    onActionAuthorization: function(authorizationContext) {
-        var secure = authorizationContext.rulee.request.secure;
+    onActionAuthorize: function(authorizeContext) {
+        var secure = authorizeContext.rulee.request.secure;
         if (!secure) {
-            this.handleNonHttpsRequest(authorizationContext);
+            this.handleNonHttpsRequest(authorizeContext);
         }
     },
 
-    handleNonHttpsRequest: function(authorizationContext) {
-        var methodName = authorizationContext.rulee.request.method;
+    handleNonHttpsRequest: function(authorizeContext) {
+        var methodName = authorizeContext.rulee.request.method;
         if (!utils.tryLowerEqual(methodName, 'GET')) {
             throw new Error('The requested resource can only be accessed via SSL.');
         } else {
-            var u = authorizationContext.rulee.request.url;
+            var u = authorizeContext.rulee.request.url;
             var url = "https://" + u.host + u.path;
-            authorizationContext.result = new mvcActionResult.redirectResult({ url: url });
+            authorizeContext.result = new mvcActionResult.redirectResult({ url: url });
         }
     }
 };

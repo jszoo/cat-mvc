@@ -84,12 +84,17 @@ mvcApp.prototype = {
 };
 
 // export
+var current;
 module.exports = {
     utils: utils,
     caching: caching,
     controller: mvcController.define,
-    current: null,
     newApp: function(set) {
-        return (this.current = new mvcApp(set));
+        return (current = new mvcApp(set));
     }
 };
+
+Object.defineProperty(module.exports, 'current', {
+    configurable: false, enumerable: true,
+    get: function() { return current; }
+});

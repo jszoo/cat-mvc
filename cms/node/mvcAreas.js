@@ -20,10 +20,10 @@ var CONST_Root = '/root',
     CONST_Controllers = 'ctrls',
     CONST_Subscribes = 'areaSubs.js';
 
-var mvcAreas = module.exports = function(rootPath) {
+var mvcAreas = module.exports = function(appPath) {
     this._inner = caching.region('mvc-areas-cache');
-    this.rootPath = rootPath;
-    this.areasPath = path.join(rootPath, CONST_Areas);
+    this.appPath = appPath;
+    this.areasPath = path.join(appPath, CONST_Areas);
     this.events = new events.EventEmitter();
 };
 
@@ -31,7 +31,7 @@ mvcAreas.prototype = {
 
     _inner: null, _routeSet: null,
 
-    rootPath: null, areasPath: null, events: null,
+    appPath: null, areasPath: null, events: null,
 
     constructor: mvcAreas, className: 'mvcAreas',
 

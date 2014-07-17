@@ -5,7 +5,7 @@
 */
 var path = require('path');
 var ruleeMvc = require('./node/mvc');
-var mvc = ruleeMvc.create({ rootPath: __dirname });
+var mvc = ruleeMvc.create({ appPath: __dirname });
 
 // web config
 var configuration = require('./bin/configuration');

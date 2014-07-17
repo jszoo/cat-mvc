@@ -28,10 +28,10 @@ mvcView.prototype = {
         if (!extname) { extname = engines.default(); }
         var ctrlName = viewContext.controller.name();
         //
-        var rootPath = path.join(viewContext.routeArea.viewsPath, ctrlName);
-        var filePath = path.join(rootPath, this.viewName + extname);
+        var ctrlViewsDir = path.join(viewContext.routeArea.viewsPath, ctrlName);
+        var filePath = path.join(ctrlViewsDir, this.viewName + extname);
         if (!fs.existsSync(filePath) || !fs.statSync(filePath).isFile()) {
-            callback(new Error('Failed to lookup view "' + this.viewName + '" in views directory "' + rootPath + '"'));
+            callback(new Error('Failed to lookup view "' + this.viewName + '" in views directory "' + ctrlViewsDir + '"'));
             return;
         }
         //
@@ -42,7 +42,7 @@ mvcView.prototype = {
         }
         //
         var findPaths = [];
-        findPaths.push(rootPath);
+        findPaths.push(ctrlViewsDir);
         findPaths.push(viewContext.routeArea.viewsSharedPath);
         findPaths.push(areas.rootArea().viewsSharedPath);
         var findView = function(name) {

@@ -25,8 +25,8 @@ var bodyParser = require('body-parser'),
 
 var mvc = function(set) {
     utils.extend(this, set);
-    if (!this.rootPath) { throw new Error('Parameter "rootPath" is required'); }
-    this.areas = new mvcAreas(this.rootPath);
+    if (!this.appPath) { throw new Error('Parameter "appPath" is required'); }
+    this.areas = new mvcAreas(this.appPath);
     this.engines = new mvcViewEngines();
     this.attributes = new mvcAttributes();
     this._handlers = new mvcHandlerRouter();
@@ -36,7 +36,7 @@ var mvc = function(set) {
 
 mvc.prototype = {
 
-    _setts: null, _handlers: null, rootPath: null,
+    _setts: null, _handlers: null, appPath: null,
 
     areas: null, engines: null, attributes: null,
 

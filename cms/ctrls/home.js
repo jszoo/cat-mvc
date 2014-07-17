@@ -6,7 +6,7 @@
 
 var mvc = require('../mvc/index');
 
-module.exports = mvc.controller(function(req, res, end, tempdata, session) {
+module.exports = mvc.controller(function(req, res, end, tempdata, viewdata, session) {
 
     this.action('index', function() {
 
@@ -20,7 +20,7 @@ module.exports = mvc.controller(function(req, res, end, tempdata, session) {
         else { count = ++session.count; }
 
         //
-        this.viewData['title'] = 'rulee viewData';
+        viewdata['title'] = 'rulee viewData';
         setTimeout(function() {
             end.view();
             //end.json({ 

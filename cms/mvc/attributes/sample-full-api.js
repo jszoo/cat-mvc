@@ -18,19 +18,14 @@ sample.prototype = {
 
 
     /************ controller object events **************/
-    onControllerInitialized: function(controller) {},
     onControllerInjected: function(controller, injectedParams) {},
+    onControllerInitialized: function(controller) {},
     onControllerDestroy: function(controller) {},
-
-
-    /************ action object events **************/
-    onActionInitialized: function(action) {},
-    onActionInjected: function(action, injectedParams) {},
-    onActionDestroy: function(action) {},
 
 
     /************ action implementation events **************/
     onAuthorization: function(actionContext) {},
+    onActionInjected: function(action, injectedParams) {},
     onActionExecuting: function(actionContext) {},
     onActionExecuted: function(actionContext) {},
     onException: function(actionContext) {},

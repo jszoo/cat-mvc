@@ -47,9 +47,9 @@ mvcController.prototype = {
 
     actions: null,  url: null,
 
-    viewData: null, tempData: null, 
+    viewData: null, tempData: null,
 
-    resultApi: null, resultApiSync: null,
+    resultApi: null, implScope: null,
 
     httpContext: null, attributes: null,
 
@@ -70,13 +70,13 @@ mvcController.prototype = {
     },
 
     destroy: function() {
-        if (this.actions) {
-            utils.each(this.actions, function() { this.destroy(); });
-            this.actions = null;
-        }
         if (this.attributes) {
             this.emitAttributesEvent('onControllerDestroy', this);
             this.attributes = null;
+        }
+        if (this.actions) {
+            utils.each(this.actions, function() { this.destroy(); });
+            this.actions = null;
         }
         if (this.url) {
             this.url.httpContext = null;
@@ -90,9 +90,9 @@ mvcController.prototype = {
             this.resultApi.httpContext = null;
             this.resultApi = null;
         }
-        if (this.resultApiSync) {
-            this.resultApiSync.httpContext = null;
-            this.resultApiSync = null;
+        if (this.implScope) {
+            this.implScope.destroy();
+            this.implScope = null;
         }
         if (this.httpContext) {
             this.httpContext.destroy();
@@ -105,7 +105,6 @@ mvcController.prototype = {
     },
 
     initialize: function(httpContext) {
-        var self = this;
         this.actions = [];
         this.httpContext = httpContext;
         //
@@ -114,28 +113,19 @@ mvcController.prototype = {
         this.tempData = new mvcTempData({ provider: mvcTempDataStore.sessionProvider });
         //
         this.resultApi = new mvcActionResultApi({ httpContext: this.httpContext, sync: false });
-        this.resultApiSync = new mvcActionResultApi({ httpContext: this.httpContext, sync: true });
-        utils.each(this.resultApiSync, function(name, func) {
-            if (utils.isFunction(func) && !self[name]) {
-                self[name] = function() {
-                    var args = utils.arg2arr(arguments);
-                    return self.resultApiSync[name].apply(self.resultApiSync, args);
-                };
-            }
-        });
+        this.implScope = new controllerImplementationScope(this);
         //
         this.attributes = httpContext.mvc.attributes.resolveConfig(this.attr());
-        this.emitAttributesEvent('onControllerInitialized', this);
     },
 
     emitAttributesEvent: function(eventName) {
         var args = utils.arg2arr(arguments);
         this.attributes.emit.apply(this.attributes, args);
         //
-        var internalFunc = this[eventName];
-        if (utils.isFunction(internalFunc)){
+        var scopeFunc = this.implScope[eventName];
+        if (utils.isFunction(scopeFunc)){
             var args1 = utils.arg2arr(arguments, 1);
-            internalFunc.apply(this, args1);
+            scopeFunc.apply(this, args1);
         }
     },
 
@@ -144,7 +134,7 @@ mvcController.prototype = {
         var params = annotated.params = [];
         if (!annotated.args || annotated.args.length === 0) { return annotated; }
         //
-        var self = this, actionWrap;
+        var self = this;
         utils.each(annotated.args, function(i, name) {
             var loweName = name.toLowerCase();
             if (loweName.charAt(0) === '$') {
@@ -166,12 +156,6 @@ mvcController.prototype = {
                 case 'end':      params.push(self.resultApi); break;
                 case 'url':      params.push(self.url); break;
                 //
-                case 'action': params.push(actionWrap || (actionWrap = function() { 
-                    var args = utils.arg2arr(arguments);
-                    self.action.apply(self, args);
-                    return actionWrap;
-                })); break;
-                //
                 default: params.push(null); break;
             }
         });
@@ -183,7 +167,8 @@ mvcController.prototype = {
         var annotated = this.injectImpl(this.httpContext);
         this.emitAttributesEvent('onControllerInjected', this, annotated);
         if (!utils.isFunction(annotated.func)) { return; }
-        annotated.func.apply(this, annotated.params);
+        annotated.func.apply(this.implScope, annotated.params);
+        this.emitAttributesEvent('onControllerInitialized', this);
     },
 
     action: function() {
@@ -242,4 +227,28 @@ mvcController.prototype = {
         });
         return new Error(utils.format('The current request for action "{0}" on controller type "{1}" is ambiguous between the following action methods:<br/>{2}', actionName, this.name(), message.join('<br/>')));
     }
+};
+
+var controllerImplementationScope = function(controller) {
+    this.controller = controller;
+};
+
+controllerImplementationScope.prototype = {
+
+    controller: null, resultApiSync: null,
+    
+    constructor: controllerImplementationScope, className: 'controllerImplementationScope',
+
+    destroy: function() {
+        this.controller = null;
+    },
+
+    action: function() {
+        return this.controller.action.apply(this.controller, arguments);
+    },
+
+    /*********** virtual event functions ************/
+    onControllerInjected: function(controller, injectedParams) {},
+    onControllerInitialized: function(controller) {},
+    onControllerDestroy: function(controller) {}
 };

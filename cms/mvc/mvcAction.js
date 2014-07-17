@@ -9,7 +9,8 @@
 var utils = require('./utilities'),
     injector = require('./mvcInjector'),
     httpMethod = require('./mvcHttpMethod'),
-    actionResult = require('./mvcActionResult');
+    actionResult = require('./mvcActionResult'),
+    mvcActionResultApi = require('./mvcActionResultApi');
 
 var lowerRootNs = function(namespace) {
     var index = namespace.search(/\.|\[|\]/);
@@ -28,7 +29,7 @@ mvcAction.prototype = {
 
     _name: null, _attr: null, _impl: null,
 
-    controller: null, controllerContext: null, attributes: null,
+    controller: null, controllerContext: null, attributes: null, implScope: null,
     
     constructor: mvcAction, className: 'mvcAction',
 
@@ -37,9 +38,9 @@ mvcAction.prototype = {
     impl: function(p) { return (p === undefined) ? (this._impl) : (this._impl = p, this); },
 
     destroy: function() {
-        if (this.attributes) {
-            this.emitAttributesEvent('onActionDestroy', this);
-            this.attributes = null;
+        if (this.implScope) {
+            this.implScope.destroy();
+            this.implScope = null;
         }
         if (this.controllerContext) {
             this.controllerContext.controller = null;
@@ -49,6 +50,7 @@ mvcAction.prototype = {
         this._impl = null;
         this._attr = null;
         this.controller = null;
+        this.attributes = null;
     },
 
     initialize: function(controller) {
@@ -56,7 +58,6 @@ mvcAction.prototype = {
         this.controller = controller;
         this.controllerContext = controller.httpContext.toControllerContext(controller);
         this.attributes = controller.httpContext.mvc.attributes.resolveConfig(this.attr());
-        this.emitAttributesEvent('onActionInitialized', this);
     },
 
     isValidName: function(name) {
@@ -134,6 +135,19 @@ mvcAction.prototype = {
     },
 
     executeImpl: function(callback) {
+        var authorizationContext = this.controllerContext.toAuthorizationContext({
+            result: undefined
+        });
+        this.emitAttributesEvent('onAuthorization', authorizationContext, function() {
+            if (authorizationContext.result) {
+                return false;
+            }
+        });
+        if (authorizationContext.result !== undefined) {
+            callback(authorizationContext.result);
+            return;
+        }
+        //
         var annotated = this.injectImpl(this.controllerContext);
         this.emitAttributesEvent('onActionInjected', this, annotated);
         if (!utils.isFunction(annotated.func)) { return; }
@@ -148,20 +162,13 @@ mvcAction.prototype = {
             callback(result);
         };
         //
-        this.emitAttributesEvent('onAuthorization', actionContext, function() {
-            if (actionContext.result) {
-                return false;
-            }
-        });
+        this.controller.resultApi.callback = endExecute;
+        this.controller.tempData.load(this.controllerContext);
         //
-        if (!actionContext.result) {
-            this.controller.resultApi.callback = endExecute;
-            this.controller.tempData.load(this.controllerContext);
-            //
-            this.emitAttributesEvent('onActionExecuting', actionContext);
-            actionContext.result = annotated.func.apply(this.controller, annotated.params);
-        }
-        // ret
+        this.emitAttributesEvent('onActionExecuting', actionContext);
+        this.implScope = new actionImplementationScope(this.controller);
+        actionContext.result = annotated.func.apply(this.implScope, annotated.params);
+        //
         if (actionContext.result !== undefined) {
             endExecute(actionContext.result);
         }
@@ -195,6 +202,33 @@ mvcAction.prototype = {
         } else {
             result.executeResult(resultContext);
             endExecute(resultContext.exception);
+        }
+    }
+};
+
+var actionImplementationScope = function(controller) {
+    var self = this;
+    this.resultApiSync = new mvcActionResultApi({ httpContext: controller.httpContext, sync: true });
+    utils.each(this.resultApiSync, function(name, func) {
+        if (utils.isFunction(func) && !self[name]) {
+            self[name] = function() {
+                var args = utils.arg2arr(arguments);
+                return self.resultApiSync[name].apply(self.resultApiSync, args);
+            };
+        }
+    });
+};
+
+actionImplementationScope.prototype = {
+
+    resultApiSync: null,
+    
+    constructor: actionImplementationScope, className: 'actionImplementationScope',
+
+    destroy: function() {
+        if (this.resultApiSync) {
+            this.resultApiSync.httpContext = null;
+            this.resultApiSync = null;
         }
     }
 };

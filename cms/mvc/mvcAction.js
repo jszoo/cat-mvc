@@ -43,7 +43,7 @@ mvcAction.prototype = {
             this.implScope = null;
         }
         if (this.controllerContext) {
-            this.controllerContext.controller = null;
+            this.controllerContext.destroy();
             this.controllerContext = null;
         }
         // clear reference types
@@ -143,9 +143,15 @@ mvcAction.prototype = {
                 return false;
             }
         });
-        if (authorizeContext.result !== undefined) {
-            callback(authorizeContext.result);
+        var authResult = authorizeContext.result;
+        authorizeContext.destroy();
+        if (authResult !== undefined) {
+            callback(authResult);
             return;
+        }
+        //
+        if (this.controller.validateRequest) {
+            //TODO:
         }
         //
         var annotated = this.injectImpl(this.controllerContext);

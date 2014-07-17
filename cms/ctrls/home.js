@@ -4,7 +4,7 @@
 * create date: 2014.6.30
 */
 
-var mvc = require('../node/mvc');
+var mvc = require('../node/index');
 
 module.exports = mvc.controller(function(req, res, end, tempdata, session) {
 

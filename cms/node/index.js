@@ -4,4 +4,4 @@
 * create date: 2014.7.11
 */
 
-module.exports = require('./mvc');
+module.exports = require('./mvcApp');

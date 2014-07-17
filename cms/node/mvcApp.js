@@ -1,5 +1,5 @@
 /*
-* mvc
+* mvcApp
 * author: ronglin
 * create date: 2014.6.24
 */
@@ -23,7 +23,7 @@ var midError = require('./middles/error'),
 var bodyParser = require('body-parser'),
     cookieParser = require('cookie-parser');
 
-var mvc = function(set) {
+var mvcApp = function(set) {
     utils.extend(this, set);
     if (!this.appPath) { throw new Error('Parameter "appPath" is required'); }
     this.areas = new mvcAreas(this.appPath);
@@ -34,13 +34,13 @@ var mvc = function(set) {
     this._setts.set('env', process.env.NODE_ENV || 'development');
 };
 
-mvc.prototype = {
+mvcApp.prototype = {
 
     _setts: null, _handlers: null, appPath: null,
 
     areas: null, engines: null, attributes: null,
 
-    constructor: mvc, className: 'mvc',
+    constructor: mvcApp, className: 'mvcApp',
 
     get: function(key) {
         return this._setts.get(key);
@@ -87,6 +87,6 @@ mvc.prototype = {
 module.exports = {
     controller: mvcController.define,
     create: function(set) {
-        return new mvc(set);
+        return new mvcApp(set);
     }
 };

@@ -23,9 +23,6 @@ var caching = module.exports = function(set) {
     }
 };
 
-caching.store = store = new cachingStore();
-caching.instances = instances = caching.region('caching-instances');
-
 caching.region = function(region) {
     return new caching({ region: region });
 };
@@ -100,3 +97,6 @@ caching.prototype = {
         return store.remove(this.region);
     }
 };
+
+caching.store = store = new cachingStore();
+caching.instances = instances = caching.region('caching-instances');

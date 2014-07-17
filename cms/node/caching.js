@@ -12,16 +12,15 @@ var utils = require('./utilities'),
 var instances, store;
 
 var caching = module.exports = function(set) {
-    set = set || {};
-    var region = set.region || ('guid:' + utils.unique(32));
-    //
-    if (instances) {
-        var instance = instances.get(region);
-        if (instance) { return instance; }
-        instances.set(region, this);
+    utils.extend(this, set);
+    if (!this.region) {
+        this.region = ('guid:' + utils.unique(32));
     }
-    //
-    this._region = region;
+    if (instances) {
+        var instance = instances.get(this.region);
+        if (instance) { return instance; }
+        instances.set(this.region, this);
+    }
 };
 
 caching.store = store = new cachingStore();
@@ -37,7 +36,7 @@ caching.isRandomRegionName = function (region) {
 
 caching.prototype = {
 
-    _region: null, _cachedAll: null, _hasExpireItem: false,
+    region: null, _cachedAll: null, _hasExpireItem: false,
 
     constructor: caching, className: 'caching',
 
@@ -46,7 +45,7 @@ caching.prototype = {
             return this._cachedAll;
         }
         var ret = {}, self = this;
-        utils.each(store.get(this._region), function(key) {
+        utils.each(store.get(this.region), function(key) {
             var val = self.get(key);
             if (val) { ret[key] = val; }
         });
@@ -57,7 +56,7 @@ caching.prototype = {
     },
 
     get: function(key) {
-        var o = store.get(this._region, key);
+        var o = store.get(this.region, key);
         if (o) {
             if (utils.isDate(o.expire) && new Date() >= o.expire) {
                 this.remove(key);
@@ -71,13 +70,13 @@ caching.prototype = {
 
     set: function(key, val, expire, notify) {
         var o = { val: val, expire: expire, notify: notify };
-        store.set(this._region, key, o);
+        store.set(this.region, key, o);
         this._hasExpireItem = (this._hasExpireItem || !!expire);
         this._cachedAll = null;
     },
 
     remove: function(key) {
-        var o = store.get(this._region, key);
+        var o = store.get(this.region, key);
         if (o && utils.isFunction(o.notify)) {
             o.notify({
                 value: o.val,
@@ -85,7 +84,7 @@ caching.prototype = {
             });
         }
         this._cachedAll = null;
-        return store.remove(this._region, key);
+        return store.remove(this.region, key);
     },
 
     count: function() {
@@ -93,11 +92,11 @@ caching.prototype = {
     },
 
     exists: function(key) {
-        return store.exists(this._region, key);
+        return store.exists(this.region, key);
     },
 
     clear: function() {
         this._cachedAll = null;
-        return store.remove(this._region);
+        return store.remove(this.region);
     }
 };

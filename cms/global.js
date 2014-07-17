@@ -40,8 +40,8 @@ mvc.use(static(path.join(__dirname, 'fe')));
 
 // entrance
 var express = require('express');
-var app = express();
-app.use(mvc.handler());
+var server = express();
+server.use(mvc.handler());
 
 // export
-module.exports = app;
+module.exports = server;

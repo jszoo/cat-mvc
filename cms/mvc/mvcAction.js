@@ -138,7 +138,7 @@ mvcAction.prototype = {
         var authorizationContext = this.controllerContext.toAuthorizationContext({
             result: undefined
         });
-        this.emitAttributesEvent('onAuthorization', authorizationContext, function() {
+        this.emitAttributesEvent('onActionAuthorization', authorizationContext, function() {
             if (authorizationContext.result) {
                 return false;
             }
@@ -149,7 +149,7 @@ mvcAction.prototype = {
         }
         //
         var annotated = this.injectImpl(this.controllerContext);
-        this.emitAttributesEvent('onActionInjected', this, annotated);
+        this.emitAttributesEvent('onActionInjected', this.controllerContext, annotated);
         if (!utils.isFunction(annotated.func)) { return; }
         //
         var actionContext = this.controllerContext.toActionContext({

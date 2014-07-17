@@ -248,21 +248,21 @@ controllerImplementationScope.prototype = {
     },
 
 
-    /************ controller object virtual events **************/
+    /************ controller object events **************/
     onControllerInjected: function(controller, injectedParams) {},
     onControllerInitialized: function(controller) {},
     onControllerDestroy: function(controller) {},
 
 
-    /************ action implementation virtual events **************/
-    onAuthorization: function(actionContext) {},
-    onActionInjected: function(action, injectedParams) {},
+    /************ action implementation events **************/
+    onActionAuthorization: function(authorizationContext) {},
+    onActionInjected: function(controllerContext, injectedParams) {},
     onActionExecuting: function(actionContext) {},
     onActionExecuted: function(actionContext) {},
-    onException: function(actionContext) {},
+    onActionException: function(exceptionContext) {},
 
 
-    /************ action result virtual events **************/
+    /************ action result events **************/
     onResultExecuting: function(resultContext) {},
     onResultExecuted: function(resultContext) {}
 };

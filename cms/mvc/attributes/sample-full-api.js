@@ -24,11 +24,11 @@ sample.prototype = {
 
 
     /************ action implementation events **************/
-    onAuthorization: function(actionContext) {},
-    onActionInjected: function(action, injectedParams) {},
+    onActionAuthorization: function(authorizationContext) {},
+    onActionInjected: function(controllerContext, injectedParams) {},
     onActionExecuting: function(actionContext) {},
     onActionExecuted: function(actionContext) {},
-    onException: function(actionContext) {},
+    onActionException: function(exceptionContext) {},
 
 
     /************ action result events **************/

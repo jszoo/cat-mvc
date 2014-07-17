@@ -13,14 +13,18 @@ var mvcContext = module.exports = function(set) {
 };
 
 var clone = function(ins, className) {
-    var obj = new mvcContext();
-    utils.each(obj, function(key) {
-        if (obj[key] === null && ins[key]) {
-            obj[key] = ins[key];
-        }
+    return new mvcContext({
+        app: ins.app,
+        items: ins.items,
+        rulee: ins.rulee,
+        request: ins.request,
+        response: ins.response,
+        route: ins.route,
+        routeData: ins.routeData,
+        routeArea: ins.routeArea,
+        routeSet: ins.routeSet,
+        className: (className || ins.className)
     });
-    obj.className = className || ins.className;
-    return obj;
 };
 
 mvcContext.prototype = {

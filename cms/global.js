@@ -4,8 +4,8 @@
 * create date: 2014.6.23
 */
 var path = require('path');
-var mvcApp = require('./mvc/index');
-var mvc = mvcApp.create({ appPath: __dirname });
+var mvc = require('./mvc/index');
+var app = mvc.newApp({ appPath: __dirname });
 
 // web config
 var configuration = require('./bin/configuration');
@@ -13,12 +13,12 @@ var config = configuration.load('web.config');
 
 // log
 var logger = require('morgan');
-mvc.use(logger({ format: 'dev' }));
+app.use(logger({ format: 'dev' }));
 
 // session
 var session = require('express-session');
 var cachingStore = require('./bin/cachingSessionStore')(session);
-mvc.use(session({
+app.use(session({
     name: config.get('session.cookie.name'),
     rolling: config.get('session.rolling'),
     secret: config.get('session.secret'),
@@ -32,16 +32,16 @@ mvc.use(session({
 
 // favicon
 var favicon = require('serve-favicon');
-mvc.use(favicon(path.join(__dirname, config.get('favicon.source'))));
+app.use(favicon(path.join(__dirname, config.get('favicon.source'))));
 
 // static
 var static = require('serve-static');
-mvc.use(static(path.join(__dirname, 'fe')));
+app.use(static(path.join(__dirname, 'fe')));
 
 // entrance
 var express = require('express');
 var server = express();
-server.use(mvc.handler());
+server.use(app.handler());
 
 // export
 module.exports = server;

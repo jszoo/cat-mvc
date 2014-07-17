@@ -85,8 +85,9 @@ mvcApp.prototype = {
 
 // export
 module.exports = {
+    caching: caching,
     controller: mvcController.define,
-    create: function(set) {
+    newApp: function(set) {
         return new mvcApp(set);
     }
 };

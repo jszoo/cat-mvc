@@ -19,7 +19,7 @@ var CONSTS = {
     Views: 'views',
     Shared: 'shared',
     Controllers: 'ctrls',
-    Subscribes: 'areaSubs.js'
+    Events: 'areaEvents.js'
 };
 
 var mvcAreas = module.exports = function(appPath) {
@@ -66,7 +66,7 @@ mvcAreas.prototype = {
     unload: function(areaName) {
         var area = this.get(areaName);
         if (area) {
-            area.fireSubscribes('onUnload');
+            area.fireEvent('onUnload');
             this.events.emit('unload', area);
         }
         return this._inner.remove(areaName);
@@ -90,13 +90,13 @@ mvcAreas.prototype = {
             // map route
             area.routes.set(areaName, areaRoute, defaultRouteValues);
             // load default subscribes
-            area.subscribes.load(path.join(area.path, CONSTS.Subscribes));
+            area.subevents.load(path.join(area.path, CONSTS.Events));
             // read 'areas/account/ctrls'
             area.controllers.loaddir(area.controllersPath);
         }
         //
         if (area) {
-            area.fireSubscribes('onRegister');
+            area.fireEvent('onRegister');
             this.events.emit('register', area);
             this._inner.set(area.name, area);
         }

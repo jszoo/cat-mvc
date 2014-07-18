@@ -1,5 +1,5 @@
 /*
-* mvcAreaSubs
+* mvcAreaEvents
 * author: ronglin
 * create date: 2014.7.8
 */
@@ -9,17 +9,17 @@ var fs = require('fs'),
     utils = require('./utilities'),
     caching = require('./caching');
 
-var mvcAreaSubs = module.exports = function(set) {
+var mvcAreaEvents = module.exports = function(set) {
     utils.extend(this, set);
     if (!this.ownerAreaName) { throw new Error('Parameter "ownerAreaName" is required'); }
-    this._inner = caching.region('mvc-' + this.ownerAreaName + '-subscribes-cache');
+    this._inner = caching.region('mvc-' + this.ownerAreaName + '-events-cache');
 };
 
-mvcAreaSubs.prototype = {
+mvcAreaEvents.prototype = {
 
     ownerAreaName: null, _inner: null,
 
-    constructor: mvcAreaSubs, className: 'mvcAreaSubs',
+    constructor: mvcAreaEvents, className: 'mvcAreaEvents',
 
     all: function() {
         return this._inner.all();

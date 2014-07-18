@@ -7,7 +7,7 @@
 'use strict';
 
 var utils = require('./utilities'),
-    mvcAreaSubs = require('./mvcAreaSubs'),
+    mvcAreaEvents = require('./mvcAreaEvents'),
     mvcAreaRoutes = require('./mvcAreaRoutes'),
     mvcControllers = require('./mvcControllers');
 
@@ -16,7 +16,7 @@ var mvcArea = module.exports = function(set) {
     if (!this.name) { throw new Error('Parameter "name" is required'); }
     //
     this.routes = new mvcAreaRoutes({ ownerAreaName: this.name });
-    this.subscribes = new mvcAreaSubs({ ownerAreaName: this.name });
+    this.subevents = new mvcAreaEvents({ ownerAreaName: this.name });
     this.controllers = new mvcControllers({ ownerAreaName: this.name });
 };
 
@@ -24,7 +24,7 @@ mvcArea.prototype = {
 
     name: null, path: null, viewsPath: null, viewsSharedPath: null, controllersPath: null,
 
-    routes: null, subscribes: null, controllers: null,
+    routes: null, subevents: null, controllers: null,
 
     constructor: mvcArea, className: 'mvcArea',
 
@@ -36,9 +36,9 @@ mvcArea.prototype = {
         return this.controllers.get(controllerName);
     },
 
-    fireSubscribes: function(funcName) {
+    fireEvent: function(funcName) {
         var self = this;
-        utils.each(this.subscribes.all(), function(k, sub) {
+        utils.each(this.subevents.all(), function(k, sub) {
             if (sub && utils.isFunction(sub[funcName])) {
                 sub[funcName](self);
             }

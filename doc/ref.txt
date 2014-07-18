@@ -3,3 +3,4 @@ http://expressjs.com/4x/api.html
 http://stackoverflow.com/questions/14795145/how-the-single-threaded-non-blocking-io-model-works-in-node-js
 http://blog.fens.me/nodejs-https-server/
 http://blog.fens.me/nodejs-core-cluster/
+http://www.cnblogs.com/xyang/archive/2012/08/01/2618269.html  (mapPath)

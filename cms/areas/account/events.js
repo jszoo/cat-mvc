@@ -1,5 +1,5 @@
 /*
-* areaEvents
+* area events
 * author: ronglin
 * create date: 2014.6.28
 */

@@ -41,7 +41,7 @@ var mvcApp = function(set) {
 
 mvcApp.prototype = {
 
-    _setts: null, _handlers: null,
+    _setts: null, _handlers: null, _inited: null,
 
     appPath: null, areas: null, engines: null, attributes: null,
 
@@ -98,21 +98,25 @@ mvcApp.prototype = {
     handler: function () {
         //
         var handlers = this._handlers;
-        handlers.register(bodyParser.json());
-        handlers.register(bodyParser.json({ type: 'application/hal+json' }));
-        handlers.register(bodyParser.urlencoded({ extended: true }));
-        handlers.register(cookieParser());
-        //
-        handlers.register('/', 'midHeader', midHeader());
-        handlers.register('/', 'midRequest', midRequest());
-        handlers.register('/', 'midResponse', midResponse());
-        handlers.registerAtLast('/', 'midError', midError());
-        //
-        handlers.register(mvcHandler(this));
-        //
-        this.engines.register('.vash', require('./engines/vash'));
-        this.attributes.registerAll();
-        this.areas.registerAll(); // user code always focus on the controllers, so register at last
+        if (this._inited !== true) {
+            this._inited = true;
+            //
+            handlers.register(bodyParser.json());
+            handlers.register(bodyParser.json({ type: 'application/hal+json' }));
+            handlers.register(bodyParser.urlencoded({ extended: true }));
+            handlers.register(cookieParser());
+            //
+            handlers.register('/', 'midHeader', midHeader());
+            handlers.register('/', 'midRequest', midRequest());
+            handlers.register('/', 'midResponse', midResponse());
+            handlers.registerAtLast('/', 'midError', midError());
+            //
+            handlers.register(mvcHandler(this));
+            //
+            this.engines.register('.vash', require('./engines/vash'));
+            this.attributes.registerAll();
+            this.areas.registerAll(); // user code always focus on the controllers, so register at last
+        }
         //
         return function(req, res) {
             handlers.execute(req, res);

@@ -27,12 +27,14 @@ var bodyParser = require('body-parser'),
 var mvcApp = function(set) {
     utils.extend(this, set);
     if (!this.appPath) { throw new Error('Parameter "appPath" is required'); }
-    this.areas = new mvcAreas(this.appPath);
-    this.engines = new mvcViewEngines();
-    this.attributes = new mvcAttributes();
+    //
     this._handlers = new mvcHandlerRouter();
     this._setts = caching.region('mvc-runtime-settings');
     this._setts.set('env', process.env.NODE_ENV || 'development');
+    //
+    this.areas = new mvcAreas(this.appPath);
+    this.engines = new mvcViewEngines();
+    this.attributes = new mvcAttributes();
 };
 
 mvcApp.prototype = {

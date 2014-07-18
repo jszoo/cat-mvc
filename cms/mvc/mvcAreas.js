@@ -13,7 +13,7 @@ var fs = require('fs'),
     caching = require('./caching'),
     mvcArea = require('./mvcArea');
 
-var CONST = {
+var CONSTS = {
     Root: '/root',
     Areas: 'areas',
     Views: 'views',
@@ -24,10 +24,12 @@ var CONST = {
 
 var mvcAreas = module.exports = function(appPath) {
     this.appPath = appPath;
-    this.areasPath = path.join(appPath, CONST.Areas);
+    this.areasPath = path.join(appPath, CONSTS.Areas);
     this.events = new events.EventEmitter();
     this._inner = caching.region('mvc-areas-cache');
 };
+
+mvcAreas.CONSTS = CONSTS;
 
 mvcAreas.prototype = {
 
@@ -46,7 +48,7 @@ mvcAreas.prototype = {
     },
 
     rootArea: function() {
-        return this._inner.get(CONST.Root);
+        return this._inner.get(CONSTS.Root);
     },
 
     routeSet: function() {
@@ -72,23 +74,23 @@ mvcAreas.prototype = {
 
     register: function(areaName, areaRoute, defaultRouteValues) {
         var areaDirectory = areaName, self = this;
-        if (areaName === CONST.Root) { areaDirectory = path.sep + '..'; }
+        if (areaName === CONSTS.Root) { areaDirectory = path.sep + '..'; }
         var area, areaPath = path.normalize(path.join(this.areasPath, areaDirectory));
         if (fs.existsSync(areaPath) && fs.statSync(areaPath).isDirectory()) {
             // area obj
             area = new mvcArea({
                 name: areaName,
                 path: areaPath,
-                viewsPath: path.join(areaPath, CONST.Views),
-                viewsSharedPath: path.join(areaPath, CONST.Views, CONST.Shared),
-                controllersPath: path.join(areaPath, CONST.Controllers)
+                viewsPath: path.join(areaPath, CONSTS.Views),
+                viewsSharedPath: path.join(areaPath, CONSTS.Views, CONSTS.Shared),
+                controllersPath: path.join(areaPath, CONSTS.Controllers)
             });
             //
             area.routes.events.on('changed', function() { self._routeSet = null; });
             // map route
             area.routes.set(areaName, areaRoute, defaultRouteValues);
             // load default subscribes
-            area.subscribes.load(path.join(area.path, CONST.Subscribes));
+            area.subscribes.load(path.join(area.path, CONSTS.Subscribes));
             // read 'areas/account/ctrls'
             var ctrlsPath = area.controllersPath;
             if (fs.existsSync(ctrlsPath) && fs.statSync(ctrlsPath).isDirectory()) {
@@ -111,7 +113,7 @@ mvcAreas.prototype = {
     
     registerAll: function() {
         this.register(
-            (CONST.Root),
+            (CONSTS.Root),
             ('/:controller?/:action?'),
             ({ controller: 'home', action: 'index' })
         );

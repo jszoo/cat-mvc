@@ -19,26 +19,44 @@ var mvcController = module.exports = function(set) {
     utils.extend(this, set);
 };
 
+var defined;
 mvcController.define = function() {
-    var len = arguments.length;
-    if (len === 0) {
-        return new mvcController();
-    } else if (len === 1) {
-        return new mvcController({
-            _impl: arguments[0]
-        });
+    var name, attr, impl;
+    var len = arguments.length, arg0 = arguments[0];
+    //
+    if (len === 1 && utils.isFunction(arg0)) {
+        impl = arg0;
+    } else if (len === 1 && utils.isObject(arg0)) {
+        name = arg0.name;
+        attr = arg0.attr;
+        impl = arg0.impl;
     } else if (len === 2) {
-        return new mvcController({
-            _attr: arguments[0],
-            _impl: arguments[1]
-        });
+        attr = arg0;
+        impl = arguments[1];
     } else {
-        return new mvcController({
-            _name: arguments[0],
-            _attr: arguments[1],
-            _impl: arguments[2]
-        });
+        name = arg0;
+        attr = arguments[1];
+        impl = arguments[2];
     }
+    //
+    var ret = new mvcController({
+        _name: name,
+        _attr: attr,
+        _impl: impl
+    });
+    if (defined) {
+        defined.push(ret);
+    }
+    return ret;
+};
+
+mvcController.loadfile = function(fileName) {
+    defined = [];
+    delete require.cache[fileName];
+    require(fileName);
+    var t = defined;
+    defined = null;
+    return t;
 };
 
 mvcController.prototype = {

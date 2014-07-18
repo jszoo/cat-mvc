@@ -92,14 +92,7 @@ mvcAreas.prototype = {
             // load default subscribes
             area.subscribes.load(path.join(area.path, CONSTS.Subscribes));
             // read 'areas/account/ctrls'
-            var ctrlsPath = area.controllersPath;
-            if (fs.existsSync(ctrlsPath) && fs.statSync(ctrlsPath).isDirectory()) {
-                // read 'areas/account/ctrls/logon.js'
-                var ctrlFiles = fs.readdirSync(ctrlsPath);
-                utils.each(ctrlFiles, function(i, ctrlFileName) {
-                    area.controllers.load(path.join(ctrlsPath, ctrlFileName));
-                });
-            }
+            area.controllers.loaddir(area.controllersPath);
         }
         //
         if (area) {

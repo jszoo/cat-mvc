@@ -9,7 +9,8 @@
 var fs = require('fs'),
     path = require('path'),
     utils = require('./utilities'),
-    caching = require('./caching');
+    caching = require('./caching'),
+    mvcController = require('./mvcController');
 
 var mvcControllers = module.exports = function(set) {
     utils.extend(this, set);
@@ -46,45 +47,37 @@ mvcControllers.prototype = {
         return this._inner.clear();
     },
 
+    loaddir: function(ctrlsPath, act) {
+        if (!fs.existsSync(ctrlsPath) || !fs.statSync(ctrlsPath).isDirectory()) { return; }
+        var self = this, ctrlFiles = fs.readdirSync(ctrlsPath), fn = act || 'load';
+        utils.each(ctrlFiles, function(i, ctrlFileName) {
+            self[fn](path.join(ctrlsPath, ctrlFileName));
+        });
+    },
+
+    unloaddir: function(ctrlsPath) {
+        this.loaddir(ctrlsPath, 'unload');
+    },
+
     load: function(filePath) {
         if (!fs.existsSync(filePath) || !fs.statSync(filePath).isFile()) { return; }
-        var self = this, load = function(ctrl) {
-            if (ctrl && ctrl.className === 'mvcController') {
-                if (!ctrl.name()) {
-                    var extName = path.extname(filePath);
-                    ctrl.name(path.basename(filePath, extName));
-                }
-                ctrl.path(filePath);
-                self.register(ctrl.name(), ctrl);
-                return true;
+        var self = this, ctrls = mvcController.loadfile(filePath);
+        utils.each(ctrls, function() {
+            if (!this.name()) {
+                var extName = path.extname(filePath);
+                this.name(path.basename(filePath, extName));
             }
-        };
-        var module = require(filePath);
-        if (module && load(module) !== true) {
-            utils.each(module, function() {
-                load(this);
-            });
-        }
+            this.path(filePath);
+            self.register(this.name(), this);
+        });
     },
 
     unload: function(filePath) {
-        if (!fs.existsSync(filePath) || !fs.statSync(filePath).isFile()) { return; }
-        var self = this, unload = function(ctrl) {
-            if (ctrl && ctrl.className === 'mvcController') {
-                var ctrlName = ctrl.name();
-                if (!ctrlName) {
-                    var extName = path.extname(filePath);
-                    ctrlName = path.basename(filePath, extName);
-                }
-                self.remove(ctrlName);
-                return true;
+        var self = this, all = this._inner.all();
+        utils.each(all, function() {
+            if (this.path() === filePath) {
+                self.remove(this.name());
             }
-        };
-        var module = require(filePath);
-        if (module && unload(module) !== true) {
-            utils.each(module, function() {
-                unload(this);
-            });
-        }
+        });
     }
 };

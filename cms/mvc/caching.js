@@ -31,6 +31,15 @@ caching.isRandomRegionName = function (region) {
     return /^guid:[a-z0-9]{32}$/i.test(region);
 };
 
+caching.setStore = function(sto) {
+    store = caching.store = sto;
+};
+
+// init
+caching.setStore(new cachingStore());
+instances = caching.region('caching-instances');
+// end
+
 caching.prototype = {
 
     region: null, _cachedAll: null, _hasExpireItem: false,
@@ -97,6 +106,3 @@ caching.prototype = {
         return store.remove(this.region);
     }
 };
-
-caching.store = store = new cachingStore();
-caching.instances = instances = caching.region('caching-instances');

@@ -13,12 +13,10 @@ OK 14. vash engine layout function
 OK 12. Https related: controller&action setting ---> attributes
 OK 16. combine isValidxxxxxx attribute apis?
 OK 15. ~/ formater url
+OK 17. support multi mvc instance
+OK 18. caching support multi mvc instance
 
 PP 4. partialViewResult
-
-
-17. support multi mvc instance
-18. caching support multi mvc instance
 
 19. context instance destroy?
 20. review every code files, optimize the application initialization

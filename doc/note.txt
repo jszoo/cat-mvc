@@ -1,15 +1,17 @@
 NOTE
 
-1. Simply change every dependency's version to *, then run npm update --save.
+1.........
+Simply change every dependency's version to *, then run npm update --save.
 
 2. npm-check-updates is a utility that automatically adjusts a package.json with the latest version of all dependencies
 $ npm install -g npm-check-updates
 $ npm-check-updates -u
 $ npm install
 
-3. my current mvc implementation requires the root controller names can't be repeat to the area names.
+3.........
+my current mvc implementation requires the root controller names can't be repeat to the area names.
 
-4.
+4.........
 $ npm set init.author.name "Your Name"
 $ npm set init.author.email "you@example.com"
 $ npm set init.author.url "http://yourblog.com"

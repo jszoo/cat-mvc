@@ -11,7 +11,7 @@ var request = require('request'),
     configuration = require('./configuration');
 
 var utils = mvcApp.utils,
-    store = mvcApp.cachingStore,
+    store = mvcApp.caching.defaultStore(),
     config = configuration.load('web.config'),
     verify = config.get('cacheNotify.verify'),
     remotes = config.get('cacheNotify.remotes');

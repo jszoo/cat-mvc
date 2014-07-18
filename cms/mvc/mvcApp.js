@@ -96,10 +96,6 @@ mvcApp.prototype = {
     * 2. return the web server handler
     */
     handler: function () {
-        // init
-        this.areas.registerAll();
-        this.attributes.registerAll();
-        this.engines.register('.vash', require('./engines/vash'));
         //
         var handlers = this._handlers;
         handlers.register(bodyParser.json());
@@ -113,32 +109,24 @@ mvcApp.prototype = {
         handlers.registerAtLast('/', 'midError', midError());
         //
         handlers.register(mvcHandler(this));
-        // entrance
+        //
+        this.engines.register('.vash', require('./engines/vash'));
+        this.attributes.registerAll();
+        this.areas.registerAll(); // user code always focus on the controllers, so register at last
+        //
         return function(req, res) {
             handlers.execute(req, res);
         };
     }
 };
 
-var current;
-caching.defaultStore(new cachingStore());
-
 // export
 module.exports = {
     utils: utils,
     caching: caching,
     controller: mvcController.define,
-    newApp: function(set) {
-        return (current = new mvcApp(set));
+    current: null,
+    gainApp: function(set) {
+        return this.current ? this.current : (this.current = new mvcApp(set));
     }
 };
-
-Object.defineProperty(module.exports, 'current', {
-    configurable: false, enumerable: true,
-    get: function() { return current; }
-});
-
-Object.defineProperty(module.exports, 'cachingStore', {
-    configurable: false, enumerable: true,
-    get: function() { return caching.defaultStore(); }
-});

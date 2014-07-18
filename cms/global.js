@@ -4,7 +4,7 @@
 * create date: 2014.6.23
 */
 var mvc = require('./mvc/index');
-var app = mvc.newApp({ appPath: __dirname });
+var app = mvc.gainApp({ appPath: __dirname });
 
 // web config
 var configuration = require('./bin/configuration');

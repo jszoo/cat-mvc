@@ -165,6 +165,7 @@ mvcAction.prototype = {
         //
         var self = this, endExecute = function(result) {
             self.emitAttributesEvent('onActionExecuted', actionContext);
+            actionContext.destroy();
             callback(result);
         };
         //
@@ -197,6 +198,7 @@ mvcAction.prototype = {
         var self = this, endExecute = function(exception) {
             self.emitAttributesEvent('onResultExecuted', resultContext);
             self.controller.tempData.save(self.controllerContext);
+            resultContext.destroy();
             callback(exception);
         };
         //

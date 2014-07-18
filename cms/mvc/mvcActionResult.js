@@ -117,6 +117,7 @@ utils.inherit(viewResult, baseResult, {
         var view = new mvcView(this.viewName);
         view.render(viewContext, function(err, str) {
             if (!err) { context.rulee.response.send(str);}
+            viewContext.destroy();
             callback(err);
         });
     }

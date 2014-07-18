@@ -11,7 +11,7 @@ var path = require('path'),
 	mvcAreas = require('./mvcAreas'),
     mvcHandler = require('./mvcHandler'),
     mvcController = require('./mvcController'),
-    mvcAttributes = require('./attributes/index'),
+    mvcAttributes = require('./attributes/$index'),
     mvcViewEngines = require('./mvcViewEngines'),
     mvcHandlerRouter = require('./mvcHandlerRouter');
 

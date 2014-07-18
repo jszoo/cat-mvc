@@ -15,11 +15,11 @@ OK 16. combine isValidxxxxxx attribute apis?
 OK 15. ~/ formater url
 OK 17. support multi mvc instance
 OK 18. caching support multi mvc instance
+OK 20. review every code files, optimize the application initialization
 
 PP 4. partialViewResult
 
 19. context instance destroy?
-20. review every code files, optimize the application initialization
 
 21. new execute action impl flow
 22. onException attribute

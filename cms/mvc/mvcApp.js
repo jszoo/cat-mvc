@@ -45,10 +45,16 @@ mvcApp.prototype = {
 
     constructor: mvcApp, className: 'mvcApp',
 
+    /*
+    * get app setting
+    */
     get: function(key) {
         return this._setts.get(key);
     },
 
+    /*
+    * set app setting
+    */
     set: function(key, val) {
         return this._setts.set(key, val);
     },
@@ -83,6 +89,10 @@ mvcApp.prototype = {
         return path.join(this.appPath, relPath);
     },
 
+    /*
+    * 1. initialize
+    * 2. return the web server handler
+    */
     handler: function () {
         // init
         this.areas.registerAll();

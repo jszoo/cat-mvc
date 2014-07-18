@@ -6,7 +6,7 @@
 
 var mvc = require('../mvc/index');
 
-module.exports = mvc.controller(function(req, res, end, tempdata, viewdata, session) {
+mvc.controller(function(req, res, end, tempdata, viewdata, session) {
 
     this.action('index', function() {
 

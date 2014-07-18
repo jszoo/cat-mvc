@@ -6,7 +6,7 @@
 
 var mvc = require('../../../mvc/index');
 
-module.exports = mvc.controller(function(req, res, session, end) {
+mvc.controller(function(req, res, session, end) {
 
     this.action('index', function() {
         res.json({ Get: true });

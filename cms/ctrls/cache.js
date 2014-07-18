@@ -7,7 +7,7 @@
 var mvc = require('../mvc/index');
 var cachingNotifyRemote = require('../bin/cachingNotifyRemote');
 
-module.exports = mvc.controller(function(req, res, end) {
+mvc.controller(function(req, res, end) {
 
     this.action('index', function() {
         cachingNotifyRemote.accept(req.query);

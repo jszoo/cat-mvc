@@ -38,11 +38,6 @@ caching.defaultStore = function(sto) {
     return (sto === undefined) ? (defaultStore) : (defaultStore = sto);
 };
 
-// init
-caching.defaultStore(new cachingStore());
-instances = caching.region('caching-instances');
-// end
-
 caching.prototype = {
 
     region: null, store: null, _cachedAll: null, _hasExpireItem: false,
@@ -113,3 +108,8 @@ caching.prototype = {
         return this.sto().remove(this.region);
     }
 };
+
+// init
+caching.defaultStore(new cachingStore());
+instances = caching.region('caching-instances');
+// end

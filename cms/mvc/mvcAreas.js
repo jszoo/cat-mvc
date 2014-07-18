@@ -19,7 +19,7 @@ var CONSTS = {
     Views: 'views',
     Shared: 'shared',
     Controllers: 'ctrls',
-    Events: 'areaEvents.js'
+    Events: 'events.js'
 };
 
 var mvcAreas = module.exports = function(appPath) {

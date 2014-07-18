@@ -6,7 +6,8 @@
 
 'use strict';
 
-var utils = require('./utilities'),
+var path = require('path'),
+    utils = require('./utilities'),
     caching = require('./caching'),
 	mvcAreas = require('./mvcAreas'),
     mvcHandler = require('./mvcHandler'),
@@ -50,12 +51,34 @@ mvcApp.prototype = {
         return this._setts.set(key, val);
     },
 
+    /*
+    * use(handler)
+    * use(routeExp, handler)
+    * use(routeExp, name, handler)
+    */
     use: function() {
         return this._handlers.register.apply(this._handlers, arguments);
     },
 
+    /*
+    * disuse(name)
+    */
     disuse: function() {
         return this._handlers.unregister.apply(this._handlers, arguments);
+    },
+
+    /*
+    * mapPath('~/xx')
+    *
+    * TODO:
+    * mapPath('/xx')
+    * mapPath('./xx')
+    * mapPath('../xx')
+    */
+    mapPath: function(relPath) {
+        if (!relPath) { return this.appPath; }
+        if (relPath.charAt(0) === '~') { relPath = relPath.substr(1); }
+        return path.join(this.appPath, relPath);
     },
 
     handler: function () {

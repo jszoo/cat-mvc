@@ -3,7 +3,6 @@
 * author: ronglin
 * create date: 2014.6.23
 */
-var path = require('path');
 var mvc = require('./mvc/index');
 var app = mvc.newApp({ appPath: __dirname });
 
@@ -32,11 +31,11 @@ app.use(session({
 
 // favicon
 var favicon = require('serve-favicon');
-app.use(favicon(path.join(__dirname, config.get('favicon.source'))));
+app.use(favicon(app.mapPath(config.get('favicon.source'))));
 
 // static
 var static = require('serve-static');
-app.use(static(path.join(__dirname, 'fe')));
+app.use(static(app.mapPath('~/fe')));
 
 // entrance
 var express = require('express');

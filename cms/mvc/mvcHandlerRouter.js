@@ -47,10 +47,18 @@ mvcHandlerRouter.prototype = {
         }
     },
 
+    /*
+    * registerAtLast(handler)
+    * registerAtLast(routeExp, handler)
+    * registerAtLast(routeExp, name, handler)
+    */
     registerAtLast: function() {
         this.register.apply({ _handlers: this._lastHandlers }, arguments);
     },
 
+    /*
+    * unregister(name)
+    */
     unregister: function(name) {
         var self = this, found = false;
         if (!name) { return found; }

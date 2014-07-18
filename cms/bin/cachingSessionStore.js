@@ -6,9 +6,9 @@
 
 'use strict';
 
-var caching = require('../mvc/caching'),
-    utils = require('../mvc/utilities'),
-    inner = caching.region('session-objects-cache');
+var mvcApp = require('../mvc/index');
+
+var utils = mvcApp.utils, inner = mvcApp.caching.region('session-objects-cache');
 
 module.exports = function(session) {
 

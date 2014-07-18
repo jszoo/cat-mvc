@@ -9,12 +9,13 @@
 var fs = require('fs'),
     tpath = require('path'),
     events = require('events'),
-    utils = require('../mvc/utilities'),
-    caching = require('../mvc/caching');
+    mvcApp = require('../mvc/index');
 
-var instances = caching.region('configuration-instances-cache');
-var rootPath = tpath.normalize(__dirname + tpath.sep + '..');
-var absolute = function(p) { return tpath.join(rootPath, p); };
+var utils = mvcApp.utils,
+    caching = mvcApp.caching,
+    instances = caching.region('configuration-instances-cache'),
+    rootPath = tpath.normalize(__dirname + tpath.sep + '..'),
+    absolute = function(p) { return tpath.join(rootPath, p); };
 
 var configuration = function (path, cb) {
     path = absolute(path);

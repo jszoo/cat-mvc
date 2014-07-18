@@ -8,13 +8,15 @@
 
 var path = require('path'),
     utils = require('./utilities'),
-    caching = require('./caching'),
 	mvcAreas = require('./mvcAreas'),
     mvcHandler = require('./mvcHandler'),
     mvcController = require('./mvcController'),
     mvcAttributes = require('./attributes/index'),
     mvcViewEngines = require('./mvcViewEngines'),
     mvcHandlerRouter = require('./mvcHandlerRouter');
+
+var caching = require('./caching'),
+    cachingStore = require('./cachingStore');
 
 var midError = require('./middles/error'),
     midHeader = require('./middles/header'),
@@ -118,8 +120,10 @@ mvcApp.prototype = {
     }
 };
 
-// export
 var current;
+caching.defaultStore(new cachingStore());
+
+// export
 module.exports = {
     utils: utils,
     caching: caching,
@@ -132,4 +136,9 @@ module.exports = {
 Object.defineProperty(module.exports, 'current', {
     configurable: false, enumerable: true,
     get: function() { return current; }
+});
+
+Object.defineProperty(module.exports, 'cachingStore', {
+    configurable: false, enumerable: true,
+    get: function() { return caching.defaultStore(); }
 });

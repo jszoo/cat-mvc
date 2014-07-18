@@ -16,26 +16,12 @@ OK 15. ~/ formater url
 
 PP 4. partialViewResult
 
-17. onException attribute
-18. support multi mvc instance
+
+17. support multi mvc instance
+18. caching support multi mvc instance
+
 19. context instance destroy?
-20. caching support multi mvc instance
-21. review every code files, optimize the application initialization
-22. new execute action impl flow
+20. review every code files, optimize the application initialization
 
-
-
-
-
-    rootPath = path.normalize(__dirname + path.sep + '..');
-
-    absolutePath: function() {
-        var args = utils.arg2arr(arguments);
-        if (path.sep === '\\') {
-            utils.each(args, function(i, val) {
-                args[i] = val.replace(/\//g, '\\');
-            });
-        }
-        args.unshift(rootPath);
-        return path.join.apply(path, args);
-    },
+21. new execute action impl flow
+22. onException attribute

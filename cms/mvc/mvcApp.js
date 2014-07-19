@@ -34,7 +34,7 @@ var mvcApp = function(set) {
     this._setts = caching.region('mvc-runtime-settings');
     this._setts.set('env', process.env.NODE_ENV || 'development');
     //
-    this.areas = new mvcAreas(this.appPath);
+    this.areas = new mvcAreas(this);
     this.engines = new mvcViewEngines();
     this.attributes = new mvcAttributes();
 };

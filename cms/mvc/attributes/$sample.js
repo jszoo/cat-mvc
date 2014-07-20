@@ -8,7 +8,7 @@
 
 var utils = require('../utilities');
 
-var sample = function(set) {
+var sample = module.exports = function(set) {
     utils.extend(this, set);
 };
 
@@ -40,5 +40,3 @@ sample.prototype = {
     isValidActionName: function(controllerContext, actionName) {},
     isValidActionRequest: function(controllerContext) {}
 };
-
-module.exports = sample;

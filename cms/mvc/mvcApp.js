@@ -9,10 +9,10 @@
 var path = require('path'),
     utils = require('./utilities'),
 	mvcAreas = require('./mvcAreas'),
-    mvcHandler = require('./mvcHandler'),
     mvcController = require('./mvcController'),
     mvcAttributes = require('./attributes/$index'),
     mvcViewEngines = require('./mvcViewEngines'),
+    mvcHandler = require('./mvcHandler'),
     mvcHandlerRouter = require('./mvcHandlerRouter');
 
 var caching = require('./caching'),
@@ -88,6 +88,7 @@ mvcApp.prototype = {
     mapPath: function(relPath) {
         if (!relPath) { return this.appPath; }
         if (relPath.charAt(0) === '~') { relPath = relPath.substr(1); }
+        relPath = relPath.replace(/\/|\\/g, path.sep);
         return path.join(this.appPath, relPath);
     },
 

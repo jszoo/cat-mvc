@@ -22,7 +22,7 @@ var mvcArea = module.exports = function(set) {
 
 mvcArea.prototype = {
 
-    name: null, path: null, viewsPath: null, viewsSharedPath: null, controllersPath: null,
+    name: null, path: null, viewsPath: null, viewsSharedPath: null, controllersPath: null, eventsFilePath: null,
 
     routes: null, subevents: null, controllers: null,
 

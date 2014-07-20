@@ -25,25 +25,26 @@ mvcAreaEvents.prototype = {
         return this._inner.all();
     },
 
-    get: function(name) {
-        return this._inner.get(name);
-    },
-
-    set: function(name, obj) {
-        this._inner.set(name, obj);
-    },
-
     clear: function() {
         this._inner.clear();
     },
 
+    register: function(name, obj) {
+        this._inner.set(name, obj);
+    },
+
+    remove: function(name) {
+        return this._inner.remove(filePath);
+    },
+
     load: function(filePath) {
-        if (fs.existsSync(filePath) && fs.statSync(filePath).isFile()) {
-            this._inner.set(filePath, require(filePath));
-        }
+        if (!fs.existsSync(filePath)) { return; }
+        if (!fs.statSync(filePath).isFile()) { return; }
+        var obj = require(filePath);
+        this.register(filePath, utils.isFunction(obj) ? obj() : obj);
     },
 
     unload: function(filePath) {
-        return this._inner.remove(filePath);
+        this.remove(filePath);
     }
 };

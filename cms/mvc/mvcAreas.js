@@ -88,16 +88,17 @@ mvcAreas.prototype = {
             area = new mvcArea({
                 name: areaName,
                 path: areaPath,
-                viewsPath: path.join(areaPath, self.conf('config.views')),
+                viewsPath:       path.join(areaPath, self.conf('config.views')),
                 controllersPath: path.join(areaPath, self.conf('config.controllers')),
-                viewsSharedPath: path.join(areaPath, self.conf('config.views'), self.conf('config.shared'))
+                viewsSharedPath: path.join(areaPath, self.conf('config.views'), self.conf('config.shared')),
+                eventsFilePath:  path.join(areaPath, self.conf('config.events'))
             });
             //
             area.routes.events.on('changed', function() { self._routeSet = null; });
             // map route
             area.routes.set(areaName, areaRoute, defaultRouteValues);
             // load default subscribes
-            area.subevents.load(path.join(area.path, self.conf('config.events')));
+            area.subevents.load(area.eventsFilePath);
             // read 'areas/account/ctrls'
             area.controllers.loaddir(area.controllersPath);
         }

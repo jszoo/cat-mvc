@@ -78,9 +78,10 @@ module.exports = function(app) {
                 if (!action) { 
                     controller.destroy();
                     return; // continue
+                } else {
+                    matched = true;
                 }
                 //
-                matched = true;
                 var actionExecuted = false;
                 action.executeImpl(function(obj) {
                     if (actionExecuted) { return; }

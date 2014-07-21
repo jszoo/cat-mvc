@@ -6,7 +6,8 @@
 
 'use strict';
 
-var utils = require('../utilities');
+var utils = require('../utilities'),
+    viewResult = require('../mvcActionResult').viewResult;
 
 var handleError = module.exports = function(set) {
     utils.extend(this, set);

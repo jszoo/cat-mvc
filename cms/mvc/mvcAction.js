@@ -132,7 +132,6 @@ mvcAction.prototype = {
     },
 
     executeImpl: function(callback) {
-        this.controller.resultApi.callback = endExecute;
         this.controller.tempData.load(this.controllerContext);
         //
         var authorizeContext = this.controllerContext.toAuthorizeContext({
@@ -169,6 +168,7 @@ mvcAction.prototype = {
             callback(result);
         };
         //
+        this.controller.resultApi.callback = endExecute;
         this.emitAttributesEvent('onActionExecuting', actionContext);
         this.implScope = new actionImplementationScope(this.controller);
         actionContext.result = annotated.func.apply(this.implScope, annotated.params);

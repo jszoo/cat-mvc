@@ -108,10 +108,6 @@ mvcController.prototype = {
             this.resultApi.httpContext = null;
             this.resultApi = null;
         }
-        if (this.implScope) {
-            this.implScope.destroy();
-            this.implScope = null;
-        }
         if (this.httpContext) {
             this.httpContext.destroy();
             this.httpContext = null;
@@ -120,6 +116,7 @@ mvcController.prototype = {
         this._impl = null;
         this._attr = null;
         this.tempData = null;
+        this.implScope = null;
     },
 
     initialize: function(httpContext) {
@@ -248,22 +245,14 @@ mvcController.prototype = {
 };
 
 var controllerImplementationScope = function(controller) {
-    this.controller = controller;
+    this.action = function() {
+        return controller.action.apply(controller, arguments);
+    };
 };
 
 controllerImplementationScope.prototype = {
-
-    controller: null,
     
     constructor: controllerImplementationScope, className: 'controllerImplementationScope',
-
-    destroy: function() {
-        this.controller = null;
-    },
-
-    action: function() {
-        return this.controller.action.apply(this.controller, arguments);
-    },
 
 
     /************ controller object events **************/

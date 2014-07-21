@@ -134,16 +134,16 @@ mvcAction.prototype = {
     executeImpl: function(callback) {
         this.controller.tempData.load(this.controllerContext);
         //
-        var authorizeContext = this.controllerContext.toAuthorizeContext({
+        var authorizationContext = this.controllerContext.toAuthorizationContext({
             result: undefined
         });
-        this.emitAttributesEvent('onActionAuthorize', authorizeContext, function() {
-            if (authorizeContext.result) {
+        this.emitAttributesEvent('onAuthorization', authorizationContext, function() {
+            if (authorizationContext.result) {
                 return false;
             }
         });
-        var authResult = authorizeContext.result;
-        authorizeContext.destroy();
+        var authResult = authorizationContext.result;
+        authorizationContext.destroy();
         if (authResult !== undefined) {
             callback(authResult);
             return;
@@ -154,7 +154,6 @@ mvcAction.prototype = {
         }
         //
         var annotated = this.injectImpl(this.controllerContext);
-        this.emitAttributesEvent('onActionInjected', this.controllerContext, annotated);
         if (!utils.isFunction(annotated.func)) { return; }
         //
         var actionContext = this.controllerContext.toActionContext({

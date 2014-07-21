@@ -180,7 +180,6 @@ mvcController.prototype = {
 
     executeImpl: function() {
         var annotated = this.injectImpl(this.httpContext);
-        this.emitAttributesEvent('onControllerInjected', this, annotated);
         if (!utils.isFunction(annotated.func)) { return; }
         annotated.func.apply(this.implScope, annotated.params);
         this.emitAttributesEvent('onControllerInitialized', this);
@@ -256,20 +255,21 @@ controllerImplementationScope.prototype = {
 
 
     /************ controller object events **************/
-    onControllerInjected: function(controller, injectedParams) {},
     onControllerInitialized: function(controller) {},
     onControllerDestroy: function(controller) {},
 
 
-    /************ action implementation events **************/
-    onActionAuthorize: function(authorizeContext) {},
-    onActionInjected: function(controllerContext, injectedParams) {},
+    /************ authorize event **************/
+    onAuthorization: function(authorizationContext) {},
+
+
+    /************ action filter events **************/
     onActionExecuting: function(actionContext) {},
     onActionExecuted: function(actionContext) {},
-    onActionException: function(exceptionContext) {},
-
-
-    /************ action result events **************/
     onResultExecuting: function(resultContext) {},
-    onResultExecuted: function(resultContext) {}
+    onResultExecuted: function(resultContext) {},
+
+
+    /************ exception event **************/
+    onException: function(exceptionContext) {}
 };

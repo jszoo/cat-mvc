@@ -7,7 +7,7 @@
 'use strict';
 
 var utils = require('../utilities'),
-    mvcActionResult = require('../mvcActionResult');
+    redirectResult = require('../mvcActionResult').redirectResult;
 
 var requireHttps = module.exports = function(set) {
     utils.extend(this, set);
@@ -17,21 +17,21 @@ requireHttps.prototype = {
 
     constructor: requireHttps, className: 'requireHttps',
 
-    onActionAuthorize: function(authorizeContext) {
-        var secure = authorizeContext.rulee.request.secure;
+    onAuthorization: function(authorizationContext) {
+        var secure = authorizationContext.rulee.request.secure;
         if (!secure) {
-            this.handleNonHttpsRequest(authorizeContext);
+            this.handleNonHttpsRequest(authorizationContext);
         }
     },
 
-    handleNonHttpsRequest: function(authorizeContext) {
-        var methodName = authorizeContext.rulee.request.method;
+    handleNonHttpsRequest: function(authorizationContext) {
+        var methodName = authorizationContext.rulee.request.method;
         if (!utils.tryLowerEqual(methodName, 'GET')) {
             throw new Error('The requested resource can only be accessed via SSL.');
         } else {
-            var u = authorizeContext.rulee.request.url;
+            var u = authorizationContext.rulee.request.url;
             var url = "https://" + u.host + u.path;
-            authorizeContext.result = new mvcActionResult.redirectResult({ url: url });
+            authorizationContext.result = new redirectResult({ url: url });
         }
     }
 };

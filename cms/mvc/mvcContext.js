@@ -52,9 +52,9 @@ mvcContext.prototype = {
         return utils.extend(clone(this, 'mvcControllerContext'), { controller: controller });
     },
 
-    toAuthorizeContext: function(merge) {
+    toAuthorizationContext: function(merge) {
         if (this.controller) { merge.controller = this.controller; }
-        return utils.extend(clone(this, 'mvcAuthorizeContext'), merge);
+        return utils.extend(clone(this, 'mvcAuthorizationContext'), merge);
     },
 
     toActionContext: function(merge) {

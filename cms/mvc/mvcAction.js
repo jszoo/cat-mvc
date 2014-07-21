@@ -179,11 +179,9 @@ mvcAction.prototype = {
     },
 
     executeResult: function(result, callback) {
-        if (result === undefined) { return; }
-        //
-        if (!utils.isFunction(result.executeResult)) {
+        if (!result || !utils.isFunction(result.executeResult)) {
             result = new actionResult.contentResult({
-                content: result.toString()
+                content: String(result)
             });
         }
         //

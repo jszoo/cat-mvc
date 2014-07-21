@@ -23,21 +23,21 @@ sample.prototype = {
 
 
     /************ authorize event **************/
-    onAuthorization: function(authorizationContext) {},
+    onAuthorization: function(authorizationContext, next) {},
 
 
     /************ action filter events **************/
-    onActionExecuting: function(actionContext) {},
-    onActionExecuted: function(actionContext) {},
-    onResultExecuting: function(resultContext) {},
-    onResultExecuted: function(resultContext) {},
+    onActionExecuting: function(actionContext, next) {},
+    onActionExecuted: function(actionContext, next) {},
+    onResultExecuting: function(resultContext, next) {},
+    onResultExecuted: function(resultContext, next) {},
 
 
     /************ exception event **************/
-    onException: function(exceptionContext) {},
+    onException: function(exceptionContext, next) {},
 
 
     /************ action selector functions **************/
-    isValidActionName: function(controllerContext, actionName) {},
-    isValidActionRequest: function(controllerContext) {}
+    isValidActionName: function(controllerContext, actionName, next) {},
+    isValidActionRequest: function(controllerContext, next) {}
 };

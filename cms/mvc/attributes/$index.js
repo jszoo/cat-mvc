@@ -140,5 +140,24 @@ attributes.prototype = {
         });
         //
         return rets;
+    },
+
+    emitAsync: function(eventName) {
+        var sett = arguments[arguments.length - 1];
+        if (!utils.isObject(sett)) {
+            throw new Error('Setting object notfound which contains callback and an item handler is optional');
+        }
+        if (!utils.isFunction(sett.callback)) {
+            throw new Error('Setting object can not found "callback" function');
+        }
+        var items = this.get(eventName), rets = [];
+        if (items.length === 0) {
+            sett.callback(rets);
+            return;
+        }
+        var args = utils.arg2arr(arguments, 1); args.pop();
+        var next = function() {
+
+        };
     }
 };

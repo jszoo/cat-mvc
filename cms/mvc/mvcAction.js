@@ -38,10 +38,6 @@ mvcAction.prototype = {
     impl: function(p) { return (p === undefined) ? (this._impl) : (this._impl = p, this); },
 
     destroy: function() {
-        if (this.implScope) {
-            this.implScope.destroy();
-            this.implScope = null;
-        }
         if (this.controllerContext) {
             this.controllerContext.destroy();
             this.controllerContext = null;
@@ -51,6 +47,7 @@ mvcAction.prototype = {
         this._attr = null;
         this.controller = null;
         this.attributes = null;
+        this.implScope = null;
     },
 
     initialize: function(controller) {
@@ -215,28 +212,17 @@ mvcAction.prototype = {
 };
 
 var actionImplementationScope = function(controller) {
-    var self = this;
-    this.resultApiSync = new mvcActionResultApi({ httpContext: controller.httpContext, sync: true });
-    utils.each(this.resultApiSync, function(name, func) {
+    var self = this, resultApiSync = new mvcActionResultApi({ httpContext: controller.httpContext, sync: true });
+    utils.each(resultApiSync, function(name, func) {
         if (utils.isFunction(func) && !self[name]) {
             self[name] = function() {
                 var args = utils.arg2arr(arguments);
-                return self.resultApiSync[name].apply(self.resultApiSync, args);
+                return resultApiSync[name].apply(resultApiSync, args);
             };
         }
     });
 };
 
 actionImplementationScope.prototype = {
-
-    resultApiSync: null,
-    
-    constructor: actionImplementationScope, className: 'actionImplementationScope',
-
-    destroy: function() {
-        if (this.resultApiSync) {
-            this.resultApiSync.httpContext = null;
-            this.resultApiSync = null;
-        }
-    }
+    constructor: actionImplementationScope, className: 'actionImplementationScope'
 };

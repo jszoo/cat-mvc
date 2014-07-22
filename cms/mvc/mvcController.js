@@ -138,7 +138,7 @@ mvcController.prototype = {
         this.attributes.emitSync.apply(this.attributes, args);
         //
         var scopeFunc = this.implScope[eventName];
-        if (utils.isFunction(scopeFunc)){
+        if (utils.isFunction(scopeFunc)) {
             var args1 = utils.arg2arr(arguments, 1);
             scopeFunc.apply(this, args1);
         }
@@ -254,7 +254,7 @@ controllerImplementationScope.prototype = {
     constructor: controllerImplementationScope, className: 'controllerImplementationScope',
 
 
-    /************ controller object events **************/
+    /************ controller events **************/
     onControllerInitialized: function(controller) {},
     onControllerDestroy: function(controller) {},
 

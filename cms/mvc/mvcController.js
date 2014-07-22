@@ -264,10 +264,10 @@ controllerImplementationScope.prototype = {
 
 
     /************ action filter events **************/
-    onActionExecuting: function(actionContext) {},
-    onActionExecuted: function(actionContext) {},
-    onResultExecuting: function(resultContext) {},
-    onResultExecuted: function(resultContext) {},
+    onActionExecuting: function(actionContext, next) {},
+    onActionExecuted: function(actionContext, next) {},
+    onResultExecuting: function(resultContext, next) {},
+    onResultExecuted: function(resultContext, next) {},
 
 
     /************ exception event **************/

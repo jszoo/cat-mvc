@@ -89,7 +89,7 @@ mvcController.prototype = {
 
     destroy: function() {
         if (this.attributes) {
-            this.emitAttributesEvent('onControllerDestroy', this);
+            this.emitSyncAttributesEvent('onControllerDestroy', this);
             this.attributes = null;
         }
         if (this.actions) {
@@ -133,12 +133,12 @@ mvcController.prototype = {
         this.attributes = httpContext.app.attributes.resolveConfig(this.attr());
     },
 
-    emitAttributesEvent: function(eventName) {
+    emitSyncAttributesEvent: function(eventName) {
         var args = utils.arg2arr(arguments);
-        this.attributes.emit.apply(this.attributes, args);
+        this.attributes.emitSync.apply(this.attributes, args);
         //
         var scopeFunc = this.implScope[eventName];
-        if (utils.isFunction(scopeFunc)){
+        if (utils.isFunction(scopeFunc)) {
             var args1 = utils.arg2arr(arguments, 1);
             scopeFunc.apply(this, args1);
         }
@@ -182,7 +182,7 @@ mvcController.prototype = {
         var annotated = this.injectImpl(this.httpContext);
         if (!utils.isFunction(annotated.func)) { return; }
         annotated.func.apply(this.implScope, annotated.params);
-        this.emitAttributesEvent('onControllerInitialized', this);
+        this.emitSyncAttributesEvent('onControllerInitialized', this);
     },
 
     action: function() {
@@ -254,7 +254,7 @@ controllerImplementationScope.prototype = {
     constructor: controllerImplementationScope, className: 'controllerImplementationScope',
 
 
-    /************ controller object events **************/
+    /************ controller events **************/
     onControllerInitialized: function(controller) {},
     onControllerDestroy: function(controller) {},
 
@@ -264,10 +264,10 @@ controllerImplementationScope.prototype = {
 
 
     /************ action filter events **************/
-    onActionExecuting: function(actionContext) {},
-    onActionExecuted: function(actionContext) {},
-    onResultExecuting: function(resultContext) {},
-    onResultExecuted: function(resultContext) {},
+    onActionExecuting: function(actionContext, next) {},
+    onActionExecuted: function(actionContext, next) {},
+    onResultExecuting: function(resultContext, next) {},
+    onResultExecuted: function(resultContext, next) {},
 
 
     /************ exception event **************/

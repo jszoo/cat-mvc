@@ -17,7 +17,7 @@ sample.prototype = {
     constructor: sample, className: 'sample',
 
 
-    /************ controller object events **************/
+    /************ controller events **************/
     onControllerInitialized: function(controller) {},
     onControllerDestroy: function(controller) {},
 
@@ -27,10 +27,10 @@ sample.prototype = {
 
 
     /************ action filter events **************/
-    onActionExecuting: function(actionContext) {},
-    onActionExecuted: function(actionContext) {},
-    onResultExecuting: function(resultContext) {},
-    onResultExecuted: function(resultContext) {},
+    onActionExecuting: function(actionContext, next) {},
+    onActionExecuted: function(actionContext, next) {},
+    onResultExecuting: function(resultContext, next) {},
+    onResultExecuted: function(resultContext, next) {},
 
 
     /************ exception event **************/

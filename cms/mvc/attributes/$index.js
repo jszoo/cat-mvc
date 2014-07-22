@@ -106,9 +106,6 @@ attributes.prototype = {
     },
 
     get: function(eventName) {
-        if (!eventName) {
-            throw new Error('Parameter "eventName" is required');
-        }
         var rets = [];
         utils.each(this._attrs, function(i, it) {
             if (it && utils.isFunction(it[eventName])) {
@@ -118,7 +115,7 @@ attributes.prototype = {
         return rets;
     },
 
-    emit: function(eventName) {
+    emitSync: function(eventName) {
         var items = this.get(eventName), rets = [];
         if (items.length === 0) { return rets; }
         //
@@ -140,5 +137,24 @@ attributes.prototype = {
         });
         //
         return rets;
+    },
+
+    /*
+    * emit(param_1, param_2, ..., param_n, sett)
+    * the last argument is the setting object
+    * sett: {
+    *   eventName: 'onXXX',
+    *   callback: function(rets, err) { }
+    *   handler: function(att, val) { }
+    * }
+    */
+    emit: function() {
+        var args = utils.arg2arr(arguments);
+        var sett = args[args.length - 1];
+        try {
+            sett.funcName = sett.eventName;
+            sett.items = this._attrs;
+        } catch (ex) { }
+        utils.callEachAsync.apply(utils, args);
     }
 };

@@ -131,6 +131,7 @@ mvcController.prototype = {
         this.implScope = new controllerImplementationScope(this);
         //
         this.attributes = httpContext.app.attributes.resolveConfig(this.attr());
+        this.attributes.merge(httpContext.app.attributes.resolveConfig('handleError, validateInput(true)'));
     },
 
     emitSyncAttributesEvent: function(eventName) {

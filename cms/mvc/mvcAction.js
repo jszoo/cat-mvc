@@ -358,7 +358,7 @@ mvcAction.prototype = {
         var validate = function() {
             try {
                 if (self.controller.validateRequest) {
-                    //TODO:
+                    return true;
                 } else {
                     return true;
                 }

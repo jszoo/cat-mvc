@@ -145,11 +145,16 @@ attributes.prototype = {
     /*
     * emitAsync(param_1, param_2, ..., param_n, sett)
     * the last argument is the setting object
+    * sett: {
+    *   eventName: 'onXXX',
+    *   callback: function(rets) { }
+    *   handler: function(attr, value) { }
+    * }
     */
     emitAsync: function() {
         var sett = arguments[arguments.length - 1];
         if (!utils.isObject(sett)) {
-            throw new Error('Setting object notfound which contains callback and an item handler is optional');
+            throw new Error('Setting object not found which requires eventName + callback and an item handler is optional');
         }
         if (!utils.isString(sett.eventName)) {
             throw new Error('Setting object can not found "eventName" string');
@@ -163,16 +168,23 @@ attributes.prototype = {
             return;
         }
         var args = utils.arg2arr(arguments), index = -1, canceled = false;
-        var next = function() {
-            if (!canceled) {
-                var item = items[++index], val;
-                if (item) {
-                    rets.push(val = item[sett.eventName].apply(item, args));
-                    if (sett.handler && sett.handler.call(item, val) !== false) {
+        var next = function(val) {
+            if (index > -1) {
+                rets.push(val);
+                if (utils.isFunction(sett.handler)) {
+                    if (sett.handler(item, val) === false) {
                         canceled = true;
                     }
                 }
             }
+            if (!canceled) {
+                var item = items[++index], val;
+                if (item) {
+                    item[sett.eventName].apply(item, args);
+                    return;
+                }
+            }
+            sett.callback(rets);
         };
         args.pop();
         args.push(next);

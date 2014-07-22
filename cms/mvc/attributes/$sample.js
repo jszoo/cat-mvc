@@ -16,15 +16,12 @@ sample.prototype = {
 
     constructor: sample, className: 'sample',
 
-
     /************ controller events **************/
     onControllerInitialized: function(controller) {},
     onControllerDestroy: function(controller) {},
 
-
     /************ authorize event **************/
     onAuthorization: function(authorizationContext) {},
-
 
     /************ action filter events **************/
     onActionExecuting: function(actionContext, next) { next(); },
@@ -32,10 +29,8 @@ sample.prototype = {
     onResultExecuting: function(resultContext, next) { next(); },
     onResultExecuted: function(resultContext, next) { next(); },
 
-
     /************ exception event **************/
     onException: function(exceptionContext) {},
-
 
     /************ action selector functions **************/
     isValidActionName: function(controllerContext, actionName) {},

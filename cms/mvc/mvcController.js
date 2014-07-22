@@ -89,7 +89,7 @@ mvcController.prototype = {
 
     destroy: function() {
         if (this.attributes) {
-            this.emitSyncAttributesEvent('onControllerDestroy', this);
+            this.emitSyncAttributesEvent(this, { eventName: 'onControllerDestroy' });
             this.attributes = null;
         }
         if (this.actions) {
@@ -134,14 +134,20 @@ mvcController.prototype = {
         this.attributes.merge(httpContext.app.attributes.resolveConfig('handleError, validateInput(true)'));
     },
 
-    emitSyncAttributesEvent: function(eventName) {
+    emitSyncAttributesEvent: function() {
         var args = utils.arg2arr(arguments);
         this.attributes.emitSync.apply(this.attributes, args);
         //
-        var scopeFunc = this.implScope[eventName];
-        if (utils.isFunction(scopeFunc)) {
-            var args1 = utils.arg2arr(arguments, 1);
-            scopeFunc.apply(this, args1);
+        var lastArg = arguments[arguments.length - 1];
+        if (lastArg) {
+            var eventName = lastArg.eventName;
+            if (eventName) {
+                var scopeFunc = this.implScope[eventName];
+                if (utils.isFunction(scopeFunc)) {
+                    var args1 = utils.arg2arr(arguments); args1.pop();
+                    scopeFunc.apply(this, args1);
+                }
+            }
         }
     },
 
@@ -183,7 +189,7 @@ mvcController.prototype = {
         var annotated = this.injectImpl(this.httpContext);
         if (!utils.isFunction(annotated.func)) { return; }
         annotated.func.apply(this.implScope, annotated.params);
-        this.emitSyncAttributesEvent('onControllerInitialized', this);
+        this.emitSyncAttributesEvent(this, { eventName: 'onControllerInitialized' });
     },
 
     action: function() {

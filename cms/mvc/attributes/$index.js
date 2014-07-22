@@ -121,23 +121,34 @@ attributes.prototype = {
         return rets;
     },
 
-    emitSync: function(eventName) {
-        var items = this.get(eventName), rets = [];
-        if (items.length === 0) { return rets; }
+    /*
+    * emitSync(param_1, param_2, ..., param_n, sett)
+    * the last argument is the setting object
+    * sett: {
+    *   eventName: 'onXXX',
+    *   handler: function(att, val) { }
+    * }
+    */
+    emitSync: function() {
+        var sett = arguments[arguments.length - 1];
         //
-        var args = utils.arg2arr(arguments, 1), val, handler;
-        if (args.length > 0) {
-            handler = args[args.length - 1];
-            if (utils.isFunction(handler)) {
-                args.pop();
-            } else {
-                handler = null;
-            }
+        if (!utils.isObject(sett)) {
+            throw new Error('Setting object not found which requires items + eventName + callback and handler is optional');
+        }
+        if (!utils.isString(sett.eventName)) {
+            throw new Error('Setting object can not found "eventName" string');
+        }
+        if (!utils.isFunction(sett.handler)) {
+            sett.handler = function() { };
         }
         //
+        var items = this.get(sett.eventName), rets = [];
+        if (items.length === 0) { return rets; }
+        //
+        var args = utils.arg2arr(arguments), val; args.pop();
         utils.each(items, function(i, it) {
-            rets.push(val = it[eventName].apply(it, args));
-            if (handler && handler.call(this, val) === false) {
+            rets.push(val = it[sett.eventName].apply(it, args));
+            if (sett.handler(this, val) === false) {
                 return false;
             }
         });
@@ -155,12 +166,54 @@ attributes.prototype = {
     * }
     */
     emit: function() {
-        var args = utils.arg2arr(arguments);
-        var sett = args[args.length - 1];
-        try {
-            sett.funcName = sett.eventName;
-            sett.items = this._attrs;
-        } catch (ex) { }
-        utils.callEachAsync.apply(utils, args);
+        var sett = arguments[arguments.length - 1];
+        //
+        if (!utils.isObject(sett)) {
+            throw new Error('Setting object not found which requires items + eventName + callback and handler is optional');
+        }
+        if (!utils.isString(sett.eventName)) {
+            throw new Error('Setting object can not found "eventName" string');
+        }
+        if (!utils.isFunction(sett.callback)) {
+            throw new Error('Setting object can not found "callback" function');
+        }
+        if (!utils.isFunction(sett.handler)) {
+            sett.handler = function() { };
+        }
+        //
+        var items = this.get(sett.eventName);
+        if (items.length === 0) {
+            sett.callback();
+            return;            
+        }
+        //
+        var args = utils.arg2arr(arguments), index = -1, item, canceled = false;
+        var next = function(err) {
+            if (index > -1) {
+                if (err) {
+                    sett.callback(err);
+                    return;
+                }
+                if (sett.handler(item) === false) {
+                    canceled = true;
+                }
+            }
+            if (!canceled) {
+                item = items[++index];
+                if (item) {
+                    try {
+                        item[sett.eventName].apply(item, args);
+                    } catch (ex) {
+                        sett.callback(ex);
+                    }
+                    return;
+                }
+            }
+            sett.callback();
+        };
+        //
+        args.pop();
+        args.push(next);
+        next();
     }
 };

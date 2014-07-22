@@ -58,7 +58,7 @@ mvcAction.prototype = {
     },
 
     isValidName: function(name) {
-        var rets = this.attributes.emitSync('isValidActionName', this.controllerContext, name);
+        var rets = this.attributes.emitSync(this.controllerContext, name, { eventName: 'isValidActionName' });
         if (rets.length === 0) {
             return { 'deft': utils.tryLowerEqual(this.name(), name) };
         }
@@ -71,7 +71,7 @@ mvcAction.prototype = {
     },
 
     isValidRequest: function() {
-        var rets  = this.attributes.emitSync('isValidActionRequest', this.controllerContext);
+        var rets  = this.attributes.emitSync(this.controllerContext, { eventName: 'isValidActionRequest' });
         if (rets.length === 0) {
             return { 'deft': true };
         }
@@ -135,9 +135,12 @@ mvcAction.prototype = {
         var context = this.controllerContext.toAuthorizationContext({
             result: undefined
         });
-        this.emitSyncAttributesEvent('onAuthorization', context, function() {
-            if (context.result !== undefined) {
-                return false;
+        this.emitSyncAttributesEvent(context, {
+            eventName: 'onAuthorization',
+            handler: function() {
+                if (context.result !== undefined) {
+                    return false;
+                }
             }
         });
         return context;
@@ -149,9 +152,12 @@ mvcAction.prototype = {
             exceptionHandled: false,
             result: undefined
         });
-        this.emitSyncAttributesEvent('onException', context, function() {
-            if (context.exceptionHandled) {
-                return false;
+        this.emitSyncAttributesEvent(context, {
+            eventName: 'onException',
+            handler: function() {
+                if (context.exceptionHandled) {
+                    return false;
+                }
             }
         });
         return context;

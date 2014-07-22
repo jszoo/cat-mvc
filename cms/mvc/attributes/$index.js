@@ -105,6 +105,12 @@ attributes.prototype = {
         return this._attrs;
     },
 
+    merge: function(ins) {
+        if (ins instanceof attributes) {
+            this._attrs = this._attrs.concat(ins.all());
+        }
+    },
+
     get: function(eventName) {
         var rets = [];
         utils.each(this._attrs, function(i, it) {
@@ -131,7 +137,7 @@ attributes.prototype = {
         //
         utils.each(items, function(i, it) {
             rets.push(val = it[eventName].apply(it, args));
-            if (handler && handler.call(this, v) === false) {
+            if (handler && handler.call(this, val) === false) {
                 return false;
             }
         });

@@ -106,9 +106,6 @@ attributes.prototype = {
     },
 
     get: function(eventName) {
-        if (!eventName) {
-            throw new Error('Parameter "eventName" is required');
-        }
         var rets = [];
         utils.each(this._attrs, function(i, it) {
             if (it && utils.isFunction(it[eventName])) {
@@ -118,7 +115,7 @@ attributes.prototype = {
         return rets;
     },
 
-    emit: function(eventName) {
+    emitSync: function(eventName) {
         var items = this.get(eventName), rets = [];
         if (items.length === 0) { return rets; }
         //
@@ -143,51 +140,21 @@ attributes.prototype = {
     },
 
     /*
-    * emitAsync(param_1, param_2, ..., param_n, sett)
+    * emit(param_1, param_2, ..., param_n, sett)
     * the last argument is the setting object
     * sett: {
     *   eventName: 'onXXX',
-    *   callback: function(rets) { }
-    *   handler: function(attr, value) { }
+    *   callback: function(rets, err) { }
+    *   handler: function(att, val) { }
     * }
     */
-    emitAsync: function() {
-        var sett = arguments[arguments.length - 1];
-        if (!utils.isObject(sett)) {
-            throw new Error('Setting object not found which requires eventName + callback and an item handler is optional');
-        }
-        if (!utils.isString(sett.eventName)) {
-            throw new Error('Setting object can not found "eventName" string');
-        }
-        if (!utils.isFunction(sett.callback)) {
-            throw new Error('Setting object can not found "callback" function');
-        }
-        var items = this.get(sett.eventName), rets = [];
-        if (items.length === 0) {
-            sett.callback(rets);
-            return;
-        }
-        var args = utils.arg2arr(arguments), index = -1, canceled = false;
-        var next = function(val) {
-            if (index > -1) {
-                rets.push(val);
-                if (utils.isFunction(sett.handler)) {
-                    if (sett.handler(item, val) === false) {
-                        canceled = true;
-                    }
-                }
-            }
-            if (!canceled) {
-                var item = items[++index], val;
-                if (item) {
-                    item[sett.eventName].apply(item, args);
-                    return;
-                }
-            }
-            sett.callback(rets);
-        };
-        args.pop();
-        args.push(next);
-        next();
+    emit: function() {
+        var args = utils.arg2arr(arguments);
+        var sett = args[args.length - 1];
+        try {
+            sett.funcName = sett.eventName;
+            sett.items = this._attrs;
+        } catch (ex) { }
+        utils.callEachAsync.apply(utils, args);
     }
 };

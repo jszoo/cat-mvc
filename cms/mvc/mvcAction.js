@@ -58,7 +58,7 @@ mvcAction.prototype = {
     },
 
     isValidName: function(name) {
-        var rets = this.attributes.emit('isValidActionName', this.controllerContext, name);
+        var rets = this.attributes.emitSync('isValidActionName', this.controllerContext, name);
         if (rets.length === 0) {
             return { 'deft': utils.tryLowerEqual(this.name(), name) };
         }
@@ -71,7 +71,7 @@ mvcAction.prototype = {
     },
 
     isValidRequest: function() {
-        var rets  = this.attributes.emit('isValidActionRequest', this.controllerContext);
+        var rets  = this.attributes.emitSync('isValidActionRequest', this.controllerContext);
         if (rets.length === 0) {
             return { 'deft': true };
         }
@@ -83,10 +83,10 @@ mvcAction.prototype = {
         return { 'attr': valid };
     },
 
-    emitAttributesEvent: function() {
+    emitSyncAttributesEvent: function() {
         var args = utils.arg2arr(arguments);
-        this.attributes.emit.apply(this.attributes, args);
-        this.controller.emitAttributesEvent.apply(this.controller, args);
+        this.attributes.emitSync.apply(this.attributes, args);
+        this.controller.emitSyncAttributesEvent.apply(this.controller, args);
     },
 
     injectImpl: function(ctx) {
@@ -137,7 +137,7 @@ mvcAction.prototype = {
         var authorizationContext = this.controllerContext.toAuthorizationContext({
             result: undefined
         });
-        this.emitAttributesEvent('onAuthorization', authorizationContext, function() {
+        this.emitSyncAttributesEvent('onAuthorization', authorizationContext, function() {
             if (authorizationContext.result) {
                 return false;
             }
@@ -162,13 +162,13 @@ mvcAction.prototype = {
         });
         //
         var self = this, endExecute = function(result) {
-            self.emitAttributesEvent('onActionExecuted', actionContext);
+            self.emitSyncAttributesEvent('onActionExecuted', actionContext);
             actionContext.destroy();
             callback(result);
         };
         //
         this.controller.resultApi.callback = endExecute;
-        this.emitAttributesEvent('onActionExecuting', actionContext);
+        this.emitSyncAttributesEvent('onActionExecuting', actionContext);
         this.implScope = new actionImplementationScope(this.controller);
         actionContext.result = annotated.func.apply(this.implScope, annotated.params);
         //
@@ -190,13 +190,13 @@ mvcAction.prototype = {
         });
         //
         var self = this, endExecute = function(exception) {
-            self.emitAttributesEvent('onResultExecuted', resultContext);
+            self.emitSyncAttributesEvent('onResultExecuted', resultContext);
             self.controller.tempData.save(self.controllerContext);
             resultContext.destroy();
             callback(exception);
         };
         //
-        this.emitAttributesEvent('onResultExecuting', resultContext);
+        this.emitSyncAttributesEvent('onResultExecuting', resultContext);
         var isAsyncResult = (result.executeResult.length > 1);
         if (isAsyncResult) {
             var cb = function(ex) { utils.defer(endExecute, ex); };

@@ -89,7 +89,7 @@ mvcController.prototype = {
 
     destroy: function() {
         if (this.attributes) {
-            this.emitAttributesEvent('onControllerDestroy', this);
+            this.emitSyncAttributesEvent('onControllerDestroy', this);
             this.attributes = null;
         }
         if (this.actions) {
@@ -133,9 +133,9 @@ mvcController.prototype = {
         this.attributes = httpContext.app.attributes.resolveConfig(this.attr());
     },
 
-    emitAttributesEvent: function(eventName) {
+    emitSyncAttributesEvent: function(eventName) {
         var args = utils.arg2arr(arguments);
-        this.attributes.emit.apply(this.attributes, args);
+        this.attributes.emitSync.apply(this.attributes, args);
         //
         var scopeFunc = this.implScope[eventName];
         if (utils.isFunction(scopeFunc)){
@@ -182,7 +182,7 @@ mvcController.prototype = {
         var annotated = this.injectImpl(this.httpContext);
         if (!utils.isFunction(annotated.func)) { return; }
         annotated.func.apply(this.implScope, annotated.params);
-        this.emitAttributesEvent('onControllerInitialized', this);
+        this.emitSyncAttributesEvent('onControllerInitialized', this);
     },
 
     action: function() {

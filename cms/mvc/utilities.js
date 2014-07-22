@@ -90,21 +90,20 @@ module.exports = utils.extend({}, utils, {
                 sett.handler = function() { };
             }
             //
-            var items = filterItems(sett.items, sett.funcName), rets = [];
+            var items = filterItems(sett.items, sett.funcName);
             if (items.length === 0) {
-                sett.callback(rets);
+                sett.callback();
                 return;            
             }
             //
             var args = utils.arg2arr(arguments), index = -1, item, canceled = false;
-            var next = function(ret, err) {
+            var next = function(err) {
                 if (index > -1) {
                     if (err) {
-                        sett.callback(null, ret);
+                        sett.callback(err);
                         return;
                     }
-                    rets.push(ret);
-                    if (sett.handler(item, ret) === false) {
+                    if (sett.handler(item) === false) {
                         canceled = true;
                     }
                 }
@@ -114,12 +113,12 @@ module.exports = utils.extend({}, utils, {
                         try {
                             item[sett.funcName].apply(item, args);
                         } catch (ex) {
-                            sett.callback(null, ex);
+                            sett.callback(ex);
                         }
                         return;
                     }
                 }
-                sett.callback(rets);
+                sett.callback();
             };
             //
             args.pop();

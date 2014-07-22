@@ -131,79 +131,265 @@ mvcAction.prototype = {
         return (this.impl().annotated = annotated);
     },
 
-    executeImpl: function(callback) {
-        this.controller.tempData.load(this.controllerContext);
-        //
-        var authorizationContext = this.controllerContext.toAuthorizationContext({
+    onAuthorization: function() {
+        var context = this.controllerContext.toAuthorizationContext({
             result: undefined
         });
-        this.emitSyncAttributesEvent('onAuthorization', authorizationContext, function() {
-            if (authorizationContext.result) {
+        this.emitSyncAttributesEvent('onAuthorization', context, function() {
+            if (context.result !== undefined) {
                 return false;
             }
         });
-        var authResult = authorizationContext.result;
-        authorizationContext.destroy();
-        if (authResult !== undefined) {
-            callback(authResult);
-            return;
-        }
-        //
-        if (this.controller.validateRequest) {
-            //TODO:
-        }
-        //
-        var annotated = this.injectImpl(this.controllerContext);
-        if (!utils.isFunction(annotated.func)) { return; }
-        //
-        var actionContext = this.controllerContext.toActionContext({
-            params: annotated.params,
-            result: undefined
-        });
-        //
-        var self = this, endExecute = function(result) {
-            self.emitSyncAttributesEvent('onActionExecuted', actionContext);
-            actionContext.destroy();
-            callback(result);
-        };
-        //
-        this.controller.resultApi.callback = endExecute;
-        this.emitSyncAttributesEvent('onActionExecuting', actionContext);
-        this.implScope = new actionImplementationScope(this.controller);
-        actionContext.result = annotated.func.apply(this.implScope, annotated.params);
-        //
-        if (actionContext.result !== undefined) {
-            endExecute(actionContext.result);
-        }
+        return context;
     },
 
-    executeResult: function(result, callback) {
-        if (!result || !utils.isFunction(result.executeResult)) {
-            result = new actionResult.contentResult({
-                content: String(result)
+    onException: function(ex) {
+        var context = this.controllerContext.toExceptionContext({
+            exception: ex,
+            exceptionHandled: false,
+            result: undefined
+        });
+        this.emitSyncAttributesEvent('onException', context, function() {
+            if (context.exceptionHandled) {
+                return false;
+            }
+        });
+        return context;
+    },
+
+    onActionExecuting: function(annotated, callback) {
+        var context = this.controllerContext.toActionExecutingContext({
+            parameters: annotated,
+            result: undefined
+        });
+        this.attributes.emit(context, {
+            eventName: 'onActionExecuting',
+            handler: function(att) {
+                if (context.result !== undefined) {
+                    return false;
+                }
+            },
+            callback: function(err) {
+                callback(context, err);
+            }
+        });
+    },
+
+    onActionExecuted: function(result, callback) {
+        var context = this.controllerContext.toActionExecutedContext({
+            // canceled: false,
+            // exception: null,
+            // exceptionhandled: false,
+            result: result
+        });
+        this.attributes.emit(context, {
+            eventName: 'onActionExecuted',
+            handler: function(att) { },
+            callback: function(err) {
+                callback(context, err);
+            }
+        });
+    },
+
+    onResultExecuting: function(result, callback) {
+        var context = this.controllerContext.toResultExecutingContext({
+            result: result,
+            cancel: false
+        });
+        this.attributes.emit(context, {
+            eventName: 'onResultExecuting',
+            handler: function(att) { },
+            callback: function(err) {
+                callback(context, err);
+            }
+        });
+    },
+
+    onResultExecuted: function(result, callback) {
+        var context = this.controllerContext.toResultExecutedContext({
+            result: result
+        });
+        this.attributes.emit(context, {
+            eventName: 'onResultExecuted',
+            handler: function(att) { },
+            callback: function(err) {
+                callback(context, err);
+            }
+        });
+    },
+
+    checkActionResult: function(ret) {
+        if (ret === null) {
+            ret = new actionResult.emptyResult();
+        }
+        if (!utils.isFunction(ret.executeResult)) {
+            ret = new actionResult.contentResult({
+                content: String(ret)
             });
         }
+        return ret;
+    },
+
+    executeImpl: function(callback) {
+        var self = this, contexts = [];
+        this.controller.tempData.load(this.controllerContext);
+
         //
-        var resultContext = this.controllerContext.toResultContext({
-            result: result,
-            exception: undefined
-        });
-        //
-        var self = this, endExecute = function(exception) {
-            self.emitSyncAttributesEvent('onResultExecuted', resultContext);
+        var finish = function(err) {
+            utils.each(contexts, function() {
+                this.destroy();
+            });
             self.controller.tempData.save(self.controllerContext);
-            resultContext.destroy();
-            callback(exception);
+            callback(err);
         };
+
         //
-        this.emitSyncAttributesEvent('onResultExecuting', resultContext);
-        var isAsyncResult = (result.executeResult.length > 1);
-        if (isAsyncResult) {
-            var cb = function(ex) { utils.defer(endExecute, ex); };
-            result.executeResult(resultContext, cb);
-        } else {
-            result.executeResult(resultContext);
-            endExecute(resultContext.exception);
+        var resulted = function(ret) {
+            try {
+                self.onResultExecuted(ret, function(ctx, err) {
+                    contexts.push(ctx);
+                    if (err) {
+                        exception(err);
+                    } else {
+                        finish();
+                    }
+                })
+            } catch(ex) {
+                exception(ex);
+            }
+        };
+
+        //
+        var _result = function(ret) {
+            try {
+                ret.executeResult(self.controllerContext, function(err) {
+                    if (err) {
+                        exception(err);
+                    } else {
+                        resulted(ret);
+                    }
+                });
+            } catch(ex) {
+                exception(ex);
+            }
+        };
+
+        //
+        var resulting = function(ret) {
+            ret = self.checkActionResult(ret);
+            try {
+                self.onResultExecuting(ret, function(ctx, err) {
+                    contexts.push(ctx);
+                    if (err) {
+                        exception(err);
+                    } else {
+                        _result(ret);
+                    }
+                });
+            } catch (ex) {
+                exception(ex);
+            }
+        };
+
+        //
+        var exception = function(err) {
+            try {
+                var ctx = self.onException(err);
+                contexts.push(ctx);
+                if (ctx.exceptionHandled) {
+                    resulting(ctx.result);
+                } else {
+                    finish(err);
+                }
+            } catch (ex) {
+                finish(ex);
+            }
+        };
+
+        //
+        var executed = function(ret) {
+            try {
+                self.onActionExecuted(ret, function(ctx, err) {
+                    contexts.push(ctx);
+                    if (err) {
+                        exception(err);
+                    } else {
+                        resulting(ctx.result);
+                    }
+                });
+            } catch (ex) {
+                exception(ex);
+            }
+        };
+
+        //
+        var execute = function(annotated) {
+            try {
+                self.controller.resultApi.callback = executed;
+                self.implScope = new actionImplementationScope(self.controller);
+                var ret = annotated.func.apply(self.implScope, annotated.params);
+                if (ret !== undefined) {
+                    executed(ret);
+                }
+            } catch (ex) {
+                exception(ex);
+            }
+        };
+
+        //
+        var executing = function(annotated) {
+            try {
+                self.onActionExecuting(annotated, function(ctx, err) {
+                    contexts.push(ctx);
+                    if (err) {
+                        exception(err);
+                    } else if(ctx.result !== undefined) {
+                        executed(ctx.result);
+                    } else {
+                        execute(annotated);
+                    }
+                });    
+            } catch (ex) {
+                exception(ex);
+            }
+        };
+
+        //
+        var validate = function() {
+            try {
+                if (self.controller.validateRequest) {
+                    //TODO:
+                } else {
+                    return true;
+                }
+            } catch (ex) {
+                exception(ex);
+            }
+        };
+
+        //
+        var authorize = function() {
+            try {
+                var ctx = self.onAuthorization();
+                contexts.push(ctx);
+                if (ctx.result !== undefined) {
+                    resulting(ctx.result);
+                } else {
+                    return true;
+                }
+            } catch (ex) {
+                exception(ex);
+            }
+        };
+
+        // start
+        if (authorize() && validate()) {
+            var annotated = this.injectImpl(this.controllerContext);
+            if (utils.isFunction(annotated.func)) {
+                executing(annotated);
+            } else {
+                throw new Error('Implementation not found, controller:"' + this.controller.name() + '", action: "' + this.name() + '"');
+            }
         }
     }
 };

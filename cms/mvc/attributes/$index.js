@@ -144,8 +144,8 @@ attributes.prototype = {
     * the last argument is the setting object
     * sett: {
     *   eventName: 'onXXX',
-    *   callback: function(rets, err) { }
-    *   handler: function(att, val) { }
+    *   handler: function(att) { }
+    *   callback: function(err) { }
     * }
     */
     emit: function() {

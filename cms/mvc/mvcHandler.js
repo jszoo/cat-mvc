@@ -82,19 +82,10 @@ module.exports = function(app) {
                     matched = true;
                 }
                 //
-                var actionExecuted = false;
-                action.executeImpl(function(obj) {
-                    if (actionExecuted) { return; }
-                    actionExecuted = true;
-                    //
-                    var resultExecuted = false;
-                    action.executeResult(obj, function(error) {
-                        if (resultExecuted) { return; }
-                        resultExecuted = true;
-                        controller.destroy();
-                        exception = error;
-                        gotoNext();
-                    });
+                action.executeImpl(function(err) {
+                    controller.destroy();
+                    exception = err;
+                    gotoNext();
                 });
                 //
                 return false; // break

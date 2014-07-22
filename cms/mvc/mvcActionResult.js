@@ -26,7 +26,7 @@ var baseResult = exports.baseResult = function(set) {
 
 baseResult.prototype = {
     constructor: baseResult, className: 'mvcActionResult',
-    executeResult: function(context) {
+    executeResult: function(controllerContext, callback) {
         throw new Error('"executeResult" function needs override by sub classes.');
     }
 };
@@ -39,9 +39,10 @@ var emptyResult = exports.emptyResult = function(set) {
 };
 
 utils.inherit(emptyResult, baseResult, {
-    executeResult: function(context) {
-        context.rulee.response.header('Content-Type', 'text/plain');
-        context.rulee.response.send('');
+    executeResult: function(controllerContext, callback) {
+        controllerContext.rulee.response.header('Content-Type', 'text/plain');
+        controllerContext.rulee.response.send('');
+        callback();
     }
 });
 
@@ -54,11 +55,12 @@ var jsonResult = exports.jsonResult = function(set) {
 
 utils.inherit(jsonResult, baseResult, {
     data: null, contentType: 'application/json',
-    executeResult: function(context) {
+    executeResult: function(controllerContext, callback) {
         var json = JSON.stringify(this.data);
         //
-        context.rulee.response.header('Content-Type', this.contentType);
-        context.rulee.response.send(json);
+        controllerContext.rulee.response.header('Content-Type', this.contentType);
+        controllerContext.rulee.response.send(json);
+        callback();
     }
 });
 
@@ -71,13 +73,14 @@ var jsonpResult = exports.jsonpResult = function(set) {
 
 utils.inherit(jsonpResult, baseResult, {
     data: null, contentType: 'text/javascript', callbackName: 'callback',
-    executeResult: function(context) {
+    executeResult: function(controllerContext, callback) {
         //
         var json = JSON.stringify(this.data).replace(/\u2028/g, '\\u2028').replace(/\u2029/g, '\\u2029');
         var jsonp = utils.format('typeof {0} === "function" && {0}({1});', this.callbackName, json);
         //
-        context.rulee.response.header('Content-Type', this.contentType);
-        context.rulee.response.send(jsonp);
+        controllerContext.rulee.response.header('Content-Type', this.contentType);
+        controllerContext.rulee.response.send(jsonp);
+        callback();
     }
 });
 
@@ -90,8 +93,8 @@ utils.inherit(jsonpResult, baseResult, {
 
 utils.inherit(partialViewResult, baseResult, {
     viewName: null,
-    executeResult: function(context) {
-        if (!this.viewName) { this.viewName = mvcHelper.findRouteItem(context.routeData, 'action').value; }
+    executeResult: function(controllerContext) {
+        if (!this.viewName) { this.viewName = mvcHelper.findRouteItem(controllerContext.routeData, 'action').value; }
         //TODO:
     }
 });*/
@@ -105,19 +108,19 @@ var viewResult = exports.viewResult = function(set) {
 
 utils.inherit(viewResult, baseResult, {
     viewName: null, viewData: null, tempData: null,
-    executeResult: function(context, callback) {
-        if (!this.viewData) { this.viewData = context.controller.viewData; }
-        if (!this.tempData) { this.tempData = context.controller.tempData; }
-        if (!this.viewName) { this.viewName = mvcHelper.findRouteItem(context.routeData, 'action').value; }
+    executeResult: function(controllerContext, callback) {
+        if (!this.viewData) { this.viewData = controllerContext.controller.viewData; }
+        if (!this.tempData) { this.tempData = controllerContext.controller.tempData; }
+        if (!this.viewName) { this.viewName = mvcHelper.findRouteItem(controllerContext.routeData, 'action').value; }
         //
-        var viewContext = context.toViewContext({
+        var viewContext = controllerContext.toViewContext({
             viewData: this.viewData,
             tempData: this.tempData
         });
         //
         var view = new mvcView(this.viewName);
         view.render(viewContext, function(err, str) {
-            if (!err) { context.rulee.response.send(str);}
+            if (!err) { controllerContext.rulee.response.send(str);}
             viewContext.destroy();
             callback(err);
         });
@@ -133,8 +136,9 @@ var fileResult = exports.fileResult = function(set) {
 
 utils.inherit(fileResult, baseResult, {
     filePath: null, fileDownloadName: null,
-    executeResult: function(context) {
-        context.rulee.response.download(this.filePath, this.fileDownloadName);
+    executeResult: function(controllerContext, callback) {
+        controllerContext.rulee.response.download(this.filePath, this.fileDownloadName);
+        callback();
     }
 });
 
@@ -147,13 +151,14 @@ var contentResult = exports.contentResult = function(set) {
 
 utils.inherit(contentResult, baseResult, {
     content: null, contentType: 'text/plain',
-    executeResult: function(context) {
+    executeResult: function(controllerContext, callback) {
         //
         var text = this.content;
         if (!utils.isString(text)) { text = text + ''; }
         //
-        context.rulee.response.header('Content-Type', this.contentType);
-        context.rulee.response.send(text);
+        controllerContext.rulee.response.header('Content-Type', this.contentType);
+        controllerContext.rulee.response.send(text);
+        callback();
     }
 });
 
@@ -166,13 +171,14 @@ var httpStatusCodeResult = exports.httpStatusCodeResult = function(set) {
 
 utils.inherit(httpStatusCodeResult, baseResult, {
     statusCode: null, statusText: null,
-    executeResult: function(context) {
+    executeResult: function(controllerContext, callback) {
         //
         var message = this.statusText;
         if (!message) { message = http.STATUS_CODES[this.statusCode];}
         //
-        context.exception = new Error(message);
-        context.exception.status = this.statusCode;
+        controllerContext.exception = new Error(message);
+        controllerContext.exception.status = this.statusCode;
+        callback();
     }
 });
 
@@ -185,8 +191,8 @@ var httpNotFoundResult = exports.httpNotFoundResult = function(set) {
 };
 
 utils.inherit(httpNotFoundResult, httpStatusCodeResult, {
-    executeResult: function(context) {
-        httpNotFoundResult.superclass.executeResult.call(this, context);
+    executeResult: function(controllerContext, callback) {
+        httpNotFoundResult.superclass.executeResult.call(this, controllerContext, callback);
     }
 });
 
@@ -199,8 +205,8 @@ var httpUnauthorizedResult = exports.httpUnauthorizedResult = function(set) {
 };
 
 utils.inherit(httpUnauthorizedResult, httpStatusCodeResult, {
-    executeResult: function(context) {
-        httpUnauthorizedResult.superclass.executeResult.call(this, context);
+    executeResult: function(controllerContext, callback) {
+        httpUnauthorizedResult.superclass.executeResult.call(this, controllerContext, callback);
     }
 });
 
@@ -213,8 +219,9 @@ var redirectResult = exports.redirectResult = function(set) {
 
 utils.inherit(redirectResult, baseResult, {
     url: null, permanent: false,
-    executeResult: function(context) {
-        context.rulee.response.redirect(this.url, this.permanent);
+    executeResult: function(controllerContext, callback) {
+        controllerContext.rulee.response.redirect(this.url, this.permanent);
+        callback();
     }
 });
 
@@ -227,10 +234,11 @@ var redirectToRouteResult = exports.redirectToRouteResult = function(set) {
 
 utils.inherit(redirectToRouteResult, baseResult, {
     routeName: null, routeValues: null, permanent: false,
-    executeResult: function(context) {
-        context.controller.tempData.keep();
-        var url = mvcHelper.generateUrl(this.routeName, null, null, this.routeValues, context.routeSet, context, false);
-        context.rulee.response.redirect(url, this.permanent);
+    executeResult: function(controllerContext, callback) {
+        controllerContext.controller.tempData.keep();
+        var url = mvcHelper.generateUrl(this.routeName, null, null, this.routeValues, controllerContext.routeSet, controllerContext, false);
+        controllerContext.rulee.response.redirect(url, this.permanent);
+        callback();
     }
 });
 

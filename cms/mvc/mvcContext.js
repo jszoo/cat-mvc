@@ -57,14 +57,29 @@ mvcContext.prototype = {
         return utils.extend(clone(this, 'mvcAuthorizationContext'), merge);
     },
 
-    toActionContext: function(merge) {
+    toExceptionContext: function(merge) {
         if (this.controller) { merge.controller = this.controller; }
-        return utils.extend(clone(this, 'mvcActionContext'), merge);
+        return utils.extend(clone(this, 'mvcExceptionContext'), merge);
     },
 
-    toResultContext: function(merge) {
+    toActionExecutingContext: function(merge) {
         if (this.controller) { merge.controller = this.controller; }
-        return utils.extend(clone(this, 'mvcResultContext'), merge);
+        return utils.extend(clone(this, 'mvcActionExecutingContext'), merge);
+    },
+
+    toActionExecutedContext: function(merge) {
+        if (this.controller) { merge.controller = this.controller; }
+        return utils.extend(clone(this, 'mvcActionExecutedContext'), merge);
+    },
+
+    toResultExecutingContext: function(merge) {
+        if (this.controller) { merge.controller = this.controller; }
+        return utils.extend(clone(this, 'mvcResultExecutingContext'), merge);
+    },
+
+    toResultExecutedContext: function(merge) {
+        if (this.controller) { merge.controller = this.controller; }
+        return utils.extend(clone(this, 'mvcResultExecutedContext'), merge);
     },
 
     toViewContext: function(merge) {

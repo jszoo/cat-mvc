@@ -38,7 +38,8 @@ mvcContext.prototype = {
     destroy: function() {
         var self = this;
         utils.each(this, function(key) {
-            if (utils.isObject(self[key])) {
+            var t = utils.type(self[key]);
+            if (t !== 'string' && t !== 'function') {
                 self[key] = null;
             }
         });

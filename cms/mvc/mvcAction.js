@@ -59,29 +59,38 @@ mvcAction.prototype = {
     },
 
     isValidName: function(name) {
-        var rets = this.attributes.emitSync(this.controllerContext, name, { eventName: 'isValidActionName' });
-        if (rets.length === 0) {
+        var valid = false;
+        this.attributes.emitSync(this.controllerContext, name, {
+            eventName: 'isValidActionName',
+            handler: function(att, val) {
+                // any one valid then break
+                if (val) {
+                    valid = true;
+                    return false;
+                }
+            }
+        });
+        if (valid) {
+            return { 'attr': valid };
+        } else {
             return { 'deft': utils.tryLowerEqual(this.name(), name) };
         }
-        // any one valid
-        var valid = false;
-        utils.each(rets, function(i, ret) {
-            valid = (valid || ret);
-        });
-        return { 'attr': valid };
     },
 
     isValidRequest: function() {
-        var rets  = this.attributes.emitSync(this.controllerContext, { eventName: 'isValidActionRequest' });
-        if (rets.length === 0) {
-            return { 'deft': true };
-        }
-        // all are valid
-        var valid = true;
-        utils.each(rets, function(i, ret) {
-            valid = (valid && ret);
+        var valid = 1;
+        this.attributes.emitSync(this.controllerContext, {
+            eventName: 'isValidActionRequest',
+            handler: function(att, val) {
+                // all are valid
+                valid = !!(valid && val);
+            }
         });
-        return { 'attr': valid };
+        if (valid === 1) {
+            return { 'deft': true };
+        } else {
+            return { 'attr': valid };
+        }
     },
 
     injectImpl: function(ctx) {

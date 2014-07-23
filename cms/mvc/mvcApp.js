@@ -10,6 +10,7 @@ var path = require('path'),
     utils = require('./utilities'),
 	mvcAreas = require('./mvcAreas'),
     mvcController = require('./mvcController'),
+    mvcActionResult = require('./mvcActionResult'),
     mvcAttributes = require('./attributes/$index'),
     mvcViewEngines = require('./mvcViewEngines'),
     mvcHandler = require('./mvcHandler'),
@@ -130,6 +131,7 @@ module.exports = {
     utils: utils,
     caching: caching,
     controller: mvcController.define,
+    actionResults: mvcActionResult,
     current: null,
     gainApp: function(set) {
         return this.current ? this.current : (this.current = new mvcApp(set));

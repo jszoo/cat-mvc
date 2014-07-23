@@ -48,6 +48,25 @@ module.exports = utils.extend({}, utils, {
         return function(fn) {
             process.nextTick(fn.bind.apply(fn, arguments));
         };
-    }()
+    }(),
+
+    deferProxy: function(fn) {
+        return function() {
+            var as = arguments;
+            switch(as.length) {
+                case 0: setImmediate(fn); break;
+                case 1: setImmediate(fn, as[0]); break;
+                case 2: setImmediate(fn, as[0], as[1]); break;
+                case 3: setImmediate(fn, as[0], as[1], as[2]); break;
+                case 4: setImmediate(fn, as[0], as[1], as[2], as[3]); break;
+                case 5: setImmediate(fn, as[0], as[1], as[2], as[3], as[4]); break;
+                case 6: setImmediate(fn, as[0], as[1], as[2], as[3], as[4], as[5]); break;
+                case 7: setImmediate(fn, as[0], as[1], as[2], as[3], as[4], as[5], as[6]); break;
+                case 8: setImmediate(fn, as[0], as[1], as[2], as[3], as[4], as[5], as[6], as[7]); break;
+                case 9: setImmediate(fn, as[0], as[1], as[2], as[3], as[4], as[5], as[6], as[7], as[8]); break;
+                default: as = utils.arg2arr(as); as.splice(0, 0, fn); setImmediate.apply(null, as); break;
+            }
+        };
+    }
 
 });

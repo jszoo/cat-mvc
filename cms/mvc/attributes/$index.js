@@ -181,9 +181,10 @@ attributes.prototype = {
             sett.handler = function() { };
         }
         //
+        var callback = utils.deferProxy(sett.callback);
         var items = this.get(sett.eventName);
         if (items.length === 0) {
-            sett.callback();
+            callback();
             return;            
         }
         //
@@ -191,7 +192,7 @@ attributes.prototype = {
         var next = function(err) {
             if (index > -1) {
                 if (err) {
-                    sett.callback(err);
+                    callback(err);
                     return;
                 }
                 if (sett.handler(item) === false) {
@@ -204,12 +205,12 @@ attributes.prototype = {
                     try {
                         item[sett.eventName].apply(item, args);
                     } catch (ex) {
-                        sett.callback(ex);
+                        callback(ex);
                     }
                     return;
                 }
             }
-            sett.callback();
+            callback();
         };
         //
         args.push(next);

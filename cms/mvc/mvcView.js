@@ -20,6 +20,10 @@ mvcView.prototype = {
 
     constructor: mvcView, className: 'mvcView',
 
+    findView: function(viewContext) {
+        //TODO:
+    },
+
     render: function(viewContext, callback) {
         var engines = viewContext.app.engines;
         //

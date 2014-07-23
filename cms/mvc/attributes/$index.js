@@ -114,7 +114,7 @@ attributes.prototype = {
     },
 
     parent: function(p) {
-        return (p instanceof attributes) ? (this._parent = p, this) : (this._parent);
+        return (p === undefined) ? (this._parent) : (this._parent = p, this);
     },
 
     filter: function(eventName, includeParent) {
@@ -124,7 +124,7 @@ attributes.prototype = {
                 rets.push(it);
             }
         });
-        if (includeParent && this._parent) {
+        if (includeParent && (this._parent instanceof attributes)) {
             var ps = this._parent.filter(eventName, includeParent);
             return rets.concat(ps);
         } else {

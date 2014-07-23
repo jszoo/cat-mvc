@@ -252,10 +252,10 @@ controllerImplementationScope.prototype = {
     onAuthorization: function(authorizationContext) {},
 
     /************ action filter events **************/
-    onActionExecuting: function(actionContext, next) { next(); },
-    onActionExecuted: function(actionContext, next) { next(); },
-    onResultExecuting: function(resultContext, next) { next(); },
-    onResultExecuted: function(resultContext, next) { next(); },
+    onActionExecuting: function(actionExecutingContext, next) { next(); },
+    onActionExecuted: function(actionExecutedContext, next) { next(); },
+    onResultExecuting: function(resultExecutingContext, next) { next(); },
+    onResultExecuted: function(resultExecutedContext, next) { next(); },
 
     /************ exception event **************/
     onException: function(exceptionContext) {}

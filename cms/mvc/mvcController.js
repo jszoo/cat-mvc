@@ -15,12 +15,12 @@ var utils = require('./utilities'),
     mvcTempDataStore = require('./mvcTempDataStore'),
     mvcActionResultApi = require('./mvcActionResultApi');
 
+var controllersDefined,
+    controllerKeyInScope = 'dont_use_me(random:' + utils.unique(8) + ')';
+
 var mvcController = module.exports = function(set) {
     utils.extend(this, set);
 };
-
-var defined;
-var controllerKeyInScope = 'dont_use_me(random:' + utils.unique(8) + ')';
 
 mvcController.define = function() {
     var name, attr, impl;
@@ -46,18 +46,18 @@ mvcController.define = function() {
         _attr: attr,
         _impl: impl
     });
-    if (defined) {
-        defined.push(ret);
+    if (controllersDefined) {
+        controllersDefined.push(ret);
     }
     return ret;
 };
 
 mvcController.loadfile = function(fileName) {
-    defined = [];
+    controllersDefined = [];
     delete require.cache[fileName];
     require(fileName);
-    var t = defined;
-    defined = null;
+    var t = controllersDefined;
+    controllersDefined = null;
     return t;
 };
 

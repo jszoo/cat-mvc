@@ -30,6 +30,10 @@ mvcViewEngines.prototype = {
         return (extname) ? this._inner.set('_default_extname', extname) : this._inner.get('_default_extname');
     },
 
+    findView: function(viewContext, callback) {
+        //TODO:
+    },
+
     get: function(extname) {
         return this._inner.get(extname);
     },

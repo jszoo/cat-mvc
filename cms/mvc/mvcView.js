@@ -10,29 +10,25 @@ var fs = require('fs'),
     path = require('path'),
     utils = require('./utilities');
 
-var mvcView = module.exports = function(viewName) {
-    this.viewName = viewName;
+var mvcView = module.exports = function(set) {
+    utils.extend(this, set)
 };
 
 mvcView.prototype = {
     
-    viewName: null, engineExtname: null,
+    viewName: null, viewEngines: null,
 
     constructor: mvcView, className: 'mvcView',
 
-    findView: function(viewContext) {
+    findView: function(viewContext, callback) {
         //TODO:
     },
 
     render: function(viewContext, callback) {
-        var engines = viewContext.app.engines;
-        //
-        var extname = this.engineExtname;
-        if (!extname) { extname = engines.default(); }
-        //
-        var engine = engines.get(extname);
+        var extname = this.viewEngines.default();
+        var engine = this.viewEngines.get(extname);
         if (!engine) {
-            callback(new Error('Failed to load view engine "' + this.engineExtname + '"'));
+            callback(new Error('Failed to load view engine "' + extname + '"'));
             return;
         }
         //

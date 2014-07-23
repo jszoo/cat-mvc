@@ -118,7 +118,10 @@ utils.inherit(viewResult, baseResult, {
             tempData: this.tempData
         });
         //
-        var view = new mvcView(this.viewName);
+        var view = new mvcView({
+            viewName: this.viewName,
+            viewEngines: viewContext.app.engines
+        });
         view.render(viewContext, function(err, str) {
             if (!err) { controllerContext.rulee.response.send(str);}
             viewContext.destroy();

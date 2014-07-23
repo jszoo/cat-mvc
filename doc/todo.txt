@@ -22,3 +22,5 @@ PP 4. partialViewResult
 
 21. new execute action impl flow
 22. onException attribute
+
+23. viewResult -> viewEngines.findView -> return detail mvcView, eg: vashView -> which vashView inherit from mvcView -> detail mvcView.render -> end

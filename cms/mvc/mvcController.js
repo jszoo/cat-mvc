@@ -181,7 +181,7 @@ mvcController.prototype = {
     },
 
     appendInlineActions: function(scope) {
-        if (!scope) { return; }
+        if (!(scope instanceof controllerImplementationScope)) { return; }
         var proto = controllerImplementationScope.prototype;
         for (var name in scope) {
             if (!utils.hasOwn(scope, name)) { continue; }

@@ -41,6 +41,7 @@ attributeManager.prototype = {
     registerAll: function() {
         var self = this;
         this.register('actionName', require('./actionName'));
+        this.register('handleError', require('./handleError'));
         this.register('requireHttps', require('./requireHttps'));
         this.register('validateInput', require('./validateInput'));
         utils.each(require('./httpMethod'), function(name) { self.register(name, this); });

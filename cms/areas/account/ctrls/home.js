@@ -13,9 +13,7 @@ mvc.controller(function(req, res, end) {
     });
 
     this.action('test', function(id) {
-        setTimeout(function() {
-            end.view({ id: id });
-        }, 16);
+        end.view({ id: id });
     });
 
 });

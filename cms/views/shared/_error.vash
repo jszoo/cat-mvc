@@ -1,3 +1,11 @@
+@{
+    if (!model.message) {
+        model.message = 'An error occurred while processing your request.';
+    }
+    if (!model.status) {
+        model.status = 500;
+    }
+}
 
 @html.extend('_layout', function(ctx) {
 

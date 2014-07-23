@@ -20,6 +20,8 @@ var mvcController = module.exports = function(set) {
 };
 
 var defined;
+var controllerKeyInScope = 'dont_use_me(random:' + utils.unique(8) + ')';
+
 mvcController.define = function() {
     var name, attr, impl;
     var len = arguments.length, arg0 = arguments[0];
@@ -113,7 +115,7 @@ mvcController.prototype = {
             this.httpContext = null;
         }
         if (this.implScope) {
-            this.implScope.controller = null;
+            this.implScope[controllerKeyInScope] = null;
             this.implScope = null;
         }
         // clear reference types
@@ -254,8 +256,6 @@ mvcController.prototype = {
         return new Error(utils.format('The current request for action "{0}" on controller type "{1}" is ambiguous between the following action methods:<br/>{2}', actionName, this.name(), message.join('<br/>')));
     }
 };
-
-var controllerKeyInScope = 'dont_use_me(random:' + utils.unique(8) + ')';
 
 var controllerImplementationScope = function(controller) {
     this[controllerKeyInScope] = controller;

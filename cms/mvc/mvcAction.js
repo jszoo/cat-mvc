@@ -55,6 +55,7 @@ mvcAction.prototype = {
         this.controller = controller;
         this.controllerContext = controller.httpContext.toControllerContext(controller);
         this.attributes = controller.httpContext.app.attributes.resolveConfig(this.attr());
+        this.attributes.parent(controller.attributes);
     },
 
     isValidName: function(name) {
@@ -81,12 +82,6 @@ mvcAction.prototype = {
             valid = (valid && ret);
         });
         return { 'attr': valid };
-    },
-
-    emitSyncAttributesEvent: function() {
-        var args = utils.arg2arr(arguments);
-        this.attributes.emitSync.apply(this.attributes, args);
-        this.controller.emitSyncAttributesEvent.apply(this.controller, args);
     },
 
     injectImpl: function(ctx) {
@@ -135,8 +130,9 @@ mvcAction.prototype = {
         var context = this.controllerContext.toAuthorizationContext({
             result: undefined
         });
-        this.emitSyncAttributesEvent(context, {
+        this.attributes.emitSync(context, {
             eventName: 'onAuthorization',
+            includeParent: true,
             handler: function() {
                 if (context.result !== undefined) {
                     return false;
@@ -152,8 +148,9 @@ mvcAction.prototype = {
             exceptionHandled: false,
             result: undefined
         });
-        this.emitSyncAttributesEvent(context, {
+        this.attributes.emitSync(context, {
             eventName: 'onException',
+            includeParent: true,
             handler: function() {
                 if (context.exceptionHandled) {
                     return false;
@@ -170,6 +167,7 @@ mvcAction.prototype = {
         });
         this.attributes.emit(context, {
             eventName: 'onActionExecuting',
+            includeParent: true,
             handler: function(att) {
                 if (context.result !== undefined) {
                     return false;
@@ -190,6 +188,7 @@ mvcAction.prototype = {
         });
         this.attributes.emit(context, {
             eventName: 'onActionExecuted',
+            includeParent: true,
             handler: function(att) { },
             callback: function(err) {
                 callback(context, err);
@@ -204,6 +203,7 @@ mvcAction.prototype = {
         });
         this.attributes.emit(context, {
             eventName: 'onResultExecuting',
+            includeParent: true,
             handler: function(att) { },
             callback: function(err) {
                 callback(context, err);
@@ -217,6 +217,7 @@ mvcAction.prototype = {
         });
         this.attributes.emit(context, {
             eventName: 'onResultExecuted',
+            includeParent: true,
             handler: function(att) { },
             callback: function(err) {
                 callback(context, err);

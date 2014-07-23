@@ -97,7 +97,7 @@ var attributes = function(set) {
 
 attributes.prototype = {
 
-    _attrs: null,
+    _attrs: null, _parent: null,
 
     constructor: attributes, className: 'attributes',
 
@@ -105,20 +105,31 @@ attributes.prototype = {
         return this._attrs;
     },
 
-    merge: function(ins) {
+    append: function(ins) {
         if (ins instanceof attributes) {
             this._attrs = this._attrs.concat(ins.all());
+        } else {
+            this._attrs.push(ins);
         }
     },
 
-    get: function(eventName) {
+    parent: function(p) {
+        return (p instanceof attributes) ? (this._parent = p, this) : (this._parent);
+    },
+
+    filter: function(eventName, includeParent) {
         var rets = [];
         utils.each(this._attrs, function(i, it) {
             if (it && utils.isFunction(it[eventName])) {
                 rets.push(it);
             }
         });
-        return rets;
+        if (includeParent && this._parent) {
+            var ps = this._parent.filter(eventName, includeParent);
+            return rets.concat(ps);
+        } else {
+            return rets;
+        }
     },
 
     /*
@@ -126,11 +137,12 @@ attributes.prototype = {
     * the last argument is the setting object
     * sett: {
     *   eventName: 'onXXX',
+    *   includeParent: false,
     *   handler: function(att, val) { }
     * }
     */
     emitSync: function() {
-        var sett = arguments[arguments.length - 1];
+        var args = utils.arg2arr(arguments), sett = args.pop();
         //
         if (!utils.isObject(sett)) {
             throw new Error('Setting object not found which requires items + eventName + callback and handler is optional');
@@ -142,10 +154,9 @@ attributes.prototype = {
             sett.handler = function() { };
         }
         //
-        var items = this.get(sett.eventName), rets = [];
+        var items = this.filter(sett.eventName, sett.includeParent), rets = [], val;
         if (items.length === 0) { return rets; }
         //
-        var args = utils.arg2arr(arguments), val; args.pop();
         utils.each(items, function(i, it) {
             rets.push(val = it[sett.eventName].apply(it, args));
             if (sett.handler(this, val) === false) {
@@ -161,6 +172,7 @@ attributes.prototype = {
     * the last argument is the setting object
     * sett: {
     *   eventName: 'onXXX',
+    *   includeParent: false,
     *   handler: function(att) { }
     *   callback: function(err) { }
     * }
@@ -182,7 +194,7 @@ attributes.prototype = {
         }
         //
         var callback = utils.deferProxy(sett.callback);
-        var items = this.get(sett.eventName);
+        var items = this.filter(sett.eventName, sett.includeParent);
         if (items.length === 0) {
             callback();
             return;            

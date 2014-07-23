@@ -173,8 +173,8 @@ attributes.prototype = {
     * sett: {
     *   eventName: 'onXXX',
     *   includeParent: false,
-    *   handler: function(att) { }
-    *   callback: function(err) { }
+    *   handler: function(att, val) { }
+    *   callback: function(err, vals) { }
     * }
     */
     emit: function() {
@@ -193,21 +193,22 @@ attributes.prototype = {
             sett.handler = function() { };
         }
         //
-        var callback = utils.deferProxy(sett.callback);
+        var callback = utils.deferProxy(sett.callback), vals = [];
         var items = this.filter(sett.eventName, sett.includeParent);
         if (items.length === 0) {
-            callback();
+            callback(null, vals);
             return;            
         }
         //
         var index = -1, item, canceled = false;
-        var next = function(err) {
+        var next = function(err, val) {
             if (index > -1) {
+                vals.push(val);
                 if (err) {
-                    callback(err);
+                    callback(err, vals);
                     return;
                 }
-                if (sett.handler(item) === false) {
+                if (sett.handler(item, val) === false) {
                     canceled = true;
                 }
             }
@@ -217,12 +218,12 @@ attributes.prototype = {
                     try {
                         item[sett.eventName].apply(item, args);
                     } catch (ex) {
-                        callback(ex);
+                        callback(ex, vals);
                     }
                     return;
                 }
             }
-            callback();
+            callback(null, vals);
         };
         //
         args.push(next);

@@ -112,11 +112,14 @@ mvcController.prototype = {
             this.httpContext.destroy();
             this.httpContext = null;
         }
+        if (this.implScope) {
+            this.implScope.controller = null;
+            this.implScope = null;
+        }
         // clear reference types
         this._impl = null;
         this._attr = null;
         this.tempData = null;
-        this.implScope = null;
     },
 
     initialize: function(httpContext) {
@@ -173,7 +176,20 @@ mvcController.prototype = {
         var annotated = this.injectImpl(this.httpContext);
         if (!utils.isFunction(annotated.func)) { return; }
         annotated.func.apply(this.implScope, annotated.params);
+        this.appendInlineActions(this.implScope);
         this.attributes.emitSync(this, { eventName: 'onControllerInitialized' });
+    },
+
+    appendInlineActions: function(scope) {
+        if (!scope) { return; }
+        var proto = controllerImplementationScope.prototype;
+        for (var n in scope) {
+            if (!utils.hasOwn(scope, n)) { continue; }
+            if (!utils.isFunction(scope[n])) { continue; }
+            if (!(n in proto) || n === 'action') {
+                this.action(n, scope[n]);
+            }
+        }
     },
 
     action: function() {
@@ -234,15 +250,17 @@ mvcController.prototype = {
     }
 };
 
+var controllerKeyInScope = 'dont_use_me(' + utils.unique(8) + ')';
+
 var controllerImplementationScope = function(controller) {
-    this.action = function() {
-        return controller.action.apply(controller, arguments);
-    };
+    this[controllerKeyInScope] = controller;
 };
 
 controllerImplementationScope.prototype = {
     
     constructor: controllerImplementationScope, className: 'controllerImplementationScope',
+
+    action: function() { return this[controllerKeyInScope].action.apply(this[controllerKeyInScope], arguments); },
 
     /************ controller events **************/
     onControllerInitialized: function(controller) {},

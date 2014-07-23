@@ -58,41 +58,6 @@ mvcAction.prototype = {
         this.attributes.parent(controller.attributes);
     },
 
-    isValidName: function(name) {
-        var valid = false;
-        this.attributes.emitSync(this.controllerContext, name, {
-            eventName: 'isValidActionName',
-            handler: function(att, val) {
-                // any one valid then break
-                if (val) {
-                    valid = true;
-                    return false;
-                }
-            }
-        });
-        if (valid) {
-            return { 'attr': valid };
-        } else {
-            return { 'deft': utils.tryLowerEqual(this.name(), name) };
-        }
-    },
-
-    isValidRequest: function() {
-        var valid = 1;
-        this.attributes.emitSync(this.controllerContext, {
-            eventName: 'isValidActionRequest',
-            handler: function(att, val) {
-                // all are valid
-                valid = !!(valid && val);
-            }
-        });
-        if (valid === 1) {
-            return { 'deft': true };
-        } else {
-            return { 'attr': valid };
-        }
-    },
-
     injectImpl: function(ctx) {
         var annotated = this.impl().annotated;
         if (annotated) { return annotated; }
@@ -133,6 +98,41 @@ mvcAction.prototype = {
         }
         //
         return (this.impl().annotated = annotated);
+    },
+
+    isValidName: function(name) {
+        var valid = false;
+        this.attributes.emitSync(this.controllerContext, name, {
+            eventName: 'isValidActionName',
+            handler: function(att, val) {
+                // any one valid then break
+                if (val) {
+                    valid = true;
+                    return false;
+                }
+            }
+        });
+        if (valid) {
+            return { 'attr': valid };
+        } else {
+            return { 'deft': utils.tryLowerEqual(this.name(), name) };
+        }
+    },
+
+    isValidRequest: function() {
+        var valid = 1;
+        this.attributes.emitSync(this.controllerContext, {
+            eventName: 'isValidActionRequest',
+            handler: function(att, val) {
+                // all are valid
+                valid = !!(valid && val);
+            }
+        });
+        if (valid === 1) {
+            return { 'deft': true };
+        } else {
+            return { 'attr': valid };
+        }
     },
 
     onAuthorization: function() {

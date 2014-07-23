@@ -177,7 +177,7 @@ mvcAction.prototype = {
         this.attributes.emit(context, {
             eventName: 'onActionExecuting',
             includeParent: true,
-            handler: function(att) {
+            handler: function() {
                 if (context.result !== undefined) {
                     return false;
                 }
@@ -198,7 +198,7 @@ mvcAction.prototype = {
         this.attributes.emit(context, {
             eventName: 'onActionExecuted',
             includeParent: true,
-            handler: function(att) { },
+            handler: function() { },
             callback: function(err) {
                 callback(context, err);
             }
@@ -213,7 +213,7 @@ mvcAction.prototype = {
         this.attributes.emit(context, {
             eventName: 'onResultExecuting',
             includeParent: true,
-            handler: function(att) { },
+            handler: function() { },
             callback: function(err) {
                 callback(context, err);
             }
@@ -227,7 +227,7 @@ mvcAction.prototype = {
         this.attributes.emit(context, {
             eventName: 'onResultExecuted',
             includeParent: true,
-            handler: function(att) { },
+            handler: function() { },
             callback: function(err) {
                 callback(context, err);
             }

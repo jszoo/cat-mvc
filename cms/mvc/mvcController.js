@@ -183,11 +183,16 @@ mvcController.prototype = {
     appendInlineActions: function(scope) {
         if (!scope) { return; }
         var proto = controllerImplementationScope.prototype;
-        for (var n in scope) {
-            if (!utils.hasOwn(scope, n)) { continue; }
-            if (!utils.isFunction(scope[n])) { continue; }
-            if (!(n in proto) || n === 'action') {
-                this.action(n, scope[n]);
+        for (var name in scope) {
+            if (!utils.hasOwn(scope, name)) { continue; }
+            if (!utils.isFunction(scope[name])) { continue; }
+            if (!(name in proto) || name === 'action') {
+                var impl = scope[name], attr = impl.attr;
+                this.actions.push(new mvcAction({
+                    _name: name,
+                    _attr: attr,
+                    _impl: impl
+                }));
             }
         }
     },

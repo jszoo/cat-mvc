@@ -255,7 +255,7 @@ mvcController.prototype = {
     }
 };
 
-var controllerKeyInScope = 'dont_use_me(' + utils.unique(8) + ')';
+var controllerKeyInScope = 'dont_use_me(random:' + utils.unique(8) + ')';
 
 var controllerImplementationScope = function(controller) {
     this[controllerKeyInScope] = controller;

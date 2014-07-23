@@ -1,0 +1,12 @@
+
+@html.extend('_layout', function(ctx) {
+
+    @html.block('content', function(ctx) {
+        
+        <h1>@model.message</h1>
+        <h2>@model.error.status</h2>
+        <pre>@model.error.stack</pre>
+
+    })
+
+})

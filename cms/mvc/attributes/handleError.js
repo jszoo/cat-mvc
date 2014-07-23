@@ -15,20 +15,18 @@ var handleError = module.exports = function(set) {
 
 handleError.prototype = {
 
-    viewName: 'Error',
+    viewName: '_error',
 
     constructor: handleError, className: 'handleError',
 
     onException: function(exceptionContext) {
-        if (exceptionContext.exceptionHandled) {
-            return;
+        if (!exceptionContext.exceptionHandled) {
+            exceptionContext.exceptionHandled = true;
+            exceptionContext.result = new viewResult({
+                viewData: exceptionContext.exception,
+                viewName: this.viewName,
+            });
         }
-        exceptionContext.exceptionHandled = true;
-        exceptionContext.result = new viewResult({
-            viewData: exceptionContext.exception,
-            viewName: this.viewName,
-            statusCode: 500
-        });
     }
     
 };

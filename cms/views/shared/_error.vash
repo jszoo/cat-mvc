@@ -4,8 +4,8 @@
     @html.block('content', function(ctx) {
         
         <h1>@model.message</h1>
-        <h2>@model.error.status</h2>
-        <pre>@model.error.stack</pre>
+        <h2>@model.status</h2>
+        <pre>@model.stack</pre>
 
     })
 

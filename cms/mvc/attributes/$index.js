@@ -166,7 +166,7 @@ attributes.prototype = {
     * }
     */
     emit: function() {
-        var sett = arguments[arguments.length - 1];
+        var args = utils.arg2arr(arguments), sett = args.pop();
         //
         if (!utils.isObject(sett)) {
             throw new Error('Setting object not found which requires items + eventName + callback and handler is optional');
@@ -187,7 +187,7 @@ attributes.prototype = {
             return;            
         }
         //
-        var args = utils.arg2arr(arguments), index = -1, item, canceled = false;
+        var index = -1, item, canceled = false;
         var next = function(err) {
             if (index > -1) {
                 if (err) {
@@ -212,7 +212,6 @@ attributes.prototype = {
             sett.callback();
         };
         //
-        args.pop();
         args.push(next);
         next();
     }

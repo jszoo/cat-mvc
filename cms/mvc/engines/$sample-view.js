@@ -17,10 +17,11 @@ sampleView.prototype = {
     constructor: sampleView, className: 'sampleView',
 
     render: function(viewContext, callback) {
-        
+        var error = null;
+        //TODO: render
+        callback(error);
     },
 
-    destroy: function() {
-    	
+    release: function() {
     }
 };

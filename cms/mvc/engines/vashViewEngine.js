@@ -114,8 +114,8 @@ vashViewEngine.prototype = {
     },
 
     releaseView: function(controllerContext, view) {
-        if (view.destroy) {
-            view.destroy();
+        if (view.release) {
+            view.release();
         }
     }
 };

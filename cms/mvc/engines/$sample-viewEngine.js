@@ -17,17 +17,17 @@ sampleViewEngine.prototype = {
 
     constructor: sampleViewEngine, className: 'sampleViewEngine',
 
-    findView: function(controllerContext, viewName) {
-        return {
+    findView: function(controllerContext, viewName, callback) {
+        var error = null;
+        callback(error, {
             view: new sampleView({}),
-            viewEngine: this,
             searchedLocations: []
-        };
+        });
     },
 
     releaseView: function(controllerContext, view) {
-        if (view.destroy) {
-            view.destroy();
+        if (view.release) {
+            view.release();
         }
     }
 };

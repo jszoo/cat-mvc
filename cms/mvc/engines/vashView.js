@@ -35,7 +35,7 @@ vashView.prototype = {
         }
     },
 
-    destroy: function() {
+    release: function() {
         this.findLayout = null;
     }
 };

@@ -19,10 +19,10 @@ var path = require('path'),
 var caching = require('./caching'),
     cachingStore = require('./cachingStore');
 
-var midError = require('./middles/error'),
-    midHeader = require('./middles/header'),
-    midRequest = require('./middles/request'),
-    midResponse = require('./middles/response');
+var midError = require('./middleware/error'),
+    midHeader = require('./middleware/header'),
+    midRequest = require('./middleware/request'),
+    midResponse = require('./middleware/response');
 
 var bodyParser = require('body-parser'),
     cookieParser = require('cookie-parser');

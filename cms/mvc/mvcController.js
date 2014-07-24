@@ -136,7 +136,6 @@ mvcController.prototype = {
         this.implScope = new controllerImplementationScope(this);
         //
         this.attributes = httpContext.app.attributes.resolveConfig(this.attr());
-        this.attributes.append(httpContext.app.attributes.resolveConfig('handleError, validateInput(true)'));
         this.attributes.append(this.implScope);
     },
 

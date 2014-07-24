@@ -48,7 +48,7 @@ viewEngineManager.prototype = {
             }
         });
         if (!viewEngineResult) {
-            throw new Error('Can not find any view engine.')
+            throw new Error('Can not find any view engine.');
         }
         if (!viewEngineResult.view) {
             viewEngineResult.searchedLocations = searchedLocations;

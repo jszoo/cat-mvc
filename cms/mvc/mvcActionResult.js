@@ -8,7 +8,6 @@
 
 var http = require('http'),
     utils = require('./utilities'),
-    mvcView = require('./mvcView'),
     mvcHelper = require('./mvcHelper'),
     mvcHttpStatusCode = require('./mvcHttpStatusCode');
 
@@ -27,7 +26,7 @@ var baseResult = exports.baseResult = function(set) {
 baseResult.prototype = {
     constructor: baseResult, className: 'mvcActionResult',
     executeResult: function(controllerContext, callback) {
-        throw new Error('"executeResult" function needs override by sub classes.');
+        throw new Error('"executeResult" interface function needs override by sub classes.');
     }
 };
 
@@ -107,26 +106,39 @@ var viewResult = exports.viewResult = function(set) {
 };
 
 utils.inherit(viewResult, baseResult, {
-    viewName: null, viewData: null, tempData: null,
+    viewName: null, viewData: null, tempData: null, view: null,
     executeResult: function(controllerContext, callback) {
         if (!this.viewData) { this.viewData = controllerContext.controller.viewData; }
         if (!this.tempData) { this.tempData = controllerContext.controller.tempData; }
-        if (!this.viewName) { this.viewName = mvcHelper.findRouteItem(controllerContext.routeData, 'action').value; }
         //
+        var viewEngineResult;
+        if (!this.view) {
+            viewEngineResult = this.findView(controllerContext);
+            this.view = viewEngineResult.view;
+        }
+        if (!utils.isFunction(this.view.render)) {
+            throw new Error('Can not find the interface function: "render(viewContext, callback)", please implement it in the view.')
+        }
         var viewContext = controllerContext.toViewContext({
             viewData: this.viewData,
             tempData: this.tempData
         });
-        //
-        var view = new mvcView({
-            viewName: this.viewName,
-            viewEngines: viewContext.app.engines
-        });
-        view.render(viewContext, function(err, str) {
-            if (!err) { controllerContext.rulee.response.send(str);}
+        this.view.render(viewContext, function(err, str) {
+            if (!err) { controllerContext.rulee.response.send(str); }
+            if (viewEngineResult) { viewEngineResult.viewEngine.releaseView(controllerContext, this.view); }
             viewContext.destroy();
             callback(err);
         });
+    },
+    findView: function(controllerContext) {
+        if (!this.viewName) { this.viewName = mvcHelper.findRouteItem(controllerContext.routeData, 'action').value; }
+        var viewEngines = controllerContext.app.viewEngines;
+        var viewEngineResult = viewEngines.findView(controllerContext, this.viewName);
+        if (viewEngineResult.view) {
+            return viewEngineResult;
+        } else {
+            throw new Error('Failed to lookup view "' + this.viewName + '" in the following locations <br/>' + viewEngineResult.searchedLocations.join('<br/>'));
+        }
     }
 });
 

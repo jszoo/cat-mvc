@@ -20,18 +20,15 @@ vashView.prototype = {
     constructor: vashView, className: 'vashView',
 
     render: function(viewContext, callback) {
-        try {
-            var data = {
-                model: viewContext.viewData,
-                url: viewContext.controller.url,
-                __RULEE_findView: this.findView
-            };
-            vash(this.filePath, data, function(err, str) {
-                callback(err, str);
-            });
-        } catch (ex) {
-            callback(ex);
-        }
+        callback = utils.deferProxy(callback);
+        var data = {
+            model: viewContext.viewData,
+            url: viewContext.controller.url,
+            __RULEE_findView: this.findView
+        };
+        vash(this.filePath, data, function(err, str) {
+            callback(err, str);
+        });
     },
 
     destroy: function() {

@@ -60,7 +60,6 @@ vashViewEngine.prototype = {
         //
         return {
             view: view,
-            viewEngine: this,
             searchedLocations: searchedLocations
         };
     },

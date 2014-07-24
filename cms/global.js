@@ -37,10 +37,14 @@ app.use(favicon(app.mapPath(config.get('favicon.source'))));
 var static = require('serve-static');
 app.use(static(app.mapPath('~/fe')));
 
-// entrance
-var express = require('express');
-var server = express();
-server.use(app.handler());
+var rawServer = true, server;
+if (rawServer) {
+	var http = require('http');
+	server = http.createServer(app.handler());
+} else {
+	var express = require('express');
+	server = express(); server.use(app.handler());
+}
 
 // export
 module.exports = server;

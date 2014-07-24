@@ -18,8 +18,9 @@ sampleView.prototype = {
 
     render: function(viewContext, callback) {
         var error = null;
+        var html = null;
         //TODO: render
-        callback(error);
+        callback(error, html);
     },
 
     release: function() {

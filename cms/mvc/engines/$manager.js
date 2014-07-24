@@ -37,12 +37,19 @@ viewEngineManager.prototype = {
         var viewEngineResult, searchedLocations = [];
         utils.each(this._inner.all(), function() {
             viewEngineResult = this.findView(controllerContext, viewName);
+            if (!viewEngineResult) {
+                throw new Error('The interface function "findView" in the viewEngine require return object as: { view: viewInstance, searchedLocations: [path1, path2...] }');
+            }
+            viewEngineResult.viewEngine = this;
             if (viewEngineResult.view) {
                 return false; // break
             } else {
                 searchedLocations = searchedLocations.concat(viewEngineResult.searchedLocations);
             }
         });
+        if (!viewEngineResult) {
+            throw new Error('Can not find any view engine.')
+        }
         if (!viewEngineResult.view) {
             viewEngineResult.searchedLocations = searchedLocations;
         }

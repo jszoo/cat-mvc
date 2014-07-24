@@ -12,8 +12,9 @@ module.exports = function() {
         if (err) {
             if (!(err instanceof Error)) { err = new Error(err); }
             var ct = { 'Content-Type': 'text/plain' };
-            res.writeHead(err.status || 500, ct);
-            res.end(err.message);
+            err.status = err.status || 500;
+            res.writeHead(err.status, ct);
+            res.end('Message:' + err.message + '\n' + 'Status:' + err.status + '\n' + err.stack);
         } else {
         	next(err);
         }

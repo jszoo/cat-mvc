@@ -13,7 +13,7 @@ module.exports = function() {
         msg.push('Message: ' + err.message);
         msg.push('Status: ' + err.status);
         msg.push(err.stack);
-        return msg.join('\n');
+        return msg.join('\n\n');
     };
 	//
     return function(req, res, next, err) {

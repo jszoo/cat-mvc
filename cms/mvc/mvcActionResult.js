@@ -146,7 +146,7 @@ utils.inherit(viewResult, baseResult, {
                     if (self.view) {
                         render(self.view, viewEngineResult);
                     } else {
-                        callback(new Error('Failed to lookup view "' + self.viewName + '" in the following locations <br/>' + viewEngineResult.searchedLocations.join('<br/>')));
+                        callback(new Error('Failed to lookup view "' + self.viewName + '" in the following locations \n' + viewEngineResult.searchedLocations.join('\n')));
                     }
                 }
             });

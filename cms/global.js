@@ -37,6 +37,7 @@ app.use(favicon(app.mapPath(config.get('favicon.source'))));
 var static = require('serve-static');
 app.use(static(app.mapPath('~/fe')));
 
+// server
 var rawServer = true, server;
 if (rawServer) {
 	var http = require('http');

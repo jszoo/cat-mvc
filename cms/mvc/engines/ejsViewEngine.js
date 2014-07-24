@@ -43,7 +43,7 @@ ejsViewEngine.prototype = {
         var done = function(file) {
             var view;
             if (file) {
-                view = new vashView({
+                view = new ejsView({
                     filePath: file
                 });
             }

@@ -65,7 +65,7 @@ vashViewEngine.prototype = {
         var self = this, index = 0, searchedLocations = [];
         var availableDirectories = this._getAvailableDirectories(controllerContext);
         //
-        var done = function(err, file) {
+        var done = function(file) {
             var view;
             if (file) {
                 view = new vashView({
@@ -80,7 +80,7 @@ vashViewEngine.prototype = {
                     }
                 });
             }
-            callback(err, {
+            callback(null, {
                 view: view,
                 searchedLocations: searchedLocations
             });
@@ -97,9 +97,9 @@ vashViewEngine.prototype = {
                 if (exists) {
                     fs.stat(file, function(err, stats) {
                         if (err) {
-                            done(err);
+                            callback(err);
                         } else if (stats.isFile()) {
-                            done(null, file);
+                            done(file);
                         } else {
                             next();
                         }

@@ -124,10 +124,15 @@ utils.inherit(viewResult, baseResult, {
             tempData: this.tempData
         });
         this.view.render(viewContext, function(err, str) {
-            if (!err) { controllerContext.rulee.response.send(str); }
-            if (viewEngineResult) { viewEngineResult.viewEngine.releaseView(controllerContext, self.view); }
-            viewContext.destroy();
-            callback(err);
+            var exception;
+            try {
+                viewContext.destroy();
+                if (viewEngineResult) { viewEngineResult.viewEngine.releaseView(controllerContext, self.view); }
+                if (!err) { controllerContext.rulee.response.send(str); }
+            } catch (ex) {
+                exception = ex;
+            }
+            callback(err || exception);
         });
     },
     findView: function(controllerContext) {

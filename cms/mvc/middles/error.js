@@ -7,6 +7,14 @@
 'use strict';
 
 module.exports = function() {
+    //
+    var format = function(err) {
+        var msg = [];
+        msg.push('Message: ' + err.message);
+        msg.push('Status: ' + err.status);
+        msg.push(err.stack);
+        return msg.join('\n');
+    };
 	//
     return function(req, res, next, err) {
         if (err) {
@@ -14,7 +22,7 @@ module.exports = function() {
             var ct = { 'Content-Type': 'text/plain' };
             err.status = err.status || 500;
             res.writeHead(err.status, ct);
-            res.end('Message:' + err.message + '\n' + 'Status:' + err.status + '\n' + err.stack);
+            res.end(format(err));
         } else {
         	next(err);
         }

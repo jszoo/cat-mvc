@@ -28,12 +28,12 @@ viewEngineManager.prototype = {
     },
 
     registerAll: function() {
-        // ejs
-        var ejsViewEngine = require('./ejsViewEngine');
-        this.register('ejs', new ejsViewEngine());
         // vash
         var vashViewEngine = require('./vashViewEngine');
         this.register('vash', new vashViewEngine());
+        // ejs
+        var ejsViewEngine = require('./ejsViewEngine');
+        this.register('ejs', new ejsViewEngine());
         // more engines...
     },
 

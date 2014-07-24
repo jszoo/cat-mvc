@@ -15,23 +15,27 @@ var vashView = module.exports = function(set) {
 
 vashView.prototype = {
     
-    filePath: null, findView: null,
+    filePath: null, findLayout: null,
 
     constructor: vashView, className: 'vashView',
 
     render: function(viewContext, callback) {
         callback = utils.deferProxy(callback);
-        var data = {
-            model: viewContext.viewData,
-            url: viewContext.controller.url,
-            __RULEE_findView: this.findView
-        };
-        vash(this.filePath, data, function(err, str) {
-            callback(err, str);
-        });
+        try {
+            var data = {
+                model: viewContext.viewData,
+                url: viewContext.controller.url,
+                __RULEE_findView: this.findLayout
+            };
+            vash(this.filePath, data, function(err, str) {
+                callback(err, str);
+            });
+        } catch (ex) {
+            callback(ex);
+        }
     },
 
     destroy: function() {
-        this.findView = null;
+        this.findLayout = null;
     }
 };

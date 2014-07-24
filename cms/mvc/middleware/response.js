@@ -15,7 +15,7 @@ module.exports = function() {
             return (value === undefined) ? res.header(name) : res.header(name, value);
         };
         rulee.redirect = function(url, permanent) {
-            return res.redirect(url, permanent ? 301 : 302);
+            return res.redirect(permanent ? 301 : 302, url);
         };
         rulee.download = function(filePath, fileDownloadName) {
             return res.download(filePath, fileDownloadName);

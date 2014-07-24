@@ -30,7 +30,9 @@ module.exports = function(app) {
             if (exception) {
                 next(exception);
             } else if (!matched) {
-                rulee.response.redirect(utils.appendQuery('/notfound', { 'return' : req.url }));
+                var notfound = new Error('Notfound');
+                notfound.status = 404;
+                next(notfound);
             }
         };
         //

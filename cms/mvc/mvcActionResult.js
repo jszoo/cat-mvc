@@ -110,39 +110,46 @@ utils.inherit(viewResult, baseResult, {
     executeResult: function(controllerContext, callback) {
         if (!this.viewData) { this.viewData = controllerContext.controller.viewData; }
         if (!this.tempData) { this.tempData = controllerContext.controller.tempData; }
-        //
-        var self = this, viewEngineResult;
-        if (!this.view) {
-            viewEngineResult = this.findView(controllerContext);
-            this.view = viewEngineResult.view;
-        }
-        if (!utils.isFunction(this.view.render)) {
-            throw new Error('Can not find the interface function: "render(viewContext, callback)", please implement it in the view.')
-        }
-        var viewContext = controllerContext.toViewContext({
-            viewData: this.viewData,
-            tempData: this.tempData
-        });
-        this.view.render(viewContext, function(err, str) {
-            var exception;
-            try {
-                viewContext.destroy();
-                if (viewEngineResult) { viewEngineResult.viewEngine.releaseView(controllerContext, self.view); }
-                if (!err) { controllerContext.rulee.response.send(str); }
-            } catch (ex) {
-                exception = ex;
-            }
-            callback(err || exception);
-        });
-    },
-    findView: function(controllerContext) {
         if (!this.viewName) { this.viewName = mvcHelper.findRouteItem(controllerContext.routeData, 'action').value; }
-        var viewEngines = controllerContext.app.viewEngines;
-        var viewEngineResult = viewEngines.findView(controllerContext, this.viewName);
-        if (viewEngineResult.view) {
-            return viewEngineResult;
+        //
+        var self = this, render = function(view, viewEngineResult) {
+            if (!utils.isFunction(view.render)) {
+                callback(new Error('Can not find the interface function: "render(viewContext, callback)", please implement it in the view.'));
+                return;
+            }
+            var viewContext = controllerContext.toViewContext({
+                viewData: self.viewData,
+                tempData: self.tempData
+            });
+            view.render(viewContext, function(err, str) {
+                var exception;
+                try {
+                    viewContext.destroy();
+                    if (viewEngineResult) { viewEngineResult.viewEngine.releaseView(controllerContext, view); }
+                    if (!err) { controllerContext.rulee.response.send(str); }
+                } catch (ex) {
+                    exception = ex;
+                }
+                callback(err || exception);
+            });
+        };
+        //
+        if (this.view) {
+            render(this.view);
         } else {
-            throw new Error('Failed to lookup view "' + this.viewName + '" in the following locations <br/>' + viewEngineResult.searchedLocations.join('<br/>'));
+            var viewEngines = controllerContext.app.viewEngines;
+            viewEngines.findView(controllerContext, this.viewName, function(err, viewEngineResult) {
+                if (err) {
+                    callback(err);
+                } else {
+                    self.view = viewEngineResult.view;
+                    if (self.view) {
+                        render(self.view, viewEngineResult);
+                    } else {
+                        callback(new Error('Failed to lookup view "' + this.viewName + '" in the following locations <br/>' + viewEngineResult.searchedLocations.join('<br/>')));
+                    }
+                }
+            });
         }
     }
 });

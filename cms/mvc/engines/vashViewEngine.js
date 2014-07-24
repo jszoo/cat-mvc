@@ -21,18 +21,23 @@ vashViewEngine.prototype = {
 
     constructor: vashViewEngine, className: 'vashViewEngine',
 
-    findView: function(controllerContext, viewName) {
+    _getAvailableDirectories: function(controllerContext) {
         var areas = controllerContext.app.areas;
         var controllerName = controllerContext.controller.name();
         //
-        var availableDirectories = [];
-        availableDirectories.push(path.join(controllerContext.routeArea.viewsPath, controllerName));
-        availableDirectories.push(controllerContext.routeArea.viewsSharedPath);
+        var directories = [];
+        directories.push(path.join(controllerContext.routeArea.viewsPath, controllerName));
+        directories.push(controllerContext.routeArea.viewsSharedPath);
         if (controllerContext.routeArea !== areas.rootArea()) {
-            availableDirectories.push(areas.rootArea().viewsSharedPath);
+            directories.push(areas.rootArea().viewsSharedPath);
         }
-        //
-        var searchedLocations = [], foundFile;
+        // ret
+        return directories;
+    },
+
+    _findViewSync: function(controllerContext, viewName) {
+        var self = this, foundFile, searchedLocations = [];
+        var availableDirectories = this._getAvailableDirectories(controllerContext);
         for (var i = 0; i < availableDirectories.length; i++) {
             var file = path.join(availableDirectories[i], viewName + this.extname);
             searchedLocations.push(file);
@@ -44,17 +49,8 @@ vashViewEngine.prototype = {
         //
         var view;
         if (foundFile) {
-            var self = this;
             view = new vashView({
-                filePath: foundFile,
-                findView: function(name) {
-                    var viewEngineResult = self.findView(controllerContext, name);
-                    if (viewEngineResult.view) {
-                        return viewEngineResult.view.filePath;
-                    } else {
-                        throw new Error('Failed to lookup view "' + name + '" in the following locations <br/>' + viewEngineResult.searchedLocations.join('<br/>'));
-                    }
-                }
+                filePath: foundFile
             });
         }
         //
@@ -62,6 +58,59 @@ vashViewEngine.prototype = {
             view: view,
             searchedLocations: searchedLocations
         };
+    },
+
+    findView: function(controllerContext, viewName, callback) {
+        callback = utils.deferProxy(callback);
+        var self = this, index = 0, searchedLocations = [];
+        var availableDirectories = this._getAvailableDirectories(controllerContext);
+        //
+        var done = function(err, file) {
+            var view;
+            if (file) {
+                view = new vashView({
+                    filePath: file,
+                    findLayout: function(name) {
+                        var viewEngineResult = self._findViewSync(controllerContext, name);
+                        if (viewEngineResult.view) {
+                            return viewEngineResult.view.filePath;
+                        } else {
+                            callback(new Error('Failed to lookup view "' + name + '" in the following locations <br/>' + viewEngineResult.searchedLocations.join('<br/>')));
+                        }
+                    }
+                });
+            }
+            callback(err, {
+                view: view,
+                searchedLocations: searchedLocations
+            });
+        };
+        //
+        var next = function() {
+            if (index >= availableDirectories.length) {
+                done();
+                return;
+            }
+            var file = path.join(availableDirectories[index++], viewName + self.extname);
+            searchedLocations.push(file);
+            fs.exists(file, function(exists) {
+                if (exists) {
+                    fs.stat(file, function(err, stats) {
+                        if (err) {
+                            done(err);
+                        } else if (stats.isFile()) {
+                            done(null, file);
+                        } else {
+                            next();
+                        }
+                    });
+                } else {
+                    next();
+                }
+            });
+        };
+        //
+        next();
     },
 
     releaseView: function(controllerContext, view) {

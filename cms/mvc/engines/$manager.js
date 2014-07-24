@@ -33,27 +33,46 @@ viewEngineManager.prototype = {
         // TODO: support other view engine
     },
 
-    findView: function(controllerContext, viewName) {
-        var viewEngineResult, searchedLocations = [];
-        utils.each(this._inner.all(), function() {
-            viewEngineResult = this.findView(controllerContext, viewName);
+    findView: function(controllerContext, viewName, callback) {
+        callback = utils.deferProxy(callback);
+        var viewEngineResult, searchedLocations = [], index = 0;
+        var all = this._inner.all(), allKeys = Object.keys(all);
+        //
+        var done = function() {
             if (!viewEngineResult) {
-                throw new Error('The interface function "findView" in the viewEngine require return object as: { view: viewInstance, searchedLocations: [path1, path2...] }');
-            }
-            viewEngineResult.viewEngine = this;
-            if (viewEngineResult.view) {
-                return false; // break
+                callback(new Error('Can not find any view engine.'));
             } else {
-                searchedLocations = searchedLocations.concat(viewEngineResult.searchedLocations);
+                viewEngineResult.searchedLocations = searchedLocations;
+                callback(null, viewEngineResult);
             }
-        });
-        if (!viewEngineResult) {
-            throw new Error('Can not find any view engine.');
-        }
-        if (!viewEngineResult.view) {
-            viewEngineResult.searchedLocations = searchedLocations;
-        }
-        return viewEngineResult;
+        };
+        //
+        var next = function() {
+            if (index >= allKeys.length) {
+                done();
+                return;
+            }
+            var engine = all[allKeys[index++]];
+            engine.findView(controllerContext, viewName, function(err, ret) {
+                if (err) {
+                    callback(err);
+                    return;
+                }
+                if (!ret) {
+                    callback(new Error('The interface function "findView" in the viewEngine require return object as: { view: viewInstance, searchedLocations: [] }'));
+                    return;
+                }
+                viewEngineResult = ret;
+                viewEngineResult.viewEngine = engine;
+                searchedLocations = searchedLocations.concat(viewEngineResult.searchedLocations);
+                if (viewEngineResult.view) {
+                    done();
+                } else {
+                    next();
+                }
+            });
+        };
+        next();
     },
 
     get: function(engineName) {

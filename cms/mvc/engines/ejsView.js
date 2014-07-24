@@ -20,10 +20,18 @@ ejsView.prototype = {
     constructor: ejsView, className: 'ejsView',
 
     render: function(viewContext, callback) {
-        var error = null;
-        var html = null;
-        //TODO: render
-        callback(error, html);
+        callback = utils.deferProxy(callback);
+        try {
+            var data = {
+                model: viewContext.viewData,
+                url: viewContext.controller.url
+            };
+            ejs(this.filePath, data, function(err, str) {
+                callback(err, str);
+            });
+        } catch (ex) {
+            callback(ex);
+        }
     },
 
     release: function() {

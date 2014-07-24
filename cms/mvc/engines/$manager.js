@@ -22,7 +22,7 @@ viewEngineManager.prototype = {
     register: function(engineName, viewEngine) {
         if (!engineName) { throw new Error('Parameter "engineName" is required'); }
         if (!viewEngine) { throw new Error('Parameter "viewEngine" is required'); }
-        if (!utils.isFunction(viewEngine.findView)) { throw new Error('Please implement the interface function: "findView(controllerContext, viewName)" in the viewEngine: "' + engineName + '"'); }
+        if (!utils.isFunction(viewEngine.findView)) { throw new Error('Please implement the interface function: "findView(controllerContext, viewName, callback)" in the viewEngine: "' + engineName + '"'); }
         if (!utils.isFunction(viewEngine.releaseView)) { throw new Error('Please implement the interface function: "releaseView(controllerContext, view)" in the viewEngine: "' + engineName + '"'); }
         return this._inner.set(engineName, viewEngine);
     },

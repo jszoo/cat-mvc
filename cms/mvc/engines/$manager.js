@@ -28,9 +28,13 @@ viewEngineManager.prototype = {
     },
 
     registerAll: function() {
+        // ejs
+        var ejsViewEngine = require('./ejsViewEngine');
+        this.register('ejs', new ejsViewEngine());
+        // vash
         var vashViewEngine = require('./vashViewEngine');
         this.register('vash', new vashViewEngine());
-        // TODO: support other view engine
+        // more engines...
     },
 
     findView: function(controllerContext, viewName, callback) {

@@ -89,8 +89,8 @@ mvcAreas.prototype = {
                 name: areaName,
                 path: areaPath,
                 viewsPath:       path.join(areaPath, self.conf('config.views')),
-                controllersPath: path.join(areaPath, self.conf('config.controllers')),
                 viewsSharedPath: path.join(areaPath, self.conf('config.views'), self.conf('config.shared')),
+                controllersPath: path.join(areaPath, self.conf('config.controllers')),
                 eventsFilePath:  path.join(areaPath, self.conf('config.events'))
             });
             //

@@ -111,7 +111,7 @@ utils.inherit(viewResult, baseResult, {
         if (!this.viewData) { this.viewData = controllerContext.controller.viewData; }
         if (!this.tempData) { this.tempData = controllerContext.controller.tempData; }
         //
-        var viewEngineResult;
+        var self = this, viewEngineResult;
         if (!this.view) {
             viewEngineResult = this.findView(controllerContext);
             this.view = viewEngineResult.view;
@@ -125,7 +125,7 @@ utils.inherit(viewResult, baseResult, {
         });
         this.view.render(viewContext, function(err, str) {
             if (!err) { controllerContext.rulee.response.send(str); }
-            if (viewEngineResult) { viewEngineResult.viewEngine.releaseView(controllerContext, this.view); }
+            if (viewEngineResult) { viewEngineResult.viewEngine.releaseView(controllerContext, self.view); }
             viewContext.destroy();
             callback(err);
         });

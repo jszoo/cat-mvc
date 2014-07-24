@@ -32,6 +32,6 @@ vashView.prototype = {
     },
 
     destroy: function() {
-        //
+        this.findView = null;
     }
 };

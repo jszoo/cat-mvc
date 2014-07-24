@@ -12,7 +12,7 @@ var path = require('path'),
     mvcController = require('./mvcController'),
     mvcActionResult = require('./mvcActionResult'),
     mvcAttributes = require('./attributes/$manager'),
-    mvcViewEngines = require('./engines/$manager'),
+    mvcViewEngines = require('./viewEngine/$manager'),
     mvcHandler = require('./mvcHandler'),
     mvcHandlerRouter = require('./mvcHandlerRouter');
 

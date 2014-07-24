@@ -122,15 +122,15 @@ utils.inherit(viewResult, baseResult, {
                 tempData: self.tempData
             });
             view.render(viewContext, function(err, str) {
-                var exception;
+                var exp;
                 try {
                     viewContext.destroy();
                     if (viewEngineResult) { viewEngineResult.viewEngine.releaseView(controllerContext, view); }
                     if (!err) { controllerContext.rulee.response.send(str); }
                 } catch (ex) {
-                    exception = ex;
+                    exp = ex;
                 }
-                callback(err || exception);
+                callback(err || exp);
             });
         };
         //

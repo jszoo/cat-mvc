@@ -8,7 +8,6 @@
 
 var http = require('http'),
     utils = require('./utilities'),
-    mvcView = require('./mvcView'),
     mvcHelper = require('./mvcHelper'),
     mvcHttpStatusCode = require('./mvcHttpStatusCode');
 
@@ -27,7 +26,7 @@ var baseResult = exports.baseResult = function(set) {
 baseResult.prototype = {
     constructor: baseResult, className: 'mvcActionResult',
     executeResult: function(controllerContext, callback) {
-        throw new Error('"executeResult" function needs override by sub classes.');
+        throw new Error('"executeResult" interface function needs override by sub classes.');
     }
 };
 
@@ -107,23 +106,51 @@ var viewResult = exports.viewResult = function(set) {
 };
 
 utils.inherit(viewResult, baseResult, {
-    viewName: null, viewData: null, tempData: null,
+    viewName: null, viewData: null, tempData: null, view: null,
     executeResult: function(controllerContext, callback) {
         if (!this.viewData) { this.viewData = controllerContext.controller.viewData; }
         if (!this.tempData) { this.tempData = controllerContext.controller.tempData; }
         if (!this.viewName) { this.viewName = mvcHelper.findRouteItem(controllerContext.routeData, 'action').value; }
         //
-        var viewContext = controllerContext.toViewContext({
-            viewData: this.viewData,
-            tempData: this.tempData
-        });
+        var self = this, render = function(view, viewEngineResult) {
+            if (!utils.isFunction(view.render)) {
+                callback(new Error('Can not find the interface function: "render(viewContext, callback)", please implement it in the view.'));
+                return;
+            }
+            var viewContext = controllerContext.toViewContext({
+                viewData: self.viewData,
+                tempData: self.tempData
+            });
+            view.render(viewContext, function(err, str) {
+                var exception;
+                try {
+                    viewContext.destroy();
+                    if (viewEngineResult) { viewEngineResult.viewEngine.releaseView(controllerContext, view); }
+                    if (!err) { controllerContext.rulee.response.send(str); }
+                } catch (ex) {
+                    exception = ex;
+                }
+                callback(err || exception);
+            });
+        };
         //
-        var view = new mvcView(this.viewName);
-        view.render(viewContext, function(err, str) {
-            if (!err) { controllerContext.rulee.response.send(str);}
-            viewContext.destroy();
-            callback(err);
-        });
+        if (this.view) {
+            render(this.view);
+        } else {
+            var viewEngines = controllerContext.app.viewEngines;
+            viewEngines.findView(controllerContext, this.viewName, function(err, viewEngineResult) {
+                if (err) {
+                    callback(err);
+                } else {
+                    self.view = viewEngineResult.view;
+                    if (self.view) {
+                        render(self.view, viewEngineResult);
+                    } else {
+                        callback(new Error('Failed to lookup view "' + self.viewName + '" in the following locations \n' + viewEngineResult.searchedLocations.join('\n')));
+                    }
+                }
+            });
+        }
     }
 });
 

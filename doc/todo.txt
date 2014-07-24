@@ -17,6 +17,7 @@ OK 17. support multi mvc instance
 OK 18. caching support multi mvc instance
 OK 20. review every code files, optimize the application initialization
 OK 19. context instance destroy?
+OK 23. viewResult -> viewEngines.findView -> return detail mvcView, eg: vashView -> which vashView inherit from mvcView -> detail mvcView.render -> end
 
 PP 4. partialViewResult
 

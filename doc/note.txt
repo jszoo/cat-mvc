@@ -12,6 +12,9 @@ $ npm install
 my current mvc implementation requires the root controller names can't be repeat to the area names.
 
 4.........
+all callback functions with the signature: callback(error, value)
+
+5.........
 $ npm set init.author.name "Your Name"
 $ npm set init.author.email "you@example.com"
 $ npm set init.author.url "http://yourblog.com"

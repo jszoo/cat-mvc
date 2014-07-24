@@ -12,7 +12,7 @@ var config = configuration.load('web.config');
 
 // log
 var logger = require('morgan');
-app.use(logger({ format: 'dev' }));
+app.use(logger('dev', {}));
 
 // session
 var session = require('express-session');

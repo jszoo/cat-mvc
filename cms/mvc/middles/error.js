@@ -7,13 +7,22 @@
 'use strict';
 
 module.exports = function() {
+    //
+    var format = function(err) {
+        var msg = [];
+        msg.push('Message: ' + err.message);
+        msg.push('Status: ' + err.status);
+        msg.push(err.stack);
+        return msg.join('\n\n');
+    };
 	//
     return function(req, res, next, err) {
         if (err) {
             if (!(err instanceof Error)) { err = new Error(err); }
             var ct = { 'Content-Type': 'text/plain' };
-            res.writeHead(err.status || 500, ct);
-            res.end(err.message);
+            err.status = err.status || 500;
+            res.writeHead(err.status, ct);
+            res.end(format(err));
         } else {
         	next(err);
         }

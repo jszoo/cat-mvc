@@ -11,8 +11,8 @@ var path = require('path'),
 	mvcAreas = require('./mvcAreas'),
     mvcController = require('./mvcController'),
     mvcActionResult = require('./mvcActionResult'),
-    mvcAttributes = require('./attributes/$index'),
-    mvcViewEngines = require('./mvcViewEngines'),
+    mvcAttributes = require('./attributes/$manager'),
+    mvcViewEngines = require('./engines/$manager'),
     mvcHandler = require('./mvcHandler'),
     mvcHandlerRouter = require('./mvcHandlerRouter');
 
@@ -36,15 +36,15 @@ var mvcApp = function(set) {
     this._setts.set('env', process.env.NODE_ENV || 'development');
     //
     this.areas = new mvcAreas(this);
-    this.engines = new mvcViewEngines();
     this.attributes = new mvcAttributes();
+    this.viewEngines = new mvcViewEngines();
 };
 
 mvcApp.prototype = {
 
     _setts: null, _handlers: null, _inited: null,
 
-    appPath: null, areas: null, engines: null, attributes: null,
+    appPath: null, areas: null, attributes: null, viewEngines: null,
 
     constructor: mvcApp, className: 'mvcApp',
 
@@ -115,7 +115,7 @@ mvcApp.prototype = {
             //
             handlers.register(mvcHandler(this));
             //
-            this.engines.register('.vash', require('./engines/vash'));
+            this.viewEngines.registerAll();
             this.attributes.registerAll();
             this.areas.registerAll(); // user code always focus on the controllers, so register at last
         }

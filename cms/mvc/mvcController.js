@@ -15,11 +15,13 @@ var utils = require('./utilities'),
     mvcTempDataStore = require('./mvcTempDataStore'),
     mvcActionResultApi = require('./mvcActionResultApi');
 
+var controllersDefined,
+    controllerKeyInScope = 'dont_use_me(random:' + utils.unique(8) + ')';
+
 var mvcController = module.exports = function(set) {
     utils.extend(this, set);
 };
 
-var defined;
 mvcController.define = function() {
     var name, attr, impl;
     var len = arguments.length, arg0 = arguments[0];
@@ -44,18 +46,18 @@ mvcController.define = function() {
         _attr: attr,
         _impl: impl
     });
-    if (defined) {
-        defined.push(ret);
+    if (controllersDefined) {
+        controllersDefined.push(ret);
     }
     return ret;
 };
 
 mvcController.loadfile = function(fileName) {
-    defined = [];
+    controllersDefined = [];
     delete require.cache[fileName];
     require(fileName);
-    var t = defined;
-    defined = null;
+    var t = controllersDefined;
+    controllersDefined = null;
     return t;
 };
 
@@ -113,7 +115,7 @@ mvcController.prototype = {
             this.httpContext = null;
         }
         if (this.implScope) {
-            this.implScope.controller = null;
+            this.implScope[controllerKeyInScope] = null;
             this.implScope = null;
         }
         // clear reference types
@@ -134,7 +136,6 @@ mvcController.prototype = {
         this.implScope = new controllerImplementationScope(this);
         //
         this.attributes = httpContext.app.attributes.resolveConfig(this.attr());
-        this.attributes.append(httpContext.app.attributes.resolveConfig('handleError, validateInput(true)'));
         this.attributes.append(this.implScope);
     },
 
@@ -181,7 +182,7 @@ mvcController.prototype = {
     },
 
     appendInlineActions: function(scope) {
-        if (!scope) { return; }
+        if (!(scope instanceof controllerImplementationScope)) { return; }
         var proto = controllerImplementationScope.prototype;
         for (var name in scope) {
             if (!utils.hasOwn(scope, name)) { continue; }
@@ -254,8 +255,6 @@ mvcController.prototype = {
         return new Error(utils.format('The current request for action "{0}" on controller type "{1}" is ambiguous between the following action methods:<br/>{2}', actionName, this.name(), message.join('<br/>')));
     }
 };
-
-var controllerKeyInScope = 'dont_use_me(random:' + utils.unique(8) + ')';
 
 var controllerImplementationScope = function(controller) {
     this[controllerKeyInScope] = controller;

@@ -140,7 +140,7 @@ response.prototype = {
         if (fn) { delete obj.default; }
         //
         var keys = Object.keys(obj);
-        var key = this.req._ree.accepts(keys);
+        var key = this.req._ree.acceptsTypes(keys);
         //
         this.vary('Accept');
         //

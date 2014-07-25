@@ -6,11 +6,23 @@
 
 'use strict';
 
+var utils = require('../utilities');
+
 module.exports = function() {
     //
     return function(req, res, next, err) {
         var rulee = res.rulee || (res.rulee = {});
         //
+        rulee.statusCode = function(code) {
+            if (code === undefined) {
+                return res.statusCode;
+            }
+            if (utils.isNumber(code)) {
+                res.statusCode = code;
+            } else {
+                throw new Error('The status code is required a number');
+            }
+        };
         rulee.header = function(name, value) {
             return (value === undefined) ? res.header(name) : res.header(name, value);
         };

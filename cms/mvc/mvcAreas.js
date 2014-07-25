@@ -111,7 +111,7 @@ mvcAreas.prototype = {
         // ret
         return area;
     },
-    
+
     registerAll: function() {
         this.register(
             (consts.root),

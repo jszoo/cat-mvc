@@ -17,11 +17,11 @@ sampleEvents.prototype = {
     constructor: sampleEvents, className: 'sampleEvents',
 
     /************ controller events **************/
-    onControllerInitialized: function(controller) {},
-    onControllerDestroy: function(controller) {},
+    onControllerInitialized: function(controller) { },
+    onControllerDestroy: function(controller) { },
 
     /************ authorize event **************/
-    onAuthorization: function(authorizationContext) {},
+    onAuthorization: function(authorizationContext) { },
 
     /************ action filter events **************/
     onActionExecuting: function(actionExecutingContext, next) { next(); },
@@ -30,9 +30,9 @@ sampleEvents.prototype = {
     onResultExecuted: function(resultExecutedContext, next) { next(); },
 
     /************ exception event **************/
-    onException: function(exceptionContext) {},
+    onException: function(exceptionContext) { },
 
     /************ action selector functions **************/
-    isValidActionName: function(controllerContext, actionName) {},
-    isValidActionRequest: function(controllerContext) {}
+    isValidActionName: function(controllerContext, actionName) { },
+    isValidActionRequest: function(controllerContext) { }
 };

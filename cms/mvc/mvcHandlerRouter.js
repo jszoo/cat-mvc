@@ -93,7 +93,7 @@ mvcHandlerRouter.prototype = {
                 var matched = false;
                 if (utils.isString(item.routeExp)) {
                     matched = req.url.indexOf(item.routeExp) === 0;
-                } else if(utils.type(item.routeExp) === 'regexp') {
+                } else if (utils.type(item.routeExp) === 'regexp') {
                     matched = item.routeExp.test(parse(req.url).pathname);
                 }
                 //

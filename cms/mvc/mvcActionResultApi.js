@@ -17,7 +17,7 @@ var mvcActionResultApi = module.exports = function(set) {
 var emit = function(result) {
     if (this.sync) {
         return result;
-    } 
+    }
     if (utils.isFunction(this.callback)) {
         utils.defer(this.callback, result);
     }
@@ -38,7 +38,7 @@ mvcActionResultApi.prototype = {
     },
 
     json: function(data, contentType) {
-        return emit.call(this, new actionResult.jsonResult({ data: data, contentType: contentType}));
+        return emit.call(this, new actionResult.jsonResult({ data: data, contentType: contentType }));
     },
 
     jsonp: function(data, callbackName) {

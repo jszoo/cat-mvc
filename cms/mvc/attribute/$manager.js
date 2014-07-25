@@ -86,7 +86,7 @@ var tryEval = function(str, attrName) {
     var temp;
     try {
         eval("temp=" + str + ';');
-    } catch(ex) {
+    } catch (ex) {
         throw new Error('Can not resolve the parameters of attribute: "' + attrName + '"');
     }
     return temp;
@@ -198,7 +198,7 @@ attributes.prototype = {
         var items = this.filter(sett.eventName, sett.includeParent);
         if (items.length === 0) {
             callback(null, vals);
-            return;            
+            return;
         }
         //
         var index = -1, item, canceled = false;

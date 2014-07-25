@@ -28,5 +28,5 @@ handleError.prototype = {
             });
         }
     }
-    
+
 };

@@ -53,7 +53,7 @@ module.exports = utils.extend({}, utils, {
     deferProxy: function(fn) {
         return function() {
             var as = arguments;
-            switch(as.length) {
+            switch (as.length) {
                 case 0: setImmediate(fn); break;
                 case 1: setImmediate(fn, as[0]); break;
                 case 2: setImmediate(fn, as[0], as[1]); break;

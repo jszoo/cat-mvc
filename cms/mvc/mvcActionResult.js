@@ -16,7 +16,7 @@ var http = require('http'),
 ***************************************/
 var baseResult = exports.baseResult = function(set) {
     var self = this;
-    utils.each(set, function (key, val) {
+    utils.each(set, function(key, val) {
         if (val !== undefined && val !== null) {
             self[key] = val;
         }
@@ -201,7 +201,7 @@ utils.inherit(httpStatusCodeResult, baseResult, {
     executeResult: function(controllerContext, callback) {
         //
         var message = this.statusText;
-        if (!message) { message = http.STATUS_CODES[this.statusCode];}
+        if (!message) { message = http.STATUS_CODES[this.statusCode]; }
         //
         controllerContext.exception = new Error(message);
         controllerContext.exception.status = this.statusCode;

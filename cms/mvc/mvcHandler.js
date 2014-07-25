@@ -20,7 +20,7 @@ module.exports = function(app) {
     // route core
     return function(req, res, next) {
         //
-        var rulee  = {
+        var rulee = {
             request: req.rulee,
             response: res.rulee
         };
@@ -77,7 +77,7 @@ module.exports = function(app) {
                 controller.executeImpl();
                 //
                 var action = controller.findAction(actionParam.value);
-                if (!action) { 
+                if (!action) {
                     controller.destroy();
                     return; // continue
                 } else {

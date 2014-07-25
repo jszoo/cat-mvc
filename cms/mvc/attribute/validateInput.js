@@ -23,6 +23,6 @@ validateInput.prototype = {
     constructor: validateInput, className: 'validateInput',
 
     onAuthorization: function(authorizationContext) {
-    	authorizationContext.controller.validateRequest = !!this.enableValidation;
+        authorizationContext.controller.validateRequest = !!this.enableValidation;
     }
 };

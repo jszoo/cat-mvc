@@ -29,7 +29,7 @@ mvcAction.prototype = {
     _name: null, _attr: null, _impl: null,
 
     controller: null, controllerContext: null, attributes: null, implScope: null,
-    
+
     constructor: mvcAction, className: 'mvcAction',
 
     name: function(p) { return (p === undefined) ? (this._name) : (this._name = p, this); },
@@ -87,7 +87,7 @@ mvcAction.prototype = {
                     params.push(form[loweName]);
                 } else if (loweName in query) {
                     params.push(query[loweName]);
-                } else if(loweName in routeData) {
+                } else if (loweName in routeData) {
                     params.push(routeData[loweName]);
                 } else {
                     params.push(null);
@@ -269,7 +269,7 @@ mvcAction.prototype = {
                         finish();
                     }
                 })
-            } catch(ex) {
+            } catch (ex) {
                 exception(ex);
             }
         };
@@ -284,7 +284,7 @@ mvcAction.prototype = {
                         resulted(ret);
                     }
                 });
-            } catch(ex) {
+            } catch (ex) {
                 exception(ex);
             }
         };
@@ -358,12 +358,12 @@ mvcAction.prototype = {
                     contexts.push(ctx);
                     if (err) {
                         exception(err);
-                    } else if(ctx.result !== undefined) {
+                    } else if (ctx.result !== undefined) {
                         executed(ctx.result);
                     } else {
                         execute(annotated);
                     }
-                });    
+                });
             } catch (ex) {
                 exception(ex);
             }

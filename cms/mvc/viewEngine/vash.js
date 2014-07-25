@@ -16,7 +16,7 @@ vash.config.modelName = 'viewdata';
 vash.config.helpersName = 'html';
 vash.helpers.partial = vash.helpers.include;
 
-vash.loadFile = function(filepath, options, cb){
+vash.loadFile = function(filepath, options, cb) {
 
     // extend works from right to left, using first arg as target
     options = utils.extend( {}, vash.config, options || {} );

@@ -96,7 +96,7 @@ var generateUrl = exports.generateUrl = function(routeName, actionName, controll
         var areaRoutes = filterRouteSetByArea(routeSet, areaName);
         utils.each(areaRoutes, function() {
             var count = this.matchedCount(values);
-            if (matchedCount === null || count > matchedCount){
+            if (matchedCount === null || count > matchedCount) {
                 matchedCount = count;
                 matchedRoute = this;
             }

@@ -43,5 +43,5 @@ utils.each(httpMethod.methods, function(name) {
     utils.inherit(cls, httpMethod, {
         className: className, methodName: name
     });
-    
+
 });

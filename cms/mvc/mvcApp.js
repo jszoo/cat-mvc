@@ -97,7 +97,7 @@ mvcApp.prototype = {
     * 1. initialize
     * 2. return the web server handler
     */
-    handler: function () {
+    handler: function() {
         //
         var handlers = this._handlers;
         if (this._inited !== true) {

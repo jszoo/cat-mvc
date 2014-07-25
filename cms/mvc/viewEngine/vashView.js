@@ -14,7 +14,7 @@ var vashView = module.exports = function(set) {
 };
 
 vashView.prototype = {
-    
+
     filePath: null, findLayout: null,
 
     constructor: vashView, className: 'vashView',

@@ -14,7 +14,7 @@ var ejsView = module.exports = function(set) {
 };
 
 ejsView.prototype = {
-    
+
     filePath: null,
 
     constructor: ejsView, className: 'ejsView',

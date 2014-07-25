@@ -15,7 +15,7 @@ module.exports = function() {
         msg.push(err.stack);
         return msg.join('\n\n');
     };
-	//
+    //
     return function(req, res, next, err) {
         if (err) {
             if (!(err instanceof Error)) { err = new Error(err); }
@@ -24,7 +24,7 @@ module.exports = function() {
             res.writeHead(err.status, ct);
             res.end(format(err));
         } else {
-        	next(err);
+            next(err);
         }
     };
 };

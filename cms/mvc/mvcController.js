@@ -65,7 +65,7 @@ mvcController.prototype = {
 
     _name: null, _path: null, _attr: null, _impl: null,
 
-    actions: null,  url: null,
+    actions: null, url: null,
 
     viewData: null, tempData: null,
 
@@ -238,7 +238,7 @@ mvcController.prototype = {
         });
         acts = (actsByAttr.length > 0) ? actsByAttr : actsByDeft;
         // ret
-        switch(acts.length) {
+        switch (acts.length) {
             case 0: return null;
             case 1: return acts[0];
             default: throw this.createAmbiguousActionsError(acts, actionName);
@@ -261,17 +261,17 @@ var controllerImplementationScope = function(controller) {
 };
 
 controllerImplementationScope.prototype = {
-    
+
     constructor: controllerImplementationScope, className: 'controllerImplementationScope',
 
     action: function() { return this[controllerKeyInScope].action.apply(this[controllerKeyInScope], arguments); },
 
     /************ controller events **************/
-    onControllerInitialized: function(controller) {},
-    onControllerDestroy: function(controller) {},
+    onControllerInitialized: function(controller) { },
+    onControllerDestroy: function(controller) { },
 
     /************ authorize event **************/
-    onAuthorization: function(authorizationContext) {},
+    onAuthorization: function(authorizationContext) { },
 
     /************ action filter events **************/
     onActionExecuting: function(actionExecutingContext, next) { next(); },
@@ -280,5 +280,5 @@ controllerImplementationScope.prototype = {
     onResultExecuted: function(resultExecutedContext, next) { next(); },
 
     /************ exception event **************/
-    onException: function(exceptionContext) {}
+    onException: function(exceptionContext) { }
 };

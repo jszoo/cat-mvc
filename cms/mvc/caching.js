@@ -30,7 +30,7 @@ caching.region = function(region, store) {
     });
 };
 
-caching.isRandomRegionName = function (region) {
+caching.isRandomRegionName = function(region) {
     return /^guid:[a-z0-9]{32}$/i.test(region);
 };
 

@@ -6,7 +6,7 @@
 
 'use strict';
 
-var utils = require('../utilities'),
+var utils = require('../utilities');
 
 var sampleView = module.exports = function(set) {
     utils.extend(this, set)

@@ -28,5 +28,5 @@ actionName.prototype = {
     isValidActionName: function(httpContext, actionName) {
         return utils.tryLowerEqual(this.name, actionName);
     }
-    
+
 };

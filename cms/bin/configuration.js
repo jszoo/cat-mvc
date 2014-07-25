@@ -90,4 +90,3 @@ configuration.prototype = {
 
 // export
 module.exports = configuration;
-

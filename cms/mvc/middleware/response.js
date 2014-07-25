@@ -12,7 +12,6 @@ var http = require('http'),
     mime = require('mime'),
     send = require('send'),
     cookie = require('cookie'),
-    typer = require('media-typer'),
     sign = require('cookie-signature').sign,
     extname = require('path').extname;
 

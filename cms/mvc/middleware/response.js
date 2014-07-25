@@ -2,68 +2,22 @@
 * response
 * author: ronglin
 * create date: 2014.7.4
-* description: migrate from express
+* description: migrate from expressjs
 */
 
 'use strict';
 
 var http = require('http'),
-    path = require('path'),
     vary = require('vary'),
     mime = require('mime'),
     send = require('send'),
-    typer = require('media-typer'),
     cookie = require('cookie'),
+    typer = require('media-typer'),
     sign = require('cookie-signature').sign,
-    utils = require('../utilities');
+    extname = require('path').extname;
 
-var acceptParams = function(str, index) {
-    var parts = str.split(/ *; */);
-    var ret = { value: parts[0], quality: 1, params: {}, originalIndex: index };
-    for (var i = 1; i < parts.length; ++i) {
-        var pms = parts[i].split(/ *= */);
-        if ('q' == pms[0]) {
-            ret.quality = parseFloat(pms[1]);
-        } else {
-            ret.params[pms[0]] = pms[1];
-        }
-    }
-    return ret;
-};
-
-var normalizeType = function(type) {
-    return ~type.indexOf('/') ? acceptParams(type) : { value: mime.lookup(type), params: {} };
-};
-
-var normalizeTypes = function(types) {
-    var ret = [];
-    for (var i = 0; i < types.length; ++i) {
-        ret.push(normalizeType(types[i]));
-    }
-    return ret;
-};
-
-var contentDisposition = function(filename) {
-    var ret = 'attachment';
-    if (filename) {
-        filename = path.basename(filename);
-        // if filename contains non-ascii characters, add a utf-8 version ala RFC 5987
-        ret = /[^\040-\176]/.test(filename)
-            ? 'attachment; filename="' + encodeURI(filename) + '"; filename*=UTF-8\'\'' + encodeURI(filename)
-            : 'attachment; filename="' + filename + '"';
-    }
-    return ret;
-};
-
-var setCharset = function(type, charset) {
-    if (!type || !charset) { return type; }
-    // parse type
-    var parsed = typer.parse(type);
-    // set charset
-    parsed.parameters.charset = charset;
-    // format type
-    return typer.format(parsed);
-};
+var utils = require('../utilities'),
+    httpHelper = require('../httpHelper');
 
 var response = function(set) {
     utils.extend(this, set);
@@ -138,7 +92,7 @@ response.prototype = {
 
     attachment: function(filename) {
         if (filename) { this.contentType(path.extname(filename)); }
-        this.header('Content-Disposition', contentDisposition(filename));
+        this.header('Content-Disposition', httpHelper.contentDisposition(filename));
     },
 
     clearCookie: function(name, options) {
@@ -186,18 +140,18 @@ response.prototype = {
         if (fn) { delete obj.default; }
         //
         var keys = Object.keys(obj);
-        var key = this.req.rulee.accepts(keys);
+        var key = this.req._ree.accepts(keys);
         //
         this.vary('Accept');
         //
         if (key) {
-            this.contentType(normalizeType(key).value);
+            this.contentType(httpHelper.normalizeType(key).value);
             obj[key](this.req, this.res);
         } else if (fn) {
             fn();
         } else {
             var err = new Error('Not Acceptable'); err.status = 406;
-            err.types = normalizeTypes(keys).map(function(o) { return o.value });
+            err.types = httpHelper.normalizeTypes(keys).map(function(o) { return o.value });
             throw err;
         }
     },
@@ -210,7 +164,7 @@ response.prototype = {
                 body = http.STATUS_CODES[status] + '. Redirecting to ' + encodeURI(url);
             },
             html: function() {
-                var u = escapeHtml(url);
+                var u = httpHelper.escapeHtml(url);
                 body = '<p>' + http.STATUS_CODES[status] + '. Redirecting to <a href="' + u + '">' + u + '</a></p>';
             },
             default: function() {
@@ -236,7 +190,7 @@ response.prototype = {
             filename = null;
         }
         this.sendfile(path, {
-            headers: { 'Content-Disposition': contentDisposition(filename || path) }
+            headers: { 'Content-Disposition': httpHelper.contentDisposition(filename || path) }
         }, fn);
     },
 
@@ -247,9 +201,7 @@ response.prototype = {
 
         //
         if (!utils.isFunction(fn)) {
-            fn = function(err) {
-                throw err;
-            };
+            fn = function(err) { throw err; };
         }
 
         // socket errors
@@ -301,49 +253,44 @@ response.prototype = {
     },
 
     send: function(body, status) {
-        
-
-
         var self = this, encoding;
-        var ensureCt = function(t) {
-            if (!self.contentType()) { self.contentType(t); }
-        };
+        var tryCT = function(ct) { if (!self.contentType()) { self.contentType(ct); } };
+
         //
         if (utils.isNumber(status) && (body === null || body === undefined)) {
             body = http.STATUS_CODES[status];
             this.status(status);
-            ensureCt('txt');
+            tryCT('txt');
         }
+
         //
         var bt = utils.type(body);
         if (bt === 'string') {
-            ensureCt('txt');
+            tryCT('html');
             encoding = 'utf8';
             var type = this.contentType();
-            this.contentType(setCharset(type, 'utf-8'));
+            this.contentType(httpHelper.setCharset(type, 'utf-8'));
         }
-        else if (bt === 'object') {
-            if (Buffer.isBuffer(body)) {
-                ensureCt('bin');
-            }
-            //TODO:
+        else if (Buffer.isBuffer(body)) {
+            tryCT('bin');
         }
-        else if (bt === 'boolean' || bt === 'number') {
+        else {
             body = String(body);
         }
 
-        // populate Content-Length
-        if (chunk !== undefined && !this.get('Content-Length')) {
-            len = Buffer.isBuffer(chunk) ? chunk.length : Buffer.byteLength(chunk, encoding);
-            this.set('Content-Length', len);
+        //
+        var len;
+        if (body && !this.header('Content-Length')) {
+            len = Buffer.isBuffer(body) ? body.length : Buffer.byteLength(body, encoding);
+            this.header('Content-Length', len);
         }
 
         // ETag support
-        var etag = len !== undefined && app.get('etag fn');
-        if (etag && ('GET' === req.method || 'HEAD' === req.method)) {
-            if (!this.get('ETag')) {
-                etag = etag(chunk, encoding);
-                etag && this.set('ETag', etag);
+        var etag = (len !== undefined && this.res._app.get('etag-fn'));
+        if (etag && ('GET' === this.req.method || 'HEAD' === this.req.method)) {
+            if (!this.header('ETag')) {
+                etag = etag(body, encoding);
+                etag && this.header('ETag', etag);
             }
         }
 
@@ -371,7 +318,7 @@ response.prototype = {
 
 module.exports = function() {
     return function(req, res, next, err) {
-        res.rulee = new response({
+        res._ree = new response({
             req: req,
             res: res
         });

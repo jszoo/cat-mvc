@@ -2,7 +2,7 @@
 * request
 * author: ronglin
 * create date: 2014.7.4
-* description: migrate from express
+* description: migrate from expressjs
 */
 
 'use strict';
@@ -23,8 +23,20 @@ var getter = function(obj, name, getter) {
 var request = function(set) {
     utils.extend(this, set);
     //
+    getter(this, 'protocol', function() { return protocol
+        var trust = self.req._app.get('trust-proxy-fn');
+        if (!trust(self.req.connection.remoteAddress)) {
+            return self.connection.encrypted ? 'https' : 'http';
+        } else {
+            // Note: X-Forwarded-Proto is normally only ever a
+            //       single value, but this is to be safe.
+            var proto = self.header('X-Forwarded-Proto') || 'http';
+            return proto.split(/\s*,\s*/)[0];
+        }
+    });
+    //
     var self = this;
-    var protocol = 'http';                     //eg: http
+    var protocol = this.protocol;              //eg: http
     var host = this.req.headers.host;          //eg: www.nodetest.cn:1337
     var path = this.req.url;                   //eg: /home?a=1
     var url = parse(protocol + '://' + host + path, true);
@@ -35,15 +47,13 @@ var request = function(set) {
     //
     getter(this, 'form', function() { return utils.extend({}, self.req.body); });
     //
-    getter(this, 'protocol', function() { return protocol; }); //TODO:
-    //
     getter(this, 'method', function() { return self.req.method; });
     //
     getter(this, 'secure', function() { return (protocol === 'https'); });
     //
     getter(this, 'session', function() { return self.req.session; });
     //
-    getter(this, 'isxhr', function() {
+    getter(this, 'xhr', function() {
         var val = self.header('X-Requested-With') || '';
         return ('xmlhttprequest' === val.toLowerCase());
     });
@@ -62,6 +72,11 @@ var request = function(set) {
         // default
         return false;
     });
+    //
+    getter(this, 'subdomains', function() {
+        var offset = self.req._app.get('subdomain-offset');
+        return (this.hostname || '').split('.').reverse().slice(offset);
+    });
 };
 
 request.prototype = {
@@ -72,24 +87,38 @@ request.prototype = {
 
     header: function(field) {
         var hs = this.req.headers;
-        switch (field = field.toLowerCase()) {
-            case 'referer':
-            case 'referrer':
-                return hs.referrer || hs.referer;
-            default:
-                return hs[field];
+        field = field.toLowerCase();
+        if (field === 'referer' || field === 'referrer') {
+            return hs.referrer || hs.referer;
+        } else {
+            return hs[field];
         }
     },
 
-    accepts: function() {
+    acceptsTypes: function() {
         var accept = accepts(this.req);
         return accept.types.apply(accept, arguments);
+    },
+
+    acceptsEncodings: function() {
+        var accept = accepts(this.req);
+        return accept.encodings.apply(accept, arguments);
+    },
+
+    acceptsCharsets: function() {
+        var accept = accepts(this.req);
+        return accept.charsets.apply(accept, arguments);
+    },
+
+    acceptsLanguages: function() {
+        var accept = accepts(this.req);
+        return accept.languages.apply(accept, arguments);
     }
 };
 
 module.exports = function() {
     return function(req, res, next, err) {
-        req.rulee = new request({
+        req._ree = new request({
             req: req,
             res: res
         });

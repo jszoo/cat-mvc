@@ -21,8 +21,8 @@ module.exports = function(app) {
     return function(req, res, next) {
         //
         var rulee = {
-            request: req.rulee,
-            response: res.rulee
+            request: req._ree,
+            response: res._ree
         };
         //
         var matched = false, exception;

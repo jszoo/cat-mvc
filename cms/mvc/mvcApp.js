@@ -8,6 +8,7 @@
 
 var path = require('path'),
     utils = require('./utilities'),
+    httpHelper = require('./httpHelper'),
 	mvcAreas = require('./mvcAreas'),
     mvcController = require('./mvcController'),
     mvcActionResult = require('./mvcActionResult'),
@@ -33,7 +34,12 @@ var mvcApp = function(set) {
     //
     this._handlers = new mvcHandlerRouter();
     this._setts = caching.region('mvc-runtime-settings');
-    this._setts.set('env', process.env.NODE_ENV || 'development');
+    //
+    this.set('env', process.env.NODE_ENV || 'development');
+    this.set('x-powered-by-enabled', true);
+    this.set('subdomain-offset', 2);
+    this.set('trust-proxy', false);
+    this.set('etag', 'weak');
     //
     this.areas = new mvcAreas(this);
     this.attributes = new mvcAttributes();
@@ -59,7 +65,14 @@ mvcApp.prototype = {
     * set app setting
     */
     set: function(key, val) {
-        return this._setts.set(key, val);
+        this._setts.set(key, val);
+        //
+        if (key === 'etag') {
+            this.set('etag-fn', httpHelper.compileETag(val));
+        }
+        else if (key === 'trust-proxy') {
+            this.set('trust-proxy-fn', httpHelper.compileTrust(val));
+        }
     },
 
     /*

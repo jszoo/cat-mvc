@@ -15,7 +15,7 @@ var utils = require('./utilities'),
 
 var STATUS = { pending: 0, fulfilled: 1, rejected: 2 };
 var thenAll = function(iterable, resolve, reject) {
-    for (var i = 0; i < iterable.length; i++) { var p;
+    for (var p, i = 0; i < iterable.length; i++) {
         (thenable(p = iterable[i]) ? p : Promise.resolve(p)).then(resolve, reject);
     }
 };
@@ -59,9 +59,9 @@ var Promise = function(resolver) {
 
 Promise.prototype = {
     constructor: Promise,
-    
+
     _status: null, _resolves: null, _rejects: null,
-    
+
     //
     then: function(onFulfilled, onRejected) {
         if (utils.isFunction(onFulfilled)) {

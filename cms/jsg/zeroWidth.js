@@ -14,7 +14,7 @@ var spaces = ['\u200b', '\u200c', '\u200d'], slen = spaces.length;
 
 var zeroWidth = {
     //
-    hide: function (str) {
+    hide: function(str) {
         var prefix = [];
         for (var m = 0; m < bit; m++) {
             prefix.push(marker);
@@ -36,12 +36,12 @@ var zeroWidth = {
         return codeSet.join('');
     },
     //
-    show: function (str) {
+    show: function(str) {
         var count = 0;
         while (str.charAt(count) === marker) {
             count++;
         }
-        return str.substr(count).replace(new RegExp('.{' + (count || bit) + '}', 'g'), function (code) {
+        return str.substr(count).replace(new RegExp('.{' + (count || bit) + '}', 'g'), function(code) {
             for (var i = 0; i < slen; i++) {
                 code = code.replace(new RegExp(spaces[i], 'g'), i + '');
             }

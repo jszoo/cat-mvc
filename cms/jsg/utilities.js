@@ -18,7 +18,7 @@ module.exports = {
     type: function() {
         var op = Object.prototype;
         var class2type = {}, natives = 'Boolean Number String Function Array Date RegExp Object Error'.split(' ');
-        for (var i = 0; i < natives.length; i++) {class2type['[object ' + natives[i] + ']'] = natives[i].toLowerCase(); }
+        for (var i = 0; i < natives.length; i++) { class2type['[object ' + natives[i] + ']'] = natives[i].toLowerCase(); }
         return function(obj) {
             return obj == null ? String(obj) : class2type[op.toString.call(obj)] || 'object';
         };
@@ -52,11 +52,11 @@ module.exports = {
         return this.type(obj) === 'number';
     },
 
-    isNumeric: function (obj) {
+    isNumeric: function(obj) {
         return !isNaN(parseFloat(obj)) && isFinite(obj);
     },
 
-    isPlainObject: function (obj) {
+    isPlainObject: function(obj) {
         if (!obj || this.type(obj) !== "object" || obj.nodeType) {
             return false;
         }
@@ -68,54 +68,53 @@ module.exports = {
             return false;
         }
         var key;
-        for (key in obj) {}
+        for (key in obj) { }
         return key === undefined || this.hasOwn(obj, key);
     },
 
-    hasOwn: function(o, prop){
-        if ( o === null || o === undefined ) {
+    hasOwn: function(o, prop) {
+        if (o === null || o === undefined) {
             return false;
-        } else if ( o.hasOwnProperty ) {
-            return o.hasOwnProperty( prop );
+        } else if (o.hasOwnProperty) {
+            return o.hasOwnProperty(prop);
         } else {
-            return ( this.type( o[prop] ) !== 'undefined' ) && o.constructor.prototype[prop] !== o[prop];
+            return (this.type(o[prop]) !== 'undefined') && o.constructor.prototype[prop] !== o[prop];
         }
     },
 
-    each: function( obj, callback, args ) {
+    each: function(obj, callback, args) {
         if (!obj) { return; }
         //
         var name,
             i = 0,
             length = obj.length,
-            isObj = length === undefined || this.isFunction( obj );
+            isObj = length === undefined || this.isFunction(obj);
 
-        if ( args ) {
-            if ( isObj ) {
-                for ( name in obj ) {
-                    if ( callback.apply( obj[ name ], args ) === false ) {
+        if (args) {
+            if (isObj) {
+                for (name in obj) {
+                    if (callback.apply(obj[name], args) === false) {
                         break;
                     }
                 }
             } else {
-                for ( ; i < length; ) {
-                    if ( callback.apply( obj[ i++ ], args ) === false ) {
+                for (; i < length;) {
+                    if (callback.apply(obj[i++], args) === false) {
                         break;
                     }
                 }
             }
-
-        // A special, fast, case for the most common use of each
         } else {
-            if ( isObj ) {
-                for ( name in obj ) {
-                    if ( callback.call( obj[ name ], name, obj[ name ] ) === false ) {
+            // A special, fast, case for the most common use of each
+            if (isObj) {
+                for (name in obj) {
+                    if (callback.call(obj[name], name, obj[name]) === false) {
                         break;
                     }
                 }
             } else {
-                for ( ; i < length; ) {
-                    if ( callback.call( obj[ i ], i, obj[ i++ ] ) === false ) {
+                for (; i < length;) {
+                    if (callback.call(obj[i], i, obj[i++]) === false) {
                         break;
                     }
                 }
@@ -169,8 +168,8 @@ module.exports = {
         return target;
     },
 
-    inherit: function (subc, superc, overrides) {
-        var F = function () { }, i;
+    inherit: function(subc, superc, overrides) {
+        var F = function() { }, i;
         F.prototype = superc.prototype;
         subc.prototype = new F();
         subc.prototype.constructor = subc;
@@ -219,14 +218,14 @@ module.exports = {
         return this.padLeft(str, len, chr, true);
     },
 
-    format: function (format) {
+    format: function(format) {
         var args = this.arg2arr(arguments, 1), arg;
-        return format.replace(/\{(\d+)\}/g, function (m, i) {
+        return format.replace(/\{(\d+)\}/g, function(m, i) {
             return (arg = args[i], (arg === null || arg === undefined) ? '' : arg);
         });
     },
 
-    trim: function (str, set) {
+    trim: function(str, set) {
         str = str || ''; set = set || {};
         if (set.find) {
             var exp = this.format('^{0}+|{0}+$', set.find);
@@ -244,15 +243,15 @@ module.exports = {
 
     readObj: function(obj, namespace) {
         var names = namespace.split(/\.|\[|\]|\(/), ret = obj;
-        this.each(names, function (i, key) { if (key && ret) { ret = (isNaN(key) ? (key === ')' ? ret() : ret[key]) : ret[parseInt(key, 10)]); } });
+        this.each(names, function(i, key) { if (key && ret) { ret = (isNaN(key) ? (key === ')' ? ret() : ret[key]) : ret[parseInt(key, 10)]); } });
         return ret;
     },
 
     mapObj: function(obj, namespace, dft) {
         var parts = namespace.split(/\.|\[|\]/), names = [];
-        this.each(parts, function (i, key) { if (key) { names.push(key); } });
+        this.each(parts, function(i, key) { if (key) { names.push(key); } });
         var lastName = names[names.length - 1], curr = obj = (obj || {}), prev;
-        this.each(names, function (i, key) { prev = curr; curr = (curr[key] ? curr[key] : (curr[key] = isNaN(names[i + 1]) ? {} : [])); });
+        this.each(names, function(i, key) { prev = curr; curr = (curr[key] ? curr[key] : (curr[key] = isNaN(names[i + 1]) ? {} : [])); });
         if (prev) { prev[lastName] = dft; }
         return obj;
     },
@@ -275,7 +274,7 @@ module.exports = {
             if (url === null || url === undefined || (!name && name !== 0)) { return url; }
             if (this.type(name) === 'object' || this.type(name) === 'array') {
                 var self = this;
-                this.each(name, function (key, val) {// here 'key' fixed to simple type and will not loop again.
+                this.each(name, function(key, val) {// here 'key' fixed to simple type and will not loop again.
                     url = self.appendQuery(url, key, val);
                 });
             } else if (allows[this.type(value)]) {
@@ -291,11 +290,11 @@ module.exports = {
         if (url === null || url === undefined || (!name && name !== 0)) { return url; }
         var urlParams = this.getQuery(url), lowerParams = {}, keyMap = {}, params = {}, lower;
         params = 'object,array'.indexOf(this.type(name)) > -1 ? name : (params[name] = value, params);
-        this.each(urlParams, function (key, val) {
+        this.each(urlParams, function(key, val) {
             lowerParams[key.toLowerCase()] = val;
             keyMap[key] = key.toLowerCase();
         });
-        this.each(params, function (key, val) {
+        this.each(params, function(key, val) {
             lower = (key + '').toLowerCase();
             if (lower in lowerParams) {
                 lowerParams[lower] = val;
@@ -303,7 +302,7 @@ module.exports = {
                 urlParams[key] = val;
             }
         });
-        this.each(keyMap, function (f, t) {
+        this.each(keyMap, function(f, t) {
             urlParams[f] = lowerParams[t];
         });
         //

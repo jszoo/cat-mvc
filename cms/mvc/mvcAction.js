@@ -8,7 +8,6 @@
 
 var utils = require('./utilities'),
     injector = require('./mvcInjector'),
-    httpMethod = require('./mvcHttpMethod'),
     actionResult = require('./mvcActionResult'),
     mvcActionResultApi = require('./mvcActionResultApi');
 

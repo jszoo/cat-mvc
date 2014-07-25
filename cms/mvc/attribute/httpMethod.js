@@ -7,7 +7,7 @@
 'use strict';
 
 var utils = require('../utilities'),
-    mvcHttpMethod = require('../mvcHttpMethod');
+    httpMethod = require('../httpMethod');
 
 
 /* base class
@@ -32,7 +32,7 @@ httpMethod.prototype = {
 /* entity classes
 *  httpGet,httpPost...etc
 ***************************************/
-utils.each(mvcHttpMethod.methods, function(name) {
+utils.each(httpMethod.methods, function(name) {
 
     var className = 'http' + name.substr(0, 1).toUpperCase() + name.substr(1).toLowerCase();
 

@@ -9,7 +9,7 @@
 var http = require('http'),
     utils = require('./utilities'),
     mvcHelper = require('./mvcHelper'),
-    mvcHttpStatusCode = require('./mvcHttpStatusCode');
+    httpStatusCode = require('./httpStatusCode');
 
 
 /* baseResult
@@ -214,7 +214,7 @@ utils.inherit(httpStatusCodeResult, baseResult, {
 ***************************************/
 var httpNotFoundResult = exports.httpNotFoundResult = function(set) {
     httpNotFoundResult.superclass.constructor.call(this, set);
-    this.statusCode = mvcHttpStatusCode.NotFound;
+    this.statusCode = httpStatusCode.NotFound;
 };
 
 utils.inherit(httpNotFoundResult, httpStatusCodeResult, {
@@ -228,7 +228,7 @@ utils.inherit(httpNotFoundResult, httpStatusCodeResult, {
 ***************************************/
 var httpUnauthorizedResult = exports.httpUnauthorizedResult = function(set) {
     httpUnauthorizedResult.superclass.constructor.call(this, set);
-    this.statusCode = mvcHttpStatusCode.Unauthorized;
+    this.statusCode = httpStatusCode.Unauthorized;
 };
 
 utils.inherit(httpUnauthorizedResult, httpStatusCodeResult, {

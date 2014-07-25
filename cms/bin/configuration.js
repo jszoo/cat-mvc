@@ -17,7 +17,7 @@ var utils = mvcApp.utils,
     rootPath = tpath.normalize(__dirname + tpath.sep + '..'),
     absolute = function(p) { return tpath.join(rootPath, p); };
 
-var configuration = function (path, cb) {
+var configuration = function(path, cb) {
     path = absolute(path);
     //
     var sett = instances.get(path);
@@ -31,15 +31,15 @@ var configuration = function (path, cb) {
 
 configuration.cache = instances;
 
-configuration.load = function (path, cb) {
+configuration.load = function(path, cb) {
     return new configuration(path, cb);
 };
 
-configuration.serialize = function (obj) {
+configuration.serialize = function(obj) {
     return JSON.stringify(obj, null, 4);
 };
 
-configuration.deserialize = function (str) {
+configuration.deserialize = function(str) {
     return JSON.parse(str);
 };
 
@@ -49,7 +49,7 @@ configuration.prototype = {
 
     constructor: configuration, className: 'configuration',
 
-    get: function (ns) {
+    get: function(ns) {
         if (arguments.length === 0) {
             return this.innerObj;
         } else {
@@ -57,7 +57,7 @@ configuration.prototype = {
         }
     },
 
-    set: function (ns, val) {
+    set: function(ns, val) {
         if (arguments.length === 1) {
             this.innerObj = ns;
         } else {
@@ -66,18 +66,18 @@ configuration.prototype = {
         return this;
     },
 
-    save: function () {
+    save: function() {
         var dir = tpath.dirname(this.filePath);
         if (!fs.existsSync(dir)) { fs.mkdirSync(dir); }
         var json = configuration.serialize(this.innerObj);
-        fs.writeFile(this.filePath, json, { encoding: 'utf-8' }, function (err) {
+        fs.writeFile(this.filePath, json, { encoding: 'utf-8' }, function(err) {
             if (err) { throw err; }
             self.events.emit('save', json);
         });
         return this;
     },
 
-    reload: function (cb) {
+    reload: function(cb) {
         if (fs.existsSync(this.filePath)) {
             var data = fs.readFileSync(this.filePath, { encoding: 'utf-8' });
             this.innerObj = configuration.deserialize(data);

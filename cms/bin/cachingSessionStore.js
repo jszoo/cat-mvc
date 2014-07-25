@@ -43,7 +43,7 @@ module.exports = function(session) {
             utils.defer(callback);
         },
 
-        clear: function (callback) {
+        clear: function(callback) {
             inner.clear();
             utils.defer(callback);
         },

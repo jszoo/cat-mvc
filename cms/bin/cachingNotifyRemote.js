@@ -37,7 +37,7 @@ store.events.on('remove', function(params) {
 });
 
 module.exports = {
-    accept: function (params) {
+    accept: function(params) {
         params = params || {};
         if (params.verify === verify) {
             if (params.action === 'remove' || params.action === 'clear') {

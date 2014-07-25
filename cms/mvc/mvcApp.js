@@ -120,7 +120,9 @@ mvcApp.prototype = {
             this.areas.registerAll(); // user code always focus on the controllers, so register at last
         }
         //
+        var self = this;
         return function(req, res) {
+            req._app = res._app = self;
             handlers.execute(req, res);
         };
     }

@@ -39,7 +39,7 @@ var emptyResult = exports.emptyResult = function(set) {
 
 utils.inherit(emptyResult, baseResult, {
     executeResult: function(controllerContext, callback) {
-        controllerContext.rulee.response.header('Content-Type', 'text/plain');
+        controllerContext.rulee.response.contentType('text/plain');
         controllerContext.rulee.response.send('');
         callback();
     }
@@ -57,7 +57,7 @@ utils.inherit(jsonResult, baseResult, {
     executeResult: function(controllerContext, callback) {
         var json = JSON.stringify(this.data);
         //
-        controllerContext.rulee.response.header('Content-Type', this.contentType);
+        controllerContext.rulee.response.contentType(this.contentType);
         controllerContext.rulee.response.send(json);
         callback();
     }
@@ -77,7 +77,7 @@ utils.inherit(jsonpResult, baseResult, {
         var json = JSON.stringify(this.data).replace(/\u2028/g, '\\u2028').replace(/\u2029/g, '\\u2029');
         var jsonp = utils.format('typeof {0} === "function" && {0}({1});', this.callbackName, json);
         //
-        controllerContext.rulee.response.header('Content-Type', this.contentType);
+        controllerContext.rulee.response.contentType(this.contentType);
         controllerContext.rulee.response.send(jsonp);
         callback();
     }
@@ -164,8 +164,9 @@ var fileResult = exports.fileResult = function(set) {
 utils.inherit(fileResult, baseResult, {
     filePath: null, fileDownloadName: null,
     executeResult: function(controllerContext, callback) {
-        controllerContext.rulee.response.download(this.filePath, this.fileDownloadName);
-        callback();
+        controllerContext.rulee.response.download(this.filePath, this.fileDownloadName, function(err) {
+            callback(err);
+        });
     }
 });
 
@@ -181,9 +182,9 @@ utils.inherit(contentResult, baseResult, {
     executeResult: function(controllerContext, callback) {
         //
         var text = this.content;
-        if (!utils.isString(text)) { text = text + ''; }
+        if (!utils.isString(text)) { text = String(text); }
         //
-        controllerContext.rulee.response.header('Content-Type', this.contentType);
+        controllerContext.rulee.response.contentType(this.contentType);
         controllerContext.rulee.response.send(text);
         callback();
     }
@@ -268,4 +269,3 @@ utils.inherit(redirectToRouteResult, baseResult, {
         callback();
     }
 });
-

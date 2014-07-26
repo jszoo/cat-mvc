@@ -35,8 +35,10 @@ var mvcApp = function(set) {
     this._handlers = new mvcHandlerRouter();
     this._setts = caching.region('mvc-runtime-settings');
     //
+    this.set('version', process.env.npm_package_version);
+    this.set('nodejs-version', process.version);
     this.set('env', process.env.NODE_ENV || 'development');
-    this.set('x-powered-by-enabled', true);
+    this.set('x-headers-enabled', true);
     this.set('subdomain-offset', 2);
     this.set('trust-proxy', false);
     this.set('etag', 'weak');

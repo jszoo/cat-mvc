@@ -23,7 +23,7 @@ httpMethod.prototype = {
     constructor: httpMethod, className: 'httpMethod',
 
     isValidActionRequest: function(httpContext) {
-        var methodName = httpContext.rulee.request.method;
+        var methodName = httpContext.request.method;
         return utils.tryLowerEqual(this.methodName, methodName);
     }
 };

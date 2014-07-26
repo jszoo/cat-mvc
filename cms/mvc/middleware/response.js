@@ -101,7 +101,7 @@ response.prototype = {
 
     cookie: function(name, value, options) {
         options = utils.extend({}, options);
-        var signed = options.signed, secret = this.req.secret;
+        var signed = options.signed, secret = this.req._ree.secret;
         //
         if (signed && !secret) {
             throw new Error('cookieParser("secret") required for signed cookies');

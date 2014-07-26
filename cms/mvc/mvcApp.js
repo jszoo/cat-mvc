@@ -36,7 +36,6 @@ var mvcApp = function(set) {
     this._setts = caching.region('mvc-runtime-settings');
     //
     this.set('version', process.env.npm_package_version);
-    this.set('nodejs-version', process.version);
     this.set('env', process.env.NODE_ENV || 'development');
     this.set('x-headers-enabled', true);
     this.set('subdomain-offset', 2);

@@ -2,7 +2,7 @@
 * response
 * author: ronglin
 * create date: 2014.7.4
-* description: migrate from expressjs
+* description: migrate from expressjs [https://github.com/visionmedia/express/blob/master/lib/response.js]
 */
 
 'use strict';
@@ -294,7 +294,7 @@ response.prototype = {
         }
 
         // freshness
-        if (this.req.fresh) {
+        if (this.req._ree.fresh) {
             this.status(304);
         }
 

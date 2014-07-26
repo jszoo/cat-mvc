@@ -2,7 +2,7 @@
 * request
 * author: ronglin
 * create date: 2014.7.4
-* description: migrate from expressjs
+* description: migrate from expressjs [https://github.com/visionmedia/express/blob/master/lib/request.js]
 */
 
 'use strict';

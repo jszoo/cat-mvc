@@ -6,6 +6,8 @@
 
 'use strict';
 
+var http = require('http');
+
 module.exports = function() {
     //
     var format = function(err) {
@@ -16,7 +18,7 @@ module.exports = function() {
         msg.push('</head>');
         msg.push('<body>');
         msg.push('  <h1>' + err.message + '</h1>');
-        msg.push('  <h3>Status: ' + err.status + '</h3>')
+        msg.push('  <h3>Status: ' + err.status + ' ' + http.STATUS_CODES[err.status] + '</h3>');
         msg.push('  <pre>' + err.stack + '</pre>');
         msg.push('</body>');
         msg.push('</html>');

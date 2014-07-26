@@ -67,6 +67,7 @@ mvcApp.prototype = {
     */
     set: function(key, val) {
         this._setts.set(key, val);
+        key = utils.formalStr(key);
         //
         if (key === 'etag') {
             this.set('etag-fn', httpHelper.compileETag(val));

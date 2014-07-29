@@ -21,7 +21,7 @@ var config = {
     areas: 'areas',
     views: 'views',
     shared: 'shared',
-    controllers: 'ctrls',
+    controllers: 'controllers',
     events: 'events.js'
 };
 

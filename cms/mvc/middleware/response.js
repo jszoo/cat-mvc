@@ -101,7 +101,7 @@ response.prototype = {
 
     cookie: function(name, value, options) {
         options = utils.extend({}, options);
-        var signed = options.signed, secret = this.req._ree.secret;
+        var signed = options.signed, secret = this.req._zoo.secret;
         //
         if (signed && !secret) {
             throw new Error('cookieParser("secret") required for signed cookies');
@@ -139,7 +139,7 @@ response.prototype = {
         if (fn) { delete obj.default; }
         //
         var keys = Object.keys(obj);
-        var key = this.req._ree.acceptsTypes(keys);
+        var key = this.req._zoo.acceptsTypes(keys);
         //
         this.vary('Accept');
         //
@@ -294,7 +294,7 @@ response.prototype = {
         }
 
         // freshness
-        if (this.req._ree.fresh) {
+        if (this.req._zoo.fresh) {
             this.status(304);
         }
 
@@ -317,7 +317,7 @@ response.prototype = {
 
 module.exports = function() {
     return function(req, res, next, err) {
-        res._ree = new response({
+        res._zoo = new response({
             req: req,
             res: res
         });

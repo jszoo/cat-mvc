@@ -118,7 +118,7 @@ request.prototype = {
 
 module.exports = function() {
     return function(req, res, next, err) {
-        req._ree = new request({
+        req._zoo = new request({
             req: req,
             res: res
         });

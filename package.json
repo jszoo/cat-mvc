@@ -1,6 +1,6 @@
 {
   "name": "zoo-mvc",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "nodejs mvc framework which is asp.net mvc style",
   "main": "mvc/index.js",
   "scripts": {

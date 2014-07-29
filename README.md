@@ -33,7 +33,7 @@ If you are familiar with .NET MVC, you might already known well about the site f
 |-- areas
 |   |-- account
 |   |   |-- controllers
-|   |   |   |-- auth.js       // assume contains actions login/logon
+|   |   |   |-- auth.js       // assume contains actions: login/logon
 |   |   |-- views
 |   |   |   |-- auth
 |   |   |   |   |-- login.html
@@ -42,8 +42,8 @@ If you are familiar with .NET MVC, you might already known well about the site f
 |   |   |   |   |-- layout.html
 |   |   |-- events.js         // area events
 |-- controllers
-|   |-- home.js
-|   |-- user.js               // assume contains actions list/item
+|   |-- home.js               // assume contains action: index
+|   |-- user.js               // assume contains actions: list/item
 |-- views
 |   |-- home
 |   |   |-- index.html

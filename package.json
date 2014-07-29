@@ -1,5 +1,5 @@
 {
-  "name": "zoo-mvc",
+  "name": "cat-mvc",
   "version": "0.0.4",
   "description": "nodejs mvc framework which is asp.net mvc style",
   "main": "mvc/index.js",
@@ -9,7 +9,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/jszoo/zoo-mvc.git"
+    "url": "https://github.com/jszoo/cat-mvc.git"
   },
   "keywords": [
     "mvc",

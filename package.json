@@ -5,7 +5,7 @@
   "main": "mvc/index.js",
   "scripts": {
     "start": "node --debug dev",
-    "test": "node --debug test-site"
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",

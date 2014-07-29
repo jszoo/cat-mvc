@@ -1,0 +1,60 @@
+{
+  "name": "rulee",
+  "version": "0.0.1",
+  "description": "rulee's personal practice system",
+  "main": "app.js",
+  "scripts": {
+    "start": "node --debug dev",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://code.jd.com/ruleechen/rulee.git"
+  },
+  "keywords": [
+    "node",
+    "mvc",
+    "rulee",
+    "practice"
+  ],
+  "author": "rulee",
+  "dependencies": {
+    "express-session": "~1.7.0",
+    "body-parser": "~1.5.0",
+    "cookie-parser": "^1.3.2",
+    "serve-favicon": "~2.0.1",
+    "serve-static": "~1.4.0",
+    "path-to-regexp": "~0.2.3",
+    "vash": "~0.7.12-1",
+    "ejs": "~1.0.0",
+    "mime": "1.2.11",
+    "vary": "0.1.0",
+    "send": "0.5.0",
+    "cookie": "0.1.2",
+    "cookie-signature": "1.0.4",
+    "fresh": "0.2.2",
+    "accepts": "~1.0.7",
+    "proxy-addr": "1.0.1",
+    "media-typer": "0.2.0",
+    "buffer-crc32": "0.2.3",
+    "request": "~2.39.0",
+    "morgan": "^1.2.0",
+    "debug": "~1.0.4"
+  },
+  "devDependencies": {
+    "tiny-lr": "0.0.9",
+    "gulp": "^3.8.6",
+    "gulp-browserify": "^0.5.0",
+    "gulp-notify": "^1.4.0",
+    "gulp-concat": "^2.3.4",
+    "gulp-clean": "^0.3.1",
+    "gulp-rename": "^1.2.0",
+    "gulp-minify-css": "^0.3.7",
+    "gulp-livereload": "^2.1.0",
+    "gulp-ngmin": "^0.3.0",
+    "gulp-uglify": "^0.3.1",
+    "gulp-less": "^1.3.2",
+    "gulp-plumber": "^0.6.4"
+  },
+  "optionalDependencies": {}
+}

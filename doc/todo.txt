@@ -1,0 +1,25 @@
+OK 1. httpNotFound: statusDescription header?
+OK 2. mvcController.action http method?
+OK 3. implement mvc url helper
+OK 7. tempData function
+OK 8. xheaders function
+OK 10. actions that is not specify a method should accept all method type request
+OK 11. controller.destory function
+OK 13. rulee.url
+OK 6. mvcView for view engine
+OK 5. viewResult
+OK 9. inject url helper to view engine
+OK 14. vash engine layout function
+OK 12. Https related: controller&action setting ---> attributes
+OK 16. combine isValidxxxxxx attribute apis?
+OK 15. ~/ formater url
+OK 17. support multi mvc instance
+OK 18. caching support multi mvc instance
+OK 20. review every code files, optimize the application initialization
+OK 19. context instance destroy?
+OK 23. viewResult -> viewEngines.findView -> return detail mvcView, eg: vashView -> which vashView inherit from mvcView -> detail mvcView.render -> end
+
+PP 4. partialViewResult
+
+21. new execute action impl flow
+22. onException attribute

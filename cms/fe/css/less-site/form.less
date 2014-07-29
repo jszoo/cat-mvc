@@ -1,0 +1,227 @@
+/* Form elements
+---------------------------------------------------------------------------------------------------------------------*/
+input,
+textarea,
+button {
+	font: inherit;
+}
+
+/* Radiobox
+------------------------------------------------------*/
+.radiobox {
+	display: inline-block;
+	overflow: hidden;
+	position: relative;
+
+	input {
+		left: -20px;
+		position: absolute;
+		top: -20px;
+		.opacity(0);
+
+		&:checked ~ label .sprite {
+			.sprite(@radio-active);
+		}
+	}
+
+	label {
+		cursor: pointer;
+		display: block;
+
+		.sprite {
+			display: block;
+			.sprite(@radio);
+		}
+	}
+}
+
+/* Checkbox
+------------------------------------------------------*/
+.checkbox {
+	display: inline-block;
+	overflow: hidden;
+	position: relative;
+
+	input {
+		left: -20px;
+		position: absolute;
+		top: -20px;
+		.opacity(0);
+
+		&:checked ~ label .icon {
+			display: block;
+		}
+	}
+
+	label {
+		background: #F9F9F9;
+		border: 1px solid #B2B2B2;
+		cursor: pointer;
+		display: block;
+		height: 30px;
+		width: 30px;
+		.box-shadow(0 0 2px rgba(0,0,0,.05));
+
+		.icon {
+			display: none;
+			margin: 9px 6px;
+		}
+	}
+}
+
+/* Select2
+------------------------------------------------------*/
+.select2-container {
+	.select2-choice {
+		background: #F1F1F1;
+		border: 1px solid #B2B2B2;
+		color: #000;
+		filter: none;
+		height: 38px;
+		line-height: 38px;
+		padding-left: 15px;
+		.box-shadow(e("0 0 2px rgba(0,0,0,.05), inset 0 -1px 1px rgba(0,0,0,.15)"));
+		.rounded(0);
+
+		.select2-arrow {
+			background: none;
+			border: none;
+			height: 4px;
+			margin: 17px 7px 0 0;
+			width: 7px;
+
+			b {
+				border-color: #000000 transparent transparent transparent;
+				border-style: solid;
+				border-width: 4px 3.5px 0 3.5px;
+				height: 0px;
+				width: 0px;
+			}
+		}
+	}
+}
+
+.select2-drop-active {
+	border-color: #B2B2B2;
+	.rounded(0);
+}
+
+.select2-results .select2-highlighted {
+	background: #EEE;
+	color: #000;
+}
+
+/* Star rating
+------------------------------------------------------*/
+div.star-rating,
+div.star-rating a {
+	background: url(images/icon-stars.png) no-repeat;
+}
+
+div.star-rating {
+	height: 15px;
+	width: 18px;
+}
+
+div.star-rating-hover a {
+	background-position: 0 -15px !important;
+}
+
+div.star-rating-on a {
+	background-position: 0 -30px !important;
+}
+
+/* Validation
+------------------------------------------------------*/
+.input-validation-error {
+	background: #FCE8E9 !important;
+	border-color: #F00 !important;
+}
+/* Common form
+---------------------------------------------------------------------------------------------------------------------*/
+.common-form {
+	.title {
+		font-size: 20px !important;
+		font-weight: 700 !important;
+		margin-bottom: 28px;
+	}
+
+	.field {
+		margin-bottom: 8px;
+		.clearfix();
+	}
+
+	select {
+		width: 100%;
+	}
+
+	.radiobox,
+	.checkbox {
+		float: left;
+		margin: 6px 8px 6px 0;
+	}
+
+	.radio-label {
+		float: left;
+		margin: 6px 50px 0 0;
+	}
+
+	.checkbox-label {
+		display: block;
+		line-height: 1.25;
+		margin: 12px 20px 0 0;
+		overflow: hidden;
+	}
+
+	input[type="text"],
+	input[type="password"] {
+		background: #FAFAFA;
+		border: 1px solid #B2B2B2;
+		height: 40px;
+		padding: 9px 15px;
+		width: 100%;
+		.box-shadow(0 0 2px rgba(0,0,0,.05));
+		.box-sizing(border-box);
+	}
+
+	textarea {
+		background: #FAFAFA;
+		border: 1px solid #B2B2B2;
+		height: 100px;
+		resize: vertical;
+		padding: 9px 15px;
+		width: 100%;
+		.box-shadow(0 0 2px rgba(0,0,0,.05));
+		.box-sizing(border-box);
+	}
+
+	::-webkit-input-placeholder {
+		color: #9F9F9F;
+		opacity: 1;
+	}
+
+	::-moz-placeholder {
+		color: #9F9F9F;
+		opacity: 1;
+	}
+
+	:-ms-input-placeholder {
+		color: #9F9F9F;
+		opacity: 1;
+	}
+
+	.placeholder {
+		color: #9F9F9F;
+	}
+
+	.validcode {
+		display: block;
+		margin: 15px 0;
+	}
+
+	.button {
+		display: block;
+		margin-top: 25px;
+		width: 100%;
+	}
+}

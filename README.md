@@ -95,6 +95,13 @@ mvc.controller(function(req, res, session, end) {
         }
     });
 
+    // it's support the way below to define an GET action
+    // GET /account/auth/logout
+    this.logout = function() {
+        session.destroy();
+        end.redirectToAction('login');
+    };
+
     //.... other actions
 });
 ```

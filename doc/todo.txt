@@ -23,3 +23,7 @@ PP 4. partialViewResult
 
 21. new execute action impl flow
 22. onException attribute
+
+24. custom controller inject params
+25. areas path customizable
+26. remove app.current

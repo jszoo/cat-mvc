@@ -1,10 +1,9 @@
 {
   "name": "cat-mvc",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "nodejs mvc framework which is asp.net mvc style",
   "main": "mvc/index.js",
   "scripts": {
-    "start": "node --debug dev",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {

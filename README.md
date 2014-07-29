@@ -16,10 +16,12 @@ Simple Usage
 ============
 
 ```javascript
+// global.js
+
 var http = require('http');
 var mvc = require('cat-mvc');
 //
-var app = mvc.gainApp({ appPath: __basedir });
+var app = mvc.gainApp({ appPath: __dirname });
 var server = http.createServer(mvc.handler()); // handler all request here
 server.listen(8000, function() { console.log('Server Start!'); });
 ```

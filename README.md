@@ -1,4 +1,4 @@
 zoo-mvc
 =======
 
-nodejs mvc framework which is asp.net mvc style
+A web mvc framework base on nodejs platform for personal practicing purpose. I will be very pleased if this is help to you.

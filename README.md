@@ -8,21 +8,21 @@ Sample site see to https://github.com/jszoo/cat-mvc-sample-site
 Install
 ========
 
-'''shell
+```shell
 $ npm install cat-mvc
-'''
+```
 
 Simple Usage
 ============
 
-'''javascript
+```javascript
 var http = require('http'),
 	mvc = require('cat-mvc');
 
 var app = mvc.gainApp({ appPath: __basedir });
 var server = http.createServer(mvc.handler()); // handler all request here
 server.listen(8000, function() { console.log('Server Start!'); });
-'''
+```
 
 Site File Structure
 ==============
@@ -60,7 +60,7 @@ Controller
 
 We take auth controller for example.
 
-'''javascript
+```javascript
 // areas/account/controllers/auth.js
 
 var mvc = require('cat-mvc');
@@ -97,7 +97,7 @@ mvc.controller(function(req, res, session, end) {
 
     //.... other actions
 });
-'''
+```
 
 Area
 ====

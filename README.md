@@ -16,9 +16,9 @@ Simple Usage
 ============
 
 ```javascript
-var http = require('http'),
-	mvc = require('cat-mvc');
-
+var http = require('http');
+var mvc = require('cat-mvc');
+//
 var app = mvc.gainApp({ appPath: __basedir });
 var server = http.createServer(mvc.handler()); // handler all request here
 server.listen(8000, function() { console.log('Server Start!'); });
@@ -95,7 +95,7 @@ mvc.controller(function(req, res, session, end) {
         }
     });
 
-    // it's support the way below to define an GET action
+    // it's also support the way below to define an GET action
     // GET /account/auth/logout
     this.logout = function() {
         session.destroy();

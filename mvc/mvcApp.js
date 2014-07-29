@@ -25,7 +25,8 @@ var midError = require('./middleware/error'),
     midRequest = require('./middleware/request'),
     midResponse = require('./middleware/response');
 
-var bodyParser = require('body-parser'),
+var session = require('express-session'),
+    bodyParser = require('body-parser'),
     cookieParser = require('cookie-parser');
 
 var mvcApp = function(set) {
@@ -122,6 +123,14 @@ mvcApp.prototype = {
             handlers.register(bodyParser.json({ type: 'application/hal+json' }));
             handlers.register(bodyParser.urlencoded({ extended: true }));
             handlers.register(cookieParser());
+            handlers.register(session({
+                name: 'zoomvc.sid',
+                secret: 'zoomvc',
+                cookie: { maxAge: 3600000 },
+                resave: true,
+                rolling: false,
+                saveUninitialized: true
+            }));
             //
             handlers.register('/', 'midHeader', midHeader());
             handlers.register('/', 'midRequest', midRequest());

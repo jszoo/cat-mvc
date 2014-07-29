@@ -77,6 +77,7 @@ attributeManager.prototype = {
         }
         // ret
         return new attributes({
+            _config: config,
             _attrs: attrs
         });
     }
@@ -98,7 +99,7 @@ var attributes = function(set) {
 
 attributes.prototype = {
 
-    _attrs: null, _parent: null,
+    _config: null, _attrs: null, _parent: null,
 
     constructor: attributes, className: 'attributes',
 

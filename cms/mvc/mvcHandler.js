@@ -21,8 +21,8 @@ module.exports = function(app) {
     return function(req, res, next) {
         //
         var rulee = {
-            request: req.rulee,
-            response: res.rulee
+            request: req._ree,
+            response: res._ree
         };
         //
         var matched = false, exception;
@@ -30,7 +30,7 @@ module.exports = function(app) {
             if (exception) {
                 next(exception);
             } else if (!matched) {
-                var notfound = new Error('Notfound');
+                var notfound = new Error('The requested URL was not found on this server');
                 notfound.status = 404;
                 next(notfound);
             }

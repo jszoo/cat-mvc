@@ -6,16 +6,20 @@
 
 'use strict';
 
-var utils = require('../utilities');
-
-module.exports = function(set) {
-    if (set = set || {}, !set.headers) {
-        set.headers = { 'X-Powered-By': 'RULEE-MVC' };
-    }
+module.exports = function() {
     //
     return function(req, res, next, err) {
-        utils.each(set.headers, function(key, value) {
-            res.setHeader(key, value);
-        }); next(err);
+        //
+        var enabled = req._app.get('x-headers-enabled');
+        if (enabled) {
+            //
+            res.setHeader('X-Powered-By', 'Rulee CMS');
+            res.setHeader('X-Nodejs-Version', process.version);
+            //
+            var version = req._app.get('version');
+            if (version) { res.setHeader('X-RuleeMVC-Version', version); }
+        }
+        //
+        next(err);
     };
 };

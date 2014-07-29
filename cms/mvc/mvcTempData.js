@@ -12,7 +12,9 @@ var mvcTempData = module.exports = function(set) {
     utils.extend(this, set);
     this.newData = {};
     this.oldData = {};
-    if (!this.provider) { throw new Error('Inner store "provider" is require.'); }
+    if (!this.provider) {
+        throw new Error('Inner store "provider" is require.');
+    }
 };
 
 mvcTempData.prototype = {

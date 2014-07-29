@@ -9,11 +9,11 @@ var mvc = require('../../../mvc/index');
 mvc.controller(function(req, res, session, end) {
 
     this.action('index', function() {
-        res.json({ Get: true });
+        end.json({ Get: true });
     });
 
     this.action('index', 'httpPost', function(UserName, Password, User, ArticleId) {
-        res.json({ Post: true });
+        end.json({ Post: true });
     });
 
     this.action('forgotPassword', function() {

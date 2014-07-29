@@ -250,9 +250,9 @@ mvcController.prototype = {
         utils.each(ambiguousActions, function() {
             var match = this.impl().toString().match(/^function\s*\([^\)]*/ig);
             var fnStr = match ? (match[0] + ')') : this.impl().toString();
-            message.push(utils.format('{0} [{1}] {2}', this.name(), this.attr().toString(), fnStr));
+            message.push(utils.format('{0} [{1}] {2}', this.name(), String(this.attr() || ''), fnStr));
         });
-        return new Error(utils.format('The current request for action "{0}" on controller type "{1}" is ambiguous between the following action methods:<br/>{2}', actionName, this.name(), message.join('<br/>')));
+        return new Error(utils.format('The current request for action "{0}" on controller type "{1}" is ambiguous between the following action methods:\n{2}', actionName, this.name(), message.join('\n')));
     }
 };
 

@@ -15,7 +15,7 @@ var utils = require('./utilities'),
     mvcTempDataStore = require('./mvcTempDataStore'),
     mvcActionResultApi = require('./mvcActionResultApi');
 
-var controllersDefined, controllerInject,
+var controllersDefined, controllerInject = {},
     controllerKeyInScope = 'dont_use_me(random:' + utils.unique(8) + ')';
 
 var mvcController = module.exports = function(set) {
@@ -52,11 +52,23 @@ mvcController.api = function() {
     return ret;
 };
 
-mvcController.api.inject = function(obj) {
-    if (!utils.isObject(obj)) {
-        throw new Error('Inject params require object type value');
-    } else {
-        controllerInject = utils.formalObj(obj);
+mvcController.api.inject = function(name, value) {
+    var nt = utils.type(name);
+    if (value === undefined && nt === 'object') {
+        utils.each(name, function(n, v) {
+            mvcController.api.inject(n, v);
+        });
+    }
+    else if (nt === 'string') {
+        name = utils.formalStr(name);
+        if (value === undefined) {
+            delete controllerInject[name];
+        } else {
+            controllerInject[name] = value;
+        }
+    }
+    else {
+        throw new Error('Invalid controller inject parameters');
     }
 };
 

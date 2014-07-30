@@ -1,7 +1,7 @@
 cat-mvc
 =======
 
-A .NET MVC framework style nodejs mvc framework. It's almost fully implemented the features of .NET MVC. I first build this project for personal practicing purpose. But I was moved when this project going more and more better. I think it's now good enough in the production environment use. I will be very pleased if this project is help to you.
+A .NET MVC framework style nodejs MVC framework. It's almost fully implemented the main features of .NET MVC. I first build this project for personal practicing purpose. But I was moved when this project going more and more better. I think it's now good enough in the production environment use. I will be very pleased if this project is help to you.
 
 Please checkout the sample site here: https://github.com/jszoo/cat-mvc-sample-site
 
@@ -21,7 +21,7 @@ Simple Usage
 var http = require('http');
 var mvc = require('cat-mvc');
 //
-var app = mvc.gainApp({ appPath: __dirname });
+var app = mvc({ appPath: __dirname });
 var server = http.createServer(mvc.handler()); // handler all request here
 server.listen(8000, function() { console.log('Server Start!'); });
 ```

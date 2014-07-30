@@ -30,9 +30,11 @@ var session = require('express-session'),
     bodyParser = require('body-parser'),
     cookieParser = require('cookie-parser');
 
+var emptyAppPath = 'empty_app_path';
+
 var mvcApp = function(set) {
     utils.extend(this, set);
-    if (!this.appPath) { throw new Error('Parameter "appPath" is required'); }
+    if (!this.appPath) { this.appPath = emptyAppPath; }
     //
     var instance = apps.get(this.appPath);
     if (instance) { return instance; }
@@ -102,6 +104,13 @@ mvcApp.prototype = {
     },
 
     /*
+    * has appPath
+    */
+    hasPath: function() {
+        return (this.appPath && this.appPath !== emptyAppPath);
+    },
+
+    /*
     * mapPath('~/xx')
     *
     * TODO:
@@ -110,8 +119,15 @@ mvcApp.prototype = {
     * mapPath('../xx')
     */
     mapPath: function(relPath) {
-        if (!relPath) { return this.appPath; }
-        if (relPath.charAt(0) === '~') { relPath = relPath.substr(1); }
+        if (!this.hasPath()) {
+            throw new Error('The "appPath" is not yet specified');
+        }
+        if (!relPath) {
+            return this.appPath;
+        }
+        if (relPath.charAt(0) === '~') {
+            relPath = relPath.substr(1);
+        }
         relPath = relPath.replace(/\/|\\/g, path.sep);
         return path.join(this.appPath, relPath);
     },

@@ -136,7 +136,9 @@ mvcAreas.prototype = {
     },
 
     registerAll: function() {
-        this.registerRoot(this.app.mapPath('~/'));
-        this.registerAreas(this.app.mapPath(this.conf('names.areas')));
+        if (this.app.hasPath()) {
+            this.registerRoot(this.app.mapPath('~/'));
+            this.registerAreas(this.app.mapPath(this.conf('names.areas')));
+        }
     }
 };

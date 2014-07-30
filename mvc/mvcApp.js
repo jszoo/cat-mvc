@@ -180,12 +180,15 @@ var gain = function(set) {
 };
 
 // export
-module.exports = utils.extend(function(set) {
-    return gain(set);
-}, {
+module.exports = utils.extend(gain, {
     utils: utils,
     caching: caching,
     controller: mvcController.api,
     actionResults: mvcActionResult,
-    gainApp: gain
+    gainApp: function(set) {
+        return gain(set);
+    },
+    allApps: function() {
+        return apps.all();
+    }
 });

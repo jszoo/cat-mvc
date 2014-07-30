@@ -23,9 +23,9 @@ OK 23. viewResult -> viewEngines.findView -> return detail mvcView, eg: vashView
 OK 24. custom controller inject params
 OK 26. remove app.current
 OK 28. more independence caching solution
+OK 25. areas path customizable
 
 PP 4. partialViewResult
 OP 27. optimize execute action impl flow
 
-25. areas path customizable
 29. independence controller inject params solution

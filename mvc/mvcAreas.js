@@ -17,12 +17,12 @@ var consts = {
     root: '/root'
 };
 
-var config = {
+var names = {
     areas: 'areas',
     views: 'views',
     shared: 'shared',
     controllers: 'controllers',
-    events: 'events.js'
+    subevents: 'events.js'
 };
 
 var mvcAreas = module.exports = function(app, store) {
@@ -31,7 +31,7 @@ var mvcAreas = module.exports = function(app, store) {
     this._inner = caching.region('mvc-areas-cache', store);
 };
 
-mvcAreas.config = config;
+mvcAreas.names = names;
 
 mvcAreas.prototype = {
 
@@ -42,7 +42,7 @@ mvcAreas.prototype = {
     constructor: mvcAreas, className: 'mvcAreas',
 
     conf: function(name) {
-        return this.app.get(name) || utils.readObj({ config: config }, name);
+        return this.app.get(name) || utils.readObj({ names: names }, name);
     },
 
     all: function() {
@@ -78,55 +78,65 @@ mvcAreas.prototype = {
         return this._inner.remove(areaName);
     },
 
-    register: function(areaName, areaRoute, defaultRouteValues) {
-        var areaDirectory = areaName, self = this;
-        if (areaName === consts.root) { areaDirectory = path.sep + '..'; }
-        var areasPath = this.app.mapPath(this.conf('config.areas'));
-        var area, areaPath = path.normalize(path.join(areasPath, areaDirectory));
-        if (fs.existsSync(areaPath) && fs.statSync(areaPath).isDirectory()) {
-            // area obj
-            area = new mvcArea({
-                name: areaName,
-                path: areaPath,
-                viewsPath:       path.join(areaPath, self.conf('config.views')),
-                viewsSharedPath: path.join(areaPath, self.conf('config.views'), self.conf('config.shared')),
-                controllersPath: path.join(areaPath, self.conf('config.controllers')),
-                eventsFilePath:  path.join(areaPath, self.conf('config.events'))
-            }, self._inner.sto());
-            //
-            area.routes.events.on('changed', function() { self._routeSet = null; });
-            // map route
-            area.routes.set(areaName, areaRoute, defaultRouteValues);
-            // load default subscribes
-            area.subevents.load(area.eventsFilePath);
-            // read 'areas/account/ctrls'
-            area.controllers.loaddir(area.controllersPath);
+    register: function(areaPath, areaName, areaRouteExpression, defaultRouteValues) {
+        if (!fs.existsSync(areaPath) || !fs.statSync(areaPath).isDirectory()) {
+            throw new Error('The specified "areaPath" is invalid');
         }
+        // area obj
+        var area = new mvcArea({
+            name: areaName,
+            path: areaPath,
+            viewsPath:       path.join(areaPath, this.conf('names.views')),
+            viewsSharedPath: path.join(areaPath, this.conf('names.views'), this.conf('names.shared')),
+            controllersPath: path.join(areaPath, this.conf('names.controllers')),
+            eventsFilePath:  path.join(areaPath, this.conf('names.subevents'))
+        }, this._inner.sto());
+        // map route
+        var self = this;
+        area.routes.events.on('changed', function() { self._routeSet = null; });
+        area.routes.set(areaName, areaRouteExpression, defaultRouteValues);
+        // load default subscribes
+        area.subevents.load(area.eventsFilePath);
+        // read 'areas/account/controllers'
+        area.controllers.loaddir(area.controllersPath);
         //
-        if (area) {
-            area.fireEvent('onRegister');
-            this.events.emit('register', area);
-            this._inner.set(area.name, area);
-        }
+        area.fireEvent('onRegister');
+        this.events.emit('register', area);
+        this._inner.set(area.name, area);
         // ret
         return area;
     },
 
-    registerAll: function() {
+    registerRoot: function(rootPath) {
+        if (this.rootArea()) {
+            throw new Error('Root area already exists, only one root area is allowed');
+        }
         this.register(
+            (rootPath),
             (consts.root),
             ('/:controller?/:action?'),
             ({ controller: 'home', action: 'index' })
         );
-        var areasPath = this.app.mapPath(this.conf('config.areas'));
-        var self = this, areasDirs = fs.readdirSync(areasPath);
-        utils.each(areasDirs, function(i, areaName) {
+    },
+
+    registerAreas: function(areasPath) {
+        if (!fs.existsSync(areasPath) || !fs.statSync(areasPath).isDirectory()) {
+            throw new Error('The specified "areasPath" is invalid');
+        }
+        var self = this, areaDirs = fs.readdirSync(areasPath);
+        utils.each(areaDirs, function(i, areaName) {
+            var areaPath = path.join(areasPath, areaName);
             self.register(
+                (areaPath),
                 (areaName),
                 ('/' + areaName + '/:controller?/:action?'),
                 ({ controller: 'home', action: 'index' })
             );
         });
-        return this.all();
+    },
+
+    registerAll: function() {
+        this.registerRoot(this.app.mapPath('~/'));
+        this.registerAreas(this.app.mapPath(this.conf('names.areas')));
     }
 };

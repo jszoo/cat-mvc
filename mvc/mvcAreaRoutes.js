@@ -11,12 +11,12 @@ var events = require('events'),
     caching = require('./caching'),
     mvcAreaRoute = require('./mvcAreaRoute');
 
-var mvcAreaRoutes = module.exports = function(set) {
+var mvcAreaRoutes = module.exports = function(set, store) {
     utils.extend(this, set);
     if (!this.ownerAreaName) { throw new Error('Parameter "ownerAreaName" is required'); }
     //
     this.events = new events.EventEmitter();
-    this._inner = caching.region('mvc-' + this.ownerAreaName + '-area-routes-cache');
+    this._inner = caching.region('mvc-' + this.ownerAreaName + '-area-routes-cache', store);
 };
 
 mvcAreaRoutes.prototype = {

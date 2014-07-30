@@ -9,8 +9,8 @@
 var utils = require('../utilities'),
     caching = require('../caching');
 
-var viewEngineManager = module.exports = function() {
-    this._inner = caching.region('mvc-view-engines-cache');
+var viewEngineManager = module.exports = function(app, store) {
+    this._inner = caching.region('mvc-view-engines-cache', store);
 };
 
 viewEngineManager.prototype = {

@@ -38,8 +38,9 @@ var mvcApp = function(set) {
     if (instance) { return instance; }
     apps.set(this.appPath, this);
     //
+    var store = new cachingStore();
     this._handlers = new mvcHandlerRouter();
-    this._sett = caching.region('mvc-app-setting-' + this.appPath);
+    this._sett = caching.region('mvc-app-setting', store);
     //
     this.set('version', process.env.npm_package_version);
     this.set('env', process.env.NODE_ENV || 'development');
@@ -48,14 +49,15 @@ var mvcApp = function(set) {
     this.set('trust-proxy', false);
     this.set('etag', 'weak');
     //
-    this.areas = new mvcAreas(this);
-    this.attributes = new mvcAttributes();
-    this.viewEngines = new mvcViewEngines();
+    this.cachingStore = store;
+    this.areas = new mvcAreas(this, store);
+    this.attributes = new mvcAttributes(this, store);
+    this.viewEngines = new mvcViewEngines(this ,store);
 };
 
 mvcApp.prototype = {
 
-    _sett: null, _handlers: null, _inited: null,
+    _sett: null, _handlers: null, _inited: null, cachingStore: null,
 
     appPath: null, areas: null, attributes: null, viewEngines: null,
 

@@ -11,13 +11,13 @@ var utils = require('./utilities'),
     mvcAreaRoutes = require('./mvcAreaRoutes'),
     mvcControllers = require('./mvcControllers');
 
-var mvcArea = module.exports = function(set) {
+var mvcArea = module.exports = function(set, store) {
     utils.extend(this, set);
     if (!this.name) { throw new Error('Parameter "name" is required'); }
     //
-    this.routes = new mvcAreaRoutes({ ownerAreaName: this.name });
-    this.subevents = new mvcAreaEvents({ ownerAreaName: this.name });
-    this.controllers = new mvcControllers({ ownerAreaName: this.name });
+    this.routes = new mvcAreaRoutes({ ownerAreaName: this.name }, store);
+    this.subevents = new mvcAreaEvents({ ownerAreaName: this.name }, store);
+    this.controllers = new mvcControllers({ ownerAreaName: this.name }, store);
 };
 
 mvcArea.prototype = {

@@ -25,10 +25,10 @@ var config = {
     events: 'events.js'
 };
 
-var mvcAreas = module.exports = function(app) {
+var mvcAreas = module.exports = function(app, store) {
     this.app = app;
     this.events = new events.EventEmitter();
-    this._inner = caching.region('mvc-areas-cache');
+    this._inner = caching.region('mvc-areas-cache', store);
 };
 
 mvcAreas.config = config;
@@ -92,7 +92,7 @@ mvcAreas.prototype = {
                 viewsSharedPath: path.join(areaPath, self.conf('config.views'), self.conf('config.shared')),
                 controllersPath: path.join(areaPath, self.conf('config.controllers')),
                 eventsFilePath:  path.join(areaPath, self.conf('config.events'))
-            });
+            }, self._inner.sto());
             //
             area.routes.events.on('changed', function() { self._routeSet = null; });
             // map route

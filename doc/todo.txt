@@ -1,31 +1,31 @@
 OK 1. httpNotFound: statusDescription header?
 OK 2. mvcController.action http method?
 OK 3. implement mvc url helper
+OK 5. viewResult
+OK 6. mvcView for view engine
 OK 7. tempData function
 OK 8. xheaders function
+OK 9. inject url helper to view engine
 OK 10. actions that is not specify a method should accept all method type request
 OK 11. controller.destory function
-OK 13. rulee.url
-OK 6. mvcView for view engine
-OK 5. viewResult
-OK 9. inject url helper to view engine
-OK 14. vash engine layout function
 OK 12. Https related: controller&action setting ---> attributes
-OK 16. combine isValidxxxxxx attribute apis?
+OK 13. rulee.url
+OK 14. vash engine layout function
 OK 15. ~/ formater url
+OK 16. combine isValidxxxxxx attribute apis?
 OK 17. support multi mvc instance
 OK 18. caching support multi mvc instance
-OK 20. review every code files, optimize the application initialization
 OK 19. context instance destroy?
-OK 23. viewResult -> viewEngines.findView -> return detail mvcView, eg: vashView -> which vashView inherit from mvcView -> detail mvcView.render -> end
+OK 20. review every code files, optimize the application initialization
 OK 21. new execute action impl flow
 OK 22. onException attribute
+OK 23. viewResult -> viewEngines.findView -> return detail mvcView, eg: vashView -> which vashView inherit from mvcView -> detail mvcView.render -> end
 OK 24. custom controller inject params
 OK 26. remove app.current
+OK 28. more independence caching solution
 
 PP 4. partialViewResult
 OP 27. optimize execute action impl flow
 
 25. areas path customizable
-28. more independence caching solution
 29. independence controller inject params solution

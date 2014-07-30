@@ -25,7 +25,6 @@ Simple Usage
 
 ```javascript
 // global.js
-
 var http = require('http');
 var mvc = require('cat-mvc');
 //

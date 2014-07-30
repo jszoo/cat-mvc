@@ -1,6 +1,7 @@
 /*
 * viewEngineManager
-* author: ronglin
+* author: ruleechen 
+* contact: rulee@live.cn
 * create date: 2014.6.26
 */
 

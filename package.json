@@ -1,6 +1,6 @@
 {
   "name": "cat-mvc",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "The best nodejs MVC framework in .NET MVC style",
   "main": "mvc/index.js",
   "scripts": {
@@ -12,8 +12,13 @@
   },
   "keywords": [
     "mvc",
-    "jszoo",
-    "practice"
+    "view",
+    "model",
+    "controller",
+    "area",
+    "framework",
+    "cat",
+    "jszoo"
   ],
   "author": "ruleechen <rulee@live.cn>",
   "licenses": "MIT",

@@ -135,8 +135,12 @@ mvcAreas.prototype = {
         });
     },
 
-    registerAll: function() {
-        if (this.app.hasPath()) {
+    registerAll: function(rootPath) {
+        if (utils.isString(rootPath) && utils.isAbsolute(rootPath)) {
+            this.registerRoot(rootPath);
+            this.registerAreas(path.join(rootPath, this.conf('names.areas')));
+        }
+        else if (this.app.hasPath()) {
             this.registerRoot(this.app.mapPath('~/'));
             this.registerAreas(this.app.mapPath(this.conf('names.areas')));
         }

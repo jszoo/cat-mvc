@@ -13,16 +13,6 @@ Features
 + Multiple view engines, it allows multiple view engines run together in one site.
 + Clearly code structure, low code invasion. Good for study or maintenance.
 
-Sample Site
---------
-
-Clone the [example repo](https://github.com/jszoo/cat-mvc-sample-site.git), then install the dev dependencies and run start.
-```shell
-$ git clone https://github.com/jszoo/cat-mvc-sample-site.git
-$ npm install
-$ npm start
-```
-
 Installation
 -------------
 
@@ -42,6 +32,16 @@ var mvc = require('cat-mvc');
 var app = mvc({ appPath: __dirname });
 var server = http.createServer(mvc.handler()); // handler all request here
 server.listen(8000, function() { console.log('Server Start!'); });
+```
+
+Sample Site
+--------
+
+Clone the [sample repo](https://github.com/jszoo/cat-mvc-sample-site.git), then install the dev dependencies and run start.
+```shell
+$ git clone https://github.com/jszoo/cat-mvc-sample-site.git
+$ npm install
+$ npm start
 ```
 
 Site File Structure

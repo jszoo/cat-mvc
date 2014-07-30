@@ -3,10 +3,28 @@ cat-mvc
 
 The best nodejs MVC framework in .NET MVC style. It's fully implemented the main features of .NET MVC. And will include more and more features step by step. I first build this project for personal practicing purpose. But I was moved when this project going more and more better. I think it's now good enough in the production environment use. I will be very pleased if this project is help to you.
 
-Please checkout the sample site here: https://github.com/jszoo/cat-mvc-sample-site
+Features
+---------
 
-Install
--------
++ Classical MVC structor, controllers + views + areas.
++ Intuitive routes, be the benefit from the separated controller files. It's much more graciously than define serials of url pattern.
++ Dynamic data inject, we can get the request parameters directly from the action function (also support object inject). Again, it's awesame graciously than get string data from req.body/req.params.
++ Multiple MVC instance support.
++ Multiple view engines, it allows multiple view engines run together in one site.
++ Clearly code structor, low code invasion. Good for study or maintenance.
+
+Example
+--------
+
+Clone the [example repo](https://github.com/jszoo/cat-mvc-sample-site.git), then install the dev dependencies and run start.
+```shell
+$ git clone https://github.com/jszoo/cat-mvc-sample-site.git
+$ npm install
+$ npm start
+```
+
+Installation
+-------------
 
 ```shell
 $ npm install cat-mvc

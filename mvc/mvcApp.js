@@ -156,7 +156,7 @@ mvcApp.prototype = {
 module.exports = {
     utils: utils,
     caching: caching,
-    controller: mvcController.define,
+    controller: mvcController.api,
     actionResults: mvcActionResult,
     current: null,
     gainApp: function(set) {

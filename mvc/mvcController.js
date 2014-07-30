@@ -15,14 +15,14 @@ var utils = require('./utilities'),
     mvcTempDataStore = require('./mvcTempDataStore'),
     mvcActionResultApi = require('./mvcActionResultApi');
 
-var controllersDefined,
+var controllersDefined, controllerInject,
     controllerKeyInScope = 'dont_use_me(random:' + utils.unique(8) + ')';
 
 var mvcController = module.exports = function(set) {
     utils.extend(this, set);
 };
 
-mvcController.define = function() {
+mvcController.api = function() {
     var name, attr, impl;
     var len = arguments.length, arg0 = arguments[0];
     //
@@ -50,6 +50,14 @@ mvcController.define = function() {
         controllersDefined.push(ret);
     }
     return ret;
+};
+
+mvcController.api.inject = function(obj) {
+    if (!utils.isObject(obj)) {
+        throw new Error('Inject params require object type value');
+    } else {
+        controllerInject = utils.formalObj(obj);
+    }
 };
 
 mvcController.loadfile = function(fileName) {
@@ -146,9 +154,13 @@ mvcController.prototype = {
         //
         var self = this;
         utils.each(annotated.args, function(i, name) {
-            var loweName = name.toLowerCase();
+            var loweName = utils.formalStr(name);
             if (loweName.charAt(0) === '$') {
                 loweName = loweName.substr(1);
+            }
+            if (controllerInject && loweName in controllerInject) {
+                params.push(controllerInject[loweName]);
+                return;
             }
             switch(loweName) {
                 case 'ctx':      params.push(ctx); break;

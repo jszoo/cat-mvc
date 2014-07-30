@@ -3,7 +3,8 @@ cat-mvc
 
 A .NET MVC framework style nodejs mvc framework. It's almost fully implemented the features of .NET MVC. I first build this project for personal practicing purpose. But I was moved when this project going more and more better. I think it's now good enough in the production environment use. I will be very pleased if this project is help to you.
 
-Sample site see to https://github.com/jszoo/cat-mvc-sample-site
+Please checkout the sample site here:
+https://github.com/jszoo/cat-mvc-sample-site
 
 Install
 ========
@@ -42,7 +43,7 @@ If you are familiar with .NET MVC, you might already known well about the site f
 |   |   |   |   |-- logon.html
 |   |   |   |-- shared
 |   |   |   |   |-- layout.html
-|   |   |-- events.js         // area events
+|   |   |-- events.js         // area events subscription
 |-- controllers
 |   |-- home.js               // assume contains action: index
 |   |-- user.js               // assume contains actions: list/item
@@ -60,7 +61,7 @@ If you are familiar with .NET MVC, you might already known well about the site f
 Controller
 ==========
 
-We take auth controller for example.
+We take auth.js controller for example.
 
 ```javascript
 // areas/account/controllers/auth.js
@@ -97,7 +98,7 @@ mvc.controller(function(req, res, session, end) {
         }
     });
 
-    // it's also support the way below to define an GET action
+    // it's also support the way below to define GET action
     // GET /account/auth/logout
     this.logout = function() {
         session.destroy();

@@ -1,3 +1,5 @@
+OK = done, PP = postpone, OP = optimize
+==============================================
 OK 1. httpNotFound: statusDescription header?
 OK 2. mvcController.action http method?
 OK 3. implement mvc url helper

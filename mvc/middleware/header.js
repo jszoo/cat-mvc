@@ -13,11 +13,10 @@ module.exports = function() {
         var enabled = req._app.get('x-headers-enabled');
         if (enabled) {
             //
-            res.setHeader('X-Powered-By', 'Rulee CMS');
             res.setHeader('X-Nodejs-Version', process.version);
             //
             var version = req._app.get('version');
-            if (version) { res.setHeader('X-RuleeMVC-Version', version); }
+            if (version) { res.setHeader('X-CatMVC-Version', version); }
         }
         //
         next(err);

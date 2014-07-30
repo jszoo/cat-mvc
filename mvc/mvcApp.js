@@ -18,7 +18,8 @@ var path = require('path'),
     mvcHandlerRouter = require('./mvcHandlerRouter');
 
 var caching = require('./caching'),
-    cachingStore = require('./cachingStore');
+    cachingStore = require('./cachingStore'),
+    apps = caching.region('mvc-app-instances');
 
 var midError = require('./middleware/error'),
     midHeader = require('./middleware/header'),
@@ -33,8 +34,12 @@ var mvcApp = function(set) {
     utils.extend(this, set);
     if (!this.appPath) { throw new Error('Parameter "appPath" is required'); }
     //
+    var instance = apps.get(this.appPath);
+    if (instance) { return instance; }
+    instances.set(this.appPath, this);
+    //
     this._handlers = new mvcHandlerRouter();
-    this._setts = caching.region('mvc-runtime-settings');
+    this._sett = caching.region('mvc-app-setting-' + this.appPath);
     //
     this.set('version', process.env.npm_package_version);
     this.set('env', process.env.NODE_ENV || 'development');
@@ -50,7 +55,7 @@ var mvcApp = function(set) {
 
 mvcApp.prototype = {
 
-    _setts: null, _handlers: null, _inited: null,
+    _sett: null, _handlers: null, _inited: null,
 
     appPath: null, areas: null, attributes: null, viewEngines: null,
 
@@ -60,14 +65,14 @@ mvcApp.prototype = {
     * get app setting
     */
     get: function(key) {
-        return this._setts.get(key);
+        return this._sett.get(key);
     },
 
     /*
     * set app setting
     */
     set: function(key, val) {
-        this._setts.set(key, val);
+        this._sett.set(key, val);
         key = utils.formalStr(key);
         //
         if (key === 'etag') {
@@ -124,8 +129,8 @@ mvcApp.prototype = {
             handlers.register(bodyParser.urlencoded({ extended: true }));
             handlers.register(cookieParser());
             handlers.register(session({
-                name: 'zoomvc.sid',
-                secret: 'zoomvc',
+                name: 'catmvc.sid',
+                secret: 'catmvc',
                 cookie: { maxAge: 3600000 },
                 resave: true,
                 rolling: false,
@@ -152,14 +157,15 @@ mvcApp.prototype = {
     }
 };
 
+var gain = function(set) {
+    return new mvcApp(set);
+};
+
 // export
-module.exports = {
+module.exports = utils.extend(gain, {
     utils: utils,
     caching: caching,
     controller: mvcController.api,
     actionResults: mvcActionResult,
-    current: null,
-    gainApp: function(set) {
-        return this.current ? this.current : (this.current = new mvcApp(set));
-    }
-};
+    gainApp: gain
+});

@@ -36,7 +36,7 @@ var mvcApp = function(set) {
     //
     var instance = apps.get(this.appPath);
     if (instance) { return instance; }
-    instances.set(this.appPath, this);
+    apps.set(this.appPath, this);
     //
     this._handlers = new mvcHandlerRouter();
     this._sett = caching.region('mvc-app-setting-' + this.appPath);
@@ -162,7 +162,9 @@ var gain = function(set) {
 };
 
 // export
-module.exports = utils.extend(gain, {
+module.exports = utils.extend(function(set) {
+    return gain(set);
+}, {
     utils: utils,
     caching: caching,
     controller: mvcController.api,

@@ -25,7 +25,7 @@ vashView.prototype = {
             var data = {
                 model: viewContext.viewData,
                 url: viewContext.controller.url,
-                __RULEE_findView: this.findLayout
+                __ZOO_findView: this.findLayout
             };
             vash(this.filePath, data, function(err, str) {
                 callback(err, str);

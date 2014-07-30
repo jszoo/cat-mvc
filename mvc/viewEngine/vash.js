@@ -38,15 +38,15 @@ vash.loadFile = function(filepath, options, cb) {
         }
     }
 
-    /*********************** rulee injected code start **********************/
+    /*********************** zoo injected code start **********************/
     try {
-        if (!browser && !utils.isAbsolute(filepath) && utils.isFunction(options.__RULEE_findView)) {
-            filepath = options.__RULEE_findView(filepath);
+        if (!browser && !utils.isAbsolute(filepath) && utils.isFunction(options.__ZOO_findView)) {
+            filepath = options.__ZOO_findView(filepath);
         }
     } catch (ex) {
         cb (ex);
     }
-    /*********************** rulee injected code end **********************/
+    /*********************** zoo injected code end **********************/
 
     // TODO: auto insert 'model' into arguments
     try {

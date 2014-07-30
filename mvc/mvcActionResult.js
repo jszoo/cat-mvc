@@ -39,8 +39,8 @@ var emptyResult = exports.emptyResult = function(set) {
 
 utils.inherit(emptyResult, baseResult, {
     executeResult: function(controllerContext, callback) {
-        controllerContext.rulee.response.contentType('text/plain');
-        controllerContext.rulee.response.send('');
+        controllerContext.zoo.response.contentType('text/plain');
+        controllerContext.zoo.response.send('');
         callback();
     }
 });
@@ -57,8 +57,8 @@ utils.inherit(jsonResult, baseResult, {
     executeResult: function(controllerContext, callback) {
         var json = JSON.stringify(this.data);
         //
-        controllerContext.rulee.response.contentType(this.contentType);
-        controllerContext.rulee.response.send(json);
+        controllerContext.zoo.response.contentType(this.contentType);
+        controllerContext.zoo.response.send(json);
         callback();
     }
 });
@@ -77,8 +77,8 @@ utils.inherit(jsonpResult, baseResult, {
         var json = JSON.stringify(this.data).replace(/\u2028/g, '\\u2028').replace(/\u2029/g, '\\u2029');
         var jsonp = utils.format('typeof {0} === "function" && {0}({1});', this.callbackName, json);
         //
-        controllerContext.rulee.response.contentType(this.contentType);
-        controllerContext.rulee.response.send(jsonp);
+        controllerContext.zoo.response.contentType(this.contentType);
+        controllerContext.zoo.response.send(jsonp);
         callback();
     }
 });
@@ -126,7 +126,7 @@ utils.inherit(viewResult, baseResult, {
                 try {
                     viewContext.destroy();
                     if (viewEngineResult) { viewEngineResult.viewEngine.releaseView(controllerContext, view); }
-                    if (!err) { controllerContext.rulee.response.send(str); }
+                    if (!err) { controllerContext.zoo.response.send(str); }
                 } catch (ex) {
                     exp = ex;
                 }
@@ -164,7 +164,7 @@ var fileResult = exports.fileResult = function(set) {
 utils.inherit(fileResult, baseResult, {
     filePath: null, fileDownloadName: null,
     executeResult: function(controllerContext, callback) {
-        controllerContext.rulee.response.download(this.filePath, this.fileDownloadName, function(err) {
+        controllerContext.zoo.response.download(this.filePath, this.fileDownloadName, function(err) {
             callback(err);
         });
     }
@@ -184,8 +184,8 @@ utils.inherit(contentResult, baseResult, {
         var text = this.content;
         if (!utils.isString(text)) { text = String(text); }
         //
-        controllerContext.rulee.response.contentType(this.contentType);
-        controllerContext.rulee.response.send(text);
+        controllerContext.zoo.response.contentType(this.contentType);
+        controllerContext.zoo.response.send(text);
         callback();
     }
 });
@@ -248,7 +248,7 @@ var redirectResult = exports.redirectResult = function(set) {
 utils.inherit(redirectResult, baseResult, {
     url: null, permanent: false,
     executeResult: function(controllerContext, callback) {
-        controllerContext.rulee.response.redirect(this.url, this.permanent);
+        controllerContext.zoo.response.redirect(this.url, this.permanent);
         callback();
     }
 });
@@ -265,7 +265,7 @@ utils.inherit(redirectToRouteResult, baseResult, {
     executeResult: function(controllerContext, callback) {
         controllerContext.controller.tempData.keep();
         var url = mvcHelper.generateUrl(this.routeName, null, null, this.routeValues, controllerContext.routeSet, controllerContext, false);
-        controllerContext.rulee.response.redirect(url, this.permanent);
+        controllerContext.zoo.response.redirect(url, this.permanent);
         callback();
     }
 });

@@ -20,7 +20,7 @@ module.exports = function(app) {
     // route core
     return function(req, res, next) {
         //
-        var rulee = {
+        var zoo = {
             request: req._zoo,
             response: res._zoo
         };
@@ -40,7 +40,7 @@ module.exports = function(app) {
         utils.each(routeSet, function(n, route) {
             var controller;
             try {
-                var routeData = route.routeData(rulee.request.url.pathname);
+                var routeData = route.routeData(zoo.request.url.pathname);
                 if (!routeData) { return; } // continue
                 //
                 var area = app.areas.get(route.ownerAreaName);
@@ -63,8 +63,8 @@ module.exports = function(app) {
                 //
                 var httpContext = new mvcContext({
                     app: app,
+                    zoo: zoo,
                     items: {},
-                    rulee: rulee,
                     request: req,
                     response: res,
                     route: route,

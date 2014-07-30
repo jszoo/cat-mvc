@@ -13,7 +13,7 @@ var sessionProvider = {
     sessionKey: '__controller_tempdata',
 
     loadTempData: function(httpContext) {
-        var session = httpContext.rulee.request.session;
+        var session = httpContext.zoo.request.session;
         if (session) {
             var values = session[this.sessionKey];
             if (values) {
@@ -24,7 +24,7 @@ var sessionProvider = {
     },
 
     saveTempData: function(httpContext, values) {
-        var session = httpContext.rulee.request.session;
+        var session = httpContext.zoo.request.session;
         if (session) {
             if (utils.propCount(values) > 0) {
                 session[this.sessionKey] = values;

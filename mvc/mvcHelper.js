@@ -117,7 +117,7 @@ var generateUrlPlus = exports.generateUrlPlus = function(routeName, actionName, 
             urlPath = urlPath + '#' + fragment;
         }
         if (protocol || hostName) {
-            var url = httpContext.rulee.request.url;
+            var url = httpContext.zoo.request.url;
             protocol = protocol ? protocol : url.protocol; // http:
             hostName = hostName ? hostName : url.host;     // localhost:8000
             urlPath = protocol + '//' + hostName + urlPath;

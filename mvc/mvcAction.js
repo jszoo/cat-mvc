@@ -67,10 +67,10 @@ mvcAction.prototype = {
         //
         if (annotated.args && annotated.args.length > 0) {
             var form = {}, query = {}, routeData = {};
-            utils.each(ctx.rulee.request.form, function(key, val) {
+            utils.each(ctx.zoo.request.form, function(key, val) {
                 utils.mapObj(form, lowerRootNs(key), val);
             });
-            utils.each(ctx.rulee.request.query, function(key, val) {
+            utils.each(ctx.zoo.request.query, function(key, val) {
                 utils.mapObj(query, lowerRootNs(key), val);
             });
             utils.each(ctx.routeData, function(i, it) {

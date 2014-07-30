@@ -62,7 +62,7 @@ mvcController.api.inject = function(name, value) {
     else if (nt === 'string') {
         name = utils.formalStr(name);
         if (value === undefined) {
-            delete controllerInject[name];
+            return controllerInject[name];
         } else {
             controllerInject[name] = value;
         }
@@ -70,6 +70,11 @@ mvcController.api.inject = function(name, value) {
     else {
         throw new Error('Invalid controller inject parameters');
     }
+};
+
+mvcController.api.removeInject = function(name) {
+    name = utils.formalStr(name);
+    return (delete controllerInject[name]);
 };
 
 mvcController.loadfile = function(fileName) {

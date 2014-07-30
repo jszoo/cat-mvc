@@ -91,7 +91,8 @@ mvc.controller(function(req, res, session, end) {
         if (!session.loggedin) {
             end.redirectToAction('login');
         } else {
-            end.view();   // no need to specify path or name of the view file when the view name is same to action name
+            // no need to specify path or name of the view file when the view name is same to action name
+            end.view();
         }
     });
 

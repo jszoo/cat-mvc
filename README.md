@@ -1,19 +1,19 @@
 cat-mvc
 =======
 
-A .NET MVC framework style nodejs MVC framework. It's almost fully implemented the main features of .NET MVC. I first build this project for personal practicing purpose. But I was moved when this project going more and more better. I think it's now good enough in the production environment use. I will be very pleased if this project is help to you.
+The best nodejs MVC framework in .NET MVC style. It's fully implemented the main features of .NET MVC. And will include more and more features step by step. I first build this project for personal practicing purpose. But I was moved when this project going more and more better. I think it's now good enough in the production environment use. I will be very pleased if this project is help to you.
 
 Please checkout the sample site here: https://github.com/jszoo/cat-mvc-sample-site
 
 Install
-========
+-------
 
 ```shell
 $ npm install cat-mvc
 ```
 
 Simple Usage
-============
+------------
 
 ```javascript
 // global.js
@@ -27,7 +27,7 @@ server.listen(8000, function() { console.log('Server Start!'); });
 ```
 
 Site File Structure
-==============
+--------------------
 
 If you are familiar with .NET MVC, you might already known well about the site file structure.
 
@@ -58,7 +58,7 @@ If you are familiar with .NET MVC, you might already known well about the site f
 ```
 
 Controller
-==========
+-----------
 
 We take auth.js controller for example.
 
@@ -109,12 +109,12 @@ mvc.controller(function(req, res, session, end) {
 ```
 
 Area
-====
+--------
 
 Coming soon...
 
 
 License 
-=======
+--------
 
 [MIT](LICENSE)

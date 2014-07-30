@@ -12,7 +12,7 @@ var fs = require('fs'),
 var mvcAreaEvents = module.exports = function(set) {
     utils.extend(this, set);
     if (!this.ownerAreaName) { throw new Error('Parameter "ownerAreaName" is required'); }
-    this._inner = caching.region('mvc-' + this.ownerAreaName + '-events-cache');
+    this._inner = caching.region('mvc-' + this.ownerAreaName + '-area-events-cache');
 };
 
 mvcAreaEvents.prototype = {

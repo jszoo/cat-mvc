@@ -16,7 +16,7 @@ var mvcAreaRoutes = module.exports = function(set) {
     if (!this.ownerAreaName) { throw new Error('Parameter "ownerAreaName" is required'); }
     //
     this.events = new events.EventEmitter();
-    this._inner = caching.region('mvc-' + this.ownerAreaName + '-routes-cache');
+    this._inner = caching.region('mvc-' + this.ownerAreaName + '-area-routes-cache');
 };
 
 mvcAreaRoutes.prototype = {

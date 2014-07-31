@@ -93,8 +93,8 @@ var mvc = require('cat-mvc');
 var app = mvc();
 
 // the main register api
-// areaRouteExpression: the rule of "path-to-regexp" module
-// defaultRouteValues: object as format { controller: 'home', action: 'index' }
+// areaRouteExpression: rule of path-to-regexp module "/:controller?/:action?"
+// defaultRouteValues: object as format "{ controller: 'home', action: 'index' }"
 app.areas.register(areaPath, areaName, areaRouteExpression, defaultRouteValues);
 
 // a sugar api to "app.areas.register".

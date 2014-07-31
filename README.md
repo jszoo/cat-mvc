@@ -52,17 +52,17 @@ If you are familiar with .NET MVC, you might already known well about the site f
 |-- areas
 |   |-- account
 |   |   |-- controllers
-|   |   |   |-- auth.js       // assume contains actions: login/logon
+|   |   |   |-- auth.js    // assume contains actions: login/logon
 |   |   |-- views
 |   |   |   |-- auth
 |   |   |   |   |-- login.html
 |   |   |   |   |-- logon.html
 |   |   |   |-- shared
 |   |   |   |   |-- layout.html
-|   |   |-- events.js         // area events subscription
+|   |   |-- events.js      // area events subscription
 |-- controllers
-|   |-- home.js               // assume contains action: index
-|   |-- user.js               // assume contains actions: list/item
+|   |-- home.js            // assume contains action: index
+|   |-- user.js            // assume contains actions: list/item
 |-- views
 |   |-- home
 |   |   |-- index.html
@@ -72,6 +72,48 @@ If you are familiar with .NET MVC, you might already known well about the site f
 |   |-- shared
 |   |   |-- layout.html
 |-- global.js
+```
+
+Area
+--------
+
+In the classical .NET MVC site files structure, you don't need to care the area registration. The only one you need to do is to supply the root site path as application path for cat-mvc.
+
+```javascript
+// global.js
+var mvc = require('cat-mvc');
+var app = mvc({ appPath: __dirname });
+// supply the appPath and the "app.areas.registerAll()" will be called in internal
+```
+
+We recommend to use the classical style structure as it's already be familiar to all .NET MVC fans. But you also can customize the areas as you want.
+
+```javascript
+var mvc = require('cat-mvc');
+var app = mvc();
+
+// the main register api
+// areaRouteExpression: the rule of "path-to-regexp" module
+// defaultRouteValues: object as format { controller: 'home', action: 'index' }
+app.areas.register(areaPath, areaName, areaRouteExpression, defaultRouteValues);
+
+// a sugar api to "app.areas.register".
+// only the root controllers/views etc will be loaded
+// we recognize this as Root Area.
+app.areas.registerRoot(rootPath);
+
+// a sugar api to "app.areas.register".
+// all the area folders in specified areasPath will be loaded
+app.areas.registerAreas(areasPath);
+
+// to unload area
+app.areas.unload(areaName);
+
+// to customize default folder names
+app.set('folderNames.areas', 'areas');
+app.set('folderNames.views', 'views');
+app.set('folderNames.shared', 'shared');
+app.set('folderNames.controllers', 'controllers');
 ```
 
 Controller
@@ -91,7 +133,8 @@ mvc.controller(function(req, res, session, end) {
         if (!session.loggedin) {
             end.redirectToAction('login');
         } else {
-            // no need to specify path or name of the view file when the view name is same to action name
+            // when the view name is same to action name it's
+            // no need to specify path or name of the view file
             end.view();
         }
     });
@@ -126,11 +169,10 @@ mvc.controller(function(req, res, session, end) {
 });
 ```
 
-Area
---------
+Action
+-----------
 
 Coming soon...
-
 
 License 
 --------

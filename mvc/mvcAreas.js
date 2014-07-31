@@ -18,7 +18,7 @@ var consts = {
     root: '/root'
 };
 
-var names = {
+var folderNames = {
     areas: 'areas',
     views: 'views',
     shared: 'shared',
@@ -32,7 +32,7 @@ var mvcAreas = module.exports = function(app, store) {
     this._inner = caching.region('mvc-areas-cache', store);
 };
 
-mvcAreas.names = names;
+mvcAreas.folderNames = folderNames;
 
 mvcAreas.prototype = {
 
@@ -43,7 +43,7 @@ mvcAreas.prototype = {
     constructor: mvcAreas, className: 'mvcAreas',
 
     conf: function(name) {
-        return this.app.get(name) || utils.readObj({ names: names }, name);
+        return this.app.get(name) || utils.readObj({ folderNames: folderNames }, name);
     },
 
     all: function() {
@@ -87,10 +87,10 @@ mvcAreas.prototype = {
         var area = new mvcArea({
             name: areaName,
             path: areaPath,
-            viewsPath:       path.join(areaPath, this.conf('names.views')),
-            viewsSharedPath: path.join(areaPath, this.conf('names.views'), this.conf('names.shared')),
-            controllersPath: path.join(areaPath, this.conf('names.controllers')),
-            eventsFilePath:  path.join(areaPath, this.conf('names.subevents'))
+            viewsPath:       path.join(areaPath, this.conf('folderNames.views')),
+            viewsSharedPath: path.join(areaPath, this.conf('folderNames.views'), this.conf('folderNames.shared')),
+            controllersPath: path.join(areaPath, this.conf('folderNames.controllers')),
+            eventsFilePath:  path.join(areaPath, this.conf('folderNames.subevents'))
         }, this._inner.sto());
         // map route
         var self = this;
@@ -139,11 +139,11 @@ mvcAreas.prototype = {
     registerAll: function(rootPath) {
         if (utils.isString(rootPath) && utils.isAbsolute(rootPath)) {
             this.registerRoot(rootPath);
-            this.registerAreas(path.join(rootPath, this.conf('names.areas')));
+            this.registerAreas(path.join(rootPath, this.conf('folderNames.areas')));
         }
         else if (this.app.hasPath()) {
             this.registerRoot(this.app.mapPath('~/'));
-            this.registerAreas(this.app.mapPath(this.conf('names.areas')));
+            this.registerAreas(this.app.mapPath(this.conf('folderNames.areas')));
         }
     }
 };

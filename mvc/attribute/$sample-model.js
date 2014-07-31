@@ -7,3 +7,39 @@
 
 'use strict';
 
+var profile = {
+
+    name: {
+        type: 'string',
+        minLength: 5,
+        maxLength: 20
+    },
+
+    age: {
+        type: 'integer',
+        defaultValue: 0
+    }
+};
+
+var user = {
+
+    Id: {
+        type: 'integer',
+        required: true
+    },
+
+    email: {
+        type: 'email',
+        required: true
+    },
+
+    passowrd: {
+        type: 'string',
+        required: true,
+        passowrd: true
+    },
+
+    profile: profile
+};
+
+module.exports = user;

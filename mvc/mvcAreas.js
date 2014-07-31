@@ -127,12 +127,14 @@ mvcAreas.prototype = {
         var self = this, areaDirs = fs.readdirSync(areasPath);
         utils.each(areaDirs, function(i, areaName) {
             var areaPath = path.join(areasPath, areaName);
-            self.register(
-                (areaPath),
-                (areaName),
-                ('/' + areaName + '/:controller?/:action?'),
-                ({ controller: 'home', action: 'index' })
-            );
+            if (fs.statSync(areaPath).isDirectory()) {
+                self.register(
+                    (areaPath),
+                    (areaName),
+                    ('/' + areaName + '/:controller?/:action?'),
+                    ({ controller: 'home', action: 'index' })
+                );
+            }
         });
     },
 

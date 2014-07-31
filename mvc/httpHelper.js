@@ -1,6 +1,6 @@
 /*
 * httpHelper
-* author: ruleechen 
+* author: ruleechen
 * contact: rulee@live.cn
 * create date: 2014.7.25
 * description: migrate from expressjs [https://github.com/strongloop/express/blob/master/lib/utils.js]

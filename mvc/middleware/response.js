@@ -1,6 +1,6 @@
 /*
 * response
-* author: ruleechen 
+* author: ruleechen
 * contact: rulee@live.cn
 * create date: 2014.7.4
 * description: migrate from expressjs [https://github.com/strongloop/express/blob/master/lib/response.js]

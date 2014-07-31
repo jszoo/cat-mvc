@@ -98,8 +98,7 @@ var app = mvc();
 app.areas.register(areaPath, areaName, areaRouteExpression, defaultRouteValues);
 
 // a sugar api to "app.areas.register".
-// only the root controllers/views etc will be loaded
-// we recognize this as Root Area.
+// only the root controllers/views etc will be loaded. we recognize this as RootArea
 app.areas.registerRoot(rootPath);
 
 // a sugar api to "app.areas.register".

@@ -10,7 +10,7 @@ Features
 + Intuitive routes, be the benefit from the separated controller files. It's much more graciously than define serials of url pattern.
 + Dynamic data inject, we can get the request parameters directly from the action function (also support object inject). Again, it's awesame graciously than get string data from req.body/req.params.
 + Multiple MVC instance support.
-+ Multiple view engines, it allows multiple view engines run together in one site.
++ Multiple view engines, allows multiple view engines run together in one site. Now supports ejs + vash. Will add the support to other engines step by step.
 + Clearly code structure, low code invasion. Good for study or maintenance.
 
 Installation

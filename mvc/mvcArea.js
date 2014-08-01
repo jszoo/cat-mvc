@@ -7,8 +7,8 @@
 
 'use strict';
 
-var utils = require('./utilities'),
-    mvcAreaEvents = require('./mvcAreaEvents'),
+var events = require('events'),
+    utils = require('./utilities'),
     mvcAreaRoutes = require('./mvcAreaRoutes'),
     mvcControllers = require('./mvcControllers');
 
@@ -16,16 +16,39 @@ var mvcArea = module.exports = function(set, store) {
     utils.extend(this, set);
     if (!this.name) { throw new Error('Parameter "name" is required'); }
     //
+    this.events = new events.EventEmitter();
     this.routes = new mvcAreaRoutes({ ownerAreaName: this.name }, store);
-    this.subevents = new mvcAreaEvents({ ownerAreaName: this.name }, store);
     this.controllers = new mvcControllers({ ownerAreaName: this.name }, store);
+};
+
+var definedProcedure;
+mvcArea.api = function(fn) {
+    return (definedProcedure = fn);
+};
+
+mvcArea.loadSetting = function(filePath) {
+    delete require.cache[filePath];
+    var expo = require(filePath), ret;
+    //
+    if (utils.isFunction(expo)) {
+        ret = expo;
+    } else if (utils.isFunction(definedProcedure)) {
+        ret = definedProcedure;
+    } else if (utils.isObject(definedProcedure)) {
+        ret = function() { utils.extendPlain(this, definedProcedure); };
+    } else {
+        ret = function() { utils.extendPlain(this, expo); };
+    }
+    //
+    definedProcedure = null;
+    return ret;
 };
 
 mvcArea.prototype = {
 
-    name: null, path: null, viewsPath: null, viewsSharedPath: null, controllersPath: null, eventsFilePath: null,
+    name: null, path: null, viewsPath: null, viewsSharedPath: null, controllersPath: null, settingFilePath:null,
 
-    routes: null, subevents: null, controllers: null,
+    events: null, routes: null, controllers: null,
 
     constructor: mvcArea, className: 'mvcArea',
 
@@ -38,12 +61,15 @@ mvcArea.prototype = {
     },
 
     fireEvent: function(funcName) {
-        var self = this;
-        utils.each(this.subevents.all(), function(k, sub) {
-            if (sub && utils.isFunction(sub[funcName])) {
-                sub[funcName](self);
-            }
-        });
+        var func = this[funcName];
+        if (utils.isFunction(func)) {
+            this.events.emit(funcName, this);
+            func.call(this, this);
+        }
         return this;
-    }
+    },
+
+    onRegister: function(area) { },
+
+    onUnload: function(area) { }
 };

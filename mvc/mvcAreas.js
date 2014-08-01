@@ -18,12 +18,15 @@ var consts = {
     root: '/root'
 };
 
+var fileNames = {
+    areaSetting: 'area.js'
+};
+
 var folderNames = {
     areas: 'areas',
     views: 'views',
     shared: 'shared',
-    controllers: 'controllers',
-    subevents: 'events.js'
+    controllers: 'controllers'
 };
 
 var mvcAreas = module.exports = function(app, store) {
@@ -32,6 +35,7 @@ var mvcAreas = module.exports = function(app, store) {
     this._inner = caching.region('mvc-areas-cache', store);
 };
 
+mvcAreas.fileNames = fileNames;
 mvcAreas.folderNames = folderNames;
 
 mvcAreas.prototype = {
@@ -43,7 +47,7 @@ mvcAreas.prototype = {
     constructor: mvcAreas, className: 'mvcAreas',
 
     conf: function(name) {
-        return this.app.get(name) || utils.readObj({ folderNames: folderNames }, name);
+        return this.app.get(name) || utils.readObj({ fileNames: fileNames, folderNames: folderNames }, name);
     },
 
     all: function() {
@@ -90,10 +94,16 @@ mvcAreas.prototype = {
             viewsPath:       path.join(areaPath, this.conf('folderNames.views')),
             viewsSharedPath: path.join(areaPath, this.conf('folderNames.views'), this.conf('folderNames.shared')),
             controllersPath: path.join(areaPath, this.conf('folderNames.controllers')),
-            eventsFilePath:  path.join(areaPath, this.conf('folderNames.subevents'))
+            settingFilePath: path.join(areaPath, this.conf('fileNames.areaSetting'))
         }, this._inner.sto());
-        // load default subscribes
-        area.subevents.load(area.eventsFilePath);
+        // load setting
+        var settPath = area.settingFilePath;
+        if (fs.existsSync(settPath) && fs.statSync(settPath).isFile()) {
+            var settProcedure = mvcArea.loadSetting(settPath);
+            if (utils.isFunction(settProcedure)) {
+                settProcedure.call(area);
+            }
+        }
         // read 'areas/account/controllers'
         area.controllers.loaddir(area.controllersPath);
         // map route

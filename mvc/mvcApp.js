@@ -10,6 +10,7 @@
 var path = require('path'),
     utils = require('./utilities'),
     httpHelper = require('./httpHelper'),
+    mvcArea = require('./mvcArea'),
 	mvcAreas = require('./mvcAreas'),
     mvcController = require('./mvcController'),
     mvcActionResult = require('./mvcActionResult'),
@@ -183,6 +184,7 @@ var gain = function(set) {
 module.exports = utils.extend(gain, {
     utils: utils,
     caching: caching,
+    area: mvcArea.api,
     controller: mvcController.api,
     actionResults: mvcActionResult,
     gainApp: function(set) {

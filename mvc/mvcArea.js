@@ -35,9 +35,9 @@ mvcArea.loadSetting = function(filePath) {
     } else if (utils.isFunction(definedProcedure)) {
         ret = definedProcedure;
     } else if (utils.isObject(definedProcedure)) {
-        ret = function() { utils.extendPlain(this, definedProcedure); };
+        ret = function() { utils.nudeExtend(this, definedProcedure); };
     } else {
-        ret = function() { utils.extendPlain(this, expo); };
+        ret = function() { utils.nudeExtend(this, expo); };
     }
     //
     definedProcedure = null;

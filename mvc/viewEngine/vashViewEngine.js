@@ -22,31 +22,6 @@ vashViewEngine.prototype = {
 
     constructor: vashViewEngine, className: 'vashViewEngine',
 
-    _findViewSync: function(controllerContext, viewName) {
-        var self = this, foundFile, searchedLocations = [];
-        var tryDirs = controllerContext.viewTryDirs();
-        for (var i = 0; i < tryDirs.length; i++) {
-            var file = path.join(tryDirs[i], viewName + this.extname);
-            searchedLocations.push(file);
-            if (fs.existsSync(file) && fs.statSync(file).isFile()) {
-                foundFile = file;
-                break;
-            }
-        }
-        //
-        var view;
-        if (foundFile) {
-            view = new vashView({
-                filePath: foundFile
-            });
-        }
-        //
-        return {
-            view: view,
-            searchedLocations: searchedLocations
-        };
-    },
-
     findView: function(controllerContext, viewName, callback) {
         callback = utils.deferProxy(callback);
         var self = this, index = 0, searchedLocations = [];
@@ -104,5 +79,31 @@ vashViewEngine.prototype = {
         if (view.release) {
             view.release();
         }
+    },
+
+    // for finding vash layout
+    _findViewSync: function(controllerContext, viewName) {
+        var self = this, foundFile, searchedLocations = [];
+        var tryDirs = controllerContext.viewTryDirs();
+        for (var i = 0; i < tryDirs.length; i++) {
+            var file = path.join(tryDirs[i], viewName + this.extname);
+            searchedLocations.push(file);
+            if (fs.existsSync(file) && fs.statSync(file).isFile()) {
+                foundFile = file;
+                break;
+            }
+        }
+        //
+        var view;
+        if (foundFile) {
+            view = new vashView({
+                filePath: foundFile
+            });
+        }
+        //
+        return {
+            view: view,
+            searchedLocations: searchedLocations
+        };
     }
 };

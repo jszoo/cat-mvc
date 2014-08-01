@@ -59,7 +59,7 @@ If you are familiar with .NET MVC, you might already known well about the site f
 |   |   |   |   |-- logon.html
 |   |   |   |-- shared
 |   |   |   |   |-- layout.html
-|   |   |-- events.js      // area events subscription
+|   |   |-- area.js        // area events subscription
 |-- controllers
 |   |-- home.js            // assume contains action: index
 |   |-- user.js            // assume contains actions: list/item

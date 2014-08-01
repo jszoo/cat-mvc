@@ -113,7 +113,12 @@ mvcAreas.prototype = {
         //
         area.fireEvent('onRegister');
         this.events.emit('register', area);
-        this._inner.set(area.name, area);
+        //
+        if (!this._inner.exists(area.name)) {
+            this._inner.set(area.name, area);
+        } else {
+            throw new Error('Duplicated area name: ' + area.name);
+        }
         // ret
         return area;
     },

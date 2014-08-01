@@ -12,7 +12,13 @@ var fs = require('fs'),
     events = require('events'),
     utils = require('./utilities'),
     caching = require('./caching'),
+    mvcApp = require('mvcApp'),
     mvcModel = require('./mvcModel');
+
+var registerModelAttribute = function(model) {
+    var attr = mvcApp.attributes.get('(paramModelAttribute)');
+    mvcApp.attributes.register(name, attr.subClass(model));
+};
 
 var mvcModels = module.exports = function(set, store) {
     utils.extend(this, set);
@@ -29,12 +35,17 @@ mvcModels.prototype = {
     constructor: mvcModels, className: 'mvcModels',
 
     register: function(name, model) {
-        if (!name) { throw new Error('Parameter "name" is required'); }
-        this._inner.set(name, new mvcModel({
-            name: name,
-            model: model,
-            ownerAreaName: this.ownerAreaName
-        }));
+        if (arguments.length === 1 || !model) {
+            model = name;
+            name = null;
+        }
+        if (model && model.className === 'mvcModel') {
+            model.ownerAreaName = this.ownerAreaName;
+            name = (name || model.name);
+            //
+            this._inner.set(name, model);
+            registerModelAttribute(model);
+        }
         this.events.emit('changed');
     },
 
@@ -58,9 +69,11 @@ mvcModels.prototype = {
 
     loaddir: function(modelsPath, act) {
         if (!fs.existsSync(modelsPath) || !fs.statSync(modelsPath).isDirectory()) { return; }
-        var self = this, modelFiles = fs.readdirSync(modelsPath), fn = act || 'loadfile';
-        utils.each(modelFiles, function(i, modelFileName) {
-            self[fn](path.join(modelsPath, modelFileName));
+        var self = this, modelPaths = fs.readdirSync(modelsPath), fn = act || 'loadfile';
+        utils.each(modelPaths, function(i, modelPath) {
+            modelPath = path.join(modelsPath, modelPath);
+            self.loaddir(modelPath, act);
+            self[fn](modelPath);
         });
     },
 

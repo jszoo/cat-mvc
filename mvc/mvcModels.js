@@ -7,7 +7,9 @@
 
 'use strict';
 
-var events = require('events'),
+var fs = require('fs'),
+    path = require('path'),
+    events = require('events'),
     utils = require('./utilities'),
     caching = require('./caching'),
     mvcModel = require('./mvcModel');

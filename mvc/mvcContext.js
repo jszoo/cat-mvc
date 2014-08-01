@@ -7,7 +7,8 @@
 
 'use strict';
 
-var utils = require('./utilities');
+var path = require('path'),
+    utils = require('./utilities');
 
 var mvcContext = module.exports = function(set) {
     utils.extend(this, set);
@@ -44,6 +45,20 @@ mvcContext.prototype = {
                 self[key] = null;
             }
         });
+    },
+
+    viewTryDirs: function() {
+        var areas = this.app.areas;
+        var controllerName = this.controller.name();
+        //
+        var dirs = [];
+        dirs.push(path.join(this.routeArea.viewsPath, controllerName));
+        dirs.push(this.routeArea.viewsSharedPath);
+        if (this.routeArea !== areas.rootArea()) {
+            dirs.push(areas.rootArea().viewsSharedPath);
+        }
+        // ret
+        return dirs;
     },
 
     toHttpContext: function() {

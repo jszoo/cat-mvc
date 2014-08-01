@@ -22,24 +22,10 @@ ejsViewEngine.prototype = {
 
     constructor: ejsViewEngine, className: 'ejsViewEngine',
 
-    _getAvailableDirectories: function(controllerContext) {
-        var areas = controllerContext.app.areas;
-        var controllerName = controllerContext.controller.name();
-        //
-        var directories = [];
-        directories.push(path.join(controllerContext.routeArea.viewsPath, controllerName));
-        directories.push(controllerContext.routeArea.viewsSharedPath);
-        if (controllerContext.routeArea !== areas.rootArea()) {
-            directories.push(areas.rootArea().viewsSharedPath);
-        }
-        // ret
-        return directories;
-    },
-
     findView: function(controllerContext, viewName, callback) {
         callback = utils.deferProxy(callback);
         var self = this, index = 0, searchedLocations = [];
-        var availableDirectories = this._getAvailableDirectories(controllerContext);
+        var tryDirs = controllerContext.viewTryDirs();
         //
         var done = function(file) {
             var view;
@@ -55,11 +41,11 @@ ejsViewEngine.prototype = {
         };
         //
         var next = function() {
-            if (index >= availableDirectories.length) {
+            if (index >= tryDirs.length) {
                 done();
                 return;
             }
-            var file = path.join(availableDirectories[index++], viewName + self.extname);
+            var file = path.join(tryDirs[index++], viewName + self.extname);
             searchedLocations.push(file);
             fs.exists(file, function(exists) {
                 if (exists) {

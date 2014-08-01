@@ -18,11 +18,11 @@ var consts = {
     root: '/root'
 };
 
-var fileNames = {
+var fileNames = mvcAreas.fileNames = {
     areaSetting: 'area.js'
 };
 
-var folderNames = {
+var folderNames = mvcAreas.folderNames = {
     areas: 'areas',
     views: 'views',
     shared: 'shared',
@@ -34,9 +34,6 @@ var mvcAreas = module.exports = function(app, store) {
     this.events = new events.EventEmitter();
     this._inner = caching.region('mvc-areas-cache', store);
 };
-
-mvcAreas.fileNames = fileNames;
-mvcAreas.folderNames = folderNames;
 
 mvcAreas.prototype = {
 

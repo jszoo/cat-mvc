@@ -9,7 +9,7 @@
 
 var events = require('events'),
     utils = require('./utilities'),
-    mvcAreaRoutes = require('./mvcAreaRoutes'),
+    mvcRoutes = require('./mvcRoutes'),
     mvcControllers = require('./mvcControllers');
 
 var mvcArea = module.exports = function(set, store) {
@@ -17,7 +17,7 @@ var mvcArea = module.exports = function(set, store) {
     if (!this.name) { throw new Error('Parameter "name" is required'); }
     //
     this.events = new events.EventEmitter();
-    this.routes = new mvcAreaRoutes({ ownerAreaName: this.name }, store);
+    this.routes = new mvcRoutes({ ownerAreaName: this.name }, store);
     this.controllers = new mvcControllers({ ownerAreaName: this.name }, store);
 };
 

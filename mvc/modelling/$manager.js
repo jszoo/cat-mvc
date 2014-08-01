@@ -10,7 +10,7 @@
 var utils = require('../utilities'),
     caching = require('../caching');
 
-var modellingManager = module.exports = function(app, store) {
+var modellingManager = module.exports = function(store) {
     this.dataTypes = new dataTypesManager(store);
     this.validations = new validationsManager(store);
 };

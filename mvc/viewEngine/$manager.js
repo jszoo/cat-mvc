@@ -10,7 +10,7 @@
 var utils = require('../utilities'),
     caching = require('../caching');
 
-var viewEngineManager = module.exports = function(app, store) {
+var viewEngineManager = module.exports = function(store) {
     this._inner = caching.region('mvc-view-engines-cache', store);
 };
 

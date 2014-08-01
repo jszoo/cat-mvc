@@ -19,3 +19,4 @@ var types = [
     'array',
     'json'
 ];
+

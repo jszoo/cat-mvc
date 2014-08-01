@@ -106,11 +106,18 @@ app.areas.register(areaPath, areaName, areaRouteExpression, defaultRouteValues);
 app.areas.registerRoot(rootPath);
 
 // a sugar api to "app.areas.register".
-// all the area folders in specified areasPath will be loaded
+// register one area by the specified areaPath + areaName
+app.areas.registerArea(areaPath, areaName);
+
+// a sugar api to "app.areas.registerArea".
+// all the area folders under specified areasPath will be registered
 app.areas.registerAreas(areasPath);
 
 // to unload area
 app.areas.unload(areaName);
+
+// to unload root area
+app.areas.unloadRoot();
 
 // to customize default folder names
 app.set('folderNames.areas', 'areas');

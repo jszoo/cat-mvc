@@ -81,6 +81,10 @@ mvcAreas.prototype = {
         return this._inner.remove(areaName);
     },
 
+    unloadRoot: function() {
+        this.unload(consts.root);
+    },
+
     register: function(areaPath, areaName, areaRouteExpression, defaultRouteValues) {
         if (!fs.existsSync(areaPath) || !fs.statSync(areaPath).isDirectory()) {
             throw new Error('The specified "areaPath" is invalid');
@@ -95,7 +99,7 @@ mvcAreas.prototype = {
             controllersPath: path.join(areaPath, this.conf('folderNames.controllers')),
             settingFilePath: path.join(areaPath, this.conf('fileNames.areaSetting'))
         }, this._inner.sto());
-        // load setting
+        // load 'areas/account/area.js'
         var settPath = area.settingFilePath;
         if (fs.existsSync(settPath) && fs.statSync(settPath).isFile()) {
             var settProcedure = mvcArea.loadSetting(settPath);
@@ -111,10 +115,10 @@ mvcAreas.prototype = {
         var self = this;
         area.routes.events.on('changed', function() { self._routeSet = null; });
         area.routes.set(area.name, areaRouteExpression, defaultRouteValues);
-        //
+        // fire event
         area.fireEvent('onRegister');
         this.events.emit('register', area);
-        //
+        // store
         if (!this._inner.exists(area.name)) {
             this._inner.set(area.name, area);
         } else {
@@ -136,6 +140,15 @@ mvcAreas.prototype = {
         );
     },
 
+    registerArea: function(areaPath, areaName) {
+        this.register(
+            (areaPath),
+            (areaName),
+            ('/' + areaName + '/:controller?/:action?'),
+            ({ controller: 'home', action: 'index' })
+        );
+    },
+
     registerAreas: function(areasPath) {
         if (!fs.existsSync(areasPath) || !fs.statSync(areasPath).isDirectory()) {
             throw new Error('The specified "areasPath" is invalid');
@@ -144,12 +157,7 @@ mvcAreas.prototype = {
         utils.each(areaDirs, function(i, areaName) {
             var areaPath = path.join(areasPath, areaName);
             if (fs.statSync(areaPath).isDirectory()) {
-                self.register(
-                    (areaPath),
-                    (areaName),
-                    ('/' + areaName + '/:controller?/:action?'),
-                    ({ controller: 'home', action: 'index' })
-                );
+                self.registerArea(areaPath, areaName);
             }
         });
     },

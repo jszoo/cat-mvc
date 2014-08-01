@@ -14,6 +14,12 @@ var fs = require('fs'),
     caching = require('./caching'),
     mvcArea = require('./mvcArea');
 
+var mvcAreas = module.exports = function(app, store) {
+    this.app = app;
+    this.events = new events.EventEmitter();
+    this._inner = caching.region('mvc-areas-cache', store);
+};
+
 var consts = {
     root: '/root'
 };
@@ -28,12 +34,6 @@ var folderNames = mvcAreas.folderNames = {
     shared: 'shared',
     models: 'models',
     controllers: 'controllers'
-};
-
-var mvcAreas = module.exports = function(app, store) {
-    this.app = app;
-    this.events = new events.EventEmitter();
-    this._inner = caching.region('mvc-areas-cache', store);
 };
 
 mvcAreas.prototype = {

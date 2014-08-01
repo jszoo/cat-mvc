@@ -7,8 +7,6 @@
 
 'use strict';
 
-var mvc = require('../index');
-
 var profile = {
 
     name: {
@@ -44,6 +42,7 @@ var user = {
     profile: profile
 };
 
+var mvc = require('../index');
 mvc.model('user', function() {
     return user;
 });

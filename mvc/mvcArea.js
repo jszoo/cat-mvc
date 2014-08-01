@@ -10,6 +10,7 @@
 var events = require('events'),
     utils = require('./utilities'),
     mvcRoutes = require('./mvcRoutes'),
+    mvcModels = require('./mvcModels'),
     mvcControllers = require('./mvcControllers');
 
 var mvcArea = module.exports = function(set, store) {
@@ -18,6 +19,7 @@ var mvcArea = module.exports = function(set, store) {
     //
     this.events = new events.EventEmitter();
     this.routes = new mvcRoutes({ ownerAreaName: this.name }, store);
+    this.models = new mvcModels({ ownerAreaName: this.name }, store);
     this.controllers = new mvcControllers({ ownerAreaName: this.name }, store);
 };
 
@@ -46,9 +48,9 @@ mvcArea.loadSetting = function(filePath) {
 
 mvcArea.prototype = {
 
-    name: null, path: null, viewsPath: null, viewsSharedPath: null, controllersPath: null, settingFilePath:null,
+    name: null, events: null, routes: null, models:null, controllers: null,
 
-    events: null, routes: null, controllers: null,
+    path: null, viewsPath: null, viewsSharedPath: null, modelsPath: null, controllersPath: null, settingFilePath: null,
 
     constructor: mvcArea, className: 'mvcArea',
 

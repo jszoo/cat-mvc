@@ -26,6 +26,7 @@ var folderNames = mvcAreas.folderNames = {
     areas: 'areas',
     views: 'views',
     shared: 'shared',
+    models: 'models',
     controllers: 'controllers'
 };
 
@@ -90,6 +91,7 @@ mvcAreas.prototype = {
             path: areaPath,
             viewsPath:       path.join(areaPath, this.conf('folderNames.views')),
             viewsSharedPath: path.join(areaPath, this.conf('folderNames.views'), this.conf('folderNames.shared')),
+            modelsPath:      path.join(areaPath, this.conf('folderNames.models')),
             controllersPath: path.join(areaPath, this.conf('folderNames.controllers')),
             settingFilePath: path.join(areaPath, this.conf('fileNames.areaSetting'))
         }, this._inner.sto());
@@ -101,7 +103,9 @@ mvcAreas.prototype = {
                 settProcedure.call(area);
             }
         }
-        // read 'areas/account/controllers'
+        // load 'areas/account/models'
+        area.models.loaddir(area.modelsPath);
+        // load 'areas/account/controllers'
         area.controllers.loaddir(area.controllersPath);
         // map route
         var self = this;

@@ -53,6 +53,8 @@ If you are familiar with .NET MVC, you might already known well about the site f
 |   |-- account
 |   |   |-- controllers
 |   |   |   |-- auth.js    // assume contains actions: login/logon
+|   |   |-- models
+|   |   |   |-- loginModel.js
 |   |   |-- views
 |   |   |   |-- auth
 |   |   |   |   |-- login.html
@@ -63,6 +65,8 @@ If you are familiar with .NET MVC, you might already known well about the site f
 |-- controllers
 |   |-- home.js            // assume contains action: index
 |   |-- user.js            // assume contains actions: list/item
+|-- models
+|   |-- userModel.js
 |-- views
 |   |-- home
 |   |   |-- index.html
@@ -112,6 +116,7 @@ app.areas.unload(areaName);
 app.set('folderNames.areas', 'areas');
 app.set('folderNames.views', 'views');
 app.set('folderNames.shared', 'shared');
+app.set('folderNames.models', 'models');
 app.set('folderNames.controllers', 'controllers');
 ```
 

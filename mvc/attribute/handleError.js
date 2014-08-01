@@ -11,17 +11,21 @@ var utils = require('../utilities'),
     viewResult = require('../mvcActionResult').viewResult;
 
 var handleError = module.exports = function(set) {
-    utils.extend(this, set);
+    if (utils.isBoolean(set)) {
+        this.enabled = set;
+    } else {
+        utils.extend(this, set);
+    }
 };
 
 handleError.prototype = {
 
-    viewName: '_error',
+    viewName: '_error', enabled: true,
 
     constructor: handleError, className: 'handleError',
 
     onException: function(exceptionContext) {
-        if (!exceptionContext.exceptionHandled) {
+        if (this.enabled && !exceptionContext.exceptionHandled) {
             exceptionContext.exceptionHandled = true;
             exceptionContext.result = new viewResult({
                 viewData: exceptionContext.exception,

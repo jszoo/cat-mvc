@@ -169,6 +169,15 @@ module.exports = {
         return target;
     },
 
+    nudeExtend: function(dest, from) {
+        for (var key in from) {
+            if (this.hasOwn(from, key)) {
+                dest[key] = from[key];
+            }
+        }
+        return dest;
+    },
+
     inherit: function(subc, superc, overrides) {
         var F = function() { }, i;
         F.prototype = superc.prototype;

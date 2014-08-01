@@ -11,17 +11,25 @@ var utils = require('../utilities'),
     redirectResult = require('../mvcActionResult').redirectResult;
 
 var requireHttps = module.exports = function(set) {
-    utils.extend(this, set);
+    if (utils.isBoolean(set)) {
+        this.enabled = set;
+    } else {
+        utils.extend(this, set);
+    }
 };
 
 requireHttps.prototype = {
 
+    enabled: true,
+
     constructor: requireHttps, className: 'requireHttps',
 
     onAuthorization: function(authorizationContext) {
-        var secure = authorizationContext.zoo.request.secure;
-        if (!secure) {
-            this.handleNonHttpsRequest(authorizationContext);
+        if (this.enabled) {
+            var secure = authorizationContext.zoo.request.secure;
+            if (!secure) {
+                this.handleNonHttpsRequest(authorizationContext);
+            }
         }
     },
 

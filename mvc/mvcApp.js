@@ -10,17 +10,19 @@
 var path = require('path'),
     utils = require('./utilities'),
     httpHelper = require('./httpHelper'),
+    mvcArea = require('./mvcArea'),
 	mvcAreas = require('./mvcAreas'),
+    mvcModel = require('./mvcModel'),
     mvcController = require('./mvcController'),
     mvcActionResult = require('./mvcActionResult'),
+    mvcModelling = require('./modelling/$manager'),
     mvcAttributes = require('./attribute/$manager'),
     mvcViewEngines = require('./viewEngine/$manager'),
     mvcHandler = require('./mvcHandler'),
     mvcHandlerRouter = require('./mvcHandlerRouter');
 
 var caching = require('./caching'),
-    cachingStore = require('./cachingStore'),
-    apps = caching.region('mvc-app-instances');
+    cachingStore = require('./cachingStore');
 
 var midError = require('./middleware/error'),
     midHeader = require('./middleware/header'),
@@ -31,7 +33,11 @@ var session = require('express-session'),
     bodyParser = require('body-parser'),
     cookieParser = require('cookie-parser');
 
-var emptyAppPath = 'empty_app_path';
+var emptyAppPath = 'empty_app_path',
+    apps = caching.region('mvc-app-instances'),
+    modelling = new mvcModelling(),
+    attributes = new mvcAttributes(),
+    viewEngines = new mvcViewEngines();
 
 var mvcApp = function(set) {
     utils.extend(this, set);
@@ -53,15 +59,13 @@ var mvcApp = function(set) {
     this.set('etag', 'weak');
     //
     this.areas = new mvcAreas(this, this._store);
-    this.attributes = new mvcAttributes(this, this._store);
-    this.viewEngines = new mvcViewEngines(this ,this._store);
 };
 
 mvcApp.prototype = {
 
     _store: null, _sett: null, _handlers: null, _inited: null,
 
-    appPath: null, areas: null, attributes: null, viewEngines: null,
+    appPath: null, areas: null, attributes: attributes, modelling: modelling, viewEngines: viewEngines,
 
     constructor: mvcApp, className: 'mvcApp',
 
@@ -101,6 +105,13 @@ mvcApp.prototype = {
     */
     disuse: function() {
         return this._handlers.unregister.apply(this._handlers, arguments);
+    },
+
+    /*
+    * get or set the appPath
+    */
+    path: function(p) {
+        return (p === undefined) ? (this.hasPath() ? this.appPath : null) : (this.appPath = p, this);
     },
 
     /*
@@ -183,8 +194,16 @@ var gain = function(set) {
 module.exports = utils.extend(gain, {
     utils: utils,
     caching: caching,
-    controller: mvcController.api,
     actionResults: mvcActionResult,
+    //
+    area: mvcArea.api,
+    model: mvcModel.api,
+    controller: mvcController.api,
+    //
+    modelling: modelling,
+    attributes: attributes,
+    viewEngines: viewEngines,
+    //
     gainApp: function(set) {
         return gain(set);
     },

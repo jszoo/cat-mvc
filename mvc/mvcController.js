@@ -78,13 +78,23 @@ mvcController.api.removeInject = function(name) {
     return (delete controllerInject[name]);
 };
 
-mvcController.loadfile = function(fileName) {
-    controllersDefined = [];
-    delete require.cache[fileName];
-    require(fileName);
-    var t = controllersDefined;
+mvcController.loadfile = function(filePath) {
+    var ret; controllersDefined = [];
+    delete require.cache[filePath];
+    var expo = require(filePath);
+    //
+    if (expo.className === 'mvcController') {
+        ret = [expo];
+    }
+    else if (utils.isFunction(expo)) {
+        ret = [mvcController.api(expo)];
+    }
+    else {
+        ret = controllersDefined;
+    }
+    //
     controllersDefined = null;
-    return t;
+    return ret;
 };
 
 mvcController.prototype = {

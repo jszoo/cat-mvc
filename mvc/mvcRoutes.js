@@ -1,5 +1,5 @@
 /*
-* mvcAreaRoutes
+* mvcRoutes
 * author: ruleechen
 * contact: rulee@live.cn
 * create date: 2014.7.6
@@ -10,9 +10,9 @@
 var events = require('events'),
     utils = require('./utilities'),
     caching = require('./caching'),
-    mvcAreaRoute = require('./mvcAreaRoute');
+    mvcRoute = require('./mvcRoute');
 
-var mvcAreaRoutes = module.exports = function(set, store) {
+var mvcRoutes = module.exports = function(set, store) {
     utils.extend(this, set);
     if (!this.ownerAreaName) { throw new Error('Parameter "ownerAreaName" is required'); }
     //
@@ -20,15 +20,15 @@ var mvcAreaRoutes = module.exports = function(set, store) {
     this._inner = caching.region('mvc-' + this.ownerAreaName + '-area-routes-cache', store);
 };
 
-mvcAreaRoutes.prototype = {
+mvcRoutes.prototype = {
 
     ownerAreaName: null, events: null, _inner: null,
 
-    constructor: mvcAreaRoutes, className: 'mvcAreaRoutes',
+    constructor: mvcRoutes, className: 'mvcRoutes',
 
     set: function(name, expression, defaultValues) {
         if (!name) { throw new Error('Parameter "name" is required'); }
-        this._inner.set(name, new mvcAreaRoute({
+        this._inner.set(name, new mvcRoute({
             name: name,
             expression: expression,
             defaultValues: defaultValues,

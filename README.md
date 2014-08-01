@@ -6,7 +6,7 @@ The best nodejs MVC framework in .NET MVC style. It's fully implemented the main
 Features
 ---------
 
-+ Classical MVC structure, controllers + views + areas.
++ Classical MVC structure, controllers + models + views + areas.
 + Intuitive routes, be the benefit from the separated controller files. It's much more graciously than define serials of url pattern.
 + Dynamic data inject, we can get the request parameters directly from the action function (also support object inject). Again, it's awesame graciously than get string data from req.body/req.params.
 + Multiple MVC instance support.
@@ -53,16 +53,20 @@ If you are familiar with .NET MVC, you might already known well about the site f
 |   |-- account
 |   |   |-- controllers
 |   |   |   |-- auth.js    // assume contains actions: login/logon
+|   |   |-- models
+|   |   |   |-- loginModel.js
 |   |   |-- views
 |   |   |   |-- auth
 |   |   |   |   |-- login.html
 |   |   |   |   |-- logon.html
 |   |   |   |-- shared
 |   |   |   |   |-- layout.html
-|   |   |-- events.js      // area events subscription
+|   |   |-- area.js        // area events subscription
 |-- controllers
 |   |-- home.js            // assume contains action: index
 |   |-- user.js            // assume contains actions: list/item
+|-- models
+|   |-- userModel.js
 |-- views
 |   |-- home
 |   |   |-- index.html
@@ -102,16 +106,24 @@ app.areas.register(areaPath, areaName, areaRouteExpression, defaultRouteValues);
 app.areas.registerRoot(rootPath);
 
 // a sugar api to "app.areas.register".
-// all the area folders in specified areasPath will be loaded
+// register one area by the specified areaPath + areaName
+app.areas.registerArea(areaPath, areaName);
+
+// a sugar api to "app.areas.registerArea".
+// all the area folders under specified areasPath will be registered
 app.areas.registerAreas(areasPath);
 
 // to unload area
 app.areas.unload(areaName);
 
+// to unload root area
+app.areas.unloadRoot();
+
 // to customize default folder names
 app.set('folderNames.areas', 'areas');
 app.set('folderNames.views', 'views');
 app.set('folderNames.shared', 'shared');
+app.set('folderNames.models', 'models');
 app.set('folderNames.controllers', 'controllers');
 ```
 

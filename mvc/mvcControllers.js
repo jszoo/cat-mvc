@@ -50,17 +50,17 @@ mvcControllers.prototype = {
 
     loaddir: function(ctrlsPath, act) {
         if (!fs.existsSync(ctrlsPath) || !fs.statSync(ctrlsPath).isDirectory()) { return; }
-        var self = this, ctrlFiles = fs.readdirSync(ctrlsPath), fn = act || 'load';
+        var self = this, ctrlFiles = fs.readdirSync(ctrlsPath), fn = act || 'loadfile';
         utils.each(ctrlFiles, function(i, ctrlFileName) {
             self[fn](path.join(ctrlsPath, ctrlFileName));
         });
     },
 
     unloaddir: function(ctrlsPath) {
-        this.loaddir(ctrlsPath, 'unload');
+        this.loaddir(ctrlsPath, 'unloadfile');
     },
 
-    load: function(filePath) {
+    loadfile: function(filePath) {
         if (!fs.existsSync(filePath) || !fs.statSync(filePath).isFile()) { return; }
         var self = this, ctrls = mvcController.loadfile(filePath);
         utils.each(ctrls, function() {
@@ -73,7 +73,7 @@ mvcControllers.prototype = {
         });
     },
 
-    unload: function(filePath) {
+    unloadfile: function(filePath) {
         var self = this, all = this._inner.all();
         utils.each(all, function() {
             if (this.path() === filePath) {

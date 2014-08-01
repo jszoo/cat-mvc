@@ -7,7 +7,8 @@
 
 'use strict';
 
-var utils = require('./utilities');
+var path = require('path'),
+    utils = require('./utilities');
 
 var mvcContext = module.exports = function(set) {
     utils.extend(this, set);
@@ -28,15 +29,6 @@ var clone = function(ins, className) {
     });
 };
 
-var extend = function(dest, from) {
-    for (var key in from) {
-        if (utils.hasOwn(from, key)) {
-            dest[key] = from[key];
-        }
-    }
-    return dest;
-};
-
 mvcContext.prototype = {
 
     app: null, zoo: null, items: null, request: null, response: null,
@@ -55,46 +47,60 @@ mvcContext.prototype = {
         });
     },
 
+    viewTryDirs: function() {
+        var areas = this.app.areas;
+        var controllerName = this.controller.name();
+        //
+        var dirs = [];
+        dirs.push(path.join(this.routeArea.viewsPath, controllerName));
+        dirs.push(this.routeArea.viewsSharedPath);
+        if (this.routeArea !== areas.rootArea()) {
+            dirs.push(areas.rootArea().viewsSharedPath);
+        }
+        // ret
+        return dirs;
+    },
+
     toHttpContext: function() {
         return clone(this);
     },
 
     toControllerContext: function(controller) {
-        return extend(clone(this, 'mvcControllerContext'), { controller: controller });
+        return utils.nudeExtend(clone(this, 'mvcControllerContext'), { controller: controller });
     },
 
     toAuthorizationContext: function(merge) {
         if (this.controller) { merge.controller = this.controller; }
-        return extend(clone(this, 'mvcAuthorizationContext'), merge);
+        return utils.nudeExtend(clone(this, 'mvcAuthorizationContext'), merge);
     },
 
     toExceptionContext: function(merge) {
         if (this.controller) { merge.controller = this.controller; }
-        return extend(clone(this, 'mvcExceptionContext'), merge);
+        return utils.nudeExtend(clone(this, 'mvcExceptionContext'), merge);
     },
 
     toActionExecutingContext: function(merge) {
         if (this.controller) { merge.controller = this.controller; }
-        return extend(clone(this, 'mvcActionExecutingContext'), merge);
+        return utils.nudeExtend(clone(this, 'mvcActionExecutingContext'), merge);
     },
 
     toActionExecutedContext: function(merge) {
         if (this.controller) { merge.controller = this.controller; }
-        return extend(clone(this, 'mvcActionExecutedContext'), merge);
+        return utils.nudeExtend(clone(this, 'mvcActionExecutedContext'), merge);
     },
 
     toResultExecutingContext: function(merge) {
         if (this.controller) { merge.controller = this.controller; }
-        return extend(clone(this, 'mvcResultExecutingContext'), merge);
+        return utils.nudeExtend(clone(this, 'mvcResultExecutingContext'), merge);
     },
 
     toResultExecutedContext: function(merge) {
         if (this.controller) { merge.controller = this.controller; }
-        return extend(clone(this, 'mvcResultExecutedContext'), merge);
+        return utils.nudeExtend(clone(this, 'mvcResultExecutedContext'), merge);
     },
 
     toViewContext: function(merge) {
         if (this.controller) { merge.controller = this.controller; }
-        return extend(clone(this, 'mvcViewContext'), merge);
+        return utils.nudeExtend(clone(this, 'mvcViewContext'), merge);
     }
 };

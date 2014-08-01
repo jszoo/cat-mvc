@@ -10,7 +10,7 @@
 var utils = require('../utilities'),
     caching = require('../caching');
 
-var attributeManager = module.exports = function(app, store) {
+var attributeManager = module.exports = function(store) {
     this._inner = caching.region('mvc-attribute-types-cache', store);
 };
 

@@ -16,6 +16,7 @@ var path = require('path'),
     mvcController = require('./mvcController'),
     mvcActionResult = require('./mvcActionResult'),
     mvcAttributes = require('./attribute/$manager'),
+    mvcModelling = require('./mvcModelling/$manager'),
     mvcViewEngines = require('./viewEngine/$manager'),
     mvcHandler = require('./mvcHandler'),
     mvcHandlerRouter = require('./mvcHandlerRouter');
@@ -56,6 +57,7 @@ var mvcApp = function(set) {
     //
     this.areas = new mvcAreas(this, this._store);
     this.attributes = new mvcAttributes(this, this._store);
+    this.modelling = new mvcModelling(this, this._store);
     this.viewEngines = new mvcViewEngines(this ,this._store);
 };
 
@@ -63,7 +65,7 @@ mvcApp.prototype = {
 
     _store: null, _sett: null, _handlers: null, _inited: null,
 
-    appPath: null, areas: null, attributes: null, viewEngines: null,
+    appPath: null, areas: null, attributes: null, modelling: null, viewEngines: null,
 
     constructor: mvcApp, className: 'mvcApp',
 

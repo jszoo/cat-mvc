@@ -92,14 +92,14 @@ mvcAreas.prototype = {
             controllersPath: path.join(areaPath, this.conf('folderNames.controllers')),
             eventsFilePath:  path.join(areaPath, this.conf('folderNames.subevents'))
         }, this._inner.sto());
-        // map route
-        var self = this;
-        area.routes.events.on('changed', function() { self._routeSet = null; });
-        area.routes.set(areaName, areaRouteExpression, defaultRouteValues);
         // load default subscribes
         area.subevents.load(area.eventsFilePath);
         // read 'areas/account/controllers'
         area.controllers.loaddir(area.controllersPath);
+        // map route
+        var self = this;
+        area.routes.events.on('changed', function() { self._routeSet = null; });
+        area.routes.set(area.name, areaRouteExpression, defaultRouteValues);
         //
         area.fireEvent('onRegister');
         this.events.emit('register', area);

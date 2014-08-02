@@ -7,9 +7,7 @@
 
 'use strict';
 
-var utils = require('./utilities'),
-    modelling = require('./modelling/$manager'),
-    modelsDefined;
+var utils = require('./utilities');
 
 var lowerRootNs = function(namespace) {
     var index = namespace.search(/\.|\[|\]/);
@@ -24,6 +22,7 @@ var mvcModel = module.exports = function(set) {
     utils.extend(this, set);
 };
 
+var modelsDefined;
 mvcModel.api = function(name, obj) {
     var len = arguments.length;
     if (len === 1 || !obj) {
@@ -59,17 +58,17 @@ mvcModel.loadfile = function(filePath) {
     return ret;
 };
 
-mvcModel.resolveValueDefault = function(httpContext, paramName) {
+mvcModel.resolveParamDefault = function(httpContext, paramName) {
     var data = httpContext.items['model_default_data_source'];
     if (!data) {
         var form = {}, query = {}, routeData = {};
-        utils.each(ctx.zoo.request.form, function(key, val) {
+        utils.each(httpContext.zoo.request.form, function(key, val) {
             utils.mapObj(form, lowerRootNs(key), val);
         });
-        utils.each(ctx.zoo.request.query, function(key, val) {
+        utils.each(httpContext.zoo.request.query, function(key, val) {
             utils.mapObj(query, lowerRootNs(key), val);
         });
-        utils.each(ctx.routeData, function(i, it) {
+        utils.each(httpContext.routeData, function(i, it) {
             utils.mapObj(routeData, lowerRootNs(it.name), it.value);
         });
         data = httpContext.items['model_default_data_source'] = {
@@ -110,8 +109,9 @@ mvcModel.prototype = {
         return (p === undefined) ? (this.raw) : (this.raw = p, this);
     },
 
-    resolveValue: function(httpContext, paramName) {
-        var model = modelling.resolve(this.raw);
+    resolveParam: function(httpContext, paramName) {
+        var model = httpContext.app.modelling.resolve(this.raw);
         //TODO:
+        return 'aaa';
     }
 };

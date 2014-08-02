@@ -71,11 +71,11 @@ mvcAction.prototype = {
                     lowerName = lowerName.substr(1);
                 }
                 //
-                var model = modelAttrs[lowerName], val;
-                if (model) {
-                    val = model.injectValues(ctx, lowerName);
+                var attr = modelAttrs[lowerName], val;
+                if (attr) {
+                    val = attr.getModel().resolveParam(ctx, lowerName);
                 } else {
-                    val = mvcModel.resolveValueDefault(ctx, lowerName);
+                    val = mvcModel.resolveParamDefault(ctx, lowerName);
                 }
                 //
                 if (val !== undefined) {

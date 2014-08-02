@@ -12,16 +12,18 @@ var fs = require('fs'),
     events = require('events'),
     utils = require('./utilities'),
     caching = require('./caching'),
-    mvcApp = require('./mvcApp'),
     mvcModel = require('./mvcModel');
 
 var modelAttribute = {
+    mvc: function() {
+        return (this._mvc ? this._mvc : (this._mvc = require('./mvcApp')));
+    },
     set: function(name, model) {
-        var attr = mvcApp.attributes.get('(paramModel)');
-        mvcApp.attributes.register(name, attr.subClass(model));
+        var attr = this.mvc().attributes.get('(paramModel)');
+        this.mvc().attributes.register(name, attr.subClass(model));
     },
     del: function(name) {
-        mvcApp.attributes.remove(name);
+        this.mvc().attributes.remove(name);
     }
 };
 

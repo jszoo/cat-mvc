@@ -11,6 +11,15 @@ var utils = require('./utilities'),
     modelling = require('./modelling/$manager'),
     modelsDefined;
 
+var lowerRootNs = function(namespace) {
+    var index = namespace.search(/\.|\[|\]/);
+    if (index > -1) {
+        return namespace.substr(0, index).toLowerCase() + namespace.substr(index);
+    } else {
+        return namespace.toLowerCase();
+    }
+};
+
 var mvcModel = module.exports = function(set) {
     utils.extend(this, set);
 };
@@ -50,13 +59,58 @@ mvcModel.loadfile = function(filePath) {
     return ret;
 };
 
+mvcModel.resolveValueDefault = function(httpContext, paramName) {
+    var data = httpContext.items['model_default_data_source'];
+    if (!data) {
+        var form = {}, query = {}, routeData = {};
+        utils.each(ctx.zoo.request.form, function(key, val) {
+            utils.mapObj(form, lowerRootNs(key), val);
+        });
+        utils.each(ctx.zoo.request.query, function(key, val) {
+            utils.mapObj(query, lowerRootNs(key), val);
+        });
+        utils.each(ctx.routeData, function(i, it) {
+            utils.mapObj(routeData, lowerRootNs(it.name), it.value);
+        });
+        data = httpContext.items['model_default_data_source'] = {
+            form: form,
+            query: query,
+            routeData: routeData
+        };
+    }
+    var matched = false, val;
+    if (paramName in data.form) {
+        matched = true;
+        val = data.form[paramName];
+    } else if (paramName in data.query) {
+        matched = true
+        val = data.query[paramName];
+    } else if (paramName in data.routeData) {
+        matched = true;
+        val = data.routeData[paramName];
+    } else {
+        matched = false;
+        val = undefined;
+    }
+    // only when not matched then return undefined
+    if (val === undefined && matched === true) {
+        val = null;
+    }
+    // ret
+    return val;
+};
+
 mvcModel.prototype = {
 
     ownerAreaName: null, path: null, name: null, raw: null,
 
     constructor: mvcModel, className: 'mvcModel',
 
-    injectValues: function(httpContext) {
+    inner: function(p) {
+        return (p === undefined) ? (this.raw) : (this.raw = p, this);
+    },
+
+    resolveValue: function(httpContext, paramName) {
         var model = modelling.resolve(this.raw);
         //TODO:
     }

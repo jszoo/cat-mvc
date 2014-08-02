@@ -12,12 +12,17 @@ var fs = require('fs'),
     events = require('events'),
     utils = require('./utilities'),
     caching = require('./caching'),
-    mvcApp = require('mvcApp'),
+    mvcApp = require('./mvcApp'),
     mvcModel = require('./mvcModel');
 
-var registerModelAttribute = function(model) {
-    var attr = mvcApp.attributes.get('(paramModelAttribute)');
-    mvcApp.attributes.register(name, attr.subClass(model));
+var modelAttribute = {
+    set: function(name, model) {
+        var attr = mvcApp.attributes.get('(paramModel)');
+        mvcApp.attributes.register(name, attr.subClass(model));
+    },
+    del: function(name) {
+        mvcApp.attributes.remove(name);
+    }
 };
 
 var mvcModels = module.exports = function(set, store) {
@@ -44,7 +49,7 @@ mvcModels.prototype = {
             name = (name || model.name);
             //
             this._inner.set(name, model);
-            registerModelAttribute(model);
+            modelAttribute.set(name, model);
         }
         this.events.emit('changed');
     },
@@ -59,6 +64,7 @@ mvcModels.prototype = {
 
     remove: function(name) {
         this._inner.remove(name);
+        modelAttribute.del(name);
         this.events.emit('changed');
     },
 
@@ -69,9 +75,9 @@ mvcModels.prototype = {
 
     loaddir: function(modelsPath, act) {
         if (!fs.existsSync(modelsPath) || !fs.statSync(modelsPath).isDirectory()) { return; }
-        var self = this, modelPaths = fs.readdirSync(modelsPath), fn = act || 'loadfile';
-        utils.each(modelPaths, function(i, modelPath) {
-            modelPath = path.join(modelsPath, modelPath);
+        var self = this, modelItems = fs.readdirSync(modelsPath), fn = act || 'loadfile';
+        utils.each(modelItems, function(i, modelItem) {
+            var modelPath = path.join(modelsPath, modelItem);
             self.loaddir(modelPath, act);
             self[fn](modelPath);
         });
@@ -98,7 +104,7 @@ mvcModels.prototype = {
         var self = this, all = this._inner.all();
         utils.each(all, function() {
             if (this.path === filePath) {
-                self.remove(this.name());
+                self.remove(this.name);
             }
         });
     }

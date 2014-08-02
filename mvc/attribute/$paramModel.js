@@ -7,13 +7,16 @@
 
 'use strict';
 
-var utils = require('../utilities')；
+var utils = require('../utilities');
 
 var paramModel = module.exports = function(set) {
     if (utils.isString(set)) {
         this.paramName = set;
     } else {
         utils.extend(this, set);
+    }
+    if (!this.paramName) {
+        throw new Error('The paramName of paramModel attribute is required');
     }
 };
 
@@ -31,5 +34,9 @@ paramModel.prototype = {
 
     paramName: null, model: null,
 
-    constructor: paramModel, className: 'paramModel'
+    constructor: paramModel, className: 'paramModel',
+
+    resolveModel: function() {
+        return this.model.injectValues.apply(this.model, arguments);
+    }
 };

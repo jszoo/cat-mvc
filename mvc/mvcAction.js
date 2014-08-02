@@ -8,18 +8,10 @@
 'use strict';
 
 var utils = require('./utilities'),
+    mvcModel = require('./mvcModel'),
     injector = require('./mvcInjector'),
     actionResult = require('./mvcActionResult'),
     mvcActionResultApi = require('./mvcActionResultApi');
-
-var lowerRootNs = function(namespace) {
-    var index = namespace.search(/\.|\[|\]/);
-    if (index > -1) {
-        return namespace.substr(0, index).toLowerCase() + namespace.substr(index);
-    } else {
-        return namespace.toLowerCase();
-    }
-};
 
 var mvcAction = module.exports = function(set) {
     utils.extend(this, set);
@@ -59,7 +51,7 @@ mvcAction.prototype = {
     },
 
     injectImpl: function(ctx) {
-        var annotated = this.impl().annotated;
+        var annotated = ctx.items['action_impl_annotated'];
         if (annotated) { return annotated; }
         //
         annotated = injector.annotate(this.impl());
@@ -67,37 +59,34 @@ mvcAction.prototype = {
         params.matchNum = 0;
         //
         if (annotated.args && annotated.args.length > 0) {
-            var form = {}, query = {}, routeData = {};
-            utils.each(ctx.zoo.request.form, function(key, val) {
-                utils.mapObj(form, lowerRootNs(key), val);
-            });
-            utils.each(ctx.zoo.request.query, function(key, val) {
-                utils.mapObj(query, lowerRootNs(key), val);
-            });
-            utils.each(ctx.routeData, function(i, it) {
-                utils.mapObj(routeData, lowerRootNs(it.name), it.value);
+            //
+            var modelAttrs = this.attributes.filter('getModel'), t;
+            utils.each((t = modelAttrs, modelAttrs = {}, t), function() {
+                modelAttrs[this.paramName.toLowerCase()] = this;
             });
             //
             utils.each(annotated.args, function(i, name) {
-                var loweName = name.toLowerCase();
-                if (loweName.charAt(0) === '$') {
-                    loweName = loweName.substr(1);
+                var lowerName = name.toLowerCase();
+                if (lowerName.charAt(0) === '$') {
+                    lowerName = lowerName.substr(1);
                 }
-                params.matchNum++;
-                if (loweName in form) {
-                    params.push(form[loweName]);
-                } else if (loweName in query) {
-                    params.push(query[loweName]);
-                } else if (loweName in routeData) {
-                    params.push(routeData[loweName]);
+                //
+                var attr = modelAttrs[lowerName], val;
+                if (attr) {
+                    val = attr.getModel().resolveParam(ctx, lowerName);
                 } else {
-                    params.push(null);
-                    params.matchNum--;
+                    val = mvcModel.resolveParamDefault(ctx, lowerName);
                 }
+                //
+                if (val !== undefined) {
+                    params.matchNum++;
+                }
+                //
+                params.push(val || null);
             });
         }
         //
-        return (this.impl().annotated = annotated);
+        return (ctx.items['action_impl_annotated'] = annotated);
     },
 
     isValidName: function(name) {

@@ -16,6 +16,7 @@ var mvcContext = module.exports = function(set) {
 
 var clone = function(ins, className) {
     return new mvcContext({
+        id: ins.id,
         app: ins.app,
         zoo: ins.zoo,
         items: ins.items,
@@ -31,7 +32,7 @@ var clone = function(ins, className) {
 
 mvcContext.prototype = {
 
-    app: null, zoo: null, items: null, request: null, response: null,
+    id: null, app: null, zoo: null, items: null, request: null, response: null,
 
     route: null, routeData: null, routeArea: null, routeSet: null,
 

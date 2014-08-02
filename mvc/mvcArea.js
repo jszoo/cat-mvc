@@ -23,26 +23,32 @@ var mvcArea = module.exports = function(set, store) {
     this.controllers = new mvcControllers({ ownerAreaName: this.name }, store);
 };
 
-var definedProcedure;
+var procedureDefined;
 mvcArea.api = function(fn) {
-    return (definedProcedure = fn);
+    return (procedureDefined = fn);
 };
 
 mvcArea.loadSetting = function(filePath) {
-    delete require.cache[filePath];
-    var expo = require(filePath), ret;
+    var ret, expo;
+    try {
+        delete require.cache[filePath];
+        expo = require(filePath);
+    } catch (ex) {
+        procedureDefined = null;
+        return null;
+    }
     //
     if (utils.isFunction(expo)) {
         ret = expo;
-    } else if (utils.isFunction(definedProcedure)) {
-        ret = definedProcedure;
-    } else if (utils.isObject(definedProcedure)) {
-        ret = function() { utils.nudeExtend(this, definedProcedure); };
+    } else if (utils.isFunction(procedureDefined)) {
+        ret = procedureDefined;
+    } else if (utils.isObject(procedureDefined)) {
+        ret = function() { utils.nudeExtend(this, procedureDefined); };
     } else {
         ret = function() { utils.nudeExtend(this, expo); };
     }
     //
-    definedProcedure = null;
+    procedureDefined = null;
     return ret;
 };
 

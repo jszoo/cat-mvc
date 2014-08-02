@@ -14,6 +14,19 @@ var fs = require('fs'),
     caching = require('./caching'),
     mvcModel = require('./mvcModel');
 
+var modelAttribute = {
+    mvc: function() {
+        return (this._mvc ? this._mvc : (this._mvc = require('./mvcApp')));
+    },
+    set: function(name, model) {
+        var attr = this.mvc().attributes.get('(paramModel)');
+        this.mvc().attributes.register(name, attr.subClass(model));
+    },
+    del: function(name) {
+        this.mvc().attributes.remove(name);
+    }
+};
+
 var mvcModels = module.exports = function(set, store) {
     utils.extend(this, set);
     if (!this.ownerAreaName) { throw new Error('Parameter "ownerAreaName" is required'); }
@@ -29,12 +42,17 @@ mvcModels.prototype = {
     constructor: mvcModels, className: 'mvcModels',
 
     register: function(name, model) {
-        if (!name) { throw new Error('Parameter "name" is required'); }
-        this._inner.set(name, new mvcModel({
-            name: name,
-            model: model,
-            ownerAreaName: this.ownerAreaName
-        }));
+        if (arguments.length === 1 || !model) {
+            model = name;
+            name = null;
+        }
+        if (model && model.className === 'mvcModel') {
+            model.ownerAreaName = this.ownerAreaName;
+            name = (name || model.name);
+            //
+            this._inner.set(name, model);
+            modelAttribute.set(name, model);
+        }
         this.events.emit('changed');
     },
 
@@ -48,6 +66,7 @@ mvcModels.prototype = {
 
     remove: function(name) {
         this._inner.remove(name);
+        modelAttribute.del(name);
         this.events.emit('changed');
     },
 
@@ -58,9 +77,12 @@ mvcModels.prototype = {
 
     loaddir: function(modelsPath, act) {
         if (!fs.existsSync(modelsPath) || !fs.statSync(modelsPath).isDirectory()) { return; }
-        var self = this, modelFiles = fs.readdirSync(modelsPath), fn = act || 'loadfile';
-        utils.each(modelFiles, function(i, modelFileName) {
-            self[fn](path.join(modelsPath, modelFileName));
+        var self = this, modelItems = fs.readdirSync(modelsPath), fn = act || 'loadfile';
+        utils.each(modelItems, function(i, modelItem) {
+            if (modelItem.indexOf('.') === 0) { return; }
+            var modelPath = path.join(modelsPath, modelItem);
+            self.loaddir(modelPath, act);
+            self[fn](modelPath);
         });
     },
 
@@ -85,7 +107,7 @@ mvcModels.prototype = {
         var self = this, all = this._inner.all();
         utils.each(all, function() {
             if (this.path === filePath) {
-                self.remove(this.name());
+                self.remove(this.name);
             }
         });
     }

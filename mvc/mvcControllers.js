@@ -26,7 +26,7 @@ mvcControllers.prototype = {
     constructor: mvcControllers, className: 'mvcControllers',
 
     register: function(name, controller) {
-        if (arguments.length === 1) {
+        if (arguments.length === 1 || !controller) {
             controller = name;
             name = null;
         }
@@ -50,9 +50,12 @@ mvcControllers.prototype = {
 
     loaddir: function(ctrlsPath, act) {
         if (!fs.existsSync(ctrlsPath) || !fs.statSync(ctrlsPath).isDirectory()) { return; }
-        var self = this, ctrlFiles = fs.readdirSync(ctrlsPath), fn = act || 'loadfile';
-        utils.each(ctrlFiles, function(i, ctrlFileName) {
-            self[fn](path.join(ctrlsPath, ctrlFileName));
+        var self = this, ctrlItems = fs.readdirSync(ctrlsPath), fn = act || 'loadfile';
+        utils.each(ctrlItems, function(i, ctrlItem) {
+            if (ctrlItem.indexOf('.') === 0) { return; }
+            var ctrlPath = path.join(ctrlsPath, ctrlItem);
+            self.loaddir(ctrlPath, act);
+            self[fn](ctrlPath);
         });
     },
 

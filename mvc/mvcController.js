@@ -182,15 +182,15 @@ mvcController.prototype = {
         //
         var self = this;
         utils.each(annotated.args, function(i, name) {
-            var loweName = utils.formalStr(name);
-            if (loweName.charAt(0) === '$') {
-                loweName = loweName.substr(1);
+            var lowerName = utils.formalStr(name);
+            if (lowerName.charAt(0) === '$') {
+                lowerName = lowerName.substr(1);
             }
-            if (controllerInject && loweName in controllerInject) {
-                params.push(controllerInject[loweName]);
+            if (controllerInject && lowerName in controllerInject) {
+                params.push(controllerInject[lowerName]);
                 return;
             }
-            switch(loweName) {
+            switch(lowerName) {
                 case 'ctx':      params.push(ctx); break;
                 case 'req':      params.push(ctx.request); break;
                 case 'res':      params.push(ctx.response); break;

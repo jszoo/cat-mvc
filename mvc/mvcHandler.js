@@ -63,6 +63,7 @@ module.exports = function(app) {
                 if (!actionParam) { return; } // continue
                 //
                 var httpContext = new mvcContext({
+                    id: utils.unique(32),
                     app: app,
                     zoo: zoo,
                     items: {},

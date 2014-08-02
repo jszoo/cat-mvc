@@ -8,7 +8,8 @@
 'use strict';
 
 var utils = require('./utilities'),
-    modelling = require('./modelling/$manager');
+    modelling = require('./modelling/$manager'),
+    modelsDefined;
 
 var mvcModel = module.exports = function(set) {
     utils.extend(this, set);

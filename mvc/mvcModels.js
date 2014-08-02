@@ -79,6 +79,7 @@ mvcModels.prototype = {
         if (!fs.existsSync(modelsPath) || !fs.statSync(modelsPath).isDirectory()) { return; }
         var self = this, modelItems = fs.readdirSync(modelsPath), fn = act || 'loadfile';
         utils.each(modelItems, function(i, modelItem) {
+            if (modelItem.indexOf('.') === 0) { return; }
             var modelPath = path.join(modelsPath, modelItem);
             self.loaddir(modelPath, act);
             self[fn](modelPath);

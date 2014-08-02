@@ -52,6 +52,7 @@ mvcControllers.prototype = {
         if (!fs.existsSync(ctrlsPath) || !fs.statSync(ctrlsPath).isDirectory()) { return; }
         var self = this, ctrlItems = fs.readdirSync(ctrlsPath), fn = act || 'loadfile';
         utils.each(ctrlItems, function(i, ctrlItem) {
+            if (ctrlItem.indexOf('.') === 0) { return; }
             var ctrlPath = path.join(ctrlsPath, ctrlItem);
             self.loaddir(ctrlPath, act);
             self[fn](ctrlPath);

@@ -40,9 +40,14 @@ mvcModel.api = function(name, obj) {
 };
 
 mvcModel.loadfile = function(filePath) {
-    var ret; modelsDefined = [];
-    delete require.cache[filePath];
-    var expo = require(filePath);
+    var ret, expo; modelsDefined = [];
+    try {
+        delete require.cache[filePath];
+        expo = require(filePath);
+    } catch (ex) {
+        modelsDefined = null;
+        return null;
+    }
     //
     if (expo.className === 'mvcModel') {
         ret = [expo];

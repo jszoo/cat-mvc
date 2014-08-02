@@ -36,7 +36,7 @@ paramModel.prototype = {
 
     constructor: paramModel, className: 'paramModel',
 
-    resolveModel: function() {
-        return this.model.injectValues.apply(this.model, arguments);
+    getModel: function() {
+        return this.model;
     }
 };

@@ -1,6 +1,6 @@
 {
   "name": "cat-mvc",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "description": "The best nodejs MVC framework in .NET MVC style",
   "main": "mvc/index.js",
   "scripts": {

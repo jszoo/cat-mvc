@@ -7,7 +7,9 @@
 
 'use strict';
 
-var utils = require('./utilities');
+var utils = require('./utilities'),
+    modellingKey = 'dont_use_me(random:' + utils.unique(8) + ')',
+    modelsDefined;
 
 var lowerRootNs = function(namespace) {
     var index = namespace.search(/\.|\[|\]/);
@@ -22,7 +24,6 @@ var mvcModel = module.exports = function(set) {
     utils.extend(this, set);
 };
 
-var modelsDefined;
 mvcModel.api = function(name, obj) {
     var len = arguments.length;
     if (len === 1 || !obj) {
@@ -115,7 +116,11 @@ mvcModel.prototype = {
     },
 
     resolveParam: function(httpContext, paramName) {
-        var model = httpContext.app.modelling.resolve(this.raw);
+        var modelling = this.raw[modellingKey];
+        if (!modelling) {
+            modelling = httpContext.app.modelling.resolve(this.raw);
+            this.raw[modellingKey] = modelling;
+        }
         //TODO:
         return 'aaa';
     }

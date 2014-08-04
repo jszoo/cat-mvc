@@ -6,6 +6,10 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "homepage": "https://github.com/jszoo/cat-mvc",
+  "bugs": {
+    "url": "https://github.com/jszoo/cat-mvc/issues"
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/jszoo/cat-mvc.git"

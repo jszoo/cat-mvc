@@ -19,7 +19,7 @@ var modelAttribute = {
         return (this._mvc ? this._mvc : (this._mvc = require('./mvcApp')));
     },
     set: function(name, model) {
-        var attr = this.mvc().attributes.get('(paramModel)');
+        var attr = this.mvc().attributes.get('(modelAttr)');
         this.mvc().attributes.register(name, attr.subClass(model));
     },
     del: function(name) {

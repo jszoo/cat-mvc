@@ -116,12 +116,35 @@ mvcModel.prototype = {
     },
 
     resolveParam: function(httpContext, paramName) {
-        var modelling = this.raw[modellingKey];
-        if (!modelling) {
-            modelling = httpContext.app.modelling.resolve(this.raw);
-            this.raw[modellingKey] = modelling;
-        }
-        //TODO:
-        return 'aaa';
+        var modelling = httpContext.app.modelling;
+        var cloneRaw = utils.extend(true, {}, this.raw);
+        var unparsed = { wrap: mvcModel.resolveParamDefault(httpContext, paramName) };
+        //
+        var walk = function(model, ns) {
+            utils.each(model, function(key, set) {
+                if (!utils.hasOwn(model, key)) {
+                    return;
+                }
+                ns += (ns ? '.' : '') + key;
+                var val = utils.readObj(unparsed, ns);
+                if (!set) {
+                    model[key] = val;
+                    return;
+                }
+                var result = modelling.resolve(set), val;
+                if (result.type || result.valids.length > 0) {
+                    if (result.type) { val = result.type.parse(val); }
+                    utils.each(result.valids, function() {
+                        this.valid(val);
+                    });
+                    model[key] = val;
+                } else {
+                    walk(set, ns);
+                }
+            });
+        };
+        //
+        var obj = { wrap: cloneRaw };
+        return (walk(obj, 'wrap'), obj.wrap);
     }
 };

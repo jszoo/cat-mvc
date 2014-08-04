@@ -7,6 +7,9 @@
 
 'use strict';
 
+var utils = require('../utilities');
+
+
 /* validatorBase
 ***************************************/
 var validatorBase = function(set) {

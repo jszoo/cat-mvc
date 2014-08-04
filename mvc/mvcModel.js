@@ -27,15 +27,15 @@ var mvcModel = module.exports = function(set) {
 mvcModel.api = function(name, obj) {
     var len = arguments.length;
     if (len === 1 || !obj) {
-    	obj = name;
-    	name = null;
+        obj = name;
+        name = null;
     }
     var ret = new mvcModel({
-    	name: name,
-    	raw: obj
+        name: name,
+        raw: obj
     });
     if (modelsDefined) {
-    	modelsDefined.push(ret);
+        modelsDefined.push(ret);
     }
     return ret;
 };
@@ -136,7 +136,7 @@ mvcModel.prototype = {
                 if (result.type || result.valids.length > 0) {
                     if (result.type) { val = result.type.parse(val); }
                     utils.each(result.valids, function() {
-                        this.valid(val);
+                        this.isValid(val);
                     });
                     model[key] = val;
                 } else {

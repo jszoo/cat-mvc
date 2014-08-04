@@ -48,7 +48,7 @@ modellingManager.prototype = {
         else if (set) {
             utils.each(set, function(key, val) {
                 if (!utils.hasOwn(set, key)) {
-                    continue;
+                    return;
                 }
                 if (key.toLowerCase() === 'type') {
                     // resolve data type

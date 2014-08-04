@@ -7,6 +7,65 @@
 
 'use strict';
 
+/* validatorBase
+***************************************/
+var validatorBase = function(set) {
+    if (set) { this.errorMessage = set.msg; }
+};
+
+validatorBase.prototype = {
+
+    validName: null, errorMessage: null,
+
+    constructor: validatorBase, className: 'validator',
+
+    isValid: function(value) {
+        throw new Error('"parse" interface function needs override by sub classes');
+    }
+};
+
+
+/* emptyValidator
+***************************************/
+var emptyValidator = exports.emptyValidator = function(enabled) {
+    this.enabled = enabled;
+};
+
+utils.inherit(emptyValidator, validatorBase, {
+    validName: 'empty', enabled: true,
+    isValid: function(value) {
+        //TODO:
+    }
+});
+
+
+/* emptyValidator
+***************************************/
+var notEmptyValidator = exports.notEmptyValidator = function() {
+    notEmptyValidator.superclass.constructor.apply(this, arguments);
+};
+
+utils.inherit(notEmptyValidator, emptyValidator, {
+    validName: 'notEmpty',
+    isValid: function(value) {
+        return !notEmptyValidator.superclass.isValid.call(this, value);
+    }
+});
+
+
+/* requiredValidator
+***************************************/
+var requiredValidator = exports.requiredValidator = function(set) {
+    requiredValidator.superclass.constructor.call(this, set);
+};
+
+utils.inherit(requiredValidator, validatorBase, {
+    validName: 'required',
+    isValid: function(value) {
+        //TODO:
+    }
+});
+
 var types = [
     'empty',
     'required',

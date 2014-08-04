@@ -38,29 +38,28 @@ modellingManager.prototype = {
     *   set: { type: 'string', required: true, ... }  /  set: 'string'
     */
     resolve: function(set) {
-        var dtype, valids = [], typeClass;
+        var dtype, typeClass, valids = [], self =this;
+        //
         if (utils.isString(set)) {
             // resolve data type
             typeClass = this.dataTypes.get(set);
             if (typeClass) { dtype = new typeClass(); }
         }
         else if (set) {
-            for (var typeName, typeClass, key in set) {
+            utils.each(set, function(key, val) {
                 if (!utils.hasOwn(set, key)) {
                     continue;
                 }
                 if (key.toLowerCase() === 'type') {
                     // resolve data type
-                    typeName = set[key];
-                    typeClass = this.dataTypes.get(typeName);
+                    typeClass = self.dataTypes.get(val);
                     if (typeClass) { dtype = new typeClass(); }
                 } else {
                     // resolve validations
-                    typeName = key;
-                    typeClass = this.validations.get(typeName);
+                    typeClass = self.validations.get(key);
                     if (typeClass) { valids.push(new typeClass(set[key])); }
                 }
-            }
+            });
         }
         return {
             type: dtype,

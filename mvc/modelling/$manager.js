@@ -38,7 +38,7 @@ modellingManager.prototype = {
     *   set: { type: 'string', required: true, ... }  /  set: 'string'
     */
     resolve: function(set) {
-        var dtype, typeClass, valids = [], self =this;
+        var dtype, valids, typeClass, self =this;
         //
         if (utils.isString(set)) {
             // resolve data type
@@ -57,7 +57,10 @@ modellingManager.prototype = {
                 } else {
                     // resolve validations
                     typeClass = self.validations.get(key);
-                    if (typeClass) { valids.push(new typeClass(set[key])); }
+                    if (typeClass) {
+                        if (!valids) { valids = []; }
+                        valids.push(new typeClass(set[key]));
+                    }
                 }
             });
         }

@@ -133,7 +133,7 @@ mvcModel.prototype = {
                     return;
                 }
                 var result = modelling.resolve(set), val;
-                if (result.type || result.valids.length > 0) {
+                if (result.type || result.valids) {
                     if (result.type) { val = result.type.parse(val); }
                     utils.each(result.valids, function() {
                         this.isValid(val);

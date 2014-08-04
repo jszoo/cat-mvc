@@ -21,8 +21,51 @@ modellingManager.prototype = {
 
     constructor: modellingManager, className: 'modellingManager',
 
-    resolve: function(model) {
-        
+    registerAll: function() {
+        var self = this;
+        utils.each(require('./dataType'), function(key, cls) {
+            key = cls.prototype.typeName;
+            if (key) { self.dataTypes.register(key, cls); }
+        });
+        utils.each(require('./validation'), function(key, cls) {
+            key = cls.prototype.validName;
+            if (key) { self.validations.register(key, cls); }
+        });
+    },
+
+    /*
+    * reslove setting to sepcified data type class and valiadator classes
+    *   set: { type: 'string', required: true, ... }  /  set: 'string'
+    */
+    resolve: function(set) {
+        var dtype, valids = [], typeClass;
+        if (utils.isString(set)) {
+            // resolve data type
+            typeClass = this.dataTypes.get(set);
+            if (typeClass) { dtype = new typeClass(); }
+        }
+        else if (set) {
+            for (var typeName, typeClass, key in set) {
+                if (!utils.hasOwn(set, key)) {
+                    continue;
+                }
+                if (key.toLowerCase() === 'type') {
+                    // resolve data type
+                    typeName = set[key];
+                    typeClass = this.dataTypes.get(typeName);
+                    if (typeClass) { dtype = new typeClass(); }
+                } else {
+                    // resolve validations
+                    typeName = key;
+                    typeClass = this.validations.get(typeName);
+                    if (typeClass) { valids.push(new typeClass(set[key])); }
+                }
+            }
+        }
+        return {
+            type: dtype,
+            valids: valids
+        };
     }
 };
 
@@ -36,8 +79,10 @@ dataTypesManager.prototype = {
 
     constructor: dataTypesManager, className: 'dataTypesManager',
 
-    register: function(name) {
-
+    register: function(name, klass) {
+        if (!name) { throw new Error('Register data type "name" is required'); }
+        if (!utils.isFunction(klass)) { throw new Error('Register data type "class" is function required'); }
+        return this._inner.set(name, klass);
     },
 
     get: function(name) {
@@ -67,8 +112,10 @@ validationsManager.prototype = {
 
     constructor: validationsManager, className: 'validationsManager',
 
-    register: function(name) {
-
+    register: function(name, klass) {
+        if (!name) { throw new Error('Register data type "name" is required'); }
+        if (!utils.isFunction(klass)) { throw new Error('Register data type "class" is function required'); }
+        return this._inner.set(name, klass);
     },
 
     get: function(name) {

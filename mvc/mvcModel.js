@@ -121,12 +121,13 @@ mvcModel.prototype = {
         var unparsed = { wrap: mvcModel.resolveParamDefault(httpContext, paramName) };
         //
         var walk = function(model, ns) {
+            ns += (ns ? '.' : '');
             utils.each(model, function(key, set) {
                 if (!utils.hasOwn(model, key)) {
                     return;
                 }
-                ns += (ns ? '.' : '') + key;
-                var val = utils.readObj(unparsed, ns);
+                var nns = ns + key;
+                var val = utils.readObj(unparsed, nns);
                 if (!set) {
                     model[key] = val;
                     return;
@@ -139,12 +140,12 @@ mvcModel.prototype = {
                     });
                     model[key] = val;
                 } else {
-                    walk(set, ns);
+                    walk(set, nns);
                 }
             });
         };
         //
         var obj = { wrap: cloneRaw };
-        return (walk(obj, 'wrap'), obj.wrap);
+        return (walk(obj, ''), obj.wrap);
     }
 };

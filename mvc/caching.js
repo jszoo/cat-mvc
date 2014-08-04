@@ -66,19 +66,18 @@ caching.prototype = {
 
     get: function(key) {
         var o = this.sto().get(this.region, key);
-        if (o) {
-            if (utils.isDate(o.expire) && new Date() >= o.expire) {
-                this.remove(key);
-                return null;
+        if (o instanceof cachingItem) {
+            if (o.isExpired()) {
+                return (this.remove(key), null);
             } else {
-                return o.val;
+                return o.getValue();
             }
         }
-        return undefined;
+        return o;
     },
 
     set: function(key, val, expire, notify) {
-        var o = { val: val, expire: expire, notify: notify };
+        var o = (expire || notify) ? new cachingItem(val, expire, notify) : val;
         this.sto().set(this.region, key, o);
         this._hasExpireItem = (this._hasExpireItem || !!expire);
         this._cachedAll = null;
@@ -86,11 +85,8 @@ caching.prototype = {
 
     remove: function(key) {
         var o = this.sto().get(this.region, key);
-        if (o && utils.isFunction(o.notify)) {
-            o.notify({
-                value: o.val,
-                action: 'remove'
-            });
+        if (o instanceof cachingItem) {
+            o.doNotify('remove');
         }
         this._cachedAll = null;
         return this.sto().remove(this.region, key);
@@ -107,6 +103,36 @@ caching.prototype = {
     clear: function() {
         this._cachedAll = null;
         return this.sto().remove(this.region);
+    }
+};
+
+var cachingItem = function(value, expire, notify) {
+    this._value = value;
+    this._expire = expire;
+    this._notify = notify;
+};
+
+cachingItem.prototype = {
+
+    _value: null, _expire: null, _notify: null,
+
+    constructor: cachingItem, className: 'cachingItem',
+
+    getValue: function () {
+        return this._value;
+    },
+
+    isExpired: function() {
+        return (utils.isDate(this._expire) && new Date() >= this._expire);
+    },
+
+    doNotify: function(action) {
+        if (utils.isFunction(this._notify)) {
+            this._notify({
+                value: this._value,
+                action: action
+            });
+        }
     }
 };
 

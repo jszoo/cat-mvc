@@ -175,6 +175,7 @@ mvcApp.prototype = {
             //
             this.viewEngines.registerAll();
             this.attributes.registerAll();
+            this.modelling.registerAll();
             this.areas.registerAll(); // user code always focus on the controllers, so register at last
         }
         //

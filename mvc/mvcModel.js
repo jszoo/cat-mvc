@@ -27,15 +27,15 @@ var mvcModel = module.exports = function(set) {
 mvcModel.api = function(name, obj) {
     var len = arguments.length;
     if (len === 1 || !obj) {
-    	obj = name;
-    	name = null;
+        obj = name;
+        name = null;
     }
     var ret = new mvcModel({
-    	name: name,
-    	raw: obj
+        name: name,
+        raw: obj
     });
     if (modelsDefined) {
-    	modelsDefined.push(ret);
+        modelsDefined.push(ret);
     }
     return ret;
 };
@@ -116,12 +116,36 @@ mvcModel.prototype = {
     },
 
     resolveParam: function(httpContext, paramName) {
-        var modelling = this.raw[modellingKey];
-        if (!modelling) {
-            modelling = httpContext.app.modelling.resolve(this.raw);
-            this.raw[modellingKey] = modelling;
-        }
-        //TODO:
-        return 'aaa';
+        var modelling = httpContext.app.modelling;
+        var cloneRaw = utils.extend(true, {}, this.raw);
+        var unparsed = { wrap: mvcModel.resolveParamDefault(httpContext, paramName) };
+        //
+        var walk = function(model, ns) {
+            ns += (ns ? '.' : '');
+            utils.each(model, function(key, set) {
+                if (!utils.hasOwn(model, key)) {
+                    return;
+                }
+                var nns = ns + key;
+                var val = utils.readObj(unparsed, nns);
+                if (!set) {
+                    model[key] = val;
+                    return;
+                }
+                var result = modelling.resolve(set), val;
+                if (result.type || result.valids) {
+                    if (result.type) { val = result.type.parse(val); }
+                    utils.each(result.valids, function() {
+                        this.isValid(val);
+                    });
+                    model[key] = val;
+                } else {
+                    walk(set, nns);
+                }
+            });
+        };
+        //
+        var obj = { wrap: cloneRaw };
+        return (walk(obj, ''), obj.wrap);
     }
 };

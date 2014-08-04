@@ -48,7 +48,7 @@ attributeManager.prototype = {
         utils.each(require('./httpMethod'), function(name) { self.register(name, this); });
         // internal used attribute:
         // name contains brackets that will never valid for attribute name
-        this._inner.set('(paramModel)', require('./$paramModel.js'));
+        this._inner.set('(modelAttr)', require('./$modelAttr.js'));
     },
 
     resolve: function(attrName, attrSett) {
@@ -72,7 +72,7 @@ attributeManager.prototype = {
             while (match = re.exec(config)) {
                 var name = match[1], sett = match[2];
                 if (sett && sett.length > 1) {
-                    sett = tryEval(sett + ')', name);
+                    sett = tryEval(sett.substr(1), name);
                 } else {
                     sett = undefined;
                 }
@@ -90,9 +90,15 @@ attributeManager.prototype = {
 var tryEval = function(str, attrName) {
     var temp;
     try {
-        eval("temp=" + str + ';');
+        eval('temp=' + str + ';');
     } catch (ex) {
-        throw new Error('Can not resolve the parameters of attribute: "' + attrName + '"');
+        try {
+            // try as string when first failure
+            str = str.replace(/"/g, '\\"');
+            eval('temp="' + str + '";');
+        } catch (ex) {
+            throw new Error('Can not resolve the parameters of attribute: "' + attrName + '"');
+        }
     }
     return temp;
 };

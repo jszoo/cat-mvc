@@ -11,13 +11,13 @@ var utils = require('zoo-utils'),
     caching = require('../caching');
 
 var modellingManager = module.exports = function(store) {
-    this.dataTypes = new dataTypesManager(store);
-    this.validations = new validationsManager(store);
+    this.dataTypes = new dataTypeManager(store);
+    this.validators = new validatorManager(store);
 };
 
 modellingManager.prototype = {
 
-    dataTypes: null, validations: null,
+    dataTypes: null, validators: null,
 
     constructor: modellingManager, className: 'modellingManager',
 
@@ -27,9 +27,9 @@ modellingManager.prototype = {
             key = cls.prototype.typeName;
             if (key) { self.dataTypes.register(key, cls); }
         });
-        utils.each(require('./validation'), function(key, cls) {
+        utils.each(require('./validator'), function(key, cls) {
             key = cls.prototype.validName;
-            if (key) { self.validations.register(key, cls); }
+            if (key) { self.validators.register(key, cls); }
         });
     },
 
@@ -55,8 +55,8 @@ modellingManager.prototype = {
                     typeClass = self.dataTypes.get(val);
                     if (typeClass) { dtype = new typeClass(); }
                 } else {
-                    // resolve validations
-                    typeClass = self.validations.get(key);
+                    // resolve validators
+                    typeClass = self.validators.get(key);
                     if (typeClass) {
                         if (!valids) { valids = []; }
                         valids.push(new typeClass(set[key]));
@@ -96,15 +96,15 @@ modellingMetas.prototype = {
     }
 };
 
-var dataTypesManager = function(store) {
+var dataTypeManager = function(store) {
     this._inner = caching.region('mvc-modelling-datatypes-cache', store);
 };
 
-dataTypesManager.prototype = {
+dataTypeManager.prototype = {
 
     _inner: null,
 
-    constructor: dataTypesManager, className: 'dataTypesManager',
+    constructor: dataTypeManager, className: 'dataTypeManager',
 
     register: function(name, klass) {
         if (!name) { throw new Error('Register data type "name" is required'); }
@@ -130,15 +130,15 @@ dataTypesManager.prototype = {
     }
 };
 
-var validationsManager = function(store) {
-    this._inner = caching.region('mvc-modelling-validations-cache', store);
+var validatorManager = function(store) {
+    this._inner = caching.region('mvc-modelling-validators-cache', store);
 };
 
-validationsManager.prototype = {
+validatorManager.prototype = {
 
     _inner: null,
 
-    constructor: validationsManager, className: 'validationsManager',
+    constructor: validatorManager, className: 'validatorManager',
 
     register: function(name, klass) {
         if (!name) { throw new Error('Register data type "name" is required'); }

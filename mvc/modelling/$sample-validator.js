@@ -5,6 +5,8 @@
 * create date: 2014.8.5
 */
 
+'use strict';
+
 var utils = require('zoo-utils');
 
 var sampleValidator = module.exports = function(set) {

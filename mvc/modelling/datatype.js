@@ -124,13 +124,18 @@ var arrayType = exports.arrayType = function(set) {
 utils.inherit(arrayType, dataTypeBase, {
     typeName: 'array',
     parse: function(value) {
-        if (utils.isString(value)) {
+        var vt = utils.type(value);
+        if (vt  === 'string') {
             var parts = value.split(',');
             utils.each(parts, function(i, txt) {
                 parts[i] = utils.trim(txt);
             });
             return parts;
-        } else {
+        }
+        else if(vt === 'array') {
+            return value;
+        }
+        else {
             return [value];
         }
     }

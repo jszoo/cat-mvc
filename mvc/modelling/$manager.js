@@ -23,7 +23,7 @@ modellingManager.prototype = {
 
     registerAll: function() {
         var self = this;
-        utils.each(require('./dataType'), function(key, cls) {
+        utils.each(require('./datatype'), function(key, cls) {
             key = cls.prototype.typeName;
             if (key) { self.dataTypes.register(key, cls); }
         });

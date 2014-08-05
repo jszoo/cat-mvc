@@ -7,7 +7,7 @@
 
 'use strict';
 
-var utils = require('./utilities'),
+var utils = require('zoo-utils'),
     modellingKey = 'dont_use_me(random:' + utils.unique(8) + ')',
     modelsDefined;
 

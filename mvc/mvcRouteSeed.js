@@ -7,7 +7,7 @@
 
 'use strict';
 
-var utils = require('./utilities'),
+var utils = require('zoo-utils'),
     caching = require('./caching'),
     pathToRegexp = require('path-to-regexp'),
     cache = caching.region('mvc-route-seed-cache');

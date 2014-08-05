@@ -8,7 +8,7 @@
 'use strict';
 
 var http = require('http'),
-    utils = require('./utilities'),
+    utils = require('zoo-utils'),
     mvcHelper = require('./mvcHelper'),
     httpStatusCode = require('./httpStatusCode');
 

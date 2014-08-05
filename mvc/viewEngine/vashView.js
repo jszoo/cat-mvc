@@ -7,7 +7,7 @@
 
 'use strict';
 
-var utils = require('../utilities'),
+var utils = require('zoo-utils'),
     vash = require('./vash');
 
 var vashView = module.exports = function(set) {

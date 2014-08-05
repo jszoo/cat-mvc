@@ -7,7 +7,7 @@
 
 'use strict';
 
-var utils = require('./utilities'),
+var utils = require('zoo-utils'),
     mvcHelper = require('./mvcHelper');
 
 var mvcUrlHelper = module.exports = function(set) {

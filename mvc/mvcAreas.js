@@ -10,7 +10,7 @@
 var fs = require('fs'),
     path = require('path'),
     events = require('events'),
-    utils = require('./utilities'),
+    utils = require('zoo-utils'),
     caching = require('./caching'),
     mvcArea = require('./mvcArea');
 

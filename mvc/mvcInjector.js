@@ -7,7 +7,7 @@
 
 'use strict';
 
-var utils = require('./utilities');
+var utils = require('zoo-utils');
 
 var JS_COMMENTS = /((\/\/.*$)|(\/\*[\s\S]*?\*\/))/mg,
     FN_ARGS = /^function\s*[^\(]*\(\s*([^\)]*)\)/m,

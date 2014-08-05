@@ -8,7 +8,7 @@
 'use strict';
 
 var path = require('path'),
-    utils = require('./utilities');
+    utils = require('zoo-utils');
 
 var mvcContext = module.exports = function(set) {
     utils.extend(this, set);

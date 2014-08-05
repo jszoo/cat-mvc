@@ -7,7 +7,7 @@
 
 'use strict';
 
-var utils = require('../utilities'),
+var utils = require('zoo-utils'),
     sampleView = require('./sample-view');
 
 var sampleViewEngine = module.exports = function(set) {

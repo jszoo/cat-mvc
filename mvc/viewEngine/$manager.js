@@ -7,7 +7,7 @@
 
 'use strict';
 
-var utils = require('../utilities'),
+var utils = require('zoo-utils'),
     caching = require('../caching');
 
 var viewEngineManager = module.exports = function(store) {

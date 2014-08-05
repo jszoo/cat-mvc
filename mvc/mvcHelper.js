@@ -7,7 +7,7 @@
 
 'use strict';
 
-var utils = require('./utilities');
+var utils = require('zoo-utils');
 
 var findRouteItem = exports.findRouteItem = function(routeData, findName, defaultIndex) {
     var found; findName = utils.tryLower(findName);

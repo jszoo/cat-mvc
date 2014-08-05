@@ -7,7 +7,7 @@
 
 'use strict';
 
-var utils = require('./utilities'),
+var utils = require('zoo-utils'),
     routeSeed = require('./mvcRouteSeed');
 
 var mvcRoute = module.exports = function(set) {

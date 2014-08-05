@@ -7,7 +7,7 @@
 
 'use strict';
 
-var utils = require('../utilities'),
+var utils = require('zoo-utils'),
     redirectResult = require('../mvcActionResult').redirectResult;
 
 var requireHttps = module.exports = function(set) {

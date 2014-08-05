@@ -11,7 +11,7 @@
 var parse = require('url').parse,
     accepts = require('accepts'),
     fresh = require('fresh'),
-    utils = require('../utilities');
+    utils = require('zoo-utils');
 
 var getter = function(obj, name, getter) {
     Object.defineProperty(obj, name, {

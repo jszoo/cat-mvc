@@ -8,7 +8,7 @@
 'use strict';
 
 var events = require('events'),
-    utils = require('./utilities'),
+    utils = require('zoo-utils'),
     caching = require('./caching'),
     mvcRoute = require('./mvcRoute');
 

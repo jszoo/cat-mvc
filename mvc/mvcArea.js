@@ -8,7 +8,7 @@
 'use strict';
 
 var events = require('events'),
-    utils = require('./utilities'),
+    utils = require('zoo-utils'),
     mvcRoutes = require('./mvcRoutes'),
     mvcModels = require('./mvcModels'),
     mvcControllers = require('./mvcControllers');

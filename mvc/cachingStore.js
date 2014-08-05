@@ -8,7 +8,7 @@
 'use strict';
 
 var events = require('events'),
-    utils = require('./utilities');
+    utils = require('zoo-utils');
 
 var cachingStore = module.exports = function() {
     this._data = {};

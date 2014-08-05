@@ -8,7 +8,7 @@
 'use strict';
 
 var parse = require('url').parse,
-    utils = require('./utilities');
+    utils = require('zoo-utils');
 
 var mvcHandlerRouter = module.exports = function(set) {
     utils.extend(this, set);

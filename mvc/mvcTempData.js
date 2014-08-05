@@ -7,7 +7,7 @@
 
 'use strict';
 
-var utils = require('./utilities');
+var utils = require('zoo-utils');
 
 var mvcTempData = module.exports = function(set) {
     utils.extend(this, set);

@@ -8,7 +8,7 @@
 'use strict';
 
 var path = require('path'),
-    utils = require('./utilities'),
+    utils = require('zoo-utils'),
     httpHelper = require('./httpHelper'),
     mvcArea = require('./mvcArea'),
 	mvcAreas = require('./mvcAreas'),

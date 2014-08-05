@@ -7,7 +7,7 @@
 
 'use strict';
 
-var utils = require('./utilities'),
+var utils = require('zoo-utils'),
     cachingStore = require('./cachingStore');
 
 var instances, defaultStore;

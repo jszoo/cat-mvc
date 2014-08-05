@@ -7,7 +7,7 @@
 
 'use strict';
 
-var utils = require('../utilities'),
+var utils = require('zoo-utils'),
     viewResult = require('../mvcActionResult').viewResult;
 
 var handleError = module.exports = function(set) {

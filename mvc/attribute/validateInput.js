@@ -7,7 +7,7 @@
 
 'use strict';
 
-var utils = require('../utilities');
+var utils = require('zoo-utils');
 
 var validateInput = module.exports = function(set) {
     if (utils.isBoolean(set)) {

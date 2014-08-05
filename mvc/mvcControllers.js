@@ -9,7 +9,7 @@
 
 var fs = require('fs'),
     path = require('path'),
-    utils = require('./utilities'),
+    utils = require('zoo-utils'),
     caching = require('./caching'),
     mvcController = require('./mvcController');
 

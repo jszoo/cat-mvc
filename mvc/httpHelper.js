@@ -14,7 +14,7 @@ var mime = require('send').mime,
     basename = require('path').basename,
     proxyaddr = require('proxy-addr'),
     typer = require('media-typer'),
-    utils = require('./utilities');
+    utils = require('zoo-utils');
 
 module.exports = {
 

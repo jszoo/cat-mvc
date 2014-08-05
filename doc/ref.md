@@ -18,3 +18,6 @@ REFERENCE
 + http://www.csdn.net/article/2014-02-24/2818519-node-js-mvc-frameworks-for-javascript-developers
 
 + http://www.shopify.com/technology/5898287-restful-thinking-considered-harmful
+
++ http://thinkjs.org/
++ http://sailsjs.org/#!documentation/models

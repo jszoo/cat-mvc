@@ -16,7 +16,7 @@ var http = require('http'),
     sign = require('cookie-signature').sign,
     extname = require('path').extname;
 
-var utils = require('../utilities'),
+var utils = require('zoo-utils'),
     httpHelper = require('../httpHelper');
 
 var response = function(set) {

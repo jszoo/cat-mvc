@@ -7,7 +7,7 @@
 
 var fs = require('fs'),
     path = require('path'),
-    utils = require('../utilities');
+    utils = require('zoo-utils');
 
 var vash = require('vash'),
     helpers = vash['helpers'];

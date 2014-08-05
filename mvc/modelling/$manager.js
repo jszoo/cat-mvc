@@ -7,7 +7,7 @@
 
 'use strict';
 
-var utils = require('../utilities'),
+var utils = require('zoo-utils'),
     caching = require('../caching');
 
 var modellingManager = module.exports = function(store) {

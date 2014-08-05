@@ -41,6 +41,8 @@ cachingStore.prototype = {
         region = utils.formalStr(region);
         key = utils.formalStr(key);
         //
+        this.events.emit('set', { region: region, key: key, val: val });
+        //
         if (arguments.length === 2) {
             return this._data[region] = key;
         }

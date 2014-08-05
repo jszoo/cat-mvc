@@ -25,6 +25,7 @@ viewEngineManager.prototype = {
         if (!viewEngine) { throw new Error('Parameter "viewEngine" is required'); }
         if (!utils.isFunction(viewEngine.findView)) { throw new Error('Please implement the interface function: "findView(controllerContext, viewName, callback)" in the viewEngine: "' + engineName + '"'); }
         if (!utils.isFunction(viewEngine.releaseView)) { throw new Error('Please implement the interface function: "releaseView(controllerContext, view)" in the viewEngine: "' + engineName + '"'); }
+        if (this.exists(engineName)) { throw new Error('ViewEngine "'+ engineName + '" already exists'); }
         return this._inner.set(engineName, viewEngine);
     },
 

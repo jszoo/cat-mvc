@@ -22,8 +22,8 @@ validatorBase.prototype = {
 
     constructor: validatorBase, className: 'validator',
 
-    isValid: function(value) {
-        throw new Error('"parse" interface function needs override by sub classes');
+    valid: function(value) {
+        throw new Error('"valid" interface function needs override by sub classes');
     }
 };
 
@@ -36,7 +36,7 @@ var emptyValidator = exports.emptyValidator = function(enabled) {
 
 utils.inherit(emptyValidator, validatorBase, {
     validName: 'empty', enabled: true,
-    isValid: function(value) {
+    valid: function(value) {
         //TODO:
     }
 });
@@ -50,8 +50,8 @@ var notEmptyValidator = exports.notEmptyValidator = function() {
 
 utils.inherit(notEmptyValidator, emptyValidator, {
     validName: 'notEmpty',
-    isValid: function(value) {
-        return !notEmptyValidator.superclass.isValid.call(this, value);
+    valid: function(value) {
+        return !notEmptyValidator.superclass.valid.call(this, value);
     }
 });
 
@@ -64,7 +64,7 @@ var requiredValidator = exports.requiredValidator = function(set) {
 
 utils.inherit(requiredValidator, validatorBase, {
     validName: 'required',
-    isValid: function(value) {
+    valid: function(value) {
         //TODO:
     }
 });

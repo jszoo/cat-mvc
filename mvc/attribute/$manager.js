@@ -28,6 +28,10 @@ attributeManager.prototype = {
         return this._inner.get(attrName);
     },
 
+    exists: function(attrName) {
+        return this._inner.exists(attrName);
+    },
+
     remove: function(attrName) {
         return this._inner.remove(attrName);
     },
@@ -36,6 +40,7 @@ attributeManager.prototype = {
         if (!utils.isString(attrName)) { throw new Error('Parameter "attrName" require string type'); }
         if (!utils.isFunction(attrClass)) { throw new Error('Parameter "attrClass" require function type'); }
         if (!/[0-9a-zA-Z_-]+/.test(attrName)) { throw new Error('Parameter "attrName" invalid attribute name'); }
+        if (this.exists(attrName)) { throw new Error('Attribute "'+ attrName + '" already exists'); }
         this._inner.set(attrName, attrClass);
     },
 

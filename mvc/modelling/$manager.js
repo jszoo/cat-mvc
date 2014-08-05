@@ -64,10 +64,35 @@ modellingManager.prototype = {
                 }
             });
         }
-        return {
-            type: dtype,
-            valids: valids
-        };
+        return new modellingMetas(dtype, valids);
+    }
+};
+
+var modellingMetas = function(typeObj, validators){
+    this.typeObj = typeObj;
+    this.validators = validators;
+};
+
+modellingMetas.prototype = {
+
+    typeObj: null, validators: null,
+    
+    constructor: modellingMetas, className: 'modellingMetas',
+
+    has: function() {
+        return this.typeObj || this.validators;
+    },
+
+    exe: function(value) {
+        if (this.typeObj) {
+            value = this.typeObj.parse(value);
+        }
+        if (this.validators) {
+            utils.each(this.validators, function(i, obj) {
+                obj.valid(value);
+            });
+        }
+        return value;
     }
 };
 
@@ -84,6 +109,7 @@ dataTypesManager.prototype = {
     register: function(name, klass) {
         if (!name) { throw new Error('Register data type "name" is required'); }
         if (!utils.isFunction(klass)) { throw new Error('Register data type "class" is function required'); }
+        if (this.exists(name)) { throw new Error('DataType "'+ name + '" already exists'); }
         return this._inner.set(name, klass);
     },
 
@@ -117,6 +143,7 @@ validationsManager.prototype = {
     register: function(name, klass) {
         if (!name) { throw new Error('Register data type "name" is required'); }
         if (!utils.isFunction(klass)) { throw new Error('Register data type "class" is function required'); }
+        if (this.exists(name)) { throw new Error('Valiadator "'+ name + '" already exists'); }
         return this._inner.set(name, klass);
     },
 

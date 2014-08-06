@@ -132,15 +132,18 @@ mvcModel.prototype = {
             var value = utils.readObj(datas, paramName);
             return metas.exe(value);
         } else {
+            paramName += '.';
             var clone = utils.extend(true, {}, this.raw);
             var doWalk = function(obj, parentNs) {
+                if (!utils.isObject(obj)) { return; }
                 if (parentNs) { parentNs += '.'; }
                 utils.each(obj, function(key, item) {
                     var ns = parentNs + key.toLowerCase();
                     var metas = modelling.resolve(item);
                     if (metas.has()) {
-                        var value = utils.readObj(datas, ns);
-                        obj[key] = metas.exe(value);
+                        var value1 = utils.readObj(datas, ns);
+                        var value2 = utils.readObj(datas, paramName + ns);
+                        obj[key] = metas.exe(value2 || value1);
                     } else {
                         doWalk(item, ns);
                     }

@@ -122,7 +122,7 @@ var tryEval = function(str, attrName) {
     } catch (ex) {
         try {
             // try as string when first failure
-            str = str.replace(/"/g, '\\"'); // strip quotes
+            str = str.replace(/"/g, '\\"'); // wrap quotes
             str = str.replace(/^\s+|\s+$/g, ''); // trim whitespaces
             eval('temp="' + str + '";');
         } catch (ex) {

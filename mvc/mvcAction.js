@@ -76,8 +76,10 @@ mvcAction.prototype = {
                     }
                     if (result) {
                         return result;
-                    } else {
+                    } else if (areaName !== rootAreaName) {
                         return findAttr(paramName, rootAreaName);
+                    } else {
+                        return null;
                     }
                 };
             }

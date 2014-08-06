@@ -12,11 +12,12 @@ var utils = require('zoo-utils'),
 
 var attributeManager = module.exports = function(store) {
     this._inner = caching.region('mvc-attribute-types-cache', store);
+    this._region = caching.region('mvc-attribute-region-cache', store);
 };
 
 attributeManager.prototype = {
 
-    _inner: null,
+    _inner: null, _region: null,
 
     constructor: attributeManager, className: 'attributeManager',
 
@@ -36,11 +37,27 @@ attributeManager.prototype = {
         return this._inner.remove(attrName);
     },
 
+    removeRegion: function(attrName) {
+        return this._region.remove(attrName);
+    },
+
+    registerRegion: function(attrName, attrClass, regionName) {
+        if (!utils.isString(attrName)) { throw new Error('Parameter "attrName" require string type'); }
+        if (!utils.isFunction(attrClass)) { throw new Error('Parameter "attrClass" require function type'); }
+        if (!/[0-9a-zA-Z_-]+/.test(attrName)) { throw new Error('Parameter "attrName" invalid attribute name'); }
+        //
+        var region = this._region.get(attrName);
+        if (!region) { region = {}; }
+        region[regionName] = attrClass;
+        this._region.set(attrName, region);
+    },
+
     register: function(attrName, attrClass) {
         if (!utils.isString(attrName)) { throw new Error('Parameter "attrName" require string type'); }
         if (!utils.isFunction(attrClass)) { throw new Error('Parameter "attrClass" require function type'); }
         if (!/[0-9a-zA-Z_-]+/.test(attrName)) { throw new Error('Parameter "attrName" invalid attribute name'); }
         if (this.exists(attrName)) { throw new Error('Attribute "'+ attrName + '" already exists'); }
+        //
         this._inner.set(attrName, attrClass);
     },
 
@@ -57,19 +74,25 @@ attributeManager.prototype = {
     },
 
     resolve: function(attrName, attrSett) {
+        var attrs = [];
         var attrClass = this.get(attrName);
         if (attrClass) {
-            return new attrClass(attrSett);
-        } else {
-            return null;
+            attrs.push(new attrClass(attrSett));
         }
+        var region = this._region.get(attrName);
+        if (region) {
+            for(var key in region) {
+                attrs.push(new region[key](attrSett));
+            }
+        }
+        return attrs;
     },
 
     resolveConfig: function(config) {
         var attrs = [], self = this;
         if (utils.isObject(config)) {
             utils.each(config, function(name, sett) {
-                attrs.push(self.resolve(name, sett));
+                attrs = attrs.concat(self.resolve(name, sett));
             });
         }
         else if (utils.isString(config)) {
@@ -81,7 +104,7 @@ attributeManager.prototype = {
                 } else {
                     sett = undefined;
                 }
-                attrs.push(this.resolve(name, sett));
+                attrs = attrs.concat(this.resolve(name, sett));
             }
         }
         // ret
@@ -99,7 +122,8 @@ var tryEval = function(str, attrName) {
     } catch (ex) {
         try {
             // try as string when first failure
-            str = str.replace(/"/g, '\\"');
+            str = str.replace(/"/g, '\\"'); // strip quotes
+            str = str.replace(/^\s+|\s+$/g, ''); // trim whitespaces
             eval('temp="' + str + '";');
         } catch (ex) {
             throw new Error('Can not resolve the parameters of attribute: "' + attrName + '"');

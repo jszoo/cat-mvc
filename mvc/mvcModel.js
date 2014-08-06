@@ -11,15 +11,6 @@ var utils = require('zoo-utils'),
     modellingKey = 'dont_use_me(random:' + utils.unique(8) + ')',
     modelsDefined;
 
-var lowerRootNs = function(namespace) {
-    var index = namespace.search(/\.|\[|\]/);
-    if (index > -1) {
-        return namespace.substr(0, index).toLowerCase() + namespace.substr(index);
-    } else {
-        return namespace.toLowerCase();
-    }
-};
-
 var mvcModel = module.exports = function(set) {
     utils.extend(this, set);
 };
@@ -64,45 +55,63 @@ mvcModel.loadfile = function(filePath) {
     return ret;
 };
 
-mvcModel.resolveParamDefault = function(httpContext, paramName) {
-    var data = httpContext.items['model_default_data_source'];
-    if (!data) {
-        var form = {}, query = {}, routeData = {};
-        utils.each(httpContext.zoo.request.form, function(key, val) {
-            utils.mapObj(form, lowerRootNs(key), val);
+var lowerRootNs = function(namespace) {
+
+};
+
+var lowerFuncs = {
+    lowerNane: function(namespace) {
+        return namespace;
+    },
+    lowerAll: function(namespace) {
+        return namespace.toLowerCase();
+    },
+    lowerRoot: function(namespace) {
+        var index = namespace.search(/\.|\[|\]/);
+        if (index > -1) {
+            return namespace.substr(0, index).toLowerCase() + namespace.substr(index);
+        } else {
+            return namespace.toLowerCase();
+        }
+    }
+};
+
+var requestDatas = function(httpContext, lowerType) {
+    if (!lowerType) { lowerType = 'lowerNane'; }
+    var cacheKey = 'mvc-request-data-' + lowerType;
+    var datas = httpContext.items[cacheKey];
+    if (!datas) {
+        var lowerFn = lowerFuncs[lowerType];
+        httpContext.items[cacheKey] = datas = {};
+        utils.each(httpContext.routeData, function(i, it) {
+            utils.mapObj(datas, lowerFn(it.name), it.value);
         });
         utils.each(httpContext.zoo.request.query, function(key, val) {
-            utils.mapObj(query, lowerRootNs(key), val);
+            utils.mapObj(datas, lowerFn(key), val);
         });
-        utils.each(httpContext.routeData, function(i, it) {
-            utils.mapObj(routeData, lowerRootNs(it.name), it.value);
+        utils.each(httpContext.zoo.request.form, function(key, val) {
+            utils.mapObj(datas, lowerFn(key), val);
         });
-        data = httpContext.items['model_default_data_source'] = {
-            form: form,
-            query: query,
-            routeData: routeData
-        };
     }
-    var matched = false, val;
-    if (paramName in data.form) {
+    return datas;
+};
+
+mvcModel.resolveParamDefault = function(httpContext, paramName) {
+    var datas = requestDatas(httpContext, 'lowerRoot');
+    var matched = false, value;
+    if (paramName in datas) {
         matched = true;
-        val = data.form[paramName];
-    } else if (paramName in data.query) {
-        matched = true
-        val = data.query[paramName];
-    } else if (paramName in data.routeData) {
-        matched = true;
-        val = data.routeData[paramName];
+        value = datas[paramName];
     } else {
         matched = false;
-        val = undefined;
+        value = undefined;
     }
     // only when not matched then return undefined
-    if (val === undefined && matched === true) {
-        val = null;
+    if (value === undefined && matched === true) {
+        value = null;
     }
     // ret
-    return val;
+    return value;
 };
 
 mvcModel.prototype = {
@@ -117,49 +126,31 @@ mvcModel.prototype = {
 
     resolveParam: function(httpContext, paramName) {
         var modelling = httpContext.app.modelling;
-        var unparsed = mvcModel.resolveParamDefault(httpContext, paramName);
+        var datas = requestDatas(httpContext, 'lowerAll');
         var metas = modelling.resolve(this.raw);
         if (metas.has()) {
-            return metas.exe(unparsed);
+            var value = utils.readObj(datas, paramName);
+            return metas.exe(value);
         } else {
-            var cloned = utils.extend(true, {}, this.raw);
-            utils.each(cloned, function() {
-
-            });
+            paramName += '.';
+            var clone = utils.extend(true, {}, this.raw);
+            var doWalk = function(obj, parentNs) {
+                if (!utils.isObject(obj)) { return; }
+                if (parentNs) { parentNs += '.'; }
+                utils.each(obj, function(key, item) {
+                    var ns = parentNs + key.toLowerCase();
+                    var metas = modelling.resolve(item);
+                    if (metas.has()) {
+                        var value1 = utils.readObj(datas, ns);
+                        var value2 = utils.readObj(datas, paramName + ns);
+                        obj[key] = metas.exe(value2 || value1);
+                    } else {
+                        doWalk(item, ns);
+                    }
+                });
+            };
+            doWalk(clone, '');
+            return clone;
         }
-
-        /*
-        var modelling = httpContext.app.modelling;
-        var cloneRaw = utils.extend(true, {}, this.raw);
-        var unparsed = { wrap: mvcModel.resolveParamDefault(httpContext, paramName) };
-        //
-        var walk = function(model, ns) {
-            ns += (ns ? '.' : '');
-            utils.each(model, function(key, set) {
-                if (!utils.hasOwn(model, key)) {
-                    return;
-                }
-                var nns = ns + key;
-                var val = utils.readObj(unparsed, nns);
-                if (!set) {
-                    model[key] = val;
-                    return;
-                }
-                var result = modelling.resolve(set), val;
-                if (result.type || result.valids) {
-                    if (result.type) { val = result.type.parse(val); }
-                    utils.each(result.valids, function() {
-                        this.isValid(val);
-                    });
-                    model[key] = val;
-                } else {
-                    walk(set, nns);
-                }
-            });
-        };
-        //
-        var obj = { wrap: cloneRaw };
-        return (walk(obj, ''), obj.wrap);
-        */
     }
 };

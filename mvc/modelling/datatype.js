@@ -35,7 +35,11 @@ var stringType = exports.stringType = function(set) {
 utils.inherit(stringType, dataTypeBase, {
     typeName: 'string',
     parse: function(value) {
-        return String(value);
+        if (value === null || value === undefined) {
+            return value;
+        } else {
+            return String(value);
+        }
     }
 });
 

@@ -63,13 +63,14 @@ mvcAction.prototype = {
             var modelAttrs = this.attributes.filter('getModel');
             var findAttr = function() { }, routeAreaName, rootAreaName;
             if (modelAttrs.length) {
-                routeAreaName = ctx.routeArea.name
+                routeAreaName = ctx.routeArea.name;
                 rootAreaName = ctx.app.areas.rootArea().name;
                 findAttr = function(paramName, areaName) {
                     var result;
                     for (var att, i = 0; i < modelAttrs.length; i++) {
                         att = modelAttrs[i];
-                        if (att.paramName.toLowerCase() === paramName && att.getModel().ownerAreaName === areaName) {
+                        if (att.paramName.toLowerCase() === paramName &&
+                            att.getModel().ownerAreaName === areaName) {
                             result = att;
                             break;
                         }

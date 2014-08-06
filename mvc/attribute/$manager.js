@@ -33,8 +33,10 @@ attributeManager.prototype = {
         return this._inner.exists(attrName);
     },
 
-    remove: function(attrName) {
-        return this._inner.remove(attrName);
+    remove: function(attrName, categoryName) {
+        var ret1 = this._inner.remove(attrName);
+        var ret2 = this._inner.remove(attributeClasses.key(attrName));
+        return (ret1 && ret2);
     },
 
     removeRegion: function(attrName) {
@@ -52,13 +54,21 @@ attributeManager.prototype = {
         this._region.set(attrName, region);
     },
 
-    register: function(attrName, attrClass) {
+    register: function(attrName, attrClass, categoryName) {
         if (!utils.isString(attrName)) { throw new Error('Parameter "attrName" require string type'); }
         if (!utils.isFunction(attrClass)) { throw new Error('Parameter "attrClass" require function type'); }
         if (!/[0-9a-zA-Z_-]+/.test(attrName)) { throw new Error('Parameter "attrName" invalid attribute name'); }
         if (this.exists(attrName)) { throw new Error('Attribute "'+ attrName + '" already exists'); }
         //
-        this._inner.set(attrName, attrClass);
+        if (!categoryName) {
+            this._inner.set(attrName, attrClass);
+        } else {
+            attrName = attributeClasses.key(attrName);
+            var category = this._inner.get(attrName);
+            if (!category) { category = new attributeClasses(); }
+            category.set(categoryName, attrClass);
+            this._inner.set(attrName, category);
+        }
     },
 
     registerAll: function() {
@@ -109,6 +119,29 @@ attributeManager.prototype = {
             _config: config,
             _attrs: attrs
         });
+    }
+};
+
+var attributeClasses = function() {
+    this.items = {};
+};
+
+attributeClasses.key = function(str) {
+    return str + '(category)';
+};
+
+attributeClasses.prototype = {
+    
+    items: null,
+
+    constructor: attributeClasses, className: 'attributeClasses',
+
+    all: function() {
+        return this.items;
+    },
+
+    set: function(category, attrClass) {
+        this.items[category] = attrClass;
     }
 };
 

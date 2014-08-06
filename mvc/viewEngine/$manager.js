@@ -8,7 +8,7 @@
 'use strict';
 
 var utils = require('zoo-utils'),
-    caching = require('../caching');
+    caching = require('zoo-cache');
 
 var viewEngineManager = module.exports = function(store) {
     this._inner = caching.region('mvc-view-engines-cache', store);

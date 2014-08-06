@@ -8,7 +8,7 @@
 'use strict';
 
 var utils = require('zoo-utils'),
-    caching = require('../caching');
+    caching = require('zoo-cache');
 
 var attributeManager = module.exports = function(store) {
     this._inner = caching.region('mvc-attribute-types-cache', store);

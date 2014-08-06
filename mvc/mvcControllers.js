@@ -10,7 +10,7 @@
 var fs = require('fs'),
     path = require('path'),
     utils = require('zoo-utils'),
-    caching = require('./caching'),
+    caching = require('zoo-cache'),
     mvcController = require('./mvcController');
 
 var mvcControllers = module.exports = function(set, store) {

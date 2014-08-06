@@ -8,7 +8,7 @@
 'use strict';
 
 var utils = require('zoo-utils'),
-    caching = require('../caching');
+    caching = require('zoo-cache');
 
 var modellingManager = module.exports = function(store) {
     this.dataTypes = new dataTypeManager(store);

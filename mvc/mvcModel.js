@@ -117,6 +117,19 @@ mvcModel.prototype = {
 
     resolveParam: function(httpContext, paramName) {
         var modelling = httpContext.app.modelling;
+        var unparsed = mvcModel.resolveParamDefault(httpContext, paramName);
+        var metas = modelling.resolve(this.raw);
+        if (metas.has()) {
+            return metas.exe(unparsed);
+        } else {
+            var cloned = utils.extend(true, {}, this.raw);
+            utils.each(cloned, function() {
+
+            });
+        }
+
+        /*
+        var modelling = httpContext.app.modelling;
         var cloneRaw = utils.extend(true, {}, this.raw);
         var unparsed = { wrap: mvcModel.resolveParamDefault(httpContext, paramName) };
         //
@@ -147,5 +160,6 @@ mvcModel.prototype = {
         //
         var obj = { wrap: cloneRaw };
         return (walk(obj, ''), obj.wrap);
+        */
     }
 };

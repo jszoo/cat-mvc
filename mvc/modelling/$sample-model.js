@@ -42,7 +42,4 @@ var user = {
     profile: profile
 };
 
-var mvc = require('../index');
-mvc.model('user', function() {
-    return user;
-});
+module.exports = user;

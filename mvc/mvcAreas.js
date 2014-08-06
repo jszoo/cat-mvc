@@ -11,7 +11,7 @@ var fs = require('fs'),
     path = require('path'),
     events = require('events'),
     utils = require('zoo-utils'),
-    caching = require('./caching'),
+    caching = require('zoo-cache'),
     mvcArea = require('./mvcArea');
 
 var mvcAreas = module.exports = function(app, store) {

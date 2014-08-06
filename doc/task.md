@@ -35,5 +35,5 @@
 ##TODO##
 + 29. independence controller inject params solution
 + 30. implement models support: models folder + model define rules.
-+ 31. $ npm install -g cat-mvc-site   $ cat-mvc-site create my_app   $ cd my_app $ npm install   $ npm start
-+ 32. when there are same model name but in different directory, solutions?
++ 31. when there are same model name but in different directory, solutions?
++ 32. $ npm install -g cat-mvc-site   $ cat-mvc-site create my_app   $ cd my_app $ npm install   $ npm start

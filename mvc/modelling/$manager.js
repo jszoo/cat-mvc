@@ -8,28 +8,28 @@
 'use strict';
 
 var utils = require('zoo-utils'),
-    caching = require('../caching');
+    caching = require('zoo-cache');
 
 var modellingManager = module.exports = function(store) {
-    this.dataTypes = new dataTypesManager(store);
-    this.validations = new validationsManager(store);
+    this.dataTypes = new dataTypeManager(store);
+    this.validators = new validatorManager(store);
 };
 
 modellingManager.prototype = {
 
-    dataTypes: null, validations: null,
+    dataTypes: null, validators: null,
 
     constructor: modellingManager, className: 'modellingManager',
 
     registerAll: function() {
         var self = this;
-        utils.each(require('./dataType'), function(key, cls) {
+        utils.each(require('./datatype'), function(key, cls) {
             key = cls.prototype.typeName;
             if (key) { self.dataTypes.register(key, cls); }
         });
-        utils.each(require('./validation'), function(key, cls) {
+        utils.each(require('./validator'), function(key, cls) {
             key = cls.prototype.validName;
-            if (key) { self.validations.register(key, cls); }
+            if (key) { self.validators.register(key, cls); }
         });
     },
 
@@ -55,8 +55,8 @@ modellingManager.prototype = {
                     typeClass = self.dataTypes.get(val);
                     if (typeClass) { dtype = new typeClass(); }
                 } else {
-                    // resolve validations
-                    typeClass = self.validations.get(key);
+                    // resolve validators
+                    typeClass = self.validators.get(key);
                     if (typeClass) {
                         if (!valids) { valids = []; }
                         valids.push(new typeClass(set[key]));
@@ -64,26 +64,52 @@ modellingManager.prototype = {
                 }
             });
         }
-        return {
-            type: dtype,
-            valids: valids
-        };
+        return new modellingMetas(dtype, valids);
     }
 };
 
-var dataTypesManager = function(store) {
+var modellingMetas = function(typeObj, validators){
+    this.typeObj = typeObj;
+    this.validators = validators;
+};
+
+modellingMetas.prototype = {
+
+    typeObj: null, validators: null,
+    
+    constructor: modellingMetas, className: 'modellingMetas',
+
+    has: function() {
+        return this.typeObj || this.validators;
+    },
+
+    exe: function(value) {
+        if (this.typeObj) {
+            value = this.typeObj.parse(value);
+        }
+        if (this.validators) {
+            utils.each(this.validators, function(i, obj) {
+                obj.valid(value);
+            });
+        }
+        return value;
+    }
+};
+
+var dataTypeManager = function(store) {
     this._inner = caching.region('mvc-modelling-datatypes-cache', store);
 };
 
-dataTypesManager.prototype = {
+dataTypeManager.prototype = {
 
     _inner: null,
 
-    constructor: dataTypesManager, className: 'dataTypesManager',
+    constructor: dataTypeManager, className: 'dataTypeManager',
 
     register: function(name, klass) {
         if (!name) { throw new Error('Register data type "name" is required'); }
         if (!utils.isFunction(klass)) { throw new Error('Register data type "class" is function required'); }
+        if (this.exists(name)) { throw new Error('DataType "'+ name + '" already exists'); }
         return this._inner.set(name, klass);
     },
 
@@ -104,19 +130,20 @@ dataTypesManager.prototype = {
     }
 };
 
-var validationsManager = function(store) {
-    this._inner = caching.region('mvc-modelling-validations-cache', store);
+var validatorManager = function(store) {
+    this._inner = caching.region('mvc-modelling-validators-cache', store);
 };
 
-validationsManager.prototype = {
+validatorManager.prototype = {
 
     _inner: null,
 
-    constructor: validationsManager, className: 'validationsManager',
+    constructor: validatorManager, className: 'validatorManager',
 
     register: function(name, klass) {
         if (!name) { throw new Error('Register data type "name" is required'); }
         if (!utils.isFunction(klass)) { throw new Error('Register data type "class" is function required'); }
+        if (this.exists(name)) { throw new Error('Valiadator "'+ name + '" already exists'); }
         return this._inner.set(name, klass);
     },
 

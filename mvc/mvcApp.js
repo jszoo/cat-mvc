@@ -9,6 +9,7 @@
 
 var path = require('path'),
     utils = require('zoo-utils'),
+    caching = require('zoo-cache'),
     httpHelper = require('./httpHelper'),
     mvcArea = require('./mvcArea'),
 	mvcAreas = require('./mvcAreas'),
@@ -20,9 +21,6 @@ var path = require('path'),
     mvcViewEngines = require('./viewEngine/$manager'),
     mvcHandler = require('./mvcHandler'),
     mvcHandlerRouter = require('./mvcHandlerRouter');
-
-var caching = require('./caching'),
-    cachingStore = require('./cachingStore');
 
 var midError = require('./middleware/error'),
     midHeader = require('./middleware/header'),
@@ -47,7 +45,7 @@ var mvcApp = function(set) {
     if (instance) { return instance; }
     apps.set(this.appPath, this);
     //
-    this._store = new cachingStore();
+    this._store = new caching.MemoryStore();
     this._handlers = new mvcHandlerRouter();
     this._sett = caching.region('mvc-app-setting', this._store);
     //

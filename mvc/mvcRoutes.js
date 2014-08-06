@@ -9,7 +9,7 @@
 
 var events = require('events'),
     utils = require('zoo-utils'),
-    caching = require('./caching'),
+    caching = require('zoo-cache'),
     mvcRoute = require('./mvcRoute');
 
 var mvcRoutes = module.exports = function(set, store) {

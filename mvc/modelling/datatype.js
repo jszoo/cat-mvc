@@ -49,7 +49,8 @@ var integerType = exports.integerType = function(set) {
 utils.inherit(integerType, dataTypeBase, {
     typeName: 'integer',
     parse: function(value) {
-        return parseInt(value, 10);
+        var ret = parseInt(value, 10);
+        return isNaN(ret) ?  0 : ret;
     }
 });
 
@@ -71,7 +72,8 @@ var floatType = exports.floatType = function(set) {
 utils.inherit(floatType, dataTypeBase, {
     typeName: 'float',
     parse: function(value) {
-        return parseFloat(value, 10);
+        var ret = parseFloat(value, 10);
+        return isNaN(ret) ? 0 : ret;
     }
 });
 
@@ -107,7 +109,8 @@ var dateType = exports.dateType = function(set) {
 utils.inherit(dateType, dataTypeBase, {
     typeName: 'date',
     parse: function(value) {
-        //TODO:
+        var ret = Date.parse(value);
+        return isNaN(ret) ? null : ret;
     }
 });
 
@@ -121,6 +124,19 @@ var arrayType = exports.arrayType = function(set) {
 utils.inherit(arrayType, dataTypeBase, {
     typeName: 'array',
     parse: function(value) {
-        //TODO:
+        var vt = utils.type(value);
+        if (vt  === 'string') {
+            var parts = value.split(',');
+            utils.each(parts, function(i, txt) {
+                parts[i] = utils.trim(txt);
+            });
+            return parts;
+        }
+        else if(vt === 'array') {
+            return value;
+        }
+        else {
+            return [value];
+        }
     }
 });

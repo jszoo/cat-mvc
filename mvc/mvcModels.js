@@ -18,12 +18,12 @@ var modelAttribute = {
     mvc: function() {
         return (this._mvc ? this._mvc : (this._mvc = require('./mvcApp')));
     },
-    set: function(name, model) {
+    set: function(attrName, model, regionName) {
         var attr = this.mvc().attributes.get('(modelAttr)');
-        this.mvc().attributes.register(name, attr.subClass(model));
+        this.mvc().attributes.registerRegion(attrName, attr.subClass(model), regionName);
     },
-    del: function(name) {
-        this.mvc().attributes.remove(name);
+    del: function(attrName) {
+        this.mvc().attributes.removeRegion(attrName);
     }
 };
 
@@ -51,7 +51,7 @@ mvcModels.prototype = {
             name = (name || model.name);
             //
             this._inner.set(name, model);
-            modelAttribute.set(name, model);
+            modelAttribute.set(name, model, this.ownerAreaName);
         }
         this.events.emit('changed');
     },

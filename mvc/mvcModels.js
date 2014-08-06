@@ -12,15 +12,15 @@ var fs = require('fs'),
     events = require('events'),
     utils = require('zoo-utils'),
     caching = require('zoo-cache'),
-    mvcModel = require('./mvcModel');
+    mvcModel = require('./mvcModel'),
+    mvcModelAttr = require('./mvcModelAttr');
 
 var modelAttribute = {
     mvc: function() {
         return (this._mvc ? this._mvc : (this._mvc = require('./mvcApp')));
     },
     set: function(attrName, model, regionName) {
-        var attr = this.mvc().attributes.get('(modelAttr)');
-        this.mvc().attributes.registerRegion(attrName, attr.subClass(model), regionName);
+        this.mvc().attributes.registerRegion(attrName, mvcModelAttr.subClass(model), regionName);
     },
     del: function(attrName) {
         this.mvc().attributes.removeRegion(attrName);

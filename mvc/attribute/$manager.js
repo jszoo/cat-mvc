@@ -68,9 +68,6 @@ attributeManager.prototype = {
         this.register('requireHttps', require('./requireHttps'));
         this.register('validateInput', require('./validateInput'));
         utils.each(require('./httpMethod'), function(name) { self.register(name, this); });
-        // internal used attribute:
-        // name contains brackets that will never valid for attribute name
-        this._inner.set('(modelAttr)', require('./$modelAttr.js'));
     },
 
     resolve: function(attrName, attrSett) {

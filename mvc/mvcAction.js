@@ -60,10 +60,27 @@ mvcAction.prototype = {
         //
         if (annotated.args && annotated.args.length > 0) {
             //
-            var modelAttrs = this.attributes.filter('getModel'), t;
-            utils.each((t = modelAttrs, modelAttrs = {}, t), function() {
-                modelAttrs[this.paramName.toLowerCase()] = this;
-            });
+            var modelAttrs = this.attributes.filter('getModel');
+            var findAttr = function() { }, routeAreaName, rootAreaName;
+            if (modelAttrs.length) {
+                routeAreaName = ctx.routeArea.name
+                rootAreaName = ctx.app.areas.rootArea().name;
+                findAttr = function(paramName, areaName) {
+                    var result;
+                    for (var att, i = 0; i < modelAttrs.length; i++) {
+                        att = modelAttrs[i];
+                        if (att.paramName.toLowerCase() === paramName && att.getModel().ownerAreaName === areaName) {
+                            result = att;
+                            break;
+                        }
+                    }
+                    if (result) {
+                        return result;
+                    } else {
+                        return findAttr(paramName, rootAreaName);
+                    }
+                };
+            }
             //
             utils.each(annotated.args, function(i, name) {
                 var lowerName = name.toLowerCase();
@@ -71,7 +88,7 @@ mvcAction.prototype = {
                     lowerName = lowerName.substr(1);
                 }
                 //
-                var attr = modelAttrs[lowerName], val;
+                var attr = findAttr(lowerName, routeAreaName), val;
                 if (attr) {
                     val = attr.getModel().resolveParam(ctx, lowerName);
                 } else {

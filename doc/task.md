@@ -25,6 +25,8 @@
 + 25. areas path customizable
 + 26. remove app.current
 + 28. more independence caching solution
++ 30. implement models support: models folder + model define rules.
++ 31. when there are same model name but in different directory, solutions?
 
 ##POSTPONE##
 + 4. partialViewResult
@@ -34,8 +36,6 @@
 
 ##TODO##
 + 29. independence controller inject params solution
-+ 30. implement models support: models folder + model define rules.
-+ 31. when there are same model name but in different directory, solutions?
 + 32. $ npm install -g cat-mvc-site   $ cat-mvc-site create my_app   $ cd my_app $ npm install   $ npm start
 + 33. use [connect](https://github.com/senchalabs/connect) ?
 + 34. use [Formidable](https://github.com/felixge/node-formidable) ?

@@ -51,67 +51,19 @@ mvcAction.prototype = {
     },
 
     injectImpl: function(ctx) {
-        var annotated = ctx.items['action_impl_annotated'];
+        var cacheKey = this.name() + '_act_inj';
+        var annotated = ctx.items[cacheKey];
         if (annotated) { return annotated; }
         //
         annotated = injector.annotate(this.impl());
-        var params = annotated.params = [];
-        params.matchNum = 0;
-        //
         if (annotated.args && annotated.args.length > 0) {
-            //
             var modelAttrs = this.attributes.filter('getModel');
-            var findAttr = function() { }, routeAreaName, rootAreaName;
-            if (modelAttrs.length) {
-                routeAreaName = ctx.routeArea.name;
-                rootAreaName = ctx.app.areas.rootArea().name;
-                findAttr = function(paramName, areaName) {
-                    var result;
-                    for (var att, i = 0; i < modelAttrs.length; i++) {
-                        att = modelAttrs[i];
-                        if (att.paramName.toLowerCase() === paramName &&
-                            att.getModel().ownerAreaName === areaName) {
-                            result = att;
-                            break;
-                        }
-                    }
-                    if (result) {
-                        return result;
-                    } else if (areaName !== rootAreaName) {
-                        return findAttr(paramName, rootAreaName);
-                    } else {
-                        return null;
-                    }
-                };
-            }
-            //
-            var namesDict = {};
-            utils.each(annotated.args, function(i, name) {
-                namesDict[name.toLowerCase()] = true;
-            });
-            //
-            utils.each(annotated.args, function(i, name) {
-                var lowerName = name.toLowerCase();
-                if (lowerName.charAt(0) === '$') {
-                    lowerName = lowerName.substr(1);
-                }
-                //
-                var attr = findAttr(lowerName, routeAreaName), val;
-                if (attr) {
-                    val = attr.getModel().resolveParam(ctx, lowerName, namesDict);
-                } else {
-                    val = mvcModel.resolveParamDefault(ctx, lowerName, namesDict);
-                }
-                //
-                if (val !== undefined) {
-                    params.matchNum++;
-                }
-                //
-                params.push(val || null);
-            });
+            annotated.params = mvcModel.resolveParams(ctx, annotated.args, modelAttrs);
+        } else {
+            annotated.params = [];
         }
         //
-        return (ctx.items['action_impl_annotated'] = annotated);
+        return (ctx.items[cacheKey] = annotated);
     },
 
     isValidName: function(name) {

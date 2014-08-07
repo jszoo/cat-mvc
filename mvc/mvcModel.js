@@ -91,22 +91,51 @@ var requestDatas = function(httpContext, lowerType) {
     return datas;
 };
 
-mvcModel.resolveParamDefault = function(httpContext, paramName, paramsDict) {
-    var datas = requestDatas(httpContext, 'lowerRoot');
-    var matched = false, value;
-    if (paramName in datas) {
-        matched = true;
-        value = datas[paramName];
-    } else {
-        matched = false;
-        value = undefined;
+mvcModel.resolveParams = function(httpContext, paramNames, modelAttrs) {
+    var findAttr = function() { }, routeAreaName, rootAreaName;
+    if (modelAttrs && modelAttrs.length) {
+        routeAreaName = httpContext.routeArea.name;
+        rootAreaName = httpContext.app.areas.rootArea().name;
+        findAttr = function(paramName, areaName) {
+            var result;
+            for (var att, i = 0; i < modelAttrs.length; i++) {
+                att = modelAttrs[i];
+                if (att.paramName.toLowerCase() === paramName &&
+                    att.getModel().ownerAreaName === areaName) {
+                    result = att;
+                    break;
+                }
+            }
+            if (result) {
+                return result;
+            } else if (areaName !== rootAreaName) {
+                return findAttr(paramName, rootAreaName);
+            } else {
+                return null;
+            }
+        };
     }
-    // only when not matched then return undefined
-    if (value === undefined && matched === true) {
-        value = null;
-    }
-    // ret
-    return value;
+    //
+    var namesDict = {};
+    utils.each(paramNames, function(i, name) {
+        namesDict[name.toLowerCase()] = true;
+    });
+    //
+    var values = [];
+    utils.each(paramNames, function(i, name) {
+        var lowerName = name.toLowerCase();
+        if (lowerName.charAt(0) === '$') {
+            lowerName = lowerName.substr(1);
+        }
+        var attr = findAttr(lowerName, routeAreaName), val;
+        if (attr) {
+            val = attr.getModel().resolveParam(httpContext, lowerName, namesDict);
+        } else {
+            val = requestDatas(httpContext, 'lowerRoot')[lowerName];
+        }
+        values.push(val || null);
+    });
+    return values;
 };
 
 mvcModel.prototype = {

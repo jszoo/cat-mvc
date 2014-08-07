@@ -8,7 +8,6 @@
 'use strict';
 
 var utils = require('zoo-utils'),
-    modellingKey = 'dont_use_me(random:' + utils.unique(8) + ')',
     modelsDefined;
 
 var mvcModel = module.exports = function(set) {
@@ -55,10 +54,6 @@ mvcModel.loadfile = function(filePath) {
     return ret;
 };
 
-var lowerRootNs = function(namespace) {
-
-};
-
 var lowerFuncs = {
     lowerNane: function(namespace) {
         return namespace;
@@ -76,9 +71,9 @@ var lowerFuncs = {
     }
 };
 
-var requestDatas = function(httpContext, lowerType) {
+var requestData = function(httpContext, lowerType) {
     if (!lowerType) { lowerType = 'lowerNane'; }
-    var cacheKey = 'mvc-request-data-' + lowerType;
+    var cacheKey = 'mvc-request-datas-' + lowerType;
     var datas = httpContext.items[cacheKey];
     if (!datas) {
         var lowerFn = lowerFuncs[lowerType];
@@ -97,7 +92,7 @@ var requestDatas = function(httpContext, lowerType) {
 };
 
 mvcModel.resolveParamDefault = function(httpContext, paramName) {
-    var datas = requestDatas(httpContext, 'lowerRoot');
+    var datas = requestData(httpContext, 'lowerRoot');
     var matched = false, value;
     if (paramName in datas) {
         matched = true;
@@ -126,7 +121,7 @@ mvcModel.prototype = {
 
     resolveParam: function(httpContext, paramName) {
         var modelling = httpContext.app.modelling;
-        var datas = requestDatas(httpContext, 'lowerAll');
+        var datas = requestData(httpContext, 'lowerAll');
         var metas = modelling.resolve(this.raw);
         if (metas.has()) {
             var value = utils.readObj(datas, paramName);

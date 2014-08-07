@@ -9,7 +9,6 @@
 
 var fs = require('fs'),
     path = require('path'),
-    events = require('events'),
     utils = require('zoo-utils'),
     caching = require('zoo-cache'),
     mvcModel = require('./mvcModel'),
@@ -30,14 +29,12 @@ var modelAttribute = {
 var mvcModels = module.exports = function(set, store) {
     utils.extend(this, set);
     if (!this.ownerAreaName) { throw new Error('Parameter "ownerAreaName" is required'); }
-    //
-    this.events = new events.EventEmitter();
     this._inner = caching.region('mvc-' + this.ownerAreaName + '-area-models-cache', store);
 };
 
 mvcModels.prototype = {
 
-    ownerAreaName: null, events: null, _inner: null,
+    ownerAreaName: null, _inner: null,
 
     constructor: mvcModels, className: 'mvcModels',
 
@@ -53,7 +50,6 @@ mvcModels.prototype = {
             this._inner.set(name, model);
             modelAttribute.set(name, model, this.ownerAreaName);
         }
-        this.events.emit('changed');
     },
 
     all: function() {
@@ -67,12 +63,10 @@ mvcModels.prototype = {
     remove: function(name) {
         this._inner.remove(name);
         modelAttribute.del(name, this.ownerAreaName);
-        this.events.emit('changed');
     },
 
     clear: function() {
         this._inner.clear();
-        this.events.emit('changed');
     },
 
     loaddir: function(modelsPath, act) {

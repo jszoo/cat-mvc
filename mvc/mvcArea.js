@@ -7,8 +7,7 @@
 
 'use strict';
 
-var events = require('events'),
-    utils = require('zoo-utils'),
+var utils = require('zoo-utils'),
     mvcRoutes = require('./mvcRoutes'),
     mvcModels = require('./mvcModels'),
     mvcControllers = require('./mvcControllers');
@@ -17,7 +16,6 @@ var mvcArea = module.exports = function(set, store) {
     utils.extend(this, set);
     if (!this.name) { throw new Error('Parameter "name" is required'); }
     //
-    this.events = new events.EventEmitter();
     this.routes = new mvcRoutes({ ownerAreaName: this.name }, store);
     this.models = new mvcModels({ ownerAreaName: this.name }, store);
     this.controllers = new mvcControllers({ ownerAreaName: this.name }, store);
@@ -54,7 +52,7 @@ mvcArea.loadSetting = function(filePath) {
 
 mvcArea.prototype = {
 
-    name: null, events: null, routes: null, models:null, controllers: null,
+    name: null, routes: null, models:null, controllers: null,
 
     path: null, viewsPath: null, viewsSharedPath: null, modelsPath: null, controllersPath: null, settingFilePath: null,
 
@@ -71,10 +69,10 @@ mvcArea.prototype = {
     fireEvent: function(funcName) {
         var func = this[funcName];
         if (utils.isFunction(func)) {
-            this.events.emit(funcName, this);
-            func.call(this, this);
+            var args = utils.arg2arr(arguments, 1);
+            args.unshift(this);
+            func.apply(this, args);
         }
-        return this;
     },
 
     onRegister: function(area) { },

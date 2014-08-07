@@ -1,5 +1,5 @@
 /*
-* mvcModelAttr
+* mvcModelAttribute
 * author: ruleechen
 * contact: rulee@live.cn
 * create date: 2014.8.1
@@ -9,32 +9,32 @@
 
 var utils = require('zoo-utils');
 
-var mvcModelAttr = module.exports = function(set) {
+var mvcModelAttribute = module.exports = function(set) {
     if (utils.isString(set)) {
         this.paramName = set;
     } else {
         utils.extend(this, set);
     }
     if (!this.paramName) {
-        throw new Error('The "paramName" of mvcModelAttr attribute is required');
+        throw new Error('The "paramName" of mvcModelAttribute is required');
     }
 };
 
-mvcModelAttr.subClass = function(model) {
+mvcModelAttribute.subClass = function(model) {
     var sub = function(set) {
         sub.superclass.constructor.call(this, set);
     };
-    utils.inherit(sub, mvcModelAttr, {
+    utils.inherit(sub, mvcModelAttribute, {
         model: model
     });
     return sub;
 };
 
-mvcModelAttr.prototype = {
+mvcModelAttribute.prototype = {
 
     paramName: null, model: null,
 
-    constructor: mvcModelAttr, className: 'mvcModelAttr',
+    constructor: mvcModelAttribute, className: 'mvcModelAttribute',
 
     getModel: function() {
         return this.model;

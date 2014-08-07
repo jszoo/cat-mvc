@@ -12,12 +12,11 @@ var utils = require('zoo-utils'),
 
 var attributeManager = module.exports = function(store) {
     this._inner = caching.region('mvc-attribute-types-cache', store);
-    this._region = caching.region('mvc-attribute-region-cache', store);
 };
 
 attributeManager.prototype = {
 
-    _inner: null, _region: null,
+    _inner: null,
 
     constructor: attributeManager, className: 'attributeManager',
 
@@ -25,49 +24,47 @@ attributeManager.prototype = {
         return this._inner.all();
     },
 
-    get: function(attrName) {
-        return this._inner.get(attrName);
+    get: function(attrName, category) {
+        if (!category) {
+            return this._inner.get(attrName);
+        } else {
+            var classes = this._inner.get(attributeClasses.key(attrName));
+            return classes instanceof attributeClasses ? classes.get(category) : null;
+        }
     },
 
-    exists: function(attrName) {
-        return this._inner.exists(attrName);
+    exists: function(attrName, category) {
+        if (!category) {
+            return this._inner.exists(attrName);
+        } else {
+            var classes = this._inner.get(attributeClasses.key(attrName));
+            return classes instanceof attributeClasses ? classes.exists(category) : false;
+        }
     },
 
-    remove: function(attrName, categoryName) {
-        var ret1 = this._inner.remove(attrName);
-        var ret2 = this._inner.remove(attributeClasses.key(attrName));
-        return (ret1 && ret2);
+    remove: function(attrName, category) {
+        if (!category) {
+            return this._inner.remove(attrName);
+        } else {
+            var classes = this._inner.get(attributeClasses.key(attrName));
+            return classes instanceof attributeClasses ? classes.remove(category) : true;
+        }
     },
 
-    removeRegion: function(attrName) {
-        return this._region.remove(attrName);
-    },
-
-    registerRegion: function(attrName, attrClass, regionName) {
-        if (!utils.isString(attrName)) { throw new Error('Parameter "attrName" require string type'); }
-        if (!utils.isFunction(attrClass)) { throw new Error('Parameter "attrClass" require function type'); }
-        if (!/[0-9a-zA-Z_-]+/.test(attrName)) { throw new Error('Parameter "attrName" invalid attribute name'); }
-        //
-        var region = this._region.get(attrName);
-        if (!region) { region = {}; }
-        region[regionName] = attrClass;
-        this._region.set(attrName, region);
-    },
-
-    register: function(attrName, attrClass, categoryName) {
+    register: function(attrName, attrClass, category) {
         if (!utils.isString(attrName)) { throw new Error('Parameter "attrName" require string type'); }
         if (!utils.isFunction(attrClass)) { throw new Error('Parameter "attrClass" require function type'); }
         if (!/[0-9a-zA-Z_-]+/.test(attrName)) { throw new Error('Parameter "attrName" invalid attribute name'); }
         if (this.exists(attrName)) { throw new Error('Attribute "'+ attrName + '" already exists'); }
         //
-        if (!categoryName) {
+        if (!category) {
             this._inner.set(attrName, attrClass);
         } else {
             attrName = attributeClasses.key(attrName);
-            var category = this._inner.get(attrName);
-            if (!category) { category = new attributeClasses(); }
-            category.set(categoryName, attrClass);
-            this._inner.set(attrName, category);
+            var classes = this._inner.get(attrName);
+            if (!classes) { classes = new attributeClasses(); }
+            classes.set(category, attrClass);
+            this._inner.set(attrName, classes);
         }
     },
 
@@ -86,10 +83,11 @@ attributeManager.prototype = {
         if (attrClass) {
             attrs.push(new attrClass(attrSett));
         }
-        var region = this._region.get(attrName);
-        if (region) {
-            for(var key in region) {
-                attrs.push(new region[key](attrSett));
+        var attrClasses = this.get(attributeClasses.key(attrName));
+        if (attrClasses instanceof attributeClasses) {
+            var classes = attrClasses.all();
+            for(var key in classes) {
+                attrs.push(new classes[key](attrSett));
             }
         }
         return attrs;
@@ -127,7 +125,7 @@ var attributeClasses = function() {
 };
 
 attributeClasses.key = function(str) {
-    return str + '(category)';
+    return str + '(category)'; // a name which is invalid for register api
 };
 
 attributeClasses.prototype = {
@@ -140,8 +138,24 @@ attributeClasses.prototype = {
         return this.items;
     },
 
+    get: function(category) {
+        category = utils.formalStr(category);
+        return this.items[category];
+    },
+
     set: function(category, attrClass) {
+        category = utils.formalStr(category);
         this.items[category] = attrClass;
+    },
+
+    remove: function(category) {
+        category = utils.formalStr(category);
+        return delete this.items[category];
+    },
+
+    exists: function(category) {
+        category = utils.formalStr(category);
+        return (category in this.items);
     }
 };
 

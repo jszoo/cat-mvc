@@ -15,14 +15,12 @@ var events = require('events'),
 var mvcRoutes = module.exports = function(set, store) {
     utils.extend(this, set);
     if (!this.ownerAreaName) { throw new Error('Parameter "ownerAreaName" is required'); }
-    //
-    this.events = new events.EventEmitter();
     this._inner = caching.region('mvc-' + this.ownerAreaName + '-area-routes-cache', store);
 };
 
-mvcRoutes.prototype = {
+utils.inherit(mvcRoutes, events.EventEmitter, {
 
-    ownerAreaName: null, events: null, _inner: null,
+    ownerAreaName: null, _inner: null,
 
     constructor: mvcRoutes, className: 'mvcRoutes',
 
@@ -34,7 +32,7 @@ mvcRoutes.prototype = {
             defaultValues: defaultValues,
             ownerAreaName: this.ownerAreaName
         }));
-        this.events.emit('changed');
+        this.emit('changed');
     },
 
     all: function() {
@@ -47,11 +45,11 @@ mvcRoutes.prototype = {
 
     remove: function(name) {
         this._inner.remove(name);
-        this.events.emit('changed');
+        this.emit('changed');
     },
 
     clear: function() {
         this._inner.clear();
-        this.events.emit('changed');
+        this.emit('changed');
     }
-};
+});

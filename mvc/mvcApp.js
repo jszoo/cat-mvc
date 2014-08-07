@@ -8,6 +8,7 @@
 'use strict';
 
 var path = require('path'),
+    events = require('events'),
     utils = require('zoo-utils'),
     caching = require('zoo-cache'),
     httpHelper = require('./httpHelper'),
@@ -59,7 +60,7 @@ var mvcApp = function(set) {
     this.areas = new mvcAreas(this, this._store);
 };
 
-mvcApp.prototype = {
+utils.inherit(mvcApp, events.EventEmitter, {
 
     _store: null, _sett: null, _handlers: null, _inited: null,
 
@@ -180,10 +181,12 @@ mvcApp.prototype = {
         var self = this;
         return function(req, res) {
             req._app = res._app = self;
+            self.emit('beginRequest', self);
             handlers.execute(req, res);
+            self.emit('endRequest', self);
         };
     }
-};
+});
 
 var gain = function(set) {
     return new mvcApp(set);

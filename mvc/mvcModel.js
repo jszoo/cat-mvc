@@ -91,22 +91,51 @@ var requestDatas = function(httpContext, lowerType) {
     return datas;
 };
 
-mvcModel.resolveParamDefault = function(httpContext, paramName) {
-    var datas = requestDatas(httpContext, 'lowerRoot');
-    var matched = false, value;
-    if (paramName in datas) {
-        matched = true;
-        value = datas[paramName];
-    } else {
-        matched = false;
-        value = undefined;
+mvcModel.resolveParams = function(httpContext, paramNames, modelAttrs) {
+    var findAttr = function() { }, routeAreaName, rootAreaName;
+    if (modelAttrs && modelAttrs.length) {
+        routeAreaName = httpContext.routeArea.name;
+        rootAreaName = httpContext.app.areas.rootArea().name;
+        findAttr = function(paramName, areaName) {
+            var result;
+            for (var att, i = 0; i < modelAttrs.length; i++) {
+                att = modelAttrs[i];
+                if (att.paramName.toLowerCase() === paramName &&
+                    att.getModel().ownerAreaName === areaName) {
+                    result = att;
+                    break;
+                }
+            }
+            if (result) {
+                return result;
+            } else if (areaName !== rootAreaName) {
+                return findAttr(paramName, rootAreaName);
+            } else {
+                return null;
+            }
+        };
     }
-    // only when not matched then return undefined
-    if (value === undefined && matched === true) {
-        value = null;
-    }
-    // ret
-    return value;
+    //
+    var namesDict = {};
+    utils.each(paramNames, function(i, name) {
+        namesDict[name.toLowerCase()] = true;
+    });
+    //
+    var values = [];
+    utils.each(paramNames, function(i, name) {
+        var lowerName = name.toLowerCase();
+        if (lowerName.charAt(0) === '$') {
+            lowerName = lowerName.substr(1);
+        }
+        var attr = findAttr(lowerName, routeAreaName), val;
+        if (attr) {
+            val = attr.getModel().resolveParam(httpContext, lowerName, namesDict);
+        } else {
+            val = requestDatas(httpContext, 'lowerRoot')[lowerName];
+        }
+        values.push(val || null);
+    });
+    return values;
 };
 
 mvcModel.prototype = {
@@ -119,7 +148,7 @@ mvcModel.prototype = {
         return (p === undefined) ? (this.raw) : (this.raw = p, this);
     },
 
-    resolveParam: function(httpContext, paramName) {
+    resolveParam: function(httpContext, paramName, paramsDict) {
         var modelling = httpContext.app.modelling;
         var datas = requestDatas(httpContext, 'lowerAll');
         var metas = modelling.resolve(this.raw);
@@ -133,12 +162,16 @@ mvcModel.prototype = {
                 if (!utils.isObject(obj)) { return; }
                 if (parentNs) { parentNs += '.'; }
                 utils.each(obj, function(key, item) {
-                    var ns = parentNs + key.toLowerCase();
+                    var lckey = key.toLowerCase(), ns = parentNs + lckey;
                     var metas = modelling.resolve(item);
                     if (metas.has()) {
-                        var value1 = utils.readObj(datas, ns);
-                        var value2 = utils.readObj(datas, paramName + ns);
-                        obj[key] = metas.exe(value2 || value1);
+                        var value = null;
+                        if (parentNs) {
+                            value = utils.readObj(datas, paramName + ns);
+                        } else if (!paramsDict[lckey]) {
+                            value = utils.readObj(datas, ns);
+                        }
+                        obj[key] = metas.exe(value);
                     } else {
                         doWalk(item, ns);
                     }

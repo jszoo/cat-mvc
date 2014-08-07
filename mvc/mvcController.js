@@ -16,7 +16,7 @@ var utils = require('zoo-utils'),
     mvcTempDataStore = require('./mvcTempDataStore'),
     mvcActionResultApi = require('./mvcActionResultApi');
 
-var controllersDefined, controllerInject = {},
+var controllersDefined,
     controllerKeyInScope = 'dont_use_me(random:' + utils.unique(8) + ')';
 
 var mvcController = module.exports = function(set) {
@@ -51,31 +51,6 @@ mvcController.api = function() {
         controllersDefined.push(ret);
     }
     return ret;
-};
-
-mvcController.api.inject = function(name, value) {
-    var nt = utils.type(name);
-    if (value === undefined && nt === 'object') {
-        utils.each(name, function(n, v) {
-            mvcController.api.inject(n, v);
-        });
-    }
-    else if (nt === 'string') {
-        name = utils.formalStr(name);
-        if (value === undefined) {
-            return controllerInject[name];
-        } else {
-            controllerInject[name] = value;
-        }
-    }
-    else {
-        throw new Error('Invalid controller inject parameters');
-    }
-};
-
-mvcController.api.removeInject = function(name) {
-    name = utils.formalStr(name);
-    return (delete controllerInject[name]);
 };
 
 mvcController.loadfile = function(filePath) {
@@ -185,33 +160,46 @@ mvcController.prototype = {
         var params = annotated.params = [];
         if (!annotated.args || annotated.args.length === 0) { return annotated; }
         //
+        //
+        var customInject = {};
+        ctx.app.emit('injectController', ctx.app, {
+            inject: customInject,
+            controller: this
+        });
+        ctx.routeArea.fireEvent('onInjectController', ctx.routeArea, {
+            inject: customInject,
+            controller: this
+        });
+        customInject = utils.formalObj(customInject);
+        //
         var self = this;
         utils.each(annotated.args, function(i, name) {
             var lowerName = utils.formalStr(name);
             if (lowerName.charAt(0) === '$') {
                 lowerName = lowerName.substr(1);
             }
-            if (controllerInject && lowerName in controllerInject) {
-                params.push(controllerInject[lowerName]);
+            if (lowerName in customInject) {
+                params.push(customInject[lowerName]);
                 return;
             }
             switch(lowerName) {
-                case 'ctx':      params.push(ctx); break;
-                case 'req':      params.push(ctx.request); break;
-                case 'res':      params.push(ctx.response); break;
-                case 'context':  params.push(ctx); break;
-                case 'request':  params.push(ctx.request); break;
-                case 'response': params.push(ctx.response); break;
-                case 'session':  params.push(ctx.zoo.request.session); break;
-                case 'query':    params.push(ctx.zoo.request.query); break;
-                case 'form':     params.push(ctx.zoo.request.form); break;
+                case 'ctx':        params.push(ctx); break;
+                case 'req':        params.push(ctx.request); break;
+                case 'res':        params.push(ctx.response); break;
+                case 'context':    params.push(ctx); break;
+                case 'request':    params.push(ctx.request); break;
+                case 'response':   params.push(ctx.response); break;
+                case 'session':    params.push(ctx.zoo.request.session); break;
+                case 'query':      params.push(ctx.zoo.request.query); break;
+                case 'form':       params.push(ctx.zoo.request.form); break;
                 //
-                case 'tempdata': params.push(self.tempData); break;
-                case 'viewdata': params.push(self.viewData); break;
-                case 'end':      params.push(self.resultApi); break;
-                case 'url':      params.push(self.url); break;
+                case 'tempdata':   params.push(self.tempData); break;
+                case 'viewdata':   params.push(self.viewData); break;
+                case 'modelstate': params.push(self.viewData.modelState); break;
+                case 'end':        params.push(self.resultApi); break;
+                case 'url':        params.push(self.url); break;
                 //
-                default:         params.push(null); break;
+                default:           params.push(null); break;
             }
         });
         //

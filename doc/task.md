@@ -40,3 +40,4 @@
 + 33. use [connect](https://github.com/senchalabs/connect) ?
 + 34. use [Formidable](https://github.com/felixge/node-formidable) ?
 + 35. cache resolveConfig result
++ 36. modelState function

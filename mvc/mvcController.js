@@ -196,22 +196,23 @@ mvcController.prototype = {
                 return;
             }
             switch(lowerName) {
-                case 'ctx':      params.push(ctx); break;
-                case 'req':      params.push(ctx.request); break;
-                case 'res':      params.push(ctx.response); break;
-                case 'context':  params.push(ctx); break;
-                case 'request':  params.push(ctx.request); break;
-                case 'response': params.push(ctx.response); break;
-                case 'session':  params.push(ctx.zoo.request.session); break;
-                case 'query':    params.push(ctx.zoo.request.query); break;
-                case 'form':     params.push(ctx.zoo.request.form); break;
+                case 'ctx':        params.push(ctx); break;
+                case 'req':        params.push(ctx.request); break;
+                case 'res':        params.push(ctx.response); break;
+                case 'context':    params.push(ctx); break;
+                case 'request':    params.push(ctx.request); break;
+                case 'response':   params.push(ctx.response); break;
+                case 'session':    params.push(ctx.zoo.request.session); break;
+                case 'query':      params.push(ctx.zoo.request.query); break;
+                case 'form':       params.push(ctx.zoo.request.form); break;
                 //
-                case 'tempdata': params.push(self.tempData); break;
-                case 'viewdata': params.push(self.viewData); break;
-                case 'end':      params.push(self.resultApi); break;
-                case 'url':      params.push(self.url); break;
+                case 'tempdata':   params.push(self.tempData); break;
+                case 'viewdata':   params.push(self.viewData); break;
+                case 'modelstate': params.push(self.viewData.modelState); break;
+                case 'end':        params.push(self.resultApi); break;
+                case 'url':        params.push(self.url); break;
                 //
-                default:         params.push(null); break;
+                default:           params.push(null); break;
             }
         });
         //

@@ -16,7 +16,6 @@ var fs = require('fs'),
 
 var mvcAreas = module.exports = function(app, store) {
     this.app = app;
-    this.events = new events.EventEmitter();
     this._inner = caching.region('mvc-areas-cache', store);
 };
 
@@ -36,11 +35,9 @@ var folderNames = mvcAreas.folderNames = {
     controllers: 'controllers'
 };
 
-mvcAreas.prototype = {
+utils.inherit(mvcAreas, events.EventEmitter, {
 
-    _inner: null, _routeSet: null,
-
-    app: null, events: null,
+    _inner: null, _routeSet: null, app: null,
 
     constructor: mvcAreas, className: 'mvcAreas',
 
@@ -76,7 +73,7 @@ mvcAreas.prototype = {
         var area = this.get(areaName);
         if (area) {
             area.fireEvent('onUnload');
-            this.events.emit('unload', area);
+            this.emit('unload', area);
         }
         return this._inner.remove(areaName);
     },
@@ -113,11 +110,11 @@ mvcAreas.prototype = {
         area.controllers.loaddir(area.controllersPath);
         // map route
         var self = this;
-        area.routes.events.on('changed', function() { self._routeSet = null; });
+        area.routes.on('changed', function() { self._routeSet = null; });
         area.routes.set(area.name, areaRouteExpression, defaultRouteValues);
         // fire event
         area.fireEvent('onRegister');
-        this.events.emit('register', area);
+        this.emit('register', area);
         // store
         if (!this._inner.exists(area.name)) {
             this._inner.set(area.name, area);
@@ -172,4 +169,4 @@ mvcAreas.prototype = {
             this.registerAreas(this.app.mapPath(this.conf('folderNames.areas')));
         }
     }
-};
+});

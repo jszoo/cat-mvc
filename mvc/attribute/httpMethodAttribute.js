@@ -1,5 +1,5 @@
 /*
-* httpMethod
+* httpMethodAttribute
 * author: ruleechen
 * contact: rulee@live.cn
 * create date: 2014.7.12
@@ -13,15 +13,15 @@ var utils = require('zoo-utils'),
 
 /* base class
 ***************************************/
-var httpMethod = exports.httpMethod = function(set) {
+var httpMethodAttribute = exports.httpMethodAttribute = function(set) {
     utils.extend(this, set);
 };
 
-httpMethod.prototype = {
+httpMethodAttribute.prototype = {
 
     methodName: null,
 
-    constructor: httpMethod, className: 'httpMethod',
+    constructor: httpMethodAttribute, className: 'httpMethodAttribute',
 
     isValidActionRequest: function(httpContext) {
         var methodName = httpContext.request.method;
@@ -41,7 +41,7 @@ utils.each(methods, function(name) {
         cls.superclass.constructor.call(this, set);
     };
 
-    utils.inherit(cls, httpMethod, {
+    utils.inherit(cls, httpMethodAttribute, {
         className: className, methodName: name
     });
 

@@ -1,5 +1,5 @@
 /*
-* validateInput
+* validateInputAttribute
 * author: ruleechen
 * contact: rulee@live.cn
 * create date: 2014.7.17
@@ -9,7 +9,7 @@
 
 var utils = require('zoo-utils');
 
-var validateInput = module.exports = function(set) {
+var validateInputAttribute = module.exports = function(set) {
     if (utils.isBoolean(set)) {
         this.enableValidation = set;
     } else {
@@ -17,11 +17,11 @@ var validateInput = module.exports = function(set) {
     }
 };
 
-validateInput.prototype = {
+validateInputAttribute.prototype = {
 
     enableValidation: false,
 
-    constructor: validateInput, className: 'validateInput',
+    constructor: validateInputAttribute, className: 'validateInputAttribute',
 
     onAuthorization: function(authorizationContext) {
         authorizationContext.controller.validateRequest = !!this.enableValidation;

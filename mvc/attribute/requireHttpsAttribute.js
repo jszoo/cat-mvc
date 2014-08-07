@@ -1,5 +1,5 @@
 /*
-* requireHttps
+* requireHttpsAttribute
 * author: ruleechen
 * contact: rulee@live.cn
 * create date: 2014.7.12
@@ -10,7 +10,7 @@
 var utils = require('zoo-utils'),
     redirectResult = require('../mvcActionResult').redirectResult;
 
-var requireHttps = module.exports = function(set) {
+var requireHttpsAttribute = module.exports = function(set) {
     if (utils.isBoolean(set)) {
         this.enabled = set;
     } else {
@@ -18,11 +18,11 @@ var requireHttps = module.exports = function(set) {
     }
 };
 
-requireHttps.prototype = {
+requireHttpsAttribute.prototype = {
 
     enabled: true,
 
-    constructor: requireHttps, className: 'requireHttps',
+    constructor: requireHttpsAttribute, className: 'requireHttpsAttribute',
 
     onAuthorization: function(authorizationContext) {
         if (this.enabled) {

@@ -1,5 +1,5 @@
 /*
-* handleError
+* handleErrorAttribute
 * author: ruleechen
 * contact: rulee@live.cn
 * create date: 2014.7.21
@@ -10,7 +10,7 @@
 var utils = require('zoo-utils'),
     viewResult = require('../mvcActionResult').viewResult;
 
-var handleError = module.exports = function(set) {
+var handleErrorAttribute = module.exports = function(set) {
     if (utils.isBoolean(set)) {
         this.enabled = set;
     } else {
@@ -18,11 +18,11 @@ var handleError = module.exports = function(set) {
     }
 };
 
-handleError.prototype = {
+handleErrorAttribute.prototype = {
 
     viewName: '_error', enabled: true,
 
-    constructor: handleError, className: 'handleError',
+    constructor: handleErrorAttribute, className: 'handleErrorAttribute',
 
     onException: function(exceptionContext) {
         if (this.enabled && !exceptionContext.exceptionHandled) {

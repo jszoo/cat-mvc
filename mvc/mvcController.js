@@ -16,7 +16,7 @@ var utils = require('zoo-utils'),
     mvcTempDataStore = require('./mvcTempDataStore'),
     mvcActionResultApi = require('./mvcActionResultApi');
 
-var controllersDefined, controllerInject = {},
+var controllersDefined,
     controllerKeyInScope = 'dont_use_me(random:' + utils.unique(8) + ')';
 
 var mvcController = module.exports = function(set) {
@@ -51,31 +51,6 @@ mvcController.api = function() {
         controllersDefined.push(ret);
     }
     return ret;
-};
-
-mvcController.api.inject = function(name, value) {
-    var nt = utils.type(name);
-    if (value === undefined && nt === 'object') {
-        utils.each(name, function(n, v) {
-            mvcController.api.inject(n, v);
-        });
-    }
-    else if (nt === 'string') {
-        name = utils.formalStr(name);
-        if (value === undefined) {
-            return controllerInject[name];
-        } else {
-            controllerInject[name] = value;
-        }
-    }
-    else {
-        throw new Error('Invalid controller inject parameters');
-    }
-};
-
-mvcController.api.removeInject = function(name) {
-    name = utils.formalStr(name);
-    return (delete controllerInject[name]);
 };
 
 mvcController.loadfile = function(filePath) {
@@ -185,14 +160,26 @@ mvcController.prototype = {
         var params = annotated.params = [];
         if (!annotated.args || annotated.args.length === 0) { return annotated; }
         //
+        //
+        var customInject = {};
+        ctx.app.emit('injectController', ctx.app, {
+            inject: customInject,
+            controller: this
+        });
+        ctx.routeArea.fireEvent('onInjectController', ctx.routeArea, {
+            inject: customInject,
+            controller: this
+        });
+        customInject = utils.formalObj(customInject);
+        //
         var self = this;
         utils.each(annotated.args, function(i, name) {
             var lowerName = utils.formalStr(name);
             if (lowerName.charAt(0) === '$') {
                 lowerName = lowerName.substr(1);
             }
-            if (controllerInject && lowerName in controllerInject) {
-                params.push(controllerInject[lowerName]);
+            if (lowerName in customInject) {
+                params.push(customInject[lowerName]);
                 return;
             }
             switch(lowerName) {

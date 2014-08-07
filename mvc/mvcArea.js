@@ -70,12 +70,13 @@ mvcArea.prototype = {
         var func = this[funcName];
         if (utils.isFunction(func)) {
             var args = utils.arg2arr(arguments, 1);
-            args.unshift(this);
             func.apply(this, args);
         }
     },
 
     onRegister: function(area) { },
 
-    onUnload: function(area) { }
+    onUnload: function(area) { },
+
+    onInjectController: function(area, eventArg) { }
 };

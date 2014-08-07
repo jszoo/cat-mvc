@@ -72,8 +72,8 @@ utils.inherit(mvcAreas, events.EventEmitter, {
     unload: function(areaName) {
         var area = this.get(areaName);
         if (area) {
-            area.fireEvent('onUnload');
             this.emit('unload', area);
+            area.fireEvent('onUnload', area);
         }
         return this._inner.remove(areaName);
     },
@@ -113,8 +113,8 @@ utils.inherit(mvcAreas, events.EventEmitter, {
         area.routes.on('changed', function() { self._routeSet = null; });
         area.routes.set(area.name, areaRouteExpression, defaultRouteValues);
         // fire event
-        area.fireEvent('onRegister');
         this.emit('register', area);
+        area.fireEvent('onRegister', area);
         // store
         if (!this._inner.exists(area.name)) {
             this._inner.set(area.name, area);

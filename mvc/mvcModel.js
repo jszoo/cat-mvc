@@ -71,7 +71,7 @@ var lowerFuncs = {
     }
 };
 
-var requestData = function(httpContext, lowerType) {
+var requestDatas = function(httpContext, lowerType) {
     if (!lowerType) { lowerType = 'lowerNane'; }
     var cacheKey = 'mvc-request-datas-' + lowerType;
     var datas = httpContext.items[cacheKey];
@@ -92,7 +92,7 @@ var requestData = function(httpContext, lowerType) {
 };
 
 mvcModel.resolveParamDefault = function(httpContext, paramName) {
-    var datas = requestData(httpContext, 'lowerRoot');
+    var datas = requestDatas(httpContext, 'lowerRoot');
     var matched = false, value;
     if (paramName in datas) {
         matched = true;
@@ -121,7 +121,7 @@ mvcModel.prototype = {
 
     resolveParam: function(httpContext, paramName) {
         var modelling = httpContext.app.modelling;
-        var datas = requestData(httpContext, 'lowerAll');
+        var datas = requestDatas(httpContext, 'lowerAll');
         var metas = modelling.resolve(this.raw);
         if (metas.has()) {
             var value = utils.readObj(datas, paramName);

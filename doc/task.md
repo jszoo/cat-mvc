@@ -39,3 +39,4 @@
 + 32. $ npm install -g cat-mvc-site   $ cat-mvc-site create my_app   $ cd my_app $ npm install   $ npm start
 + 33. use [connect](https://github.com/senchalabs/connect) ?
 + 34. use [Formidable](https://github.com/felixge/node-formidable) ?
++ 35. cache resolveConfig result

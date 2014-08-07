@@ -8,7 +8,6 @@
 'use strict';
 
 var utils = require('zoo-utils'),
-    modellingKey = 'dont_use_me(random:' + utils.unique(8) + ')',
     modelsDefined;
 
 var mvcModel = module.exports = function(set) {
@@ -55,10 +54,6 @@ mvcModel.loadfile = function(filePath) {
     return ret;
 };
 
-var lowerRootNs = function(namespace) {
-
-};
-
 var lowerFuncs = {
     lowerNane: function(namespace) {
         return namespace;
@@ -78,7 +73,7 @@ var lowerFuncs = {
 
 var requestDatas = function(httpContext, lowerType) {
     if (!lowerType) { lowerType = 'lowerNane'; }
-    var cacheKey = 'mvc-request-data-' + lowerType;
+    var cacheKey = 'mvc-request-datas-' + lowerType;
     var datas = httpContext.items[cacheKey];
     if (!datas) {
         var lowerFn = lowerFuncs[lowerType];

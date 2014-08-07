@@ -85,6 +85,11 @@ mvcAction.prototype = {
                 };
             }
             //
+            var namesDict = {};
+            utils.each(annotated.args, function(i, name) {
+                namesDict[name.toLowerCase()] = true;
+            });
+            //
             utils.each(annotated.args, function(i, name) {
                 var lowerName = name.toLowerCase();
                 if (lowerName.charAt(0) === '$') {
@@ -93,9 +98,9 @@ mvcAction.prototype = {
                 //
                 var attr = findAttr(lowerName, routeAreaName), val;
                 if (attr) {
-                    val = attr.getModel().resolveParam(ctx, lowerName);
+                    val = attr.getModel().resolveParam(ctx, lowerName, namesDict);
                 } else {
-                    val = mvcModel.resolveParamDefault(ctx, lowerName);
+                    val = mvcModel.resolveParamDefault(ctx, lowerName, namesDict);
                 }
                 //
                 if (val !== undefined) {

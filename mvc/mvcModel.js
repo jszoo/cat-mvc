@@ -91,7 +91,7 @@ var requestDatas = function(httpContext, lowerType) {
     return datas;
 };
 
-mvcModel.resolveParamDefault = function(httpContext, paramName) {
+mvcModel.resolveParamDefault = function(httpContext, paramName, paramsDict) {
     var datas = requestDatas(httpContext, 'lowerRoot');
     var matched = false, value;
     if (paramName in datas) {
@@ -119,7 +119,7 @@ mvcModel.prototype = {
         return (p === undefined) ? (this.raw) : (this.raw = p, this);
     },
 
-    resolveParam: function(httpContext, paramName) {
+    resolveParam: function(httpContext, paramName, paramsDict) {
         var modelling = httpContext.app.modelling;
         var datas = requestDatas(httpContext, 'lowerAll');
         var metas = modelling.resolve(this.raw);
@@ -133,12 +133,16 @@ mvcModel.prototype = {
                 if (!utils.isObject(obj)) { return; }
                 if (parentNs) { parentNs += '.'; }
                 utils.each(obj, function(key, item) {
-                    var ns = parentNs + key.toLowerCase();
+                    var lckey = key.toLowerCase(), ns = parentNs + lckey;
                     var metas = modelling.resolve(item);
                     if (metas.has()) {
-                        var value1 = utils.readObj(datas, ns);
-                        var value2 = utils.readObj(datas, paramName + ns);
-                        obj[key] = metas.exe(value2 || value1);
+                        var value = null;
+                        if (parentNs) {
+                            value = utils.readObj(datas, paramName + ns);
+                        } else if (!paramsDict[lckey]) {
+                            value = utils.readObj(datas, ns);
+                        }
+                        obj[key] = metas.exe(value);
                     } else {
                         doWalk(item, ns);
                     }

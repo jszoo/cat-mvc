@@ -210,12 +210,12 @@ It's very cooool, isn't it? But we think further more. We made the awesome injec
 var mvc = require('cat-mvc');
 var app = mvc({ appPath: __dirname });
 
-// global.js | this will make the "mongo" inject to all controllers under this app instance.
+// global.js | this make the "mongo" inject to all controllers under app instance.
 app.on('injectController', function(app, injectContext) {
     injectContext['mongo'] = 'mongo api';
 });
 
-// area.js | or inject in area events subscription for all controllers under one area.
+// area.js | or inject in area events subscription for all controllers under area.
 mvc.area(function() {
     this.onInjectController = function(area, injectContext) {
         injectContext.inject['mongo'] = 'mongo api';

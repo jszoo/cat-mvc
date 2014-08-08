@@ -38,7 +38,7 @@ modellingManager.prototype = {
     *   set: { type: 'string', required: true, ... }  /  set: 'string'
     */
     resolve: function(set) {
-        var dtype, valids, typeClass, self =this;
+        var dtype, valids, typeClass, self = this;
         //
         if (utils.isString(set)) {
             // resolve data type

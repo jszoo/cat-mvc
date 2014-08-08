@@ -31,7 +31,8 @@ validatorBase.prototype = {
 /* emptyValidator
 ***************************************/
 var emptyValidator = exports.emptyValidator = function(enabled) {
-    this.enabled = enabled;
+    emptyValidator.superclass.constructor.call(this);
+    this.enabled = !!enabled;
 };
 
 utils.inherit(emptyValidator, validatorBase, {
@@ -42,7 +43,7 @@ utils.inherit(emptyValidator, validatorBase, {
 });
 
 
-/* emptyValidator
+/* notEmptyValidator
 ***************************************/
 var notEmptyValidator = exports.notEmptyValidator = function() {
     notEmptyValidator.superclass.constructor.apply(this, arguments);

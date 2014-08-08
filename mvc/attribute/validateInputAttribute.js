@@ -21,7 +21,7 @@ validateInputAttribute.prototype = {
 
     enableValidation: false,
 
-    constructor: validateInputAttribute, className: 'validateInputAttribute',
+    constructor: validateInputAttribute,
 
     onAuthorization: function(authorizationContext) {
         authorizationContext.controller.validateRequest = !!this.enableValidation;

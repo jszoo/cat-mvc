@@ -20,7 +20,7 @@ validatorBase.prototype = {
 
     validName: null, errorMessage: null,
 
-    constructor: validatorBase, className: 'validator',
+    constructor: validatorBase,
 
     valid: function(value) {
         throw new Error('"valid" interface function needs override by sub classes');

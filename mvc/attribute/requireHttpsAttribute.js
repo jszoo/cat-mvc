@@ -22,7 +22,7 @@ requireHttpsAttribute.prototype = {
 
     enabled: true,
 
-    constructor: requireHttpsAttribute, className: 'requireHttpsAttribute',
+    constructor: requireHttpsAttribute,
 
     onAuthorization: function(authorizationContext) {
         if (this.enabled) {

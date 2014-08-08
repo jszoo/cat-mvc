@@ -20,7 +20,7 @@ ejsViewEngine.prototype = {
 
     extname: '.ejs',
 
-    constructor: ejsViewEngine, className: 'ejsViewEngine',
+    constructor: ejsViewEngine,
 
     findView: function(controllerContext, viewName, callback) {
         callback = utils.deferProxy(callback);

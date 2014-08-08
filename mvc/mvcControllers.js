@@ -23,14 +23,14 @@ mvcControllers.prototype = {
 
     ownerAreaName: null, _inner: null,
 
-    constructor: mvcControllers, className: 'mvcControllers',
+    constructor: mvcControllers,
 
     register: function(name, controller) {
         if (arguments.length === 1 || !controller) {
             controller = name;
             name = null;
         }
-        if (controller && controller.className === 'mvcController') {
+        if (controller instanceof mvcController) {
             name = (name || controller.name());
             this._inner.set(name, controller);
         }

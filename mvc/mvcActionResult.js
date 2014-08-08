@@ -25,7 +25,7 @@ var baseResult = exports.baseResult = function(set) {
 };
 
 baseResult.prototype = {
-    constructor: baseResult, className: 'mvcActionResult',
+    constructor: baseResult,
     executeResult: function(controllerContext, callback) {
         throw new Error('"executeResult" interface function needs override by sub classes.');
     }

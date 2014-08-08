@@ -20,7 +20,7 @@ vashViewEngine.prototype = {
 
     extname: '.vash',
 
-    constructor: vashViewEngine, className: 'vashViewEngine',
+    constructor: vashViewEngine,
 
     findView: function(controllerContext, viewName, callback) {
         callback = utils.deferProxy(callback);

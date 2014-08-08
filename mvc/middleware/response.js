@@ -27,7 +27,7 @@ response.prototype = {
 
     req: null, res: null,
 
-    constructor: response, className: 'response',
+    constructor: response,
 
     status: function(code) {
         if (code === undefined) {

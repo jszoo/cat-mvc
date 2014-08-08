@@ -24,7 +24,7 @@ mvcModelBinderAttribute.prototype = {
 
     paramName: null, binder: null,
 
-    constructor: mvcModelBinderAttribute, className: 'mvcModelBinderAttribute',
+    constructor: mvcModelBinderAttribute,
 
     getBinder: function() {
         return this.binder;

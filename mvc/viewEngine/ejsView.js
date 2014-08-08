@@ -18,7 +18,7 @@ ejsView.prototype = {
 
     filePath: null,
 
-    constructor: ejsView, className: 'ejsView',
+    constructor: ejsView,
 
     render: function(viewContext, callback) {
         callback = utils.deferProxy(callback);

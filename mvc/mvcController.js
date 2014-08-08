@@ -63,7 +63,7 @@ mvcController.loadfile = function(filePath) {
         return null;
     }
     //
-    if (expo.className === 'mvcController') {
+    if (expo instanceof mvcController) {
         ret = [expo];
     }
     else if (utils.isFunction(expo)) {
@@ -89,7 +89,7 @@ mvcController.prototype = {
 
     httpContext: null, attributes: null,
 
-    constructor: mvcController, className: 'mvcController',
+    constructor: mvcController,
 
     name: function(p) { return (p === undefined) ? (this._name) : (this._name = p, this); },
     path: function(p) { return (p === undefined) ? (this._path) : (this._path = p, this); },
@@ -295,7 +295,7 @@ var controllerImplementationScope = function(controller) {
 
 controllerImplementationScope.prototype = {
 
-    constructor: controllerImplementationScope, className: 'controllerImplementationScope',
+    constructor: controllerImplementationScope,
 
     action: function() { return this[controllerKeyInScope].action.apply(this[controllerKeyInScope], arguments); },
 

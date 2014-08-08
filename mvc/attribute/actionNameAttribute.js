@@ -24,7 +24,7 @@ actionNameAttribute.prototype = {
 
     name: null,
 
-    constructor: actionNameAttribute, className: 'actionNameAttribute',
+    constructor: actionNameAttribute,
 
     isValidActionName: function(httpContext, actionName) {
         return utils.tryLowerEqual(this.name, actionName);

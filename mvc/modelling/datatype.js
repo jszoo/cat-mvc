@@ -18,7 +18,7 @@ dataTypeBase.prototype = {
 
     typeName: null,
 
-    constructor: dataTypeBase, className: 'dataType',
+    constructor: dataTypeBase,
 
     parse: function(value) {
         throw new Error('"parse" interface function needs override by sub classes');

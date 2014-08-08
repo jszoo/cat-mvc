@@ -39,14 +39,14 @@ mvcModels.prototype = {
 
     ownerAreaName: null, _inner: null,
 
-    constructor: mvcModels, className: 'mvcModels',
+    constructor: mvcModels,
 
     register: function(name, model) {
         if (arguments.length === 1 || !model) {
             model = name;
             name = null;
         }
-        if (model && model.className === 'mvcModel') {
+        if (model instanceof mvcModel) {
             model.ownerAreaName = this.ownerAreaName;
             name = (name || model.name);
             //

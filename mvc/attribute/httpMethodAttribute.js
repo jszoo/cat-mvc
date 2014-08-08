@@ -21,7 +21,7 @@ httpMethodAttribute.prototype = {
 
     methodName: null,
 
-    constructor: httpMethodAttribute, className: 'httpMethodAttribute',
+    constructor: httpMethodAttribute,
 
     isValidActionRequest: function(httpContext) {
         var methodName = httpContext.request.method;
@@ -42,7 +42,7 @@ utils.each(methods, function(name) {
     };
 
     utils.inherit(cls, httpMethodAttribute, {
-        className: className, methodName: name
+        methodName: name
     });
 
 });

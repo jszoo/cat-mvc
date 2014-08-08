@@ -1,5 +1,5 @@
 /*
-* sampleEvents
+* sampleFilters
 * author: ruleechen
 * contact: rulee@live.cn
 * create date: 2014.7.12
@@ -9,13 +9,13 @@
 
 var utils = require('zoo-utils');
 
-var sampleEvents = module.exports = function(set) {
+var sampleFilters = module.exports = function(set) {
     utils.extend(this, set);
 };
 
-sampleEvents.prototype = {
+sampleFilters.prototype = {
 
-    constructor: sampleEvents, className: 'sampleEvents',
+    constructor: sampleFilters, className: 'sampleFilters',
 
     /************ controller events **************/
     onControllerInitialized: function(controller) { },

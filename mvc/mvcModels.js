@@ -42,7 +42,7 @@ mvcModels.prototype = {
     constructor: mvcModels,
 
     register: function(name, model) {
-        if (arguments.length === 1 || !model) {
+        if (!model) {
             model = name;
             name = null;
         }

@@ -26,7 +26,7 @@ mvcControllers.prototype = {
     constructor: mvcControllers,
 
     register: function(name, controller) {
-        if (arguments.length === 1 || !controller) {
+        if (!controller) {
             controller = name;
             name = null;
         }

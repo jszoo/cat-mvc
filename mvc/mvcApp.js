@@ -152,7 +152,7 @@ utils.inherit(mvcApp, events.EventEmitter, {
             initialize(req, res);
             req._app = res._app = self;
             self.emit('beginRequest', self);
-            handlers.execute(req, res);
+            self._handlers.execute(req, res);
             self.emit('endRequest', self);
         };
     }

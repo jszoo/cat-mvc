@@ -15,7 +15,7 @@ var sampleFilters = module.exports = function(set) {
 
 sampleFilters.prototype = {
 
-    constructor: sampleFilters, className: 'sampleFilters',
+    constructor: sampleFilters,
 
     /************ controller events **************/
     onControllerInitialized: function(controller) { },

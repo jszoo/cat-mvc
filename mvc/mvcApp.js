@@ -58,6 +58,7 @@ var mvcApp = function(set) {
     this.set('etag', 'weak');
     //
     this.areas = new mvcAreas(this, this._store);
+    mvcApp.superclass.constructor.call(this);
 };
 
 utils.inherit(mvcApp, events.EventEmitter, {
@@ -65,8 +66,6 @@ utils.inherit(mvcApp, events.EventEmitter, {
     _store: null, _sett: null, _handlers: null, _inited: null,
 
     appPath: null, areas: null, attributes: attributes, modelling: modelling, viewEngines: viewEngines,
-
-    constructor: mvcApp, className: 'mvcApp',
 
     /*
     * get app setting

@@ -8,16 +8,21 @@
 'use strict';
 
 var utils = require('zoo-utils'),
-	mvcModelState = require('./mvcModelState');
+    mvcModelState = require('./mvcModelState');
 
 var mvcViewData = module.exports = function(set) {
     utils.extend(this, set);
+    if (!this.model) { this.model = {}; }
     this.modelState = new mvcModelState();
+    mvcViewData.superclass.constructor.call(this, true);
 };
 
-mvcViewData.prototype = {
+utils.inherit(mvcViewData, utils.dictionary, {
 
     httpContext: null, model: null, modelState: null,
 
-    constructor: mvcViewData, className: 'mvcViewData'
-};
+    setModel: function(model) {
+    	this.model = model;
+    }
+    
+});

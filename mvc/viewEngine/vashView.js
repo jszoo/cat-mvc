@@ -24,10 +24,13 @@ vashView.prototype = {
         callback = utils.deferProxy(callback);
         try {
             var data = {
-                model: viewContext.viewData,
-                url: viewContext.controller.url,
-                __ZOO_findView: this.findLayout
+                viewContext: viewContext,
+                tempData: viewContext.tempData,
+                viewData: viewContext.viewData,
+                model: viewContext.viewData.model,
+                url: viewContext.controller.url
             };
+            data.__ZOO_findView = this.findLayout;
             vash(this.filePath, data, function(err, str) {
                 callback(err, str);
             });

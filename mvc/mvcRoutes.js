@@ -16,13 +16,12 @@ var mvcRoutes = module.exports = function(set, store) {
     utils.extend(this, set);
     if (!this.ownerAreaName) { throw new Error('Parameter "ownerAreaName" is required'); }
     this._inner = caching.region('mvc-' + this.ownerAreaName + '-area-routes-cache', store);
+    mvcRoutes.superclass.constructor.call(this);
 };
 
 utils.inherit(mvcRoutes, events.EventEmitter, {
 
     ownerAreaName: null, _inner: null,
-
-    constructor: mvcRoutes, className: 'mvcRoutes',
 
     set: function(name, expression, defaultValues) {
         if (!name) { throw new Error('Parameter "name" is required'); }

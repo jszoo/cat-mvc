@@ -50,9 +50,9 @@ mvcActionResultApi.prototype = {
         return emit.call(this, new actionResult.partialViewResult({ viewName: viewName }));
     },*/
 
-    view: function(viewName, viewData) {
-        if (!utils.isString(viewName)) { viewData = viewName; viewName = null; }
-        return emit.call(this, new actionResult.viewResult({ viewName: viewName, viewData: viewData }));
+    view: function(viewName, model) {
+        if (!utils.isString(viewName)) { model = viewName; viewName = null; }
+        return emit.call(this, new actionResult.viewResult({ viewName: viewName, model: model }));
     },
 
     file: function(filePath, fileDownloadName) {

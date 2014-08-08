@@ -30,6 +30,23 @@ var clone = function(ins, className) {
     });
 };
 
+var lowerFuncs = {
+    lowerNane: function(namespace) {
+        return namespace;
+    },
+    lowerAll: function(namespace) {
+        return namespace.toLowerCase();
+    },
+    lowerRoot: function(namespace) {
+        var index = namespace.search(/\.|\[|\]/);
+        if (index > -1) {
+            return namespace.substr(0, index).toLowerCase() + namespace.substr(index);
+        } else {
+            return namespace.toLowerCase();
+        }
+    }
+};
+
 mvcContext.prototype = {
 
     id: null, app: null, zoo: null, items: null, request: null, response: null,
@@ -60,6 +77,28 @@ mvcContext.prototype = {
         }
         // ret
         return dirs;
+    },
+
+    requestDatas: function(lowerType) {
+        if (!lowerType) { lowerType = 'lowerNane'; }
+        var cacheKey = 'mvc-request-datas-' + lowerType;
+        var datas = this.items[cacheKey];
+        if (!datas) {
+            var lowerFn = lowerFuncs[lowerType];
+            if (!lowerFn) { throw new Error('Invalid lowerType'); }
+            //
+            this.items[cacheKey] = datas = {};
+            utils.each(this.routeData, function(i, it) {
+                utils.mapObj(datas, lowerFn(it.name), it.value);
+            });
+            utils.each(this.zoo.request.query, function(key, val) {
+                utils.mapObj(datas, lowerFn(key), val);
+            });
+            utils.each(this.zoo.request.form, function(key, val) {
+                utils.mapObj(datas, lowerFn(key), val);
+            });
+        }
+        return datas;
     },
 
     toHttpContext: function() {

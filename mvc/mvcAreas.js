@@ -17,6 +17,7 @@ var fs = require('fs'),
 var mvcAreas = module.exports = function(app, store) {
     this.app = app;
     this._inner = caching.region('mvc-areas-cache', store);
+    mvcAreas.superclass.constructor.call(this);
 };
 
 var consts = {
@@ -38,8 +39,6 @@ var folderNames = mvcAreas.folderNames = {
 utils.inherit(mvcAreas, events.EventEmitter, {
 
     _inner: null, _routeSet: null, app: null,
-
-    constructor: mvcAreas, className: 'mvcAreas',
 
     conf: function(name) {
         return this.app.get(name) || utils.readObj({ fileNames: fileNames, folderNames: folderNames }, name);

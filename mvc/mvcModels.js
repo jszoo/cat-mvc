@@ -12,17 +12,20 @@ var fs = require('fs'),
     utils = require('zoo-utils'),
     caching = require('zoo-cache'),
     mvcModel = require('./mvcModel'),
-    mvcModelAttr = require('./mvcModelAttr');
+    mvcModelBinder = require('./mvcModelBinder'),
+    mvcModelBinderAttribute = require('./mvcModelBinderAttribute');
 
-var modelAttribute = {
+var modelAttributes = {
     mvc: function() {
         return (this._mvc ? this._mvc : (this._mvc = require('./mvcApp')));
     },
-    set: function(attrName, model, category) {
-        this.mvc().attributes.register(attrName, mvcModelAttr.subClass(model), category);
-    },
     del: function(attrName, category) {
         this.mvc().attributes.remove(attrName, category);
+    },
+    set: function(attrName, model, category) {
+        var binder = new mvcModelBinder(model);
+        var binderAttribute = mvcModelBinderAttribute.subClass(binder);
+        this.mvc().attributes.register(attrName, binderAttribute, category);
     }
 };
 
@@ -48,7 +51,7 @@ mvcModels.prototype = {
             name = (name || model.name);
             //
             this._inner.set(name, model);
-            modelAttribute.set(name, model, this.ownerAreaName);
+            modelAttributes.set(name, model, this.ownerAreaName);
         }
     },
 
@@ -62,7 +65,7 @@ mvcModels.prototype = {
 
     remove: function(name) {
         this._inner.remove(name);
-        modelAttribute.del(name, this.ownerAreaName);
+        modelAttributes.del(name, this.ownerAreaName);
     },
 
     clear: function() {

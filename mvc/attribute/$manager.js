@@ -70,11 +70,11 @@ attributeManager.prototype = {
 
     registerAll: function() {
         var self = this;
-        this.register('actionName', require('./actionName'));
-        this.register('handleError', require('./handleError'));
-        this.register('requireHttps', require('./requireHttps'));
-        this.register('validateInput', require('./validateInput'));
-        utils.each(require('./httpMethod'), function(name) { self.register(name, this); });
+        this.register('actionName', require('./actionNameAttribute'));
+        this.register('handleError', require('./handleErrorAttribute'));
+        this.register('requireHttps', require('./requireHttpsAttribute'));
+        this.register('validateInput', require('./validateInputAttribute'));
+        utils.each(require('./httpMethodAttribute'), function(name) { self.register(name, this); });
     },
 
     resolve: function(attrName, attrSett) {

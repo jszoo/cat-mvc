@@ -86,8 +86,8 @@ In the classical .NET MVC site files structure, you don't need to care the area 
 ```javascript
 // global.js
 var mvc = require('cat-mvc');
-var app = mvc({ appPath: __dirname });
 // supply the appPath and the "app.areas.registerAll()" will be called in internal
+var app = mvc({ appPath: __dirname });
 ```
 
 We recommend to use the classical style structure as it's already be familiar to all .NET MVC fans. But you also can customize the areas as you want.
@@ -130,40 +130,29 @@ app.set('folderNames.controllers', 'controllers');
 Controller
 -----------
 
-We take auth.js controller for example.
+We take auth.js controller for one impression.
 
 ```javascript
 // areas/account/controllers/auth.js
 
 var mvc = require('cat-mvc');
 
-mvc.controller(function(req, res, session, end) {
-
-    // GET /account/auth/admin
-    this.action('admin', function() {
-        if (!session.loggedin) {
-            end.redirectToAction('login');
-        } else {
-            // when the view name is same to action name it's
-            // no need to specify path or name of the view file
-            end.view();
-        }
-    });
+mvc.controller(function(session, end) {
 
     // GET /account/auth/login
     this.action('login', function() {
         if (session.loggedin) {
-            end.redirectToAction('admin');
+            //end.redirectToAction('admin');
         } else {
             end.view();
         }
     });
 
     // POST /account/auth/login
-    this.action('login', 'httpPost', function(UserName, Password) {
-        if (UserName === 'admin' && Password === 'admin') {
+    this.action('login', 'httpPost, loginModel(user)', function(user) {
+        if (user.UserName === 'admin' && user.Password === 'admin') {
             session.loggedin = true;
-            end.redirectToAction('admin');
+            //end.redirectToAction('admin');
         } else {
             end.redirectToAction('login');
         }
@@ -180,8 +169,98 @@ mvc.controller(function(req, res, session, end) {
 });
 ```
 
+The full signature of define a controller is:
+
+```javascript
+var mvc = require('cat-mvc');
+
+// specify attributes
+// for attributes please see to attribute section
+mvc.controller(attributes, function() {
+    // actions here
+});
+
+// specify controller name manually
+// it will take the controller file name as controller name if the name doesn't specified
+mvc.controller(name, attributes, function() {
+    // actions here
+});
+```
+
+**Injection of controller**   
+There we can see some parameters in the controller handler function. The parameters will injected automatically base on parameter names. We alreay have some common used objects builtin. They are:
++ **req**         ( raw nodejs request object )
++ **request**     ( raw nodejs request object )
++ **res**         ( raw nodejs response object )
++ **response**    ( raw nodejs response object )
++ **ctx**         ( httpContext object )
++ **context**     ( httpContext object )
++ **session**     ( session data )
++ **query**       ( query data )
++ **form**        ( form data )
++ **tempData**    ( temp data )
++ **viewData**    ( view data )
++ **modelState**  ( model state )
++ **end**         ( response functions wraper )
++ **url**         ( url generator )
+
+It's very cooool, isn't it? But we think further more. We made the awesome injection customizable.
+
+```javascript
+var mvc = require('cat-mvc');
+var app = mvc({ appPath: __dirname });
+
+// global.js | this make the "mongo" inject to all controllers under app instance.
+app.on('injectController', function(app, injectContext) {
+    injectContext['mongo'] = 'mongo api';
+});
+
+// area.js | or inject in area events subscription for all controllers under area.
+mvc.area(function() {
+    this.onInjectController = function(area, injectContext) {
+        injectContext.inject['mongo'] = 'mongo api';
+    };
+});
+
+// controller.js | simple and easy using the mongo object.
+mvc.controller(attributes, function(end, mongo) {
+    this.index = function() {
+        end.json(mongo.query('select * from table'));
+    };
+});
+
+```
+
 Action
 -----------
+
+Coming soon...
+
+Action result
+---------------
+
+Coming soon...
+
+Attribute
+-----------------
+
+Coming soon...
+
+Model
+----------
+
+Model binder
+----------
+
+Coming soon...
+
+Data annotation
+----------------
+
+Coming soon...
+
+View engine
+-----------------
 
 Coming soon...
 

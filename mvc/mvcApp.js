@@ -147,53 +147,58 @@ utils.inherit(mvcApp, events.EventEmitter, {
     * 2. return the web server handler
     */
     handler: function() {
-        //
-        var handlers = this._handlers;
-        if (this._inited !== true) {
-            this._inited = true;
-            //
-            handlers.register(bodyParser.json());
-            handlers.register(bodyParser.json({ type: 'application/hal+json' }));
-            handlers.register(bodyParser.urlencoded({ extended: true }));
-            handlers.register(cookieParser());
-            handlers.register(session({
-                name: 'catmvc.sid',
-                secret: 'catmvc',
-                cookie: { maxAge: 3600000 },
-                resave: true,
-                rolling: false,
-                saveUninitialized: true
-            }));
-            //
-            handlers.register('/', 'midHeader', midHeader());
-            handlers.register('/', 'midRequest', midRequest());
-            handlers.register('/', 'midResponse', midResponse());
-            handlers.registerAtLast('/', 'midError', midError());
-            //
-            handlers.register(mvcHandler(this));
-            //
-            this.viewEngines.registerAll();
-            this.attributes.registerAll();
-            this.modelling.registerAll();
-            this.areas.registerAll(); // user code always focus on the controllers, so register at last
-        }
-        //
-        var self = this;
+        var self = this, initialize = appInitialization(this);
         return function(req, res) {
+            initialize(req, res);
             req._app = res._app = self;
             self.emit('beginRequest', self);
-            handlers.execute(req, res);
+            self._handlers.execute(req, res);
             self.emit('endRequest', self);
         };
     }
 });
 
-var gain = function(set) {
+var appInitialization = function(app) {
+    return function(req, res) {
+        if (app._initialized) { return; }
+        else { app._initialized = true; }
+        //
+        var handlers = app._handlers;
+        handlers.register(bodyParser.json());
+        handlers.register(bodyParser.json({ type: 'application/hal+json' }));
+        handlers.register(bodyParser.urlencoded({ extended: true }));
+        handlers.register(cookieParser());
+        handlers.register(session({
+            name: 'catmvc.sid',
+            secret: 'catmvc',
+            cookie: { maxAge: 3600000 },
+            resave: true,
+            rolling: false,
+            saveUninitialized: true
+        }));
+        //
+        handlers.register('/', 'midHeader', midHeader());
+        handlers.register('/', 'midRequest', midRequest());
+        handlers.register('/', 'midResponse', midResponse());
+        handlers.registerAtLast('/', 'midError', midError());
+        //
+        handlers.register(mvcHandler(app));
+        //
+        app.viewEngines.registerAll();
+        app.attributes.registerAll();
+        app.modelling.registerAll();
+        app.areas.registerAll(); // user code always focus on the controllers, so register at last
+        //
+        app.emit('appInit', app);
+    };
+};
+
+var appGainer = function(set) {
     return new mvcApp(set);
 };
 
 // export
-module.exports = utils.extend(gain, {
+module.exports = utils.extend(appGainer, {
     utils: utils,
     caching: caching,
     actionResults: mvcActionResult,
@@ -207,7 +212,7 @@ module.exports = utils.extend(gain, {
     viewEngines: viewEngines,
     //
     gainApp: function(set) {
-        return gain(set);
+        return appGainer(set);
     },
     allApps: function() {
         return apps.all();

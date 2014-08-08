@@ -181,7 +181,7 @@ mvc.controller(attributes, function() {
 });
 
 // specify controller name manually
-// it will take the controller file name as controller name if the name doesn't specified
+// this name will replace the controller file name as controller name
 mvc.controller(name, attributes, function() {
     // actions here
 });

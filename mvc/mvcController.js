@@ -10,7 +10,7 @@
 var utils = require('zoo-utils'),
     mvcAction = require('./mvcAction'),
     mvcInjector = require('./mvcInjector'),
-    mvcHelperUrl = require('./mvcHelperUrl'),
+    mvcUrlHelper = require('./mvcUrlHelper'),
     mvcViewData = require('./mvcViewData'),
     mvcTempData = require('./mvcTempData'),
     mvcTempDataStore = require('./mvcTempDataStore'),
@@ -144,7 +144,7 @@ mvcController.prototype = {
         this.actions = [];
         this.httpContext = httpContext;
         //
-        this.url = new mvcHelperUrl({ httpContext: this.httpContext });
+        this.url = new mvcUrlHelper({ httpContext: this.httpContext });
         this.viewData = new mvcViewData({ httpContext: this.httpContext });
         this.tempData = new mvcTempData({ provider: mvcTempDataStore.sessionProvider });
         //

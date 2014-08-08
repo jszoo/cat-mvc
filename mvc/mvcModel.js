@@ -15,8 +15,7 @@ var mvcModel = module.exports = function(set) {
 };
 
 mvcModel.api = function(name, obj) {
-    var len = arguments.length;
-    if (len === 1 || !obj) {
+    if (!obj) {
         obj = name;
         name = null;
     }

@@ -12,17 +12,20 @@ var fs = require('fs'),
     utils = require('zoo-utils'),
     caching = require('zoo-cache'),
     mvcModel = require('./mvcModel'),
-    mvcModelAttribute = require('./mvcModelAttribute');
+    mvcModelBinder = require('./mvcModelBinder'),
+    mvcModelBinderAttribute = require('./mvcModelBinderAttribute');
 
 var modelAttributes = {
     mvc: function() {
         return (this._mvc ? this._mvc : (this._mvc = require('./mvcApp')));
     },
-    set: function(attrName, model, category) {
-        this.mvc().attributes.register(attrName, mvcModelAttribute.subClass(model), category);
-    },
     del: function(attrName, category) {
         this.mvc().attributes.remove(attrName, category);
+    },
+    set: function(attrName, model, category) {
+        var binder = new mvcModelBinder(model);
+        var binderAttribute = mvcModelBinderAttribute.subClass(binder);
+        this.mvc().attributes.register(attrName, binderAttribute, category);
     }
 };
 

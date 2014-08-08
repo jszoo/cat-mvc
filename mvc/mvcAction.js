@@ -8,10 +8,10 @@
 'use strict';
 
 var utils = require('zoo-utils'),
-    mvcModel = require('./mvcModel'),
     injector = require('./mvcInjector'),
     actionResult = require('./mvcActionResult'),
-    mvcActionResultApi = require('./mvcActionResultApi');
+    mvcActionResultApi = require('./mvcActionResultApi'),
+    mvcModelBinder = require('./mvcModelBinder');
 
 var mvcAction = module.exports = function(set) {
     utils.extend(this, set);
@@ -57,8 +57,8 @@ mvcAction.prototype = {
         //
         annotated = injector.annotate(this.impl());
         if (annotated.args && annotated.args.length > 0) {
-            var modelAttrs = this.attributes.filter('getModel');
-            annotated.params = mvcModel.resolveParams(ctx, annotated.args, modelAttrs);
+            var binderAttrs = this.attributes.filter('getBinder');
+            annotated.params = mvcModelBinder.resolveParams(ctx, annotated.args, binderAttrs);
         } else {
             annotated.params = [];
         }

@@ -15,7 +15,7 @@ var sampleView = module.exports = function(set) {
 
 sampleView.prototype = {
 
-    constructor: sampleView, className: 'sampleView',
+    constructor: sampleView,
 
     render: function(viewContext, callback) {
         var error = null;

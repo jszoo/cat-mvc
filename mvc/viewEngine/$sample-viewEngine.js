@@ -16,7 +16,7 @@ var sampleViewEngine = module.exports = function(set) {
 
 sampleViewEngine.prototype = {
 
-    constructor: sampleViewEngine, className: 'sampleViewEngine',
+    constructor: sampleViewEngine,
 
     findView: function(controllerContext, viewName, callback) {
         var error = null;

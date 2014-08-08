@@ -24,7 +24,10 @@ ejsView.prototype = {
         callback = utils.deferProxy(callback);
         try {
             var data = {
-                model: viewContext.viewData,
+                viewContext: viewContext,
+                tempData: viewContext.tempData,
+                viewData: viewContext.viewData,
+                model: viewContext.viewData.model,
                 url: viewContext.controller.url
             };
             ejs(this.filePath, data, function(err, str) {

@@ -22,7 +22,7 @@ mvcTempData.prototype = {
 
     provider: null, newData: null, oldData: null,
 
-    constructor: mvcTempData, className: 'mvcTempData',
+    constructor: mvcTempData,
 
     set: function(key, val) {
         key = utils.formalStr(key);

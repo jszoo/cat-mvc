@@ -40,7 +40,7 @@ mvcModel.loadfile = function(filePath) {
         return null;
     }
     //
-    if (expo.className === 'mvcModel') {
+    if (expo instanceof mvcModel) {
         ret = [expo];
     }
     else if (modelsDefined.length) {
@@ -58,7 +58,7 @@ mvcModel.prototype = {
 
     ownerAreaName: null, path: null, name: null, raw: null,
 
-    constructor: mvcModel, className: 'mvcModel',
+    constructor: mvcModel,
 
     inner: function(p) {
         return (p === undefined) ? (this.raw) : (this.raw = p, this);

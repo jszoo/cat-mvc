@@ -23,7 +23,7 @@ mvcAction.prototype = {
 
     controller: null, controllerContext: null, attributes: null, implScope: null,
 
-    constructor: mvcAction, className: 'mvcAction',
+    constructor: mvcAction,
 
     name: function(p) { return (p === undefined) ? (this._name) : (this._name = p, this); },
     attr: function(p) { return (p === undefined) ? (this._attr) : (this._attr = p, this); },
@@ -389,5 +389,5 @@ var actionImplementationScope = function(controller) {
 };
 
 actionImplementationScope.prototype = {
-    constructor: actionImplementationScope, className: 'actionImplementationScope'
+    constructor: actionImplementationScope
 };

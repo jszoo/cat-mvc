@@ -18,7 +18,7 @@ attributeManager.prototype = {
 
     _inner: null,
 
-    constructor: attributeManager, className: 'attributeManager',
+    constructor: attributeManager,
 
     all: function() {
         return this._inner.all();
@@ -132,7 +132,7 @@ attributeClasses.prototype = {
     
     items: null,
 
-    constructor: attributeClasses, className: 'attributeClasses',
+    constructor: attributeClasses,
 
     all: function() {
         return this.items;
@@ -184,7 +184,7 @@ attributes.prototype = {
 
     _config: null, _attrs: null, _parent: null,
 
-    constructor: attributes, className: 'attributes',
+    constructor: attributes,
 
     all: function() {
         return this._attrs;

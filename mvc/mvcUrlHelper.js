@@ -18,7 +18,7 @@ mvcUrlHelper.prototype = {
 
     httpContext: null,
 
-    constructor: mvcUrlHelper, className: 'mvcUrlHelper',
+    constructor: mvcUrlHelper,
 
     action: function(actionName, controllerName, routeValues, protocol, hostName) {
         return mvcHelper.generateUrlPlus(null, actionName, controllerName, protocol, hostName, null, routeValues, this.httpContext.routeSet, this.httpContext, true);

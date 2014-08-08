@@ -56,7 +56,7 @@ mvcArea.prototype = {
 
     path: null, viewsPath: null, viewsSharedPath: null, modelsPath: null, controllersPath: null, settingFilePath: null,
 
-    constructor: mvcArea, className: 'mvcArea',
+    constructor: mvcArea,
 
     ownedRoutes: function() {
         return this.routes.all();

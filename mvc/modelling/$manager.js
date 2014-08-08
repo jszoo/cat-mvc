@@ -19,7 +19,7 @@ modellingManager.prototype = {
 
     dataTypes: null, validators: null,
 
-    constructor: modellingManager, className: 'modellingManager',
+    constructor: modellingManager,
 
     registerAll: function() {
         var self = this;
@@ -77,7 +77,7 @@ modellingMetas.prototype = {
 
     typeObj: null, validators: null,
     
-    constructor: modellingMetas, className: 'modellingMetas',
+    constructor: modellingMetas,
 
     has: function() {
         return this.typeObj || this.validators;
@@ -104,7 +104,7 @@ dataTypeManager.prototype = {
 
     _inner: null,
 
-    constructor: dataTypeManager, className: 'dataTypeManager',
+    constructor: dataTypeManager,
 
     register: function(name, klass) {
         if (!name) { throw new Error('Register data type "name" is required'); }
@@ -138,7 +138,7 @@ validatorManager.prototype = {
 
     _inner: null,
 
-    constructor: validatorManager, className: 'validatorManager',
+    constructor: validatorManager,
 
     register: function(name, klass) {
         if (!name) { throw new Error('Register data type "name" is required'); }

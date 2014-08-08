@@ -20,9 +20,8 @@ Installation
 $ npm install cat-mvc
 ```
 
-Simple Usage
+Simple usage
 ------------
-
 ```javascript
 // global.js
 var http = require('http');
@@ -33,9 +32,8 @@ var server = http.createServer(mvc.handler()); // handler all request here
 server.listen(8000, function() { console.log('Server Start!'); });
 ```
 
-Sample Site
---------
-
+Sample site
+------------
 Clone the [sample repo](https://github.com/jszoo/cat-mvc-sample-site.git), then install the dev dependencies and run start.
 ```shell
 $ git clone https://github.com/jszoo/cat-mvc-sample-site.git
@@ -43,9 +41,8 @@ $ npm install
 $ npm start
 ```
 
-Site File Structure
+Site structure
 --------------------
-
 If you are familiar with .NET MVC, you might already known well about the site file structure.
 
 ```
@@ -80,7 +77,6 @@ If you are familiar with .NET MVC, you might already known well about the site f
 
 Area
 --------
-
 In the classical .NET MVC site files structure, you don't need to care the area registration. The only one you need to do is to supply the root site path as application path for cat-mvc.
 
 ```javascript
@@ -129,7 +125,6 @@ app.set('folderNames.controllers', 'controllers');
 
 Controller
 -----------
-
 We take auth.js controller for one impression.
 
 ```javascript
@@ -181,7 +176,7 @@ mvc.controller(attributes, function() {
 });
 
 // specify controller name manually
-// it will take the controller file name as controller name if the name doesn't specified
+// this name will replace the controller file name as controller name
 mvc.controller(name, attributes, function() {
     // actions here
 });
@@ -233,38 +228,32 @@ mvc.controller(attributes, function(end, mongo) {
 
 Action
 -----------
-
 Coming soon...
 
 Action result
 ---------------
-
 Coming soon...
 
 Attribute
 -----------------
-
 Coming soon...
 
 Model
 ----------
+Coming soon...
 
 Model binder
 ----------
-
 Coming soon...
 
 Data annotation
 ----------------
-
 Coming soon...
 
 View engine
 -----------------
-
 Coming soon...
 
 License 
 --------
-
 [MIT](LICENSE)

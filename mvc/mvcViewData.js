@@ -17,7 +17,7 @@ var mvcViewData = module.exports = function(set) {
 
 mvcViewData.prototype = {
 
-    httpContext: null, modelState: null,
+    httpContext: null, model: null, modelState: null,
 
     constructor: mvcViewData, className: 'mvcViewData'
 };

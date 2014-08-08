@@ -18,7 +18,7 @@ viewEngineManager.prototype = {
 
     _inner: null,
 
-    constructor: viewEngineManager, className: 'viewEngineManager',
+    constructor: viewEngineManager,
 
     register: function(engineName, viewEngine) {
         if (!engineName) { throw new Error('Parameter "engineName" is required'); }

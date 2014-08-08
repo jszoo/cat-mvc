@@ -17,7 +17,7 @@ var mvcRoute = module.exports = function(set) {
 
 mvcRoute.prototype = {
 
-    constructor: mvcRoute, className: 'mvcRoute',
+    constructor: mvcRoute,
 
     /*
     * the specified route name

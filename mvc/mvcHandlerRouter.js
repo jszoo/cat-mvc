@@ -20,7 +20,7 @@ mvcHandlerRouter.prototype = {
 
     _handlers: null, _lastHandlers: null,
 
-    constructor: mvcHandlerRouter, className: 'mvcHandlerRouter',
+    constructor: mvcHandlerRouter,
 
     /*
     * register(handler)

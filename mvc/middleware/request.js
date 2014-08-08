@@ -84,7 +84,7 @@ request.prototype = {
 
     req: null, res: null,
 
-    constructor: request, className: 'request',
+    constructor: request,
 
     header: function(field) {
         var hs = this.req.headers;

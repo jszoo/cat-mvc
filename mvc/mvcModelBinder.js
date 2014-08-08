@@ -20,7 +20,7 @@ mvcModelBinder.prototype = {
 
     model: null,
 
-    constructor: mvcModelBinder, className: 'mvcModelBinder',
+    constructor: mvcModelBinder,
 
     bindModel: function(controllerContext, bindingContext) {
         var raw = this.model.inner();

@@ -18,7 +18,7 @@ vashView.prototype = {
 
     filePath: null, findLayout: null,
 
-    constructor: vashView, className: 'vashView',
+    constructor: vashView,
 
     render: function(viewContext, callback) {
         callback = utils.deferProxy(callback);

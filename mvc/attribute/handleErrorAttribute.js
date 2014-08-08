@@ -22,7 +22,7 @@ handleErrorAttribute.prototype = {
 
     viewName: '_error', enabled: true,
 
-    constructor: handleErrorAttribute, className: 'handleErrorAttribute',
+    constructor: handleErrorAttribute,
 
     onException: function(exceptionContext) {
         if (this.enabled && !exceptionContext.exceptionHandled) {

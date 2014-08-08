@@ -207,7 +207,7 @@ var app = mvc({ appPath: __dirname });
 
 // global.js | this make the "mongo" inject to all controllers under app instance.
 app.on('injectController', function(app, injectContext) {
-    injectContext['mongo'] = 'mongo api';
+    injectContext.inject['mongo'] = 'mongo api';
 });
 
 // area.js | or inject in area events subscription for all controllers under area.

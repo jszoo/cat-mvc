@@ -68,14 +68,13 @@ mvcModelBinder.resolveParams = function(controllerContext, paramNames, binderAtt
         rootAreaName = controllerContext.app.areas.rootArea().name;
         findAttribute = function(paramName, areaName) {
             var attr;
-            for (var item, i = 0; i < binderAttrs.length; i++) {
-                item = binderAttrs[i];
+            utils.each(binderAttrs, function(i, item) {
                 if (item.paramName.toLowerCase() === paramName &&
                     item.getBinder().model.ownerAreaName === areaName) {
                     attr = item;
-                    break;
+                    return false;
                 }
-            }
+            });
             if (attr) {
                 return attr;
             } else if (areaName !== rootAreaName) {

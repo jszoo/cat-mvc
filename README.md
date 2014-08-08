@@ -189,20 +189,20 @@ mvc.controller(name, attributes, function() {
 
 **Injection of controller**   
 There we can see some parameters in the controller handler function. The parameters will injected automatically base on parameter names. We alreay have some common used objects builtin. They are:
-+ req         ( raw nodejs request object )
-+ request     ( raw nodejs request object )
-+ res         ( raw nodejs response object )
-+ response    ( raw nodejs response object )
-+ ctx         ( httpContext object )
-+ context     ( httpContext object )
-+ session     ( session data )
-+ query       ( query data )
-+ form        ( form data )
-+ tempData    ( temp data )
-+ viewData    ( view data )
-+ modelState  ( model state )
-+ end         ( response functions wraper )
-+ url         ( url generator )
++ **req**         ( raw nodejs request object )
++ **request**     ( raw nodejs request object )
++ **res**         ( raw nodejs response object )
++ **response**    ( raw nodejs response object )
++ **ctx**         ( httpContext object )
++ **context**     ( httpContext object )
++ **session**     ( session data )
++ **query**       ( query data )
++ **form**        ( form data )
++ **tempData**    ( temp data )
++ **viewData**    ( view data )
++ **modelState**  ( model state )
++ **end**         ( response functions wraper )
++ **url**         ( url generator )
 
 It's very cooool, isn't it? But we think further more. We made the awesome injection customizable.
 

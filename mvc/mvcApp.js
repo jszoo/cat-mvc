@@ -188,6 +188,8 @@ var appInitialization = function(app) {
         app.attributes.registerAll();
         app.modelling.registerAll();
         app.areas.registerAll(); // user code always focus on the controllers, so register at last
+        //
+        app.emit('appInit', app);
     };
 };
 

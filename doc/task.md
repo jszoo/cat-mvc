@@ -28,6 +28,7 @@
 + 29. independence controller inject params solution
 + 30. implement models support: models folder + model define rules.
 + 31. when there are same model name but in different directory, solutions?
++ 37. model binder customizable
 
 ##POSTPONE##
 + 4. partialViewResult

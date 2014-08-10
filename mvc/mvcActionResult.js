@@ -112,7 +112,7 @@ utils.inherit(viewResult, baseResult, {
         //
         var render = function(view, done) {
             if (!utils.isFunction(view.render)) {
-                callback(new Error('Can not find the interface function: "render(viewContext, callback)", please implement it in the view.'));
+                done(new Error('Can not find the interface function: "render(viewContext, callback)", please implement it in the view.'));
                 return;
             }
             //

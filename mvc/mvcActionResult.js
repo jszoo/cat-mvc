@@ -140,24 +140,28 @@ utils.inherit(viewResult, baseResult, {
                 callback(err);
             });
         } else {
-            var viewName = this.viewName || mvcHelper.findRouteItem(controllerContext.routeData, 'action').value;
+            var viewName = this.viewName;
+            if (!viewName) { viewName = mvcHelper.findRouteItem(controllerContext.routeData, 'action').value; }
+            //
             var viewEngines = controllerContext.app.viewEngines;
             viewEngines.findView(controllerContext, viewName, function(err, viewEngineResult) {
                 if (err) {
                     callback(err);
-                } else if (viewEngineResult.view) {
-                    render(viewEngineResult.view, function(err) {
-                        var exp;
-                        try {
-                            viewEngineResult.viewEngine.releaseView(controllerContext, viewEngineResult.view);
-                        } catch (ex) {
-                            exp = ex;
-                        }
-                        callback(err || exp);
-                    });
-                } else {
-                    callback(new Error('Failed to lookup view "' + viewName + '" in the following locations \n' + viewEngineResult.searchedLocations.join('\n')));
+                    return;
                 }
+                if (!viewEngineResult.view) {
+                    callback(new Error('Failed to lookup view "' + viewName + '" in the following locations \n' + viewEngineResult.searchedLocations.join('\n')));
+                    return;
+                }
+                render(viewEngineResult.view, function(err) {
+                    var exp;
+                    try {
+                        viewEngineResult.viewEngine.releaseView(controllerContext, viewEngineResult.view);
+                    } catch (ex) {
+                        exp = ex;
+                    }
+                    callback(err || exp);
+                });
             });
         }
     }

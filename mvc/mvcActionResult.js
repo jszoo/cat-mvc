@@ -110,6 +110,7 @@ utils.inherit(viewResult, baseResult, {
     viewName: null, model: null, view: null,
     executeResult: function(controllerContext, callback) {
         if (this.model) { controllerContext.controller.viewData.model = this.model; }
+        if (!controllerContext.controller.viewData.model) { controllerContext.controller.viewData.model = {}; }
         if (!this.viewName) { this.viewName = mvcHelper.findRouteItem(controllerContext.routeData, 'action').value; }
         //
         var self = this, render = function(view, viewEngineResult) {

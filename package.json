@@ -1,7 +1,7 @@
 {
   "name": "cat-mvc",
   "version": "0.1.2",
-  "description": "The best nodejs MVC framework in .NET MVC style",
+  "description": "The best nodejs MVC web framework in .NET MVC style",
   "main": "mvc/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"

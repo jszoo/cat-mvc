@@ -110,6 +110,7 @@ utils.inherit(viewResult, baseResult, {
     viewName: null, model: null, view: null,
     executeResult: function(controllerContext, callback) {
         //
+        var self = this;
         var render = function(view, done) {
             if (!utils.isFunction(view.render)) {
                 done(new Error('Can not find the interface function: "render(viewContext, callback)", please implement it in the view.'));
@@ -117,7 +118,7 @@ utils.inherit(viewResult, baseResult, {
             }
             //
             var viewData = controllerContext.controller.viewData;
-            viewData.model = this.model || viewData.model || {};
+            viewData.model = self.model || viewData.model || {};
             //
             var viewContext = controllerContext.toViewContext({
                 tempData: controllerContext.controller.tempData,

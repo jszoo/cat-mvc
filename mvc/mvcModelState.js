@@ -21,11 +21,39 @@ mvcModelState.prototype = {
     constructor: mvcModelState,
 
     addModelError: function(key, error) {
-
+        var state = this._inner.get(key);
+        if (!state) {
+            state = {
+                key: key,
+                value: null,
+                errors: []
+            };
+        }
+        if (error) {
+            state.errors.push(error);
+        }
+        this._inner.set(key, state);
     },
 
-    isValidField: function(key) {
-        
+    isValidField: function(namespace) {
+        namespace = namespace.toLowerCase();
+        var state = this._inner.get(namespace);
+        if (state) {
+            return (state.errors.length === 0);
+        } else {
+            var result = true;
+            utils.each(this._inner.all(), function(key, state) {
+                key = key.toLowerCase();
+                if (key.length > namespace.length && key.indexOf(namespace) === 0) {
+                    var chr = key.charAt(namespace.length);
+                    if (chr === '.' || chr === '[') {
+                        result = result && (state.errors.length === 0);
+                        if (!result) { return false; }
+                    }
+                }
+            });
+            return result;
+        }
     },
 
     isValid: function() {
@@ -37,6 +65,12 @@ mvcModelState.prototype = {
             }
         });
         return result;
+    },
+
+    setModelValue: function(key, value) {
+        this.addModelError(key, null);
+        var state = this._inner.get(key);
+        state.value = value;
     },
 
     remove: function(key) {

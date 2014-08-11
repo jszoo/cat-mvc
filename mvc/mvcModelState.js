@@ -28,6 +28,17 @@ mvcModelState.prototype = {
         
     },
 
+    isValid: function() {
+        var result = true;
+        utils.each(this._inner.all(), function() {
+            if (this.errors.length > 0) {
+                result = false;
+                return false;
+            }
+        });
+        return result;
+    },
+
     remove: function(key) {
         this._inner.remove(key);
     },

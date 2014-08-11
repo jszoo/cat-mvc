@@ -70,6 +70,38 @@ utils.inherit(requiredValidator, validatorBase, {
     }
 });
 
+/* minLengthValidator
+***************************************/
+var minLengthValidator = exports.minLengthValidator = function(len) {
+    minLengthValidator.superclass.constructor.call(this, null);
+    this.length = len;
+};
+
+utils.inherit(minLengthValidator, validatorBase, {
+    validName: 'minLength',
+    valid: function(value) {
+        if (value.length < this.length) {
+            throw new Error('Value length is overflow');
+        }
+    }
+});
+
+/* maxLengthValidator
+***************************************/
+var maxLengthValidator = exports.maxLengthValidator = function(len) {
+    maxLengthValidator.superclass.constructor.call(this, null);
+    this.length = len;
+};
+
+utils.inherit(maxLengthValidator, validatorBase, {
+    validName: 'maxLength',
+    valid: function(value) {
+        if (value.length > this.length) {
+            throw new Error('Value length is overflow');
+        }
+    }
+});
+
 var types = [
     'empty',
     'required',

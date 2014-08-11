@@ -22,7 +22,7 @@ utils.inherit(mvcViewData, utils.dictionary, {
     httpContext: null, model: null, modelState: null,
 
     setModel: function(model) {
-    	this.model = model;
+        this.model = model;
     }
     
 });

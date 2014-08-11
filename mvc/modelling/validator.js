@@ -31,7 +31,8 @@ validatorBase.prototype = {
 /* emptyValidator
 ***************************************/
 var emptyValidator = exports.emptyValidator = function(enabled) {
-    this.enabled = enabled;
+    emptyValidator.superclass.constructor.call(this);
+    this.enabled = !!enabled;
 };
 
 utils.inherit(emptyValidator, validatorBase, {
@@ -42,7 +43,7 @@ utils.inherit(emptyValidator, validatorBase, {
 });
 
 
-/* emptyValidator
+/* notEmptyValidator
 ***************************************/
 var notEmptyValidator = exports.notEmptyValidator = function() {
     notEmptyValidator.superclass.constructor.apply(this, arguments);
@@ -66,6 +67,38 @@ utils.inherit(requiredValidator, validatorBase, {
     validName: 'required',
     valid: function(value) {
         //TODO:
+    }
+});
+
+/* minLengthValidator
+***************************************/
+var minLengthValidator = exports.minLengthValidator = function(len) {
+    minLengthValidator.superclass.constructor.call(this, null);
+    this.length = len;
+};
+
+utils.inherit(minLengthValidator, validatorBase, {
+    validName: 'minLength',
+    valid: function(value) {
+        if (value.length < this.length) {
+            throw new Error('Value length is overflow');
+        }
+    }
+});
+
+/* maxLengthValidator
+***************************************/
+var maxLengthValidator = exports.maxLengthValidator = function(len) {
+    maxLengthValidator.superclass.constructor.call(this, null);
+    this.length = len;
+};
+
+utils.inherit(maxLengthValidator, validatorBase, {
+    validName: 'maxLength',
+    valid: function(value) {
+        if (value.length > this.length) {
+            throw new Error('Value length is overflow');
+        }
     }
 });
 

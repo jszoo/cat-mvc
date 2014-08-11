@@ -83,13 +83,21 @@ modellingMetas.prototype = {
         return this.typeObj || this.validators;
     },
 
-    exe: function(value) {
+    exe: function(value, reportError) {
         if (this.typeObj) {
-            value = this.typeObj.parse(value);
+            try {
+                value = this.typeObj.parse(value);
+            } catch (ex) {
+                reportError(ex);
+            }
         }
         if (this.validators) {
             utils.each(this.validators, function(i, obj) {
-                obj.valid(value);
+                try {
+                    obj.valid(value);
+                } catch (ex) {
+                    reportError(ex);
+                }
             });
         }
         return value;

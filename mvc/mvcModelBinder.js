@@ -24,38 +24,49 @@ mvcModelBinder.prototype = {
 
     bindModel: function(controllerContext, bindingContext) {
         var raw = this.model.inner();
-        var paramName = bindingContext.paramName;
+        var rootNs = bindingContext.paramName;
         var paramsDict = bindingContext.paramsDict;
+        var modelState = bindingContext.modelState;
         var modelling = controllerContext.app.modelling;
         var datas = controllerContext.requestDatas('lowerAll');
         //
         var metas = modelling.resolve(raw);
         if (metas.has()) {
-            var value = utils.readObj(datas, paramName);
-            return metas.exe(value);
+            var value = utils.readObj(datas, rootNs);
+            return metas.exe(value, function(err) {
+                modelState.addModelError(rootNs, err);
+            });
         } else {
-            paramName += '.';
             var clone = utils.extend(true, {}, raw);
-            var doWalk = function(obj, parentNs) {
-                if (!utils.isObject(obj)) { return; }
-                if (parentNs) { parentNs += '.'; }
+            var walk = function(obj, parentNs) {
+                var t = utils.type(obj);
+                var isArr = (t === 'array')
+                var isObj = (t === 'object');
+                if (!isArr && !isObj) { return; }
+                //
                 utils.each(obj, function(key, item) {
-                    var lckey = key.toLowerCase(), ns = parentNs + lckey;
+                    var partNs = isArr ? ('[' + key + ']') : ('.' + key.toLowerCase());
+                    var currNs = parentNs + partNs;
+                    var fullNs = rootNs + currNs;
+                    //
                     var metas = modelling.resolve(item);
                     if (metas.has()) {
                         var value = null;
                         if (parentNs) {
-                            value = utils.readObj(datas, paramName + ns);
-                        } else if (!paramsDict[lckey]) {
-                            value = utils.readObj(datas, ns);
+                            value = utils.readObj(datas, fullNs);
                         }
-                        obj[key] = metas.exe(value);
+                        else if (!paramsDict[key.toLowerCase()]) {
+                            value = utils.readObj(datas, currNs);
+                        }
+                        obj[key] = metas.exe(value, function(err) {
+                            modelState.addModelError(fullNs, err);
+                        });
                     } else {
-                        doWalk(item, ns);
+                        walk(item, currNs);
                     }
                 });
             };
-            doWalk(clone, '');
+            walk(clone, '');
             return clone;
         }
     }
@@ -99,8 +110,8 @@ mvcModelBinder.resolveParams = function(controllerContext, paramNames, binderAtt
         var attr = findAttribute(lowerName, routeAreaName), val;
         if (attr) {
             val = attr.getBinder().bindModel(controllerContext, {
-                paramName: lowerName,
-                paramsDict: namesDict
+                modelState: controllerContext.controller.viewData.modelState,
+                paramName: lowerName, paramsDict: namesDict
             });
         } else {
             val = controllerContext.requestDatas('lowerRoot')[lowerName];

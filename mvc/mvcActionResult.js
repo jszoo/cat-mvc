@@ -109,46 +109,60 @@ var viewResult = exports.viewResult = function(set) {
 utils.inherit(viewResult, baseResult, {
     viewName: null, model: null, view: null,
     executeResult: function(controllerContext, callback) {
-        if (this.model) { controllerContext.controller.viewData.model = this.model; }
-        if (!this.viewName) { this.viewName = mvcHelper.findRouteItem(controllerContext.routeData, 'action').value; }
         //
-        var self = this, render = function(view, viewEngineResult) {
+        var self = this;
+        var render = function(view, done) {
             if (!utils.isFunction(view.render)) {
-                callback(new Error('Can not find the interface function: "render(viewContext, callback)", please implement it in the view.'));
+                done(new Error('Can not find the interface function: "render(viewContext, callback)", please implement it in the view.'));
                 return;
             }
+            //
+            var viewData = controllerContext.controller.viewData;
+            viewData.model = self.model || viewData.model || {};
+            //
             var viewContext = controllerContext.toViewContext({
-                viewData: controllerContext.controller.viewData,
-                tempData: controllerContext.controller.tempData
+                tempData: controllerContext.controller.tempData,
+                viewData: viewData
             });
             view.render(viewContext, function(err, str) {
                 var exp;
                 try {
                     viewContext.destroy();
-                    if (viewEngineResult) { viewEngineResult.viewEngine.releaseView(controllerContext, view); }
                     if (!err) { controllerContext.zoo.response.send(str); }
                 } catch (ex) {
                     exp = ex;
                 }
-                callback(err || exp);
+                done(err || exp);
             });
         };
         //
         if (this.view) {
-            render(this.view);
+            render(this.view, function(err) {
+                callback(err);
+            });
         } else {
+            var viewName = this.viewName;
+            if (!viewName) { viewName = mvcHelper.findRouteItem(controllerContext.routeData, 'action').value; }
+            //
             var viewEngines = controllerContext.app.viewEngines;
-            viewEngines.findView(controllerContext, this.viewName, function(err, viewEngineResult) {
+            viewEngines.findView(controllerContext, viewName, function(err, viewEngineResult) {
                 if (err) {
                     callback(err);
-                } else {
-                    self.view = viewEngineResult.view;
-                    if (self.view) {
-                        render(self.view, viewEngineResult);
-                    } else {
-                        callback(new Error('Failed to lookup view "' + self.viewName + '" in the following locations \n' + viewEngineResult.searchedLocations.join('\n')));
-                    }
+                    return;
                 }
+                if (!viewEngineResult.view) {
+                    callback(new Error('Failed to lookup view "' + viewName + '" in the following locations \n' + viewEngineResult.searchedLocations.join('\n')));
+                    return;
+                }
+                render(viewEngineResult.view, function(err) {
+                    var exp;
+                    try {
+                        viewEngineResult.viewEngine.releaseView(controllerContext, viewEngineResult.view);
+                    } catch (ex) {
+                        exp = ex;
+                    }
+                    callback(err || exp);
+                });
             });
         }
     }

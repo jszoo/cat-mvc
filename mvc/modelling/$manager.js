@@ -23,14 +23,8 @@ modellingManager.prototype = {
 
     registerAll: function() {
         var self = this;
-        utils.each(require('./datatype'), function(key, cls) {
-            key = cls.prototype.typeName;
-            if (key) { self.dataTypes.register(key, cls); }
-        });
-        utils.each(require('./validator'), function(key, cls) {
-            key = cls.prototype.validName;
-            if (key) { self.validators.register(key, cls); }
-        });
+        utils.each(require('./datatype'), function(key, cls) { self.dataTypes.register(key, cls); });
+        utils.each(require('./validator'), function(key, cls) { self.validators.register(key, cls); });
     },
 
     /*
@@ -83,10 +77,10 @@ modellingMetas.prototype = {
         return this.typeObj || this.validators;
     },
 
-    exe: function(value, reportError) {
+    exe: function(value, fieldName, reportError) {
         if (this.typeObj) {
             try {
-                value = this.typeObj.parse(value);
+                value = this.typeObj.parse(value, fieldName);
             } catch (ex) {
                 reportError(ex);
             }
@@ -94,7 +88,7 @@ modellingMetas.prototype = {
         if (this.validators) {
             utils.each(this.validators, function(i, obj) {
                 try {
-                    obj.valid(value);
+                    obj.valid(value, fieldName);
                 } catch (ex) {
                     reportError(ex);
                 }

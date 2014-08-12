@@ -17,7 +17,7 @@ sampleValidator.prototype = {
 
     constructor: sampleValidator,
 
-    valid: function(value) {
+    valid: function(value, fieldName) {
         //TODO: customize logic
         // just throw Error if unvalid
     }

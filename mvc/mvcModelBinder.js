@@ -64,7 +64,7 @@ mvcModelBinder.prototype = {
                             }
                         }
                         // exe
-                        obj[key] = metas.exe(value, function(err) {
+                        obj[key] = metas.exe(value, stateNs, function(err) {
                             modelState.addModelError(stateNs, err);
                         });
                     } else {

@@ -20,21 +20,21 @@ dataTypeBase.prototype = {
 
     constructor: dataTypeBase,
 
-    parse: function(value) {
+    parse: function(value, fieldName) {
         throw new Error('"parse" interface function needs override by sub classes');
     }
 };
 
 
-/* stringType
+/* string
 ***************************************/
-var stringType = exports.stringType = function(set) {
-    stringType.superclass.constructor.call(this, set);
+var string = exports.string = function(set) {
+    string.superclass.constructor.call(this, set);
 };
 
-utils.inherit(stringType, dataTypeBase, {
+utils.inherit(string, dataTypeBase, {
     typeName: 'string',
-    parse: function(value) {
+    parse: function(value, fieldName) {
         if (value === null || value === undefined) {
             return value;
         } else {
@@ -44,90 +44,74 @@ utils.inherit(stringType, dataTypeBase, {
 });
 
 
-/* integerType
+/* integer
 ***************************************/
-var integerType = exports.integerType = function(set) {
-    integerType.superclass.constructor.call(this, set);
+var integer = exports.integer = function(set) {
+    integer.superclass.constructor.call(this, set);
 };
 
-utils.inherit(integerType, dataTypeBase, {
+utils.inherit(integer, dataTypeBase, {
     typeName: 'integer',
-    parse: function(value) {
+    parse: function(value, fieldName) {
         var ret = parseInt(value, 10);
         return isNaN(ret) ?  0 : ret;
     }
 });
 
-var intType = exports.intType = function(set) {
-    intType.superclass.constructor.call(this, set);
-};
-
-utils.inherit(intType, integerType, {
-    typeName: 'int'
-});
+exports.Int = exports.integer;
 
 
-/* floatType
+/* Float
 ***************************************/
-var floatType = exports.floatType = function(set) {
-    floatType.superclass.constructor.call(this, set);
+var Float = exports.Float = function(set) {
+    Float.superclass.constructor.call(this, set);
 };
 
-utils.inherit(floatType, dataTypeBase, {
-    typeName: 'float',
-    parse: function(value) {
+utils.inherit(Float, dataTypeBase, {
+    parse: function(value, fieldName) {
         var ret = parseFloat(value, 10);
         return isNaN(ret) ? 0 : ret;
     }
 });
 
 
-/* booleanType
+/* BOOLEAN
 ***************************************/
-var booleanType = exports.booleanType = function(set) {
-    booleanType.superclass.constructor.call(this, set);
+var BOOLEAN = exports.BOOLEAN = function(set) {
+    BOOLEAN.superclass.constructor.call(this, set);
 };
 
-utils.inherit(booleanType, dataTypeBase, {
-    typeName: 'boolean',
-    parse: function(value) {
+utils.inherit(BOOLEAN, dataTypeBase, {
+    parse: function(value, fieldName) {
         return Boolean(value);
     }
 });
 
-var boolType = exports.boolType = function(set) {
-    boolType.superclass.constructor.call(this, set);
-};
-
-utils.inherit(boolType, booleanType, {
-    typeName: 'bool'
-});
+exports.bool = exports.BOOLEAN;
 
 
-/* dateType
+/* date
 ***************************************/
-var dateType = exports.dateType = function(set) {
-    dateType.superclass.constructor.call(this, set);
+var date = exports.date = function(set) {
+    date.superclass.constructor.call(this, set);
 };
 
-utils.inherit(dateType, dataTypeBase, {
-    typeName: 'date',
-    parse: function(value) {
+utils.inherit(date, dataTypeBase, {
+    parse: function(value, fieldName) {
         var ret = Date.parse(value);
         return isNaN(ret) ? null : ret;
     }
 });
 
 
-/* arrayType
+/* array
 ***************************************/
-var arrayType = exports.arrayType = function(set) {
-    arrayType.superclass.constructor.call(this, set);
+var array = exports.array = function(set) {
+    array.superclass.constructor.call(this, set);
 };
 
-utils.inherit(arrayType, dataTypeBase, {
-    typeName: 'array',
-    parse: function(value) {
+utils.inherit(array, dataTypeBase, {
+    parse: function(value, fieldName) {
         var vt = utils.type(value);
         if (vt  === 'string') {
             var parts = value.split(',');

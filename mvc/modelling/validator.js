@@ -18,98 +18,315 @@ var validatorBase = function(set) {
 
 validatorBase.prototype = {
 
-    validName: null, errorMessage: null,
+    errorMessage: null,
 
     constructor: validatorBase,
 
-    valid: function(value) {
+    valid: function(value, fieldName) {
         throw new Error('"valid" interface function needs override by sub classes');
     }
 };
 
 
-/* emptyValidator
+/* empty
 ***************************************/
-var emptyValidator = exports.emptyValidator = function(enabled) {
-    emptyValidator.superclass.constructor.call(this);
+var empty = exports.empty = function(enabled) {
+    empty.superclass.constructor.call(this);
     this.enabled = !!enabled;
 };
 
-utils.inherit(emptyValidator, validatorBase, {
-    validName: 'empty', enabled: true,
-    valid: function(value) {
-        //TODO:
-    }
-});
-
-
-/* notEmptyValidator
-***************************************/
-var notEmptyValidator = exports.notEmptyValidator = function() {
-    notEmptyValidator.superclass.constructor.apply(this, arguments);
-};
-
-utils.inherit(notEmptyValidator, emptyValidator, {
-    validName: 'notEmpty',
-    valid: function(value) {
-        return !notEmptyValidator.superclass.valid.call(this, value);
-    }
-});
-
-
-/* requiredValidator
-***************************************/
-var requiredValidator = exports.requiredValidator = function(set) {
-    requiredValidator.superclass.constructor.call(this, set);
-};
-
-utils.inherit(requiredValidator, validatorBase, {
-    validName: 'required',
-    valid: function(value) {
-        //TODO:
-    }
-});
-
-/* minLengthValidator
-***************************************/
-var minLengthValidator = exports.minLengthValidator = function(len) {
-    minLengthValidator.superclass.constructor.call(this, null);
-    this.length = len;
-};
-
-utils.inherit(minLengthValidator, validatorBase, {
-    validName: 'minLength',
-    valid: function(value) {
-        if (value.length < this.length) {
-            throw new Error('Value length is overflow');
+utils.inherit(empty, validatorBase, {
+    enabled: true,
+    valid: function(value, fieldName) {
+        if (this.enabled) {
+            var success = (value === '' || value === null || value === undefined);
+            if (!success) {
+                throw new Error('Field "' + fieldName + '" is require empty');
+            }
         }
     }
 });
 
-/* maxLengthValidator
+
+/* notEmpty
 ***************************************/
-var maxLengthValidator = exports.maxLengthValidator = function(len) {
-    maxLengthValidator.superclass.constructor.call(this, null);
-    this.length = len;
+var notEmpty = exports.notEmpty = function(enabled) {
+    notEmpty.superclass.constructor.apply(this);
+    this.enabled = !!enabled;
 };
 
-utils.inherit(maxLengthValidator, validatorBase, {
-    validName: 'maxLength',
-    valid: function(value) {
-        if (value.length > this.length) {
-            throw new Error('Value length is overflow');
+utils.inherit(notEmpty, validatorBase, {
+    enabled: true,
+    valid: function(value, fieldName) {
+        if (this.enabled) {
+            var success = (value === '' || value === null || value === undefined);
+            if (success) {
+                throw new Error('Field "' + fieldName + '" is require not empty');
+            }
         }
     }
 });
+
+
+/* required
+***************************************/
+var required = exports.required = function(enabled) {
+    required.superclass.constructor.call(this);
+    this.enabled = !!enabled;
+};
+
+utils.inherit(required, validatorBase, {
+    enabled: true,
+    valid: function(value, fieldName) {
+        if (this.enabled) {
+            var success = (value === '' || value === null || value === undefined);
+            if (success) {
+                throw new Error('Field "' + fieldName + '" is required');
+            }
+        }
+    }
+});
+
+
+/* minLength
+***************************************/
+var minLength = exports.minLength = function(len) {
+    minLength.superclass.constructor.call(this);
+    this.length = len;
+};
+
+utils.inherit(minLength, validatorBase, {
+    length: null,
+    valid: function(value, fieldName) {
+        if (this.length !== false) {
+            if (value && value.length < this.length) {
+                throw new Error('Field "' + fieldName + '" required min length ' + this.length);
+            }
+        }
+    }
+});
+
+exports.minLen = exports.minLength;
+
+
+/* maxLength
+***************************************/
+var maxLength = exports.maxLength = function(len) {
+    maxLength.superclass.constructor.call(this);
+    this.length = len;
+};
+
+utils.inherit(maxLength, validatorBase, {
+    length: null,
+    valid: function(value, fieldName) {
+        if (this.length !== false) {
+            if (value && value.length > this.length) {
+                throw new Error('Field "' + fieldName + '" required max length ' + this.length);
+            }
+        }
+    }
+});
+
+exports.maxLen = exports.maxLength;
+
+
+/* Length
+***************************************/
+var Length = exports.Length = function(len) {
+    Length.superclass.constructor.call(this);
+    this.length = len;
+};
+
+utils.inherit(Length, validatorBase, {
+    length: null,
+    valid: function(value, fieldName) {
+        if (this.length !== false) {
+            if (value && value.length != this.length) {
+                throw new Error('Field "' + fieldName + '" required length ' + this.length);
+            }
+        }
+    }
+});
+
+exports.len = exports.Length;
+
+
+/* min
+***************************************/
+var min = exports.min = function(value) {
+    min.superclass.constructor.call(this);
+    this.value = value;
+};
+
+utils.inherit(min, validatorBase, {
+    value: null,
+    valid: function(value, fieldName) {
+        if (utils.isNumber(this.value)) {
+            if (this.value > value) {
+                throw new Error('Field "' + fieldName + '" required min number ' + this.value);
+            }
+        }
+    }
+});
+
+
+/* max
+***************************************/
+var max = exports.max = function(value) {
+    max.superclass.constructor.call(this);
+    this.value = value;
+};
+
+utils.inherit(max, validatorBase, {
+    value: null,
+    valid: function(value, fieldName) {
+        if (utils.isNumber(this.value)) {
+            if (this.value < value) {
+                throw new Error('Field "' + fieldName + '" required max number ' + this.value);
+            }
+        }
+    }
+});
+
+
+/* Undefined
+***************************************/
+var Undefined = exports.Undefined = function(enabled) {
+    Undefined.superclass.constructor.call(this);
+    this.enabled = !!enabled;
+};
+
+utils.inherit(Undefined, validatorBase, {
+    enabled: null,
+    valid: function(value, fieldName) {
+        if (this.enabled) {
+            if (value !== undefined) {
+                throw new Error('Field "' + fieldName + '" required undefined');
+            }
+        }
+    }
+});
+
+
+/* Null
+***************************************/
+var Null = exports.Null = function(enabled) {
+    Null.superclass.constructor.call(this);
+    this.enabled = !!enabled;
+};
+
+utils.inherit(Null, validatorBase, {
+    enabled: null,
+    valid: function(value, fieldName) {
+        if (this.enabled) {
+            if (value !== null) {
+                throw new Error('Field "' + fieldName + '" required null');
+            }
+        }
+    }
+});
+
+
+/* notNull
+***************************************/
+var notNull = exports.notNull = function(enabled) {
+    notNull.superclass.constructor.call(this);
+    this.enabled = !!enabled;
+};
+
+utils.inherit(notNull, validatorBase, {
+    enabled: null,
+    valid: function(value, fieldName) {
+        if (this.enabled) {
+            if (value === null) {
+                throw new Error('Field "' + fieldName + '" required not null');
+            }
+        }
+    }
+});
+
+
+/* string
+***************************************/
+var string = exports.string = function(enabled) {
+    string.superclass.constructor.call(this);
+    this.enabled = !!enabled;
+};
+
+utils.inherit(string, validatorBase, {
+    enabled: null,
+    valid: function(value, fieldName) {
+        if (this.enabled) {
+            if (!utils.isString(value)) {
+                throw new Error('Field "' + fieldName + '" required string type');
+            }
+        }
+    }
+});
+
+
+/* numeric
+***************************************/
+var numeric = exports.numeric = function(enabled) {
+    numeric.superclass.constructor.call(this);
+    this.enabled = !!enabled;
+};
+
+utils.inherit(numeric, validatorBase, {
+    enabled: null,
+    valid: function(value, fieldName) {
+        if (this.enabled) {
+            if (!utils.isNumeric(value)) {
+                throw new Error('Field "' + fieldName + '" required numeric type');
+            }
+        }
+    }
+});
+
+
+/* number
+***************************************/
+var number = exports.number = function(enabled) {
+    number.superclass.constructor.call(this);
+    this.enabled = !!enabled;
+};
+
+utils.inherit(number, validatorBase, {
+    enabled: null,
+    valid: function(value, fieldName) {
+        if (this.enabled) {
+            if (!utils.isNumber(value)) {
+                throw new Error('Field "' + fieldName + '" required number type');
+            }
+        }
+    }
+});
+
+
+/* BOOLEAN
+***************************************/
+var BOOLEAN = exports.BOOLEAN = function(enabled) {
+    BOOLEAN.superclass.constructor.call(this);
+    this.enabled = !!enabled;
+};
+
+utils.inherit(BOOLEAN, validatorBase, {
+    enabled: null,
+    valid: function(value, fieldName) {
+        if (this.enabled) {
+            if (!utils.isBoolean(value)) {
+                throw new Error('Field "' + fieldName + '" required boolean type');
+            }
+        }
+    }
+});
+
+exports.bool = exports.BOOLEAN;
+
+
 
 var types = [
-    'empty',
-    'required',
-    'notEmpty',
-    'undefined',
-    'string',
     'alpha',
-    'numeric',
     'alphanumeric',
     'email',
     'url',
@@ -123,15 +340,11 @@ var types = [
     'uuidv4',
     'int',
     'integer',
-    'number',
     'finite',
     'decimal',
     'float',
     'falsey',
     'truthy',
-    'null',
-    'notNull',
-    'boolean',
     'array',
     'date',
     'hexadecimal',
@@ -147,11 +360,6 @@ var types = [
     'equals',
     'contains',
     'notContains',
-    'len',
     'in',
-    'notIn',
-    'max',
-    'min',
-    'minLength',
-    'maxLength'
+    'notIn'
 ];

@@ -20,19 +20,18 @@ mvcModelState.prototype = {
 
     constructor: mvcModelState,
 
-    addModelError: function(key, error) {
-        var state = this._inner.get(key);
+    addModelError: function(namespace, error) {
+        var state = this._inner.get(namespace);
         if (!state) {
             state = {
-                key: key,
-                value: null,
-                errors: []
+                value: null, errors: [],
+                namespace: namespace
             };
         }
         if (error) {
             state.errors.push(error);
         }
-        this._inner.set(key, state);
+        this._inner.set(namespace, state);
     },
 
     isValidField: function(namespace) {
@@ -67,14 +66,14 @@ mvcModelState.prototype = {
         return result;
     },
 
-    setModelValue: function(key, value) {
-        this.addModelError(key, null);
-        var state = this._inner.get(key);
+    setModelValue: function(namespace, value) {
+        this.addModelError(namespace, null);
+        var state = this._inner.get(namespace);
         state.value = value;
     },
 
-    remove: function(key) {
-        this._inner.remove(key);
+    remove: function(namespace) {
+        this._inner.remove(namespace);
     },
 
     clear: function() {

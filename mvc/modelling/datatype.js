@@ -16,8 +16,6 @@ var dataTypeBase = function() { };
 
 dataTypeBase.prototype = {
 
-    typeName: null,
-
     constructor: dataTypeBase,
 
     parse: function(value, fieldName) {
@@ -33,7 +31,6 @@ var string = exports.string = function(set) {
 };
 
 utils.inherit(string, dataTypeBase, {
-    typeName: 'string',
     parse: function(value, fieldName) {
         if (value === null || value === undefined) {
             return value;
@@ -51,7 +48,6 @@ var integer = exports.integer = function(set) {
 };
 
 utils.inherit(integer, dataTypeBase, {
-    typeName: 'integer',
     parse: function(value, fieldName) {
         var ret = parseInt(value, 10);
         return isNaN(ret) ?  0 : ret;

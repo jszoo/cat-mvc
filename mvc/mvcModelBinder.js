@@ -47,20 +47,28 @@ mvcModelBinder.prototype = {
                 utils.each(obj, function(key, item) {
                     var partNs = isArr ? ('[' + key + ']') : ('.' + key.toLowerCase());
                     var currNs = parentNs + partNs;
-                    var fullNs = rootNs + currNs;
                     //
                     var metas = modelling.resolve(item);
                     if (metas.has()) {
-                        var value = null;
-                        if (parentNs || paramsDict[String(key).toLowerCase()]) {
-                            value = utils.readObj(datas, fullNs);
-                        } else {
-                            value = utils.readObj(datas, fullNs) || utils.readObj(datas, currNs);
+                        var fullNs = rootNs + currNs, stateNs = fullNs;
+                        var value = utils.readObj(datas, fullNs);
+                        //
+                        if (!value && !parentNs) {
+                            var currKey = String(key).toLowerCase();
+                            if (!paramsDict[currKey]) {
+                                var value2 = utils.readObj(datas, currKey);
+                                if (value2 !== undefined) {
+                                    stateNs = currKey;
+                                    value = value2;
+                                }
+                            }
                         }
+                        // exe
                         obj[key] = metas.exe(value, function(err) {
-                            modelState.addModelError(fullNs, err);
+                            modelState.addModelError(stateNs, err);
                         });
                     } else {
+                        // loop
                         walk(item, currNs);
                     }
                 });

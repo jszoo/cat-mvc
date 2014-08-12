@@ -55,7 +55,7 @@ mvcModelBinder.prototype = {
                         if (parentNs) {
                             value = utils.readObj(datas, fullNs);
                         }
-                        else if (!paramsDict[key.toLowerCase()]) {
+                        else if (!paramsDict[String(key).toLowerCase()]) {
                             value = utils.readObj(datas, currNs);
                         }
                         obj[key] = metas.exe(value, function(err) {

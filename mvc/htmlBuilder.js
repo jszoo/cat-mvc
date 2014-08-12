@@ -27,6 +27,12 @@ htmlBuilder.prototype = {
 
     constructor: htmlBuilder,
 
+    newTag: function(tagName, selfClose) {
+        var ins = new htmlBuilder(tagName, selfClose);
+        this.append(ins);
+        return ins;
+    },
+
     tag: function(tagName) {
         if (tagName === undefined) {
             return (this.tagName);

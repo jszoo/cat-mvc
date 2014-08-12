@@ -15,7 +15,7 @@ var htmlBuilder = module.exports = function(tagName, selfClose) {
     //
     this.attributes = new utils.dictionary(true);
     this.classes = new utils.dictionary(true);
-    this.cssdict = new utils.dictionary(true);
+    this.csses = new utils.dictionary(true);
     this.children = [];
 };
 
@@ -23,7 +23,7 @@ htmlBuilder.prototype = {
 
     tagName: null, selfClose: false,
 
-    attributes: null, classes: null, cssdict: null, children: null,
+    attributes: null, classes: null, csses: null, children: null,
 
     constructor: htmlBuilder,
 
@@ -41,12 +41,12 @@ htmlBuilder.prototype = {
 
     css: function(name, value) {
         if (value) {
-            this.cssdict.set(name, value);
+            this.csses.set(name, value);
         } else if (name) {
-            return this.cssdict.get(name);
+            return this.csses.get(name);
         } else {
             var arr = [];
-            utils.each(this.cssdict.all(), function(k, v) {
+            utils.each(this.csses.all(), function(k, v) {
                 arr.push(k + ': ' + v + ';');
             });
             return arr.join('');

@@ -17,9 +17,10 @@ sampleDataType.prototype = {
 
     constructor: sampleDataType,
 
-    parse: function(value) {
+    parse: function(value, fieldName) {
 		//TODO: customize logic
 		// return the parsed value
+		// just throw Error if parse failure
 		return value;
     }
 };

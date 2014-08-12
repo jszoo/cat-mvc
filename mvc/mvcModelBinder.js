@@ -47,21 +47,31 @@ mvcModelBinder.prototype = {
                 utils.each(obj, function(key, item) {
                     var partNs = isArr ? ('[' + key + ']') : ('.' + key.toLowerCase());
                     var currNs = parentNs + partNs;
-                    var fullNs = rootNs + currNs;
                     //
                     var metas = modelling.resolve(item);
                     if (metas.has()) {
-                        var value = null;
-                        if (parentNs) {
-                            value = utils.readObj(datas, fullNs);
+                        var fullNs = rootNs + currNs, stateNs = fullNs;
+                        var value = utils.readObj(datas, fullNs);
+                        //
+                        if (!value && !parentNs) {
+                            var currKey = String(key).toLowerCase();
+                            if (!paramsDict[currKey]) {
+                                var value2 = utils.readObj(datas, currKey);
+                                if (value2 !== undefined) {
+                                    stateNs = currKey;
+                                    value = value2;
+                                }
+                            }
                         }
-                        else if (!paramsDict[key.toLowerCase()]) {
-                            value = utils.readObj(datas, currNs);
-                        }
-                        obj[key] = metas.exe(value, function(err) {
-                            modelState.addModelError(fullNs, err);
+                        // exe
+                        value = metas.exe(value, stateNs, function(err) {
+                            modelState.addModelError(stateNs, err);
                         });
-                    } else {
+                        // state
+                        modelState.setModelValue(stateNs, (obj[key] = value));
+                    }
+                    else {
+                        // loop
                         walk(item, currNs);
                     }
                 });

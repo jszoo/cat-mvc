@@ -88,7 +88,7 @@ modellingMetas.prototype = {
         if (this.validators) {
             utils.each(this.validators, function(i, obj) {
                 try {
-                    obj.valid(value, fieldName);
+                    obj.validate(value, fieldName);
                 } catch (ex) {
                     reportError(ex);
                 }

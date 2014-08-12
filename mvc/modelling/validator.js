@@ -22,8 +22,8 @@ validatorBase.prototype = {
 
     constructor: validatorBase,
 
-    valid: function(value, fieldName) {
-        throw new Error('"valid" interface function needs override by sub classes');
+    validate: function(value, fieldName) {
+        throw new Error('"validate" interface function needs override by sub classes');
     }
 };
 
@@ -37,7 +37,7 @@ var empty = exports.empty = function(enabled) {
 
 utils.inherit(empty, validatorBase, {
     enabled: true,
-    valid: function(value, fieldName) {
+    validate: function(value, fieldName) {
         if (this.enabled) {
             var success = (value === '' || value === null || value === undefined);
             if (!success) {
@@ -57,7 +57,7 @@ var notEmpty = exports.notEmpty = function(enabled) {
 
 utils.inherit(notEmpty, validatorBase, {
     enabled: true,
-    valid: function(value, fieldName) {
+    validate: function(value, fieldName) {
         if (this.enabled) {
             var success = (value === '' || value === null || value === undefined);
             if (success) {
@@ -77,7 +77,7 @@ var required = exports.required = function(enabled) {
 
 utils.inherit(required, validatorBase, {
     enabled: true,
-    valid: function(value, fieldName) {
+    validate: function(value, fieldName) {
         if (this.enabled) {
             var success = (value === '' || value === null || value === undefined);
             if (success) {
@@ -97,7 +97,7 @@ var minLength = exports.minLength = function(len) {
 
 utils.inherit(minLength, validatorBase, {
     length: null,
-    valid: function(value, fieldName) {
+    validate: function(value, fieldName) {
         if (this.length !== false) {
             if (value && value.length < this.length) {
                 throw new Error('Field "' + fieldName + '" is required min length ' + this.length);
@@ -118,7 +118,7 @@ var maxLength = exports.maxLength = function(len) {
 
 utils.inherit(maxLength, validatorBase, {
     length: null,
-    valid: function(value, fieldName) {
+    validate: function(value, fieldName) {
         if (this.length !== false) {
             if (value && value.length > this.length) {
                 throw new Error('Field "' + fieldName + '" is required max length ' + this.length);
@@ -139,7 +139,7 @@ var Length = exports.Length = function(len) {
 
 utils.inherit(Length, validatorBase, {
     length: null,
-    valid: function(value, fieldName) {
+    validate: function(value, fieldName) {
         if (this.length !== false) {
             if (value && value.length != this.length) {
                 throw new Error('Field "' + fieldName + '" is required length ' + this.length);
@@ -160,7 +160,7 @@ var min = exports.min = function(value) {
 
 utils.inherit(min, validatorBase, {
     value: null,
-    valid: function(value, fieldName) {
+    validate: function(value, fieldName) {
         if (utils.isNumber(this.value)) {
             if (this.value > value) {
                 throw new Error('Field "' + fieldName + '" is required min number ' + this.value);
@@ -179,7 +179,7 @@ var max = exports.max = function(value) {
 
 utils.inherit(max, validatorBase, {
     value: null,
-    valid: function(value, fieldName) {
+    validate: function(value, fieldName) {
         if (utils.isNumber(this.value)) {
             if (this.value < value) {
                 throw new Error('Field "' + fieldName + '" is required max number ' + this.value);
@@ -198,7 +198,7 @@ var Undefined = exports.Undefined = function(enabled) {
 
 utils.inherit(Undefined, validatorBase, {
     enabled: null,
-    valid: function(value, fieldName) {
+    validate: function(value, fieldName) {
         if (this.enabled) {
             if (value !== undefined) {
                 throw new Error('Field "' + fieldName + '" is required undefined');
@@ -217,7 +217,7 @@ var notUndefined = exports.notUndefined = function(enabled) {
 
 utils.inherit(notUndefined, validatorBase, {
     enabled: null,
-    valid: function(value, fieldName) {
+    validate: function(value, fieldName) {
         if (this.enabled) {
             if (value === undefined) {
                 throw new Error('Field "' + fieldName + '" is required not undefined');
@@ -236,7 +236,7 @@ var Null = exports.Null = function(enabled) {
 
 utils.inherit(Null, validatorBase, {
     enabled: null,
-    valid: function(value, fieldName) {
+    validate: function(value, fieldName) {
         if (this.enabled) {
             if (value !== null) {
                 throw new Error('Field "' + fieldName + '" is required null');
@@ -255,7 +255,7 @@ var notNull = exports.notNull = function(enabled) {
 
 utils.inherit(notNull, validatorBase, {
     enabled: null,
-    valid: function(value, fieldName) {
+    validate: function(value, fieldName) {
         if (this.enabled) {
             if (value === null) {
                 throw new Error('Field "' + fieldName + '" is required not null');
@@ -274,7 +274,7 @@ var string = exports.string = function(enabled) {
 
 utils.inherit(string, validatorBase, {
     enabled: null,
-    valid: function(value, fieldName) {
+    validate: function(value, fieldName) {
         if (this.enabled) {
             if (!utils.isString(value)) {
                 throw new Error('Field "' + fieldName + '" is required string type');
@@ -293,7 +293,7 @@ var numeric = exports.numeric = function(enabled) {
 
 utils.inherit(numeric, validatorBase, {
     enabled: null,
-    valid: function(value, fieldName) {
+    validate: function(value, fieldName) {
         if (this.enabled) {
             if (!utils.isNumeric(value)) {
                 throw new Error('Field "' + fieldName + '" is required numeric type');
@@ -312,7 +312,7 @@ var number = exports.number = function(enabled) {
 
 utils.inherit(number, validatorBase, {
     enabled: null,
-    valid: function(value, fieldName) {
+    validate: function(value, fieldName) {
         if (this.enabled) {
             if (!utils.isNumber(value)) {
                 throw new Error('Field "' + fieldName + '" is required number type');
@@ -331,7 +331,7 @@ var BOOLEAN = exports.BOOLEAN = function(enabled) {
 
 utils.inherit(BOOLEAN, validatorBase, {
     enabled: null,
-    valid: function(value, fieldName) {
+    validate: function(value, fieldName) {
         if (this.enabled) {
             if (!utils.isBoolean(value)) {
                 throw new Error('Field "' + fieldName + '" is required boolean type');
@@ -352,7 +352,7 @@ var array = exports.array = function(enabled) {
 
 utils.inherit(array, validatorBase, {
     enabled: null,
-    valid: function(value, fieldName) {
+    validate: function(value, fieldName) {
         if (this.enabled) {
             if (!utils.isArray(value)) {
                 throw new Error('Field "' + fieldName + '" is required array type');
@@ -371,7 +371,7 @@ var date = exports.date = function(enabled) {
 
 utils.inherit(date, validatorBase, {
     enabled: null,
-    valid: function(value, fieldName) {
+    validate: function(value, fieldName) {
         if (this.enabled) {
             if (!utils.isDate(value)) {
                 throw new Error('Field "' + fieldName + '" is required date type');

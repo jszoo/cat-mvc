@@ -52,11 +52,10 @@ mvcModelBinder.prototype = {
                     var metas = modelling.resolve(item);
                     if (metas.has()) {
                         var value = null;
-                        if (parentNs) {
+                        if (parentNs || paramsDict[String(key).toLowerCase()]) {
                             value = utils.readObj(datas, fullNs);
-                        }
-                        else if (!paramsDict[String(key).toLowerCase()]) {
-                            value = utils.readObj(datas, currNs);
+                        } else {
+                            value = utils.readObj(datas, fullNs) || utils.readObj(datas, currNs);
                         }
                         obj[key] = metas.exe(value, function(err) {
                             modelState.addModelError(fullNs, err);

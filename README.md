@@ -196,7 +196,7 @@ There we can see some parameters in the controller handler function. The paramet
 + **tempData**    ( temp data )
 + **viewData**    ( view data )
 + **modelState**  ( model state )
-+ **end**         ( response functions wraper )
++ **end**         ( response functions wrapper )
 + **url**         ( url generator )
 
 It's very cooool, isn't it? But we think further more. We made the awesome injection customizable.

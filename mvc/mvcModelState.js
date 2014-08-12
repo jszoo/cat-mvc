@@ -23,15 +23,14 @@ mvcModelState.prototype = {
     addModelError: function(namespace, error) {
         var state = this._inner.get(namespace);
         if (!state) {
-            state = {
+            this._inner.set(namespace, state = {
                 value: null, errors: [],
                 namespace: namespace
-            };
+            });
         }
         if (error) {
             state.errors.push(error);
         }
-        this._inner.set(namespace, state);
     },
 
     isValidField: function(namespace) {

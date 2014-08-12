@@ -41,7 +41,7 @@ utils.inherit(empty, validatorBase, {
         if (this.enabled) {
             var success = (value === '' || value === null || value === undefined);
             if (!success) {
-                throw new Error('Field "' + fieldName + '" is require empty');
+                throw new Error('Field "' + fieldName + '" is required empty');
             }
         }
     }
@@ -61,7 +61,7 @@ utils.inherit(notEmpty, validatorBase, {
         if (this.enabled) {
             var success = (value === '' || value === null || value === undefined);
             if (success) {
-                throw new Error('Field "' + fieldName + '" is require not empty');
+                throw new Error('Field "' + fieldName + '" is required not empty');
             }
         }
     }
@@ -100,7 +100,7 @@ utils.inherit(minLength, validatorBase, {
     valid: function(value, fieldName) {
         if (this.length !== false) {
             if (value && value.length < this.length) {
-                throw new Error('Field "' + fieldName + '" required min length ' + this.length);
+                throw new Error('Field "' + fieldName + '" is required min length ' + this.length);
             }
         }
     }
@@ -121,7 +121,7 @@ utils.inherit(maxLength, validatorBase, {
     valid: function(value, fieldName) {
         if (this.length !== false) {
             if (value && value.length > this.length) {
-                throw new Error('Field "' + fieldName + '" required max length ' + this.length);
+                throw new Error('Field "' + fieldName + '" is required max length ' + this.length);
             }
         }
     }
@@ -142,7 +142,7 @@ utils.inherit(Length, validatorBase, {
     valid: function(value, fieldName) {
         if (this.length !== false) {
             if (value && value.length != this.length) {
-                throw new Error('Field "' + fieldName + '" required length ' + this.length);
+                throw new Error('Field "' + fieldName + '" is required length ' + this.length);
             }
         }
     }
@@ -163,7 +163,7 @@ utils.inherit(min, validatorBase, {
     valid: function(value, fieldName) {
         if (utils.isNumber(this.value)) {
             if (this.value > value) {
-                throw new Error('Field "' + fieldName + '" required min number ' + this.value);
+                throw new Error('Field "' + fieldName + '" is required min number ' + this.value);
             }
         }
     }
@@ -182,7 +182,7 @@ utils.inherit(max, validatorBase, {
     valid: function(value, fieldName) {
         if (utils.isNumber(this.value)) {
             if (this.value < value) {
-                throw new Error('Field "' + fieldName + '" required max number ' + this.value);
+                throw new Error('Field "' + fieldName + '" is required max number ' + this.value);
             }
         }
     }
@@ -201,7 +201,26 @@ utils.inherit(Undefined, validatorBase, {
     valid: function(value, fieldName) {
         if (this.enabled) {
             if (value !== undefined) {
-                throw new Error('Field "' + fieldName + '" required undefined');
+                throw new Error('Field "' + fieldName + '" is required undefined');
+            }
+        }
+    }
+});
+
+
+/* notUndefined
+***************************************/
+var notUndefined = exports.notUndefined = function(enabled) {
+    notUndefined.superclass.constructor.call(this);
+    this.enabled = !!enabled;
+};
+
+utils.inherit(notUndefined, validatorBase, {
+    enabled: null,
+    valid: function(value, fieldName) {
+        if (this.enabled) {
+            if (value === undefined) {
+                throw new Error('Field "' + fieldName + '" is required not undefined');
             }
         }
     }
@@ -220,7 +239,7 @@ utils.inherit(Null, validatorBase, {
     valid: function(value, fieldName) {
         if (this.enabled) {
             if (value !== null) {
-                throw new Error('Field "' + fieldName + '" required null');
+                throw new Error('Field "' + fieldName + '" is required null');
             }
         }
     }
@@ -239,7 +258,7 @@ utils.inherit(notNull, validatorBase, {
     valid: function(value, fieldName) {
         if (this.enabled) {
             if (value === null) {
-                throw new Error('Field "' + fieldName + '" required not null');
+                throw new Error('Field "' + fieldName + '" is required not null');
             }
         }
     }
@@ -258,7 +277,7 @@ utils.inherit(string, validatorBase, {
     valid: function(value, fieldName) {
         if (this.enabled) {
             if (!utils.isString(value)) {
-                throw new Error('Field "' + fieldName + '" required string type');
+                throw new Error('Field "' + fieldName + '" is required string type');
             }
         }
     }
@@ -277,7 +296,7 @@ utils.inherit(numeric, validatorBase, {
     valid: function(value, fieldName) {
         if (this.enabled) {
             if (!utils.isNumeric(value)) {
-                throw new Error('Field "' + fieldName + '" required numeric type');
+                throw new Error('Field "' + fieldName + '" is required numeric type');
             }
         }
     }
@@ -296,7 +315,7 @@ utils.inherit(number, validatorBase, {
     valid: function(value, fieldName) {
         if (this.enabled) {
             if (!utils.isNumber(value)) {
-                throw new Error('Field "' + fieldName + '" required number type');
+                throw new Error('Field "' + fieldName + '" is required number type');
             }
         }
     }
@@ -315,7 +334,7 @@ utils.inherit(BOOLEAN, validatorBase, {
     valid: function(value, fieldName) {
         if (this.enabled) {
             if (!utils.isBoolean(value)) {
-                throw new Error('Field "' + fieldName + '" required boolean type');
+                throw new Error('Field "' + fieldName + '" is required boolean type');
             }
         }
     }
@@ -323,6 +342,43 @@ utils.inherit(BOOLEAN, validatorBase, {
 
 exports.bool = exports.BOOLEAN;
 
+
+/* array
+***************************************/
+var array = exports.array = function(enabled) {
+    array.superclass.constructor.call(this);
+    this.enabled = !!enabled;
+};
+
+utils.inherit(array, validatorBase, {
+    enabled: null,
+    valid: function(value, fieldName) {
+        if (this.enabled) {
+            if (!utils.isArray(value)) {
+                throw new Error('Field "' + fieldName + '" is required array type');
+            }
+        }
+    }
+});
+
+
+/* date
+***************************************/
+var date = exports.date = function(enabled) {
+    date.superclass.constructor.call(this);
+    this.enabled = !!enabled;
+};
+
+utils.inherit(date, validatorBase, {
+    enabled: null,
+    valid: function(value, fieldName) {
+        if (this.enabled) {
+            if (!utils.isDate(value)) {
+                throw new Error('Field "' + fieldName + '" is required date type');
+            }
+        }
+    }
+});
 
 
 var types = [
@@ -345,8 +401,6 @@ var types = [
     'float',
     'falsey',
     'truthy',
-    'array',
-    'date',
     'hexadecimal',
     'hexColor',
     'lowercase',

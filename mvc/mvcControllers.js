@@ -32,16 +32,29 @@ mvcControllers.prototype = {
         }
         if (controller instanceof mvcController) {
             name = (name || controller.name());
-            this._inner.set(name, controller);
+            if (/.+Controller$/i.test(name)) {
+                var len = 'Controller'.length;
+                name = name.substr(0, name.length - len);
+                controller.name(name);
+            }
+            if (!this.exists(name)) {
+                this._inner.set(name, controller);
+            } else {
+                throw new Error(utils.format('Controller "{0}"" under area "{1}" is duplicated', name, this.ownerAreaName));
+            }
         }
-    },
-
-    remove: function(name) {
-        return this._inner.remove(name);
     },
 
     get: function(name) {
         return this._inner.get(name);
+    },
+
+    exists: function(name) {
+        return this._inner.exists(name);
+    },
+
+    remove: function(name) {
+        return this._inner.remove(name);
     },
 
     clear: function() {

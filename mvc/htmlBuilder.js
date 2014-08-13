@@ -92,20 +92,23 @@ htmlBuilder.prototype = {
         if (!this.tagName) {
             throw new Error('tagName is required');
         }
+        if (!indent) {
+            indent = '';
+        } else if (indent === true) {
+            indent = '    ';
+        } else if (!utils.isString(indent)) {
+            throw new Error('indent is invalid');
+        }
+        //
         if (!utils.isNumber(level) || level < 0) {
             level = 0;
         } else {
             level = Math.floor(level);
         }
-        if (!utils.isNumber(indent) || indent < 0) {
-            indent = 0;
-        } else {
-            indent = Math.floor(indent);
-        }
         //
-        var space = '', num = level * indent;
-        for (var i = 0; i < num; i++) {
-            space += ' ';
+        var space = '';
+        for (var i = 0; i < level; i++) {
+            space += indent;
         }
         //
         var html = [space];
@@ -134,11 +137,7 @@ htmlBuilder.prototype = {
             if (!this.children.length) {
                 html.push('</' + this.tagName + '>');
             } else {
-                var childSpace = space;
-                for (var c = 0; c < indent;  c++) {
-                    childSpace += ' ';
-                }
-                //
+                var childSpace = space + indent;
                 if (childSpace) {
                     html.push('\n');
                 }

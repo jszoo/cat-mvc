@@ -74,7 +74,7 @@ describe('htmlBuilder', function() {
         });
 
         it('with indent', function() {
-            assert.equal(builder.toString(4, 0), '<html>\n    <head zoo="cat" name="head" class="zoo title" style="width: 10px; color: red;">\n        inner content appended\n    </head>\n</html>');
+            assert.equal(builder.toString(true), '<html>\n    <head zoo="cat" name="head" class="zoo title" style="width: 10px; color: red;">\n        inner content appended\n    </head>\n</html>');
         });
     });
 });

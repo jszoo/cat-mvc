@@ -14,7 +14,7 @@ var path = require('path'),
     httpHelper = require('./httpHelper'),
     mvcArea = require('./mvcArea'),
 	mvcAreas = require('./mvcAreas'),
-    mvcModel = require('./mvcModel'),
+    mvcModelMeta = require('./mvcModelMeta'),
     mvcController = require('./mvcController'),
     mvcActionResult = require('./mvcActionResult'),
     mvcModelling = require('./modelling/$manager'),
@@ -203,7 +203,7 @@ module.exports = utils.extend(appGainer, {
     actionResults: mvcActionResult,
     //
     area: mvcArea.api,
-    model: mvcModel.api,
+    model: mvcModelMeta.api,
     controller: mvcController.api,
     //
     modelling: modelling,

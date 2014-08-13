@@ -1,5 +1,5 @@
 /*
-* mvcModel
+* mvcModelMeta
 * author: ruleechen
 * contact: rulee@live.cn
 * create date: 2014.7.31
@@ -10,16 +10,16 @@
 var utils = require('zoo-utils'),
     modelsDefined;
 
-var mvcModel = module.exports = function(set) {
+var mvcModelMeta = module.exports = function(set) {
     utils.extend(this, set);
 };
 
-mvcModel.api = function(name, obj) {
+mvcModelMeta.api = function(name, obj) {
     if (!obj) {
         obj = name;
         name = null;
     }
-    var ret = new mvcModel({
+    var ret = new mvcModelMeta({
         name: name,
         metadata: obj
     });
@@ -29,7 +29,7 @@ mvcModel.api = function(name, obj) {
     return ret;
 };
 
-mvcModel.loadfile = function(filePath) {
+mvcModelMeta.loadfile = function(filePath) {
     var ret, expo; modelsDefined = [];
     try {
         delete require.cache[filePath];
@@ -39,25 +39,25 @@ mvcModel.loadfile = function(filePath) {
         return null;
     }
     //
-    if (expo instanceof mvcModel) {
+    if (expo instanceof mvcModelMeta) {
         ret = [expo];
     }
     else if (modelsDefined.length) {
         ret = modelsDefined;
     }
     else {
-        ret = [mvcModel.api(expo)];
+        ret = [mvcModelMeta.api(expo)];
     }
     //
     modelsDefined = null;
     return ret;
 };
 
-mvcModel.prototype = {
+mvcModelMeta.prototype = {
 
     ownerAreaName: null, path: null, name: null, metadata: null,
 
-    constructor: mvcModel,
+    constructor: mvcModelMeta,
 
     inner: function(p) {
         return (p === undefined) ? (this.metadata) : (this.metadata = p, this);

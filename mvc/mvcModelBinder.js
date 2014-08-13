@@ -9,21 +9,25 @@
 
 var utils = require('zoo-utils');
 
-var mvcModelBinder = module.exports = function(model) {
-    this.model = model;
-    if (!this.model) {
-        throw new Error('The "model" of mvcModelBinder is required');
+var mvcModelBinder = module.exports = function(modelMeta) {
+    this.modelMeta = modelMeta;
+    if (!this.modelMeta) {
+        throw new Error('The "modelMeta" of mvcModelBinder is required');
     }
 };
 
 mvcModelBinder.prototype = {
 
-    model: null,
+    modelMeta: null,
 
     constructor: mvcModelBinder,
 
+    getModelMeta: function() {
+        return this.modelMeta;
+    },
+
     bindModel: function(controllerContext, bindingContext) {
-        var metadata = this.model.inner();
+        var metadata = this.modelMeta.inner();
         var rootNs = bindingContext.paramName;
         var paramsDict = bindingContext.paramsDict;
         var modelState = bindingContext.modelState;
@@ -91,7 +95,7 @@ mvcModelBinder.resolveParams = function(controllerContext, paramNames, binderAtt
             var attr;
             utils.each(binderAttrs, function(i, item) {
                 if (item.paramName.toLowerCase() === paramName &&
-                    item.getBinder().model.ownerAreaName === areaName) {
+                    item.getBinder().getModelMeta().ownerAreaName === areaName) {
                     attr = item;
                     return false;
                 }

@@ -27,7 +27,7 @@ ejsView.prototype = {
                 viewContext: viewContext,
                 tempData: viewContext.tempData,
                 viewData: viewContext.viewData,
-                model: viewContext.viewData.model,
+                model: viewContext.viewData.model(),
                 url: viewContext.controller.url
             };
             ejs(this.filePath, data, function(err, str) {

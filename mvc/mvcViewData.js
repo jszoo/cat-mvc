@@ -12,25 +12,24 @@ var utils = require('zoo-utils'),
 
 var mvcViewData = module.exports = function(set) {
     utils.extend(this, set);
-    if (!this.model) { this.model = {}; }
-    this.modelState = new mvcModelState();
+    if (!this._model) { this._model = {}; }
+    this._modelState = new mvcModelState();
     mvcViewData.superclass.constructor.call(this, true);
 };
 
 utils.inherit(mvcViewData, utils.dictionary, {
 
-    httpContext: null, model: null, modelState: null,
+    httpContext: null, _model: null, _modelState: null,
 
-    setModel: function(model) {
-        model = model || {};
-        this.model = model;
+    model: function(m) {
+        return m ? (this._model = m, this) : (this._model);
     },
 
     getModelState: function() {
-        return this.modelState;
+        return this._modelState;
     },
 
     getModelMetadata: function() {
-        return this.model && this.model.__metadata;
+        return this._model && this._model.__metadata;
     }
 });

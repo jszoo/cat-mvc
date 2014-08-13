@@ -22,11 +22,11 @@ mvcModelApi.prototype = {
     get: function(modelName, clone) {
         var ctx = this.httpContext, app = ctx.app;
         var attrClass = app.attributes.get(modelName, ctx.routeArea.name);
-        if (!attrClass && ctx.routeArea !== ctx.areas.rootArea()) {
-            attrClass = app.attributes.get(modelName, ctx.areas.rootArea().name);
+        if (!attrClass && ctx.routeArea !== app.areas.rootArea()) {
+            attrClass = app.attributes.get(modelName, app.areas.rootArea().name);
         }
         if (attrClass) {
-            var attr = new attrClass();
+            var attr = new attrClass('anyName');
             if (utils.isFunction(attr.getBinder)) {
                 var binder = attr.getBinder();
                 var modelMeta = binder.getModelMeta();

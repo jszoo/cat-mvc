@@ -37,7 +37,7 @@ mvcModelBinder.prototype = {
         var metas = modelling.resolve(metadata);
         if (metas.has()) {
             var value = utils.readObj(datas, rootNs);
-            return metas.exe(value, function(err) {
+            return metas.exe(value, rootNs, function(err) {
                 modelState.addModelError(rootNs, err);
             });
         } else {

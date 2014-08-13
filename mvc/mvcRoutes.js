@@ -42,6 +42,10 @@ utils.inherit(mvcRoutes, events.EventEmitter, {
         return this._inner.get(name);
     },
 
+    exists: function(name) {
+        return this._inner.exists(name);
+    },
+
     remove: function(name) {
         this._inner.remove(name);
         this.emit('changed');

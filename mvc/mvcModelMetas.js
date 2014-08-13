@@ -41,6 +41,27 @@ mvcModelMetas.prototype = {
 
     constructor: mvcModelMetas,
 
+    all: function() {
+        return this._inner.all();
+    },
+
+    get: function(name) {
+        return this._inner.get(name);
+    },
+
+    exists: function(name) {
+        return this._inner.exists(name);
+    },
+
+    remove: function(name) {
+        this._inner.remove(name);
+        modelAttributes.del(name, this.ownerAreaName);
+    },
+
+    clear: function() {
+        this._inner.clear();
+    },
+
     register: function(name, modelMeta) {
         if (!modelMeta) {
             modelMeta = name;
@@ -53,23 +74,6 @@ mvcModelMetas.prototype = {
             this._inner.set(name, modelMeta);
             modelAttributes.set(name, modelMeta, this.ownerAreaName);
         }
-    },
-
-    all: function() {
-        return this._inner.all();
-    },
-
-    get: function(name) {
-        return this._inner.get(name);
-    },
-
-    remove: function(name) {
-        this._inner.remove(name);
-        modelAttributes.del(name, this.ownerAreaName);
-    },
-
-    clear: function() {
-        this._inner.clear();
     },
 
     loaddir: function(modelsPath, act) {

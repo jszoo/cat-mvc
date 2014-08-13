@@ -25,6 +25,26 @@ mvcControllers.prototype = {
 
     constructor: mvcControllers,
 
+    all: function() {
+        return this._inner.all();
+    },
+
+    get: function(name) {
+        return this._inner.get(name);
+    },
+
+    exists: function(name) {
+        return this._inner.exists(name);
+    },
+
+    remove: function(name) {
+        return this._inner.remove(name);
+    },
+
+    clear: function() {
+        return this._inner.clear();
+    },
+
     register: function(name, controller) {
         if (!controller) {
             controller = name;
@@ -43,22 +63,6 @@ mvcControllers.prototype = {
                 throw new Error(utils.format('Controller "{0}"" under area "{1}" is duplicated', name, this.ownerAreaName));
             }
         }
-    },
-
-    get: function(name) {
-        return this._inner.get(name);
-    },
-
-    exists: function(name) {
-        return this._inner.exists(name);
-    },
-
-    remove: function(name) {
-        return this._inner.remove(name);
-    },
-
-    clear: function() {
-        return this._inner.clear();
     },
 
     loaddir: function(ctrlsPath, act) {

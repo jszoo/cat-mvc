@@ -40,16 +40,20 @@ utils.inherit(mvcAreas, events.EventEmitter, {
 
     _inner: null, _routeSet: null, app: null,
 
-    conf: function(name) {
-        return this.app.get(name) || utils.readObj({ fileNames: fileNames, folderNames: folderNames }, name);
-    },
-
     all: function() {
         return this._inner.all();
     },
 
     get: function(areaName) {
         return this._inner.get(areaName);
+    },
+
+    exists: function(areaName) {
+        return this._inner.exists(areaName);
+    },
+
+    conf: function(name) {
+        return this.app.get(name) || utils.readObj({ fileNames: fileNames, folderNames: folderNames }, name);
     },
 
     rootArea: function() {

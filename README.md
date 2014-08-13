@@ -184,8 +184,9 @@ mvc.controller(name, attributes, function() {
 
 **Injection of controller**   
 There we can see some parameters in the controller handler function. The parameters will injected automatically base on parameter names. We alreay have some common used objects builtin. They are:
+
 | **Name**    | **Description**            | **Useage**          |
-|-------------|----------------------------|---------------------|
+|:----------- |:---------------------------|:--------------------|
 | req         | raw nodejs request object  |                     |
 | request     | raw nodejs request object  |                     |
 | res         | raw nodejs response object |                     |

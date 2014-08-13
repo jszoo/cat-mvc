@@ -23,21 +23,21 @@ mvcModelBinder.prototype = {
     constructor: mvcModelBinder,
 
     bindModel: function(controllerContext, bindingContext) {
-        var raw = this.model.inner();
+        var metadata = this.model.inner();
         var rootNs = bindingContext.paramName;
         var paramsDict = bindingContext.paramsDict;
         var modelState = bindingContext.modelState;
         var modelling = controllerContext.app.modelling;
         var datas = controllerContext.requestDatas('lowerAll');
         //
-        var metas = modelling.resolve(raw);
+        var metas = modelling.resolve(metadata);
         if (metas.has()) {
             var value = utils.readObj(datas, rootNs);
             return metas.exe(value, function(err) {
                 modelState.addModelError(rootNs, err);
             });
         } else {
-            var clone = utils.extend(true, {}, raw);
+            var clone = utils.extend(true, {}, metadata);
             var walk = function(obj, parentNs) {
                 var t = utils.type(obj);
                 var isArr = (t === 'array')

@@ -21,7 +21,7 @@ mvcModel.api = function(name, obj) {
     }
     var ret = new mvcModel({
         name: name,
-        raw: obj
+        metadata: obj
     });
     if (modelsDefined) {
         modelsDefined.push(ret);
@@ -55,11 +55,11 @@ mvcModel.loadfile = function(filePath) {
 
 mvcModel.prototype = {
 
-    ownerAreaName: null, path: null, name: null, raw: null,
+    ownerAreaName: null, path: null, name: null, metadata: null,
 
     constructor: mvcModel,
 
     inner: function(p) {
-        return (p === undefined) ? (this.raw) : (this.raw = p, this);
+        return (p === undefined) ? (this.metadata) : (this.metadata = p, this);
     }
 };

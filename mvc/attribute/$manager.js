@@ -55,6 +55,14 @@ attributeManager.prototype = {
         }
     },
 
+    clear: function(category) {
+        if (!category) {
+            return this._inner.clear();
+        } else {
+            return this._inner.remove(attributeManager.sealedKey(attrName));
+        }
+    },
+
     register: function(attrName, attrClass, category) {
         if (!utils.isString(attrName)) { throw new Error('Parameter "attrName" require string type'); }
         if (!utils.isFunction(attrClass)) { throw new Error('Parameter "attrClass" require function type'); }

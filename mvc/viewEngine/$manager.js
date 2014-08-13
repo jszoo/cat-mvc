@@ -20,6 +20,26 @@ viewEngineManager.prototype = {
 
     constructor: viewEngineManager,
 
+    all: function() {
+        return this._inner.all();
+    },
+
+    get: function(engineName) {
+        return this._inner.get(engineName);
+    },
+
+    exists: function(engineName) {
+        return this._inner.exists(engineName);
+    },
+
+    remove: function(engineName) {
+        return this._inner.remove(engineName);
+    },
+
+    clear: function() {
+        return this._inner.clear();
+    },
+
     register: function(engineName, viewEngine) {
         if (!engineName) { throw new Error('Parameter "engineName" is required'); }
         if (!viewEngine) { throw new Error('Parameter "viewEngine" is required'); }
@@ -79,21 +99,5 @@ viewEngineManager.prototype = {
             });
         };
         next();
-    },
-
-    get: function(engineName) {
-        return this._inner.get(engineName);
-    },
-
-    exists: function(engineName) {
-        return this._inner.exists(engineName);
-    },
-
-    remove: function(engineName) {
-        return this._inner.remove(engineName);
-    },
-
-    clear: function() {
-        return this._inner.clear();
     }
 };

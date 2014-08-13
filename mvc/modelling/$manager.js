@@ -124,6 +124,10 @@ dataTypeManager.prototype = {
         if (this.exists(name)) { throw new Error('DataType "'+ name + '" already exists'); }
         return this._inner.set(name, klass);
     },
+    
+    all: function() {
+        return this._inner.all();
+    },
 
     get: function(name) {
         return this._inner.get(name);
@@ -157,6 +161,10 @@ validatorManager.prototype = {
         if (!utils.isFunction(klass)) { throw new Error('Register data type "class" is function required'); }
         if (this.exists(name)) { throw new Error('Valiadator "'+ name + '" already exists'); }
         return this._inner.set(name, klass);
+    },
+
+    all: function() {
+        return this._inner.all();
     },
 
     get: function(name) {

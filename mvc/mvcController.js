@@ -201,7 +201,7 @@ mvcController.prototype = {
                 //
                 case 'tempdata':   params.push(self.tempData); break;
                 case 'viewdata':   params.push(self.viewData); break;
-                case 'modelstate': params.push(self.viewData.modelState); break;
+                case 'modelstate': params.push(self.viewData.getModelState()); break;
                 case 'model':      params.push(self.modelApi); break;
                 case 'end':        params.push(self.resultApi); break;
                 case 'url':        params.push(self.url); break;

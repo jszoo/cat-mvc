@@ -124,7 +124,7 @@ mvcModelBinder.resolveParams = function(controllerContext, paramNames, binderAtt
         var attr = findAttribute(lowerName, routeAreaName), val;
         if (attr) {
             val = attr.getBinder().bindModel(controllerContext, {
-                modelState: controllerContext.controller.viewData.modelState,
+                modelState: controllerContext.controller.viewData.getModelState(),
                 paramName: lowerName, paramsDict: namesDict
             });
         } else {

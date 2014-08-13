@@ -55,25 +55,30 @@ htmlBuilder.prototype = {
     },
 
     css: function(name, value) {
-        if (value) {
-            this.csses.set(name, value);
-            return this;
-        } else if (name) {
-            return this.csses.get(name);
-        } else {
+        if (!name && !value) {
             var arr = [];
             utils.each(this.csses.all(), function(k, v) {
-                arr.push(k + ': ' + v + ';');
+                if (v) { arr.push(k + ': ' + v + ';'); }
             });
-            return arr.join('');
+            return arr.join(' ');
+        } else if (value === undefined) {
+            return (this.csses.get(name));
+        } else {
+            return (this.csses.set(name, value), this);
         }
     },
 
     attr: function(name, value) {
-        if (value) {
-            return (this.attributes.set(name, value), this);
+        if (!name && !value) {
+            var arr = [];
+            utils.each(this.attributes.all(), function(k, v) {
+                if (v) { arr.push(k + '="' + v + '"'); }
+            });
+            return arr.join(' ');
+        } else if (value === undefined) {
+            return (this.attributes.get(name));
         } else {
-            return this.attributes.get(name);
+            return (this.attributes.set(name, value), this);
         }
     },
 
@@ -83,17 +88,33 @@ htmlBuilder.prototype = {
         return this;
     },
 
-    toString: function() {
+    toString: function(indent, level) {
         if (!this.tagName) {
             throw new Error('tagName is required');
         }
+        if (!utils.isNumber(level) || level < 0) {
+            level = 0;
+        } else {
+            level = Math.floor(level);
+        }
+        if (!utils.isNumber(indent) || indent < 0) {
+            indent = 0;
+        } else {
+            indent = Math.floor(indent);
+        }
         //
-        var html = [];
+        var space = '', num = level * indent;
+        for (var i = 0; i < num; i++) {
+            space += ' ';
+        }
+        //
+        var html = [space];
         html.push('<' + this.tagName);
         //
-        utils.each(this.attributes.all(), function(key, val) {
-            html.push(' ' + key + '="' + val + '"');
-        });
+        var attrs = this.attr();
+        if (attrs) {
+            html.push(' ' + attrs);
+        }
         //
         var klass = this.cls();
         if (klass) {
@@ -110,15 +131,35 @@ htmlBuilder.prototype = {
         } else {
             html.push('>');
             //
-            utils.each(this.children, function(i, item) {
-                if (item instanceof htmlBuilder) {
-                    html.push(item.toString());
-                } else {
-                    html.push(String(item));
+            if (!this.children.length) {
+                html.push('</' + this.tagName + '>');
+            } else {
+                var childSpace = space;
+                for (var c = 0; c < indent;  c++) {
+                    childSpace += ' ';
                 }
-            });
-            //
-            html.push('</' + this.tagName + '>');
+                //
+                if (childSpace) {
+                    html.push('\n');
+                }
+                utils.each(this.children, function(i, item) {
+                    if (item instanceof htmlBuilder) {
+                        html.push(item.toString(indent, level + 1));
+                    } else {
+                        html.push(childSpace);
+                        html.push(String(item));
+                        if (childSpace) {
+                            html.push('\n');
+                        }
+                    }
+                });
+                //
+                html.push(space);
+                html.push('</' + this.tagName + '>');
+            }
+        }
+        if (space) {
+            html.push('\n');
         }
         //
         return html.join('');

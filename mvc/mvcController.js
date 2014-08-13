@@ -14,7 +14,8 @@ var utils = require('zoo-utils'),
     mvcViewData = require('./mvcViewData'),
     mvcTempData = require('./mvcTempData'),
     mvcTempDataStore = require('./mvcTempDataStore'),
-    mvcActionResultApi = require('./mvcActionResultApi');
+    mvcActionResultApi = require('./mvcActionResultApi'),
+    mvcModelApi = require('./mvcModelApi');
 
 var controllersDefined,
     controllerKeyInScope = 'dont_use_me(random:' + utils.unique(8) + ')';
@@ -85,7 +86,7 @@ mvcController.prototype = {
 
     viewData: null, tempData: null,
 
-    resultApi: null, implScope: null,
+    resultApi: null, modelApi: null, implScope: null,
 
     httpContext: null, attributes: null,
 
@@ -126,6 +127,10 @@ mvcController.prototype = {
             this.resultApi.httpContext = null;
             this.resultApi = null;
         }
+        if (this.modelApi) {
+            this.modelApi.httpContext = null;
+            this.modelApi = null;
+        }
         if (this.httpContext) {
             this.httpContext.destroy();
             this.httpContext = null;
@@ -149,6 +154,7 @@ mvcController.prototype = {
         this.tempData = new mvcTempData({ provider: mvcTempDataStore.sessionProvider });
         //
         this.resultApi = new mvcActionResultApi({ httpContext: this.httpContext, sync: false });
+        this.modelApi = new mvcModelApi({ httpContext: this.httpContext });
         this.implScope = new controllerImplementationScope(this);
         //
         this.attributes = httpContext.app.attributes.resolveConfig(this.attr());
@@ -195,7 +201,8 @@ mvcController.prototype = {
                 //
                 case 'tempdata':   params.push(self.tempData); break;
                 case 'viewdata':   params.push(self.viewData); break;
-                case 'modelstate': params.push(self.viewData.modelState); break;
+                case 'modelstate': params.push(self.viewData.getModelState()); break;
+                case 'model':      params.push(self.modelApi); break;
                 case 'end':        params.push(self.resultApi); break;
                 case 'url':        params.push(self.url); break;
                 //

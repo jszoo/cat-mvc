@@ -104,7 +104,7 @@ utils.inherit(mvcAreas, events.EventEmitter, {
             }
         }
         // load 'areas/account/models'
-        area.models.loaddir(area.modelsPath);
+        area.modelMetas.loaddir(area.modelsPath);
         // load 'areas/account/controllers'
         area.controllers.loaddir(area.controllersPath);
         // map route

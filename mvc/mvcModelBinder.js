@@ -9,35 +9,39 @@
 
 var utils = require('zoo-utils');
 
-var mvcModelBinder = module.exports = function(model) {
-    this.model = model;
-    if (!this.model) {
-        throw new Error('The "model" of mvcModelBinder is required');
+var mvcModelBinder = module.exports = function(modelMeta) {
+    this.modelMeta = modelMeta;
+    if (!this.modelMeta) {
+        throw new Error('The "modelMeta" of mvcModelBinder is required');
     }
 };
 
 mvcModelBinder.prototype = {
 
-    model: null,
+    modelMeta: null,
 
     constructor: mvcModelBinder,
 
+    getModelMeta: function() {
+        return this.modelMeta;
+    },
+
     bindModel: function(controllerContext, bindingContext) {
-        var raw = this.model.inner();
+        var metadata = this.modelMeta.inner();
         var rootNs = bindingContext.paramName;
         var paramsDict = bindingContext.paramsDict;
         var modelState = bindingContext.modelState;
         var modelling = controllerContext.app.modelling;
         var datas = controllerContext.requestDatas('lowerAll');
         //
-        var metas = modelling.resolve(raw);
+        var metas = modelling.resolve(metadata);
         if (metas.has()) {
             var value = utils.readObj(datas, rootNs);
-            return metas.exe(value, function(err) {
+            return metas.exe(value, rootNs, function(err) {
                 modelState.addModelError(rootNs, err);
             });
         } else {
-            var clone = utils.extend(true, {}, raw);
+            var clone = utils.extend(true, {}, metadata);
             var walk = function(obj, parentNs) {
                 var t = utils.type(obj);
                 var isArr = (t === 'array')
@@ -91,7 +95,7 @@ mvcModelBinder.resolveParams = function(controllerContext, paramNames, binderAtt
             var attr;
             utils.each(binderAttrs, function(i, item) {
                 if (item.paramName.toLowerCase() === paramName &&
-                    item.getBinder().model.ownerAreaName === areaName) {
+                    item.getBinder().getModelMeta().ownerAreaName === areaName) {
                     attr = item;
                     return false;
                 }
@@ -120,7 +124,7 @@ mvcModelBinder.resolveParams = function(controllerContext, paramNames, binderAtt
         var attr = findAttribute(lowerName, routeAreaName), val;
         if (attr) {
             val = attr.getBinder().bindModel(controllerContext, {
-                modelState: controllerContext.controller.viewData.modelState,
+                modelState: controllerContext.controller.viewData.getModelState(),
                 paramName: lowerName, paramsDict: namesDict
             });
         } else {

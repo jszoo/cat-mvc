@@ -77,7 +77,7 @@ modellingMetas.prototype = {
         return this.typeObj || this.validators;
     },
 
-    exe: function(value, fieldName, reportError) {
+    parse: function(value, fieldName, reportError) {
         if (this.typeObj) {
             try {
                 value = this.typeObj.parse(value, fieldName);
@@ -85,6 +85,10 @@ modellingMetas.prototype = {
                 reportError(ex);
             }
         }
+        return value;
+    },
+
+    validate: function(value, fieldName, reportError) {
         if (this.validators) {
             utils.each(this.validators, function(i, obj) {
                 try {
@@ -94,6 +98,12 @@ modellingMetas.prototype = {
                 }
             });
         }
+        return value;
+    },
+
+    exe: function(value, fieldName, reportError) {
+        value = this.parse(value, fieldName, reportError);
+        value = this.validate(value, fieldName, reportError);
         return value;
     }
 };

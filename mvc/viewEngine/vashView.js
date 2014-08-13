@@ -27,7 +27,7 @@ vashView.prototype = {
                 viewContext: viewContext,
                 tempData: viewContext.tempData,
                 viewData: viewContext.viewData,
-                model: viewContext.viewData.model,
+                model: viewContext.viewData.model(),
                 url: viewContext.controller.url
             };
             data.__ZOO_findView = this.findLayout;

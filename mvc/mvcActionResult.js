@@ -118,7 +118,7 @@ utils.inherit(viewResult, baseResult, {
             }
             //
             var viewData = controllerContext.controller.viewData;
-            viewData.model = self.model || viewData.model || {};
+            if (self.model) { viewData.model(self.model); }
             //
             var viewContext = controllerContext.toViewContext({
                 tempData: controllerContext.controller.tempData,

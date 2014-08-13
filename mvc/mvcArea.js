@@ -9,7 +9,7 @@
 
 var utils = require('zoo-utils'),
     mvcRoutes = require('./mvcRoutes'),
-    mvcModels = require('./mvcModels'),
+    mvcModelMetas = require('./mvcModelMetas'),
     mvcControllers = require('./mvcControllers');
 
 var mvcArea = module.exports = function(set, store) {
@@ -17,7 +17,7 @@ var mvcArea = module.exports = function(set, store) {
     if (!this.name) { throw new Error('Parameter "name" is required'); }
     //
     this.routes = new mvcRoutes({ ownerAreaName: this.name }, store);
-    this.models = new mvcModels({ ownerAreaName: this.name }, store);
+    this.modelMetas = new mvcModelMetas({ ownerAreaName: this.name }, store);
     this.controllers = new mvcControllers({ ownerAreaName: this.name }, store);
 };
 
@@ -52,7 +52,7 @@ mvcArea.loadSetting = function(filePath) {
 
 mvcArea.prototype = {
 
-    name: null, routes: null, models:null, controllers: null,
+    name: null, routes: null, modelMetas: null, controllers: null,
 
     path: null, viewsPath: null, viewsSharedPath: null, modelsPath: null, controllersPath: null, settingFilePath: null,
 

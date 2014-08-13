@@ -27,6 +27,12 @@ htmlBuilder.prototype = {
 
     constructor: htmlBuilder,
 
+    newTag: function(tagName, selfClose) {
+        var ins = new htmlBuilder(tagName, selfClose);
+        this.append(ins);
+        return ins;
+    },
+
     tag: function(tagName) {
         if (tagName === undefined) {
             return (this.tagName);
@@ -49,25 +55,30 @@ htmlBuilder.prototype = {
     },
 
     css: function(name, value) {
-        if (value) {
-            this.csses.set(name, value);
-            return this;
-        } else if (name) {
-            return this.csses.get(name);
-        } else {
+        if (!name && !value) {
             var arr = [];
             utils.each(this.csses.all(), function(k, v) {
-                arr.push(k + ': ' + v + ';');
+                if (v) { arr.push(k + ': ' + v + ';'); }
             });
-            return arr.join('');
+            return arr.join(' ');
+        } else if (value === undefined) {
+            return (this.csses.get(name));
+        } else {
+            return (this.csses.set(name, value), this);
         }
     },
 
     attr: function(name, value) {
-        if (value) {
-            return (this.attributes.set(name, value), this);
+        if (!name && !value) {
+            var arr = [];
+            utils.each(this.attributes.all(), function(k, v) {
+                if (v) { arr.push(k + '="' + v + '"'); }
+            });
+            return arr.join(' ');
+        } else if (value === undefined) {
+            return (this.attributes.get(name));
         } else {
-            return this.attributes.get(name);
+            return (this.attributes.set(name, value), this);
         }
     },
 
@@ -77,17 +88,36 @@ htmlBuilder.prototype = {
         return this;
     },
 
-    toString: function() {
+    toString: function(indent, level) {
         if (!this.tagName) {
             throw new Error('tagName is required');
         }
+        if (!indent) {
+            indent = '';
+        } else if (indent === true) {
+            indent = '    ';
+        } else if (!utils.isString(indent)) {
+            throw new Error('indent is invalid');
+        }
         //
-        var html = [];
+        if (!utils.isNumber(level) || level < 0) {
+            level = 0;
+        } else {
+            level = Math.floor(level);
+        }
+        //
+        var space = '';
+        for (var i = 0; i < level; i++) {
+            space += indent;
+        }
+        //
+        var html = [space];
         html.push('<' + this.tagName);
         //
-        utils.each(this.attributes.all(), function(key, val) {
-            html.push(' ' + key + '="' + val + '"');
-        });
+        var attrs = this.attr();
+        if (attrs) {
+            html.push(' ' + attrs);
+        }
         //
         var klass = this.cls();
         if (klass) {
@@ -104,15 +134,31 @@ htmlBuilder.prototype = {
         } else {
             html.push('>');
             //
-            utils.each(this.children, function(i, item) {
-                if (item instanceof htmlBuilder) {
-                    html.push(item.toString());
-                } else {
-                    html.push(String(item));
+            if (!this.children.length) {
+                html.push('</' + this.tagName + '>');
+            } else {
+                var childSpace = space + indent;
+                if (childSpace) {
+                    html.push('\n');
                 }
-            });
-            //
-            html.push('</' + this.tagName + '>');
+                utils.each(this.children, function(i, item) {
+                    if (item instanceof htmlBuilder) {
+                        html.push(item.toString(indent, level + 1));
+                    } else {
+                        html.push(childSpace);
+                        html.push(String(item));
+                        if (childSpace) {
+                            html.push('\n');
+                        }
+                    }
+                });
+                //
+                html.push(space);
+                html.push('</' + this.tagName + '>');
+            }
+        }
+        if (space) {
+            html.push('\n');
         }
         //
         return html.join('');

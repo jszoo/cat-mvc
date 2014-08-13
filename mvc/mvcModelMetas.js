@@ -1,5 +1,5 @@
 /*
-* mvcModels
+* mvcModelMetas
 * author: ruleechen
 * contact: rulee@live.cn
 * create date: 2014.7.31
@@ -11,7 +11,7 @@ var fs = require('fs'),
     path = require('path'),
     utils = require('zoo-utils'),
     caching = require('zoo-cache'),
-    mvcModel = require('./mvcModel'),
+    mvcModelMeta = require('./mvcModelMeta'),
     mvcModelBinder = require('./mvcModelBinder'),
     mvcModelBinderAttribute = require('./mvcModelBinderAttribute');
 
@@ -22,36 +22,36 @@ var modelAttributes = {
     del: function(attrName, category) {
         this.mvc().attributes.remove(attrName, category);
     },
-    set: function(attrName, model, category) {
-        var binder = new mvcModelBinder(model);
+    set: function(attrName, modelMeta, category) {
+        var binder = new mvcModelBinder(modelMeta);
         var binderAttribute = mvcModelBinderAttribute.subClass(binder);
         this.mvc().attributes.register(attrName, binderAttribute, category);
     }
 };
 
-var mvcModels = module.exports = function(set, store) {
+var mvcModelMetas = module.exports = function(set, store) {
     utils.extend(this, set);
     if (!this.ownerAreaName) { throw new Error('Parameter "ownerAreaName" is required'); }
-    this._inner = caching.region('mvc-' + this.ownerAreaName + '-area-models-cache', store);
+    this._inner = caching.region('mvc-' + this.ownerAreaName + '-area-model-metas-cache', store);
 };
 
-mvcModels.prototype = {
+mvcModelMetas.prototype = {
 
     ownerAreaName: null, _inner: null,
 
-    constructor: mvcModels,
+    constructor: mvcModelMetas,
 
-    register: function(name, model) {
-        if (!model) {
-            model = name;
+    register: function(name, modelMeta) {
+        if (!modelMeta) {
+            modelMeta = name;
             name = null;
         }
-        if (model instanceof mvcModel) {
-            model.ownerAreaName = this.ownerAreaName;
-            name = (name || model.name);
+        if (modelMeta instanceof mvcModelMeta) {
+            modelMeta.ownerAreaName = this.ownerAreaName;
+            name = (name || modelMeta.name);
             //
-            this._inner.set(name, model);
-            modelAttributes.set(name, model, this.ownerAreaName);
+            this._inner.set(name, modelMeta);
+            modelAttributes.set(name, modelMeta, this.ownerAreaName);
         }
     },
 
@@ -89,8 +89,8 @@ mvcModels.prototype = {
 
     loadfile: function(filePath) {
         if (!fs.existsSync(filePath) || !fs.statSync(filePath).isFile()) { return; }
-        var self = this, models = mvcModel.loadfile(filePath);
-        utils.each(models, function() {
+        var self = this, modelMetas = mvcModelMeta.loadfile(filePath);
+        utils.each(modelMetas, function() {
             if (!this.name) {
                 var extName = path.extname(filePath);
                 this.name = path.basename(filePath, extName);

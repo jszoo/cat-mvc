@@ -184,20 +184,24 @@ mvc.controller(name, attributes, function() {
 
 **Injection of controller**   
 There we can see some parameters in the controller handler function. The parameters will injected automatically base on parameter names. We alreay have some common used objects builtin. They are:
-+ **req**         ( raw nodejs request object )
-+ **request**     ( raw nodejs request object )
-+ **res**         ( raw nodejs response object )
-+ **response**    ( raw nodejs response object )
-+ **ctx**         ( httpContext object )
-+ **context**     ( httpContext object )
-+ **session**     ( session data )
-+ **query**       ( query data )
-+ **form**        ( form data )
-+ **tempData**    ( temp data )
-+ **viewData**    ( view data )
-+ **modelState**  ( model state )
-+ **end**         ( response functions wraper )
-+ **url**         ( url generator )
+
+| **Name**    | **Description**            | **Useage**          |
+|:----------- |:---------------------------|:--------------------|
+| req         | raw nodejs request object  |                     |
+| request     | raw nodejs request object  |                     |
+| res         | raw nodejs response object |                     |
+| response    | raw nodejs response object |                     |
+| ctx         | httpContext object         |                     |
+| context     | httpContext object         |                     |
+| session     | plain object session data  | session['logged']   |
+| query       | plain object query data    | query['PageIndx']   |
+| form        | plain object form data     | form['UserName']    |
+| tempData    | temp data                  | tempData.set('title', 'xxx')  |
+| viewData    | view data                  | viewData.setModel(model)      |
+| modelState  | request model state        | modelState.isValid()          |
+| model       | model APIs                 | model.new('UserModel')        |
+| end         | response functions         | end.json({ success: true })   |
+| url         | url generator              | url.action('index', 'home')   |
 
 It's very cooool, isn't it? But we think further more. We made the awesome injection customizable.
 

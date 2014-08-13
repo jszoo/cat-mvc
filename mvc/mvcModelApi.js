@@ -20,22 +20,20 @@ mvcModelApi.prototype = {
     constructor: mvcModelApi,
 
     get: function(modelName, clone) {
-        var ctx = this.httpContext, app = ctx.app;
-        var attrClass = app.attributes.get(modelName, ctx.routeArea.name);
-        if (!attrClass && ctx.routeArea !== app.areas.rootArea()) {
-            attrClass = app.attributes.get(modelName, app.areas.rootArea().name);
+        var ctx = this.httpContext, routeArea = ctx.routeArea;
+        var modelMeta = routeArea.modelMetas.get(modelName);
+        if (!modelMeta) {
+            var rootArea = ctx.app.areas.rootArea();
+            if (rootArea !== routeArea) {
+                modelMeta = rootArea.modelMetas.get(modelName);
+            }
         }
-        if (attrClass) {
-            var attr = new attrClass('anyName');
-            if (utils.isFunction(attr.getBinder)) {
-                var binder = attr.getBinder();
-                var modelMeta = binder.getModelMeta();
-                var metadata = modelMeta.inner();
-                if (clone !== false) {
-                    return utils.extend(true, {}, metadata);
-                } else {
-                    return metadata;
-                }
+        if (modelMeta) {
+            var metadata = modelMeta.inner();
+            if (clone === false) {
+                return metadata;
+            } else {
+                return utils.extend(true, {}, metadata);
             }
         }
     },

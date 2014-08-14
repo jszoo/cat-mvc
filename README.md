@@ -14,7 +14,7 @@ Features
 + **Multiple MVC instance support**, you can create multiple MVC instance and listen to different http ports.
 + **Multiple view engines**, allows multiple view engines run together in one site. Now supports ejs + vash. Will add the support to other engines step by step.
 + **Highly customizable platform**, all the main functions are costomizable. Not only controller/action/model/view but also area/attribute/modelling/view engine/action filter/action result/data binder etc. Just like .NET MVC.
-+ **All object-oriented code structure**, almost zero code invasion to nodejs. Good for study or maintenance.
++ **All object-oriented code structure**, zero code invasion to nodejs. Good for study or maintenance.
 
 Installation
 -------------
@@ -186,7 +186,7 @@ mvc.controller(name, attributes, function() {
 ```
 
 **Injection of controller**   
-There we can see some parameters in the controller handler function. The parameters will injected automatically base on parameter names. We alreay have some common used objects builtin. They are:
+There we can see some parameters in the controller handler function. The parameters will injected automatically base on parameter names (case insensitive). We alreay have some common used component objects builtin.
 
 | **Name**    | **Description**            | **Useage**          |
 |:----------- |:---------------------------|:--------------------|

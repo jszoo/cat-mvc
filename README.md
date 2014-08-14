@@ -12,7 +12,7 @@ Features
 + **Dynamic request data inject**, we can get the request parameters directly from the action function (also support object inject). Again, it's awesame graciously than get string data from req.body/req.params.
 + **Data annotation**, modelling the models in javascript to declare strong type data models. Annotations on data type and data validation.
 + **Multiple MVC instance support**, you can create multiple MVC instance and listen to different http ports.
-+ **Multiple view engines**, allows multiple view engines run together in one site. Now supports ejs + vash. Will add the support to other engines step by step.
++ **Multiple view engines**, allows multiple view engines run together in one site. Now supports [ejs](https://github.com/visionmedia/ejs) + [vash](https://github.com/kirbysayshi/vash). Will add the support to other engines step by step.
 + **Highly customizable platform**, all the main functions are costomizable. Not only controller/action/model/view but also area/attribute/modelling/view engine/action filter/action result/data binder etc. Just like .NET MVC.
 + **All object-oriented code structure**, zero code invasion to nodejs. Good for study or maintenance.
 

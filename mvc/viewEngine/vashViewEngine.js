@@ -12,13 +12,38 @@ var fs = require('fs'),
     utils = require('zoo-utils'),
     vashView = require('./vashView');
 
-module.exports = {
+var extname = '.vash';
 
-    extname: '.vash',
+var findViewSync = function(controllerContext, viewName) {
+    var foundFile, searchedLocations = [];
+    var tryDirs = controllerContext.viewTryDirs();
+    for (var i = 0; i < tryDirs.length; i++) {
+        var file = path.join(tryDirs[i], viewName + extname);
+        searchedLocations.push(file);
+        if (fs.existsSync(file) && fs.statSync(file).isFile()) {
+            foundFile = file;
+            break;
+        }
+    }
+    //
+    var view;
+    if (foundFile) {
+        view = new vashView({
+            filePath: foundFile
+        });
+    }
+    //
+    return {
+        view: view,
+        searchedLocations: searchedLocations
+    };
+};
+
+module.exports = {
 
     findView: function(controllerContext, viewName, callback) {
         callback = utils.deferProxy(callback);
-        var self = this, index = 0, searchedLocations = [];
+        var index = 0, searchedLocations = [];
         var tryDirs = controllerContext.viewTryDirs();
         //
         var done = function(file) {
@@ -27,7 +52,7 @@ module.exports = {
                 view = new vashView({
                     filePath: file,
                     findLayout: function(name) {
-                        var viewEngineResult = self._findViewSync(controllerContext, name);
+                        var viewEngineResult = findViewSync(controllerContext, name);
                         if (viewEngineResult.view) {
                             return viewEngineResult.view.filePath;
                         } else {
@@ -48,7 +73,7 @@ module.exports = {
                 done();
                 return;
             }
-            var file = path.join(tryDirs[index++], viewName + self.extname);
+            var file = path.join(tryDirs[index++], viewName + extname);
             searchedLocations.push(file);
             fs.exists(file, function(exists) {
                 if (exists) {
@@ -74,31 +99,5 @@ module.exports = {
         if (view.release) {
             view.release();
         }
-    },
-
-    // for finding vash layout
-    _findViewSync: function(controllerContext, viewName) {
-        var self = this, foundFile, searchedLocations = [];
-        var tryDirs = controllerContext.viewTryDirs();
-        for (var i = 0; i < tryDirs.length; i++) {
-            var file = path.join(tryDirs[i], viewName + this.extname);
-            searchedLocations.push(file);
-            if (fs.existsSync(file) && fs.statSync(file).isFile()) {
-                foundFile = file;
-                break;
-            }
-        }
-        //
-        var view;
-        if (foundFile) {
-            view = new vashView({
-                filePath: foundFile
-            });
-        }
-        //
-        return {
-            view: view,
-            searchedLocations: searchedLocations
-        };
     }
 };

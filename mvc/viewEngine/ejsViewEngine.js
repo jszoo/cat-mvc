@@ -12,13 +12,13 @@ var fs = require('fs'),
     utils = require('zoo-utils'),
     ejsView = require('./ejsView');
 
-module.exports = {
+var extname = '.ejs';
 
-    extname: '.ejs',
+module.exports = {
 
     findView: function(controllerContext, viewName, callback) {
         callback = utils.deferProxy(callback);
-        var self = this, index = 0, searchedLocations = [];
+        var index = 0, searchedLocations = [];
         var tryDirs = controllerContext.viewTryDirs();
         //
         var done = function(file) {
@@ -39,7 +39,7 @@ module.exports = {
                 done();
                 return;
             }
-            var file = path.join(tryDirs[index++], viewName + self.extname);
+            var file = path.join(tryDirs[index++], viewName + extname);
             searchedLocations.push(file);
             fs.exists(file, function(exists) {
                 if (exists) {

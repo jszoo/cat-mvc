@@ -197,7 +197,7 @@ There we can see some parameters in the controller handler function. The paramet
 | query       | plain object query data    | query['PageIndx']   |
 | form        | plain object form data     | form['UserName']    |
 | tempData    | temp data                  | tempData.set('title', 'xxx')  |
-| viewData    | view data                  | viewData.setModel(model)      |
+| viewData    | view data                  | viewData.model(obj)           |
 | modelState  | request model state        | modelState.isValid()          |
 | model       | model APIs                 | model.new('UserModel')        |
 | end         | response functions         | end.json({ success: true })   |

@@ -87,7 +87,7 @@ utils.inherit(mvcAreas, events.EventEmitter, {
 
     register: function(areaPath, areaName, areaRouteExpression, defaultRouteValues) {
         if (!fs.existsSync(areaPath) || !fs.statSync(areaPath).isDirectory()) {
-            throw new Error('The specified "areaPath" is invalid');
+            throw new utils.Error('The specified areasPath "{0}" is invalid', areaPath);
         }
         // area obj
         var area = new mvcArea({
@@ -122,7 +122,7 @@ utils.inherit(mvcAreas, events.EventEmitter, {
         if (!this._inner.exists(area.name)) {
             this._inner.set(area.name, area);
         } else {
-            throw new Error('Duplicated area name: ' + area.name);
+            throw new utils.Error('Duplicated area name "{0}"', area.name);
         }
         // ret
         return area;
@@ -151,7 +151,7 @@ utils.inherit(mvcAreas, events.EventEmitter, {
 
     registerAreas: function(areasPath) {
         if (!fs.existsSync(areasPath) || !fs.statSync(areasPath).isDirectory()) {
-            throw new Error('The specified "areasPath" is invalid');
+            throw new utils.Error('The specified areasPath "{0}" is invalid', areaPath);
         }
         var self = this, areaDirs = fs.readdirSync(areasPath);
         utils.each(areaDirs, function(i, areaName) {

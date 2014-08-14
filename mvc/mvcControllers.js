@@ -50,19 +50,21 @@ mvcControllers.prototype = {
             controller = name;
             name = null;
         }
-        if (controller instanceof mvcController) {
-            name = (name || controller.name());
-            if (/.+Controller$/i.test(name)) {
-                var len = 'Controller'.length;
-                name = name.substr(0, name.length - len);
-                controller.name(name);
-            }
-            if (!this.exists(name)) {
-                this._inner.set(name, controller);
-            } else {
-                throw new Error(utils.format('Controller "{0}"" under area "{1}" is duplicated', name, this.ownerAreaName));
-            }
+        if (!(controller instanceof mvcController)) {
+            throw new Error('The specified controller is invalid type');
         }
+        //
+        name = (name || controller.name());
+        if (/.+Controller$/i.test(name)) {
+            var len = 'Controller'.length;
+            name = name.substr(0, name.length - len);
+            controller.name(name);
+        }
+        //
+        if (!name) { throw new Error('Controller name is required'); }
+        if (this.exists(name)) { throw new utils.Error('Controller "{0}" under area "{1}" is duplicated', name, this.ownerAreaName); }
+        //
+        this._inner.set(name, controller);
     },
 
     loaddir: function(ctrlsPath, act) {

@@ -24,7 +24,7 @@ utils.inherit(mvcRoutes, events.EventEmitter, {
     ownerAreaName: null, _inner: null,
 
     set: function(name, expression, defaultValues) {
-        if (!name) { throw new Error('Parameter "name" is required'); }
+        if (!name) { throw new Error('Route name is required'); }
         this._inner.set(name, new mvcRoute({
             name: name,
             expression: expression,

@@ -33,7 +33,7 @@ exports.annotate = function(func) {
         inject = func.slice(0, last);
         func = func[last];
     } else {
-        throw new Error('Inject target supports only function type and array type.');
+        throw new Error('Inject target supports only function type and array type');
     }
     // ret
     return {

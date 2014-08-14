@@ -38,8 +38,7 @@ mvcHandlerRouter.prototype = {
             name = null;
         }
         if (!utils.isFunction(handler)) {
-            var typeName = utils.type(handler);
-            throw new Error('Parameter "handler" requires callback function but got a ' + typeName);
+            throw new utils.Error('The handler requires function type but got {0} type', utils.type(handler));
         } else {
             this._handlers.push({
                 name: name, handler: handler,

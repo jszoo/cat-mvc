@@ -29,7 +29,7 @@
   "author": "ruleechen <rulee@live.cn>",
   "licenses": "MIT",
   "dependencies": {
-    "zoo-utils": "0.0.4",
+    "zoo-utils": "0.0.5",
     "zoo-cache": "0.0.5",
     "express-session": "~1.7.5",
     "body-parser": "~1.6.3",

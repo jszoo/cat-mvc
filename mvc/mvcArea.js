@@ -14,7 +14,7 @@ var utils = require('zoo-utils'),
 
 var mvcArea = module.exports = function(set, store) {
     utils.extend(this, set);
-    if (!this.name) { throw new Error('Parameter "name" is required'); }
+    if (!this.name) { throw new Error('Area name is required'); }
     //
     this.routes = new mvcRoutes({ ownerAreaName: this.name }, store);
     this.modelMetas = new mvcModelMetas({ ownerAreaName: this.name }, store);

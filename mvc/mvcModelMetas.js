@@ -67,13 +67,18 @@ mvcModelMetas.prototype = {
             modelMeta = name;
             name = null;
         }
-        if (modelMeta instanceof mvcModelMeta) {
-            modelMeta.ownerAreaName = this.ownerAreaName;
-            name = (name || modelMeta.name);
-            //
-            this._inner.set(name, modelMeta);
-            modelAttributes.set(name, modelMeta, this.ownerAreaName);
+        if (!(modelMeta instanceof mvcModelMeta)) {
+            throw new Error('The specified model is invalid type');
         }
+        //
+        modelMeta.ownerAreaName = this.ownerAreaName;
+        name = (name || modelMeta.name);
+        //
+        if (!name) { throw Error('Model name is required'); }
+        if (this.exists(name)) { throw new utils.Error('Model "{0}" under area "{1}" is duplicated', name, this.ownerAreaName); }
+        //
+        this._inner.set(name, modelMeta);
+        modelAttributes.set(name, modelMeta, this.ownerAreaName);
     },
 
     loaddir: function(modelsPath, act) {

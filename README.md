@@ -6,7 +6,7 @@ The best nodejs MVC web framework in .NET MVC style. It's fully implemented the 
 Features
 ---------
 
-+ **Classical MVC structure**, controllers + models + views + areas.
++ [Classical MVC structure](#site-structure), controllers + models + views + areas.
 + **Intuitive routes**, be the benefit from the separated controller files. It's much more graciously than define serials of url pattern.
 + **Dynamic component inject**, any components what you want can be injected into controller function. We already defined some common used components. You can also inject your components by config simply injection.
 + **Dynamic request data inject**, we can get the request parameters directly from the action function (also support object inject). Again, it's awesame graciously than get string data from req.body/req.params.

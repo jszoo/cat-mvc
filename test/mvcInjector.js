@@ -37,6 +37,14 @@ describe('mvcInjector', function() {
             assert.equal(annotated.args[2], 'arg3');
             annotated.func(1, 2, 3);
         });
+
+        it('exception', function() {
+            try {
+                mvcInjector.annotate({});
+            } catch (ex) {
+                assert.equal(ex instanceof Error, true);
+            }
+        });
     });
 
 });

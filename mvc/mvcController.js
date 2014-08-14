@@ -186,8 +186,8 @@ mvcController.prototype = {
                 return;
             }
             switch(lowerName) {
-                case 'req':        params.push(ctx.request); break;
-                case 'res':        params.push(ctx.response); break;
+                case 'req':        params.push(ctx.req); break;
+                case 'res':        params.push(ctx.res); break;
                 case 'context':    params.push(ctx); break;
                 case 'session':    params.push(ctx.zoo.request.session); break;
                 case 'query':      params.push(ctx.zoo.request.query); break;

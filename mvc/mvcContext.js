@@ -20,8 +20,8 @@ var clone = function(ins) {
         app: ins.app,
         zoo: ins.zoo,
         items: ins.items,
-        request: ins.request,
-        response: ins.response,
+        req: ins.req,
+        res: ins.res,
         route: ins.route,
         routeData: ins.routeData,
         routeArea: ins.routeArea,
@@ -48,7 +48,7 @@ var lowerFuncs = {
 
 mvcContext.prototype = {
 
-    id: null, app: null, zoo: null, items: null, request: null, response: null,
+    id: null, app: null, zoo: null, items: null, req: null, res: null,
 
     route: null, routeData: null, routeArea: null, routeSet: null,
 

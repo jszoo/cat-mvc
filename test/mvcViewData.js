@@ -7,29 +7,29 @@ describe('mvcViewData', function() {
     var model = { __metadata: {} };
 
     describe('.model', function() {
-    	it('get default', function(){
-    		assert.equal(!!viewData.model(), true);
-    	});
+        it('get default', function(){
+            assert.equal(!!viewData.model(), true);
+        });
 
-    	it('set', function() {
-    		assert.equal(viewData.model(model), viewData);
-    	});
+        it('set', function() {
+            assert.equal(viewData.model(model), viewData);
+        });
 
-    	it('get after set', function() {
-    		assert.equal(viewData.model(), model);
-    	});
+        it('get after set', function() {
+            assert.equal(viewData.model(), model);
+        });
     });
 
     describe('.getModelState', function() {
-		it('get default', function() {
-			assert.equal(viewData.getModelState() != null, true);
-		});
+        it('get default', function() {
+            assert.equal(viewData.getModelState() != null, true);
+        });
     });
 
     describe('.getModelMetadata', function() {
-		it('get default', function() {
-			assert.equal(viewData.getModelMetadata() != null, true);
-		});
+        it('get default', function() {
+            assert.equal(viewData.getModelMetadata() != null, true);
+        });
     });
 
     describe('inner dictionary', function() {

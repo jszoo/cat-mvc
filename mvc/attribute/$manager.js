@@ -55,20 +55,12 @@ attributeManager.prototype = {
         }
     },
 
-    count: function(category) {
-        if (!category) {
-            return this._inner.count();
-        } else {
-            
-        }
+    count: function() {
+        return this._inner.count();
     },
 
-    clear: function(category) {
-        if (!category) {
-            return this._inner.clear();
-        } else {
-            return this._inner.remove(attributeManager.sealedKey(attrName));
-        }
+    clear: function() {
+        return this._inner.clear();
     },
 
     register: function(attrName, attrClass, category) {

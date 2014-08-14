@@ -10,13 +10,7 @@
 var utils = require('zoo-utils'),
     sampleView = require('./sample-view');
 
-var sampleViewEngine = module.exports = function(set) {
-    utils.extend(this, set);
-};
-
-sampleViewEngine.prototype = {
-
-    constructor: sampleViewEngine,
+module.exports = {
 
     findView: function(controllerContext, viewName, callback) {
         var error = null;

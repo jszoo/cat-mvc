@@ -20,65 +20,8 @@ viewEngineManager.prototype = {
 
     constructor: viewEngineManager,
 
-    register: function(engineName, viewEngine) {
-        if (!engineName) { throw new Error('Parameter "engineName" is required'); }
-        if (!viewEngine) { throw new Error('Parameter "viewEngine" is required'); }
-        if (!utils.isFunction(viewEngine.findView)) { throw new Error('Please implement the interface function: "findView(controllerContext, viewName, callback)" in the viewEngine: "' + engineName + '"'); }
-        if (!utils.isFunction(viewEngine.releaseView)) { throw new Error('Please implement the interface function: "releaseView(controllerContext, view)" in the viewEngine: "' + engineName + '"'); }
-        if (this.exists(engineName)) { throw new Error('ViewEngine "'+ engineName + '" already exists'); }
-        return this._inner.set(engineName, viewEngine);
-    },
-
-    registerAll: function() {
-        // vash
-        var vashViewEngine = require('./vashViewEngine');
-        this.register('vash', new vashViewEngine());
-        // ejs
-        var ejsViewEngine = require('./ejsViewEngine');
-        this.register('ejs', new ejsViewEngine());
-        // more engines...
-    },
-
-    findView: function(controllerContext, viewName, callback) {
-        callback = utils.deferProxy(callback);
-        var viewEngineResult, searchedLocations = [], index = 0;
-        var all = this._inner.all(), allKeys = Object.keys(all);
-        //
-        var done = function() {
-            if (!viewEngineResult) {
-                callback(new Error('Can not find any view engine.'));
-            } else {
-                viewEngineResult.searchedLocations = searchedLocations;
-                callback(null, viewEngineResult);
-            }
-        };
-        //
-        var next = function() {
-            if (index >= allKeys.length) {
-                done();
-                return;
-            }
-            var engine = all[allKeys[index++]];
-            engine.findView(controllerContext, viewName, function(err, ret) {
-                if (err) {
-                    callback(err);
-                    return;
-                }
-                if (!ret) {
-                    callback(new Error('The interface function "findView" in the viewEngine require return object as: { view: viewInstance, searchedLocations: [] }'));
-                    return;
-                }
-                viewEngineResult = ret;
-                viewEngineResult.viewEngine = engine;
-                searchedLocations = searchedLocations.concat(viewEngineResult.searchedLocations);
-                if (viewEngineResult.view) {
-                    done();
-                } else {
-                    next();
-                }
-            });
-        };
-        next();
+    all: function() {
+        return this._inner.all();
     },
 
     get: function(engineName) {
@@ -93,7 +36,69 @@ viewEngineManager.prototype = {
         return this._inner.remove(engineName);
     },
 
+    count: function() {
+        return this._inner.count();
+    },
+
     clear: function() {
         return this._inner.clear();
+    },
+
+    register: function(engineName, viewEngine) {
+        if (!engineName) { throw new Error('View engine name is required'); }
+        if (!viewEngine) { throw new Error('View engine object is required'); }
+        if (!utils.isFunction(viewEngine.findView)) { throw new utils.Error('Please implement the interface function "findView(controllerContext, viewName, callback)" in the view engine "{0}"', engineName); }
+        if (!utils.isFunction(viewEngine.releaseView)) { throw new utils.Error('Please implement the interface function "releaseView(controllerContext, view)" in the view engine "{0}"', engineName); }
+        if (this.exists(engineName)) { throw new utils.Error('View engine "{0}" already exists', engineName); }
+        return this._inner.set(engineName, viewEngine);
+    },
+
+    registerAll: function() {
+        this.register('vash', require('./vashViewEngine'));
+        this.register('ejs', require('./ejsViewEngine'));
+        // more engines...
+    },
+
+    findView: function(controllerContext, viewName, callback) {
+        callback = utils.deferProxy(callback);
+        var viewEngineResult, searchedLocations = [], index = 0;
+        var all = this._inner.all(), allKeys = Object.keys(all);
+        //
+        var done = function() {
+            if (!viewEngineResult) {
+                callback(new Error('Can not find any view engine'));
+            } else {
+                viewEngineResult.searchedLocations = searchedLocations;
+                callback(null, viewEngineResult);
+            }
+        };
+        //
+        var next = function() {
+            if (index >= allKeys.length) {
+                done();
+                return;
+            }
+            var engineName = allKeys[index++];
+            var engine = all[engineName];
+            engine.findView(controllerContext, viewName, function(err, ret) {
+                if (err) {
+                    callback(err);
+                    return;
+                }
+                if (!ret) {
+                    callback(new utils.Error('The interface function "findView" in the "{0}"" view engine requires return object as "{ view: viewInstance, searchedLocations: [] }"', engineName));
+                    return;
+                }
+                viewEngineResult = ret;
+                viewEngineResult.viewEngine = engine;
+                searchedLocations = searchedLocations.concat(viewEngineResult.searchedLocations);
+                if (viewEngineResult.view) {
+                    done();
+                } else {
+                    next();
+                }
+            });
+        };
+        next();
     }
 };

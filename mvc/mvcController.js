@@ -166,16 +166,13 @@ mvcController.prototype = {
         var params = annotated.params = [];
         if (!annotated.args || annotated.args.length === 0) { return annotated; }
         //
-        //
         var customInject = {};
-        ctx.app.emit('injectController', ctx.app, {
+        var injectContext = ctx.toControllerInjectContext({
             inject: customInject,
             controller: this
         });
-        ctx.routeArea.fireEvent('onInjectController', ctx.routeArea, {
-            inject: customInject,
-            controller: this
-        });
+        ctx.app.emit('injectController', ctx.app, injectContext);
+        ctx.routeArea.fireEvent('onInjectController', ctx.routeArea, injectContext);
         customInject = utils.formalObj(customInject);
         //
         var self = this;
@@ -189,12 +186,9 @@ mvcController.prototype = {
                 return;
             }
             switch(lowerName) {
-                case 'ctx':        params.push(ctx); break;
-                case 'req':        params.push(ctx.request); break;
-                case 'res':        params.push(ctx.response); break;
+                case 'req':        params.push(ctx.req); break;
+                case 'res':        params.push(ctx.res); break;
                 case 'context':    params.push(ctx); break;
-                case 'request':    params.push(ctx.request); break;
-                case 'response':   params.push(ctx.response); break;
                 case 'session':    params.push(ctx.zoo.request.session); break;
                 case 'query':      params.push(ctx.zoo.request.query); break;
                 case 'form':       params.push(ctx.zoo.request.form); break;
@@ -292,7 +286,8 @@ mvcController.prototype = {
             var fnStr = match ? (match[0] + ')') : this.impl().toString();
             message.push(utils.format('{0} [{1}] {2}', this.name(), String(this.attr() || ''), fnStr));
         });
-        return new Error(utils.format('The current request for action "{0}" on controller type "{1}" is ambiguous between the following action methods:\n{2}', actionName, this.name(), message.join('\n')));
+        var methodsMsg = message.join('\n');
+        return new utils.Error('The current request for action "{0}" on controller type "{1}" is ambiguous between the following action methods\n{2}', actionName, this.name(), methodsMsg);
     }
 };
 

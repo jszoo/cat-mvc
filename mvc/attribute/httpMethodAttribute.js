@@ -24,7 +24,7 @@ httpMethodAttribute.prototype = {
     constructor: httpMethodAttribute,
 
     isValidActionRequest: function(httpContext) {
-        var methodName = httpContext.request.method;
+        var methodName = httpContext.zoo.request.method;
         return utils.tryLowerEqual(this.methodName, methodName);
     }
 };

@@ -24,7 +24,7 @@ utils.inherit(mvcRoutes, events.EventEmitter, {
     ownerAreaName: null, _inner: null,
 
     set: function(name, expression, defaultValues) {
-        if (!name) { throw new Error('Parameter "name" is required'); }
+        if (!name) { throw new Error('Route name is required'); }
         this._inner.set(name, new mvcRoute({
             name: name,
             expression: expression,
@@ -42,9 +42,17 @@ utils.inherit(mvcRoutes, events.EventEmitter, {
         return this._inner.get(name);
     },
 
+    exists: function(name) {
+        return this._inner.exists(name);
+    },
+
     remove: function(name) {
         this._inner.remove(name);
         this.emit('changed');
+    },
+
+    count: function() {
+        return this._inner.count();
     },
 
     clear: function() {

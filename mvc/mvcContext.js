@@ -20,8 +20,8 @@ var clone = function(ins) {
         app: ins.app,
         zoo: ins.zoo,
         items: ins.items,
-        request: ins.request,
-        response: ins.response,
+        req: ins.req,
+        res: ins.res,
         route: ins.route,
         routeData: ins.routeData,
         routeArea: ins.routeArea,
@@ -48,7 +48,7 @@ var lowerFuncs = {
 
 mvcContext.prototype = {
 
-    id: null, app: null, zoo: null, items: null, request: null, response: null,
+    id: null, app: null, zoo: null, items: null, req: null, res: null,
 
     route: null, routeData: null, routeArea: null, routeSet: null,
 
@@ -84,7 +84,7 @@ mvcContext.prototype = {
         var datas = this.items[cacheKey];
         if (!datas) {
             var lowerFn = lowerFuncs[lowerType];
-            if (!lowerFn) { throw new Error('Invalid lowerType'); }
+            if (!lowerFn) { throw new utils.Error('Invalid lowerType "{0}"', lowerType); }
             //
             this.items[cacheKey] = datas = {};
             utils.each(this.routeData, function(i, it) {
@@ -106,6 +106,11 @@ mvcContext.prototype = {
 
     toControllerContext: function(controller) {
         return utils.nudeExtend(clone(this), { controller: controller });
+    },
+
+    toControllerInjectContext: function(merge) {
+        if (this.controller) { merge.controller = this.controller; }
+        return utils.nudeExtend(clone(this), merge);
     },
 
     toAuthorizationContext: function(merge) {

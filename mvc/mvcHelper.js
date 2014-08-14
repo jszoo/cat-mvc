@@ -90,7 +90,7 @@ var generateUrl = exports.generateUrl = function(routeName, actionName, controll
         if (route) {
             url = route.resolveUrl(values);
         } else {
-            throw new Error(utils.format('Can not find routeName: "{0}"', routeName));
+            throw new utils.Error('Can not find route name "{0}"', routeName);
         }
     } else {
         var areaName = values['area'], matchedCount = null, matchedRoute;
@@ -105,7 +105,7 @@ var generateUrl = exports.generateUrl = function(routeName, actionName, controll
         if (matchedRoute) {
             url = matchedRoute.resolveUrl(values);
         } else {
-            throw new Error(utils.format('Can not find any routes in area: "{0}"', areaName));
+            throw new utils.Error('Can not find any routes in area "{0}"', areaName);
         }
     }
     return url;

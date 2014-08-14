@@ -113,7 +113,7 @@ utils.inherit(viewResult, baseResult, {
         var self = this;
         var render = function(view, done) {
             if (!utils.isFunction(view.render)) {
-                done(new Error('Can not find the interface function: "render(viewContext, callback)", please implement it in the view.'));
+                done(new Error('Can not find the interface function "render(viewContext, callback)" in the view'));
                 return;
             }
             //
@@ -151,7 +151,8 @@ utils.inherit(viewResult, baseResult, {
                     return;
                 }
                 if (!viewEngineResult.view) {
-                    callback(new Error('Failed to lookup view "' + viewName + '" in the following locations \n' + viewEngineResult.searchedLocations.join('\n')));
+                    var locationsMsg = viewEngineResult.searchedLocations.join('\n');
+                    callback(new utils.Error('Failed to lookup view "{0}" in the following locations\n{1}', viewName, locationsMsg));
                     return;
                 }
                 render(viewEngineResult.view, function(err) {

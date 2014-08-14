@@ -41,20 +41,6 @@ mvcModelMetas.prototype = {
 
     constructor: mvcModelMetas,
 
-    register: function(name, modelMeta) {
-        if (!modelMeta) {
-            modelMeta = name;
-            name = null;
-        }
-        if (modelMeta instanceof mvcModelMeta) {
-            modelMeta.ownerAreaName = this.ownerAreaName;
-            name = (name || modelMeta.name);
-            //
-            this._inner.set(name, modelMeta);
-            modelAttributes.set(name, modelMeta, this.ownerAreaName);
-        }
-    },
-
     all: function() {
         return this._inner.all();
     },
@@ -63,13 +49,40 @@ mvcModelMetas.prototype = {
         return this._inner.get(name);
     },
 
+    exists: function(name) {
+        return this._inner.exists(name);
+    },
+
     remove: function(name) {
         this._inner.remove(name);
         modelAttributes.del(name, this.ownerAreaName);
     },
 
+    count: function() {
+        return this._inner.count();
+    },
+
     clear: function() {
         this._inner.clear();
+    },
+
+    register: function(name, modelMeta) {
+        if (!modelMeta) {
+            modelMeta = name;
+            name = null;
+        }
+        if (!(modelMeta instanceof mvcModelMeta)) {
+            throw new Error('The specified model is invalid type');
+        }
+        //
+        modelMeta.ownerAreaName = this.ownerAreaName;
+        name = (name || modelMeta.name);
+        //
+        if (!name) { throw Error('Model name is required'); }
+        if (this.exists(name)) { throw new utils.Error('Model "{0}" under area "{1}" is duplicated', name, this.ownerAreaName); }
+        //
+        this._inner.set(name, modelMeta);
+        modelAttributes.set(name, modelMeta, this.ownerAreaName);
     },
 
     loaddir: function(modelsPath, act) {

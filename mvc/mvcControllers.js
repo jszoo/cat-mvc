@@ -25,27 +25,50 @@ mvcControllers.prototype = {
 
     constructor: mvcControllers,
 
-    register: function(name, controller) {
-        if (!controller) {
-            controller = name;
-            name = null;
-        }
-        if (controller instanceof mvcController) {
-            name = (name || controller.name());
-            this._inner.set(name, controller);
-        }
-    },
-
-    remove: function(name) {
-        return this._inner.remove(name);
+    all: function() {
+        return this._inner.all();
     },
 
     get: function(name) {
         return this._inner.get(name);
     },
 
+    exists: function(name) {
+        return this._inner.exists(name);
+    },
+
+    remove: function(name) {
+        return this._inner.remove(name);
+    },
+
+    count: function() {
+        return this._inner.count();
+    },
+
     clear: function() {
         return this._inner.clear();
+    },
+
+    register: function(name, controller) {
+        if (!controller) {
+            controller = name;
+            name = null;
+        }
+        if (!(controller instanceof mvcController)) {
+            throw new Error('The specified controller is invalid type');
+        }
+        //
+        name = (name || controller.name());
+        if (/.+Controller$/i.test(name)) {
+            var len = 'Controller'.length;
+            name = name.substr(0, name.length - len);
+            controller.name(name);
+        }
+        //
+        if (!name) { throw new Error('Controller name is required'); }
+        if (this.exists(name)) { throw new utils.Error('Controller "{0}" under area "{1}" is duplicated', name, this.ownerAreaName); }
+        //
+        this._inner.set(name, controller);
     },
 
     loaddir: function(ctrlsPath, act) {

@@ -119,10 +119,15 @@ dataTypeManager.prototype = {
     constructor: dataTypeManager,
 
     register: function(name, klass) {
-        if (!name) { throw new Error('Register data type "name" is required'); }
-        if (!utils.isFunction(klass)) { throw new Error('Register data type "class" is function required'); }
-        if (this.exists(name)) { throw new Error('DataType "'+ name + '" already exists'); }
+        if (!name) { throw new Error('Data type name is required'); }
+        if (!utils.isString(name)) { throw new utils.Error('Data type name requires string type but got {0} type', utils.type(name)); }
+        if (!utils.isFunction(klass)) { throw new utils.Error('Data type class requires function type but got {0} type', utils.type(klass)); }
+        if (this.exists(name)) { throw new utils.Error('Data type "{0}" already exists', name); }
         return this._inner.set(name, klass);
+    },
+    
+    all: function() {
+        return this._inner.all();
     },
 
     get: function(name) {
@@ -135,6 +140,10 @@ dataTypeManager.prototype = {
 
     remove: function(name) {
         return this._inner.remove(name);
+    },
+
+    count: function() {
+        return this._inner.count();
     },
 
     clear: function() {
@@ -153,10 +162,15 @@ validatorManager.prototype = {
     constructor: validatorManager,
 
     register: function(name, klass) {
-        if (!name) { throw new Error('Register data type "name" is required'); }
-        if (!utils.isFunction(klass)) { throw new Error('Register data type "class" is function required'); }
-        if (this.exists(name)) { throw new Error('Valiadator "'+ name + '" already exists'); }
+        if (!name) { throw new Error('Validator name is required'); }
+        if (!utils.isString(name)) { throw new utils.Error('Validator name requires string type but got {0} type', utils.type(name)); }
+        if (!utils.isFunction(klass)) { throw new utils.Error('Validator class requires function type but got {0} type', utils.type(klass)); }
+        if (this.exists(name)) { throw new utils.Error('Valiadator "{0}" already exists', name); }
         return this._inner.set(name, klass);
+    },
+
+    all: function() {
+        return this._inner.all();
     },
 
     get: function(name) {
@@ -169,6 +183,10 @@ validatorManager.prototype = {
 
     remove: function(name) {
         return this._inner.remove(name);
+    },
+
+    count: function() {
+        return this._inner.count();
     },
 
     clear: function() {

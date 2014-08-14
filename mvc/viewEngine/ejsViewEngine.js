@@ -12,15 +12,9 @@ var fs = require('fs'),
     utils = require('zoo-utils'),
     ejsView = require('./ejsView');
 
-var ejsViewEngine = module.exports = function(set) {
-    utils.extend(this, set);
-};
-
-ejsViewEngine.prototype = {
+module.exports = {
 
     extname: '.ejs',
-
-    constructor: ejsViewEngine,
 
     findView: function(controllerContext, viewName, callback) {
         callback = utils.deferProxy(callback);

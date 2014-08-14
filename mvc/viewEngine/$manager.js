@@ -41,21 +41,17 @@ viewEngineManager.prototype = {
     },
 
     register: function(engineName, viewEngine) {
-        if (!engineName) { throw new Error('Parameter "engineName" is required'); }
-        if (!viewEngine) { throw new Error('Parameter "viewEngine" is required'); }
-        if (!utils.isFunction(viewEngine.findView)) { throw new Error('Please implement the interface function: "findView(controllerContext, viewName, callback)" in the viewEngine: "' + engineName + '"'); }
-        if (!utils.isFunction(viewEngine.releaseView)) { throw new Error('Please implement the interface function: "releaseView(controllerContext, view)" in the viewEngine: "' + engineName + '"'); }
-        if (this.exists(engineName)) { throw new Error('ViewEngine "'+ engineName + '" already exists'); }
+        if (!engineName) { throw new Error('View engine name is required'); }
+        if (!viewEngine) { throw new Error('View engine object is required'); }
+        if (!utils.isFunction(viewEngine.findView)) { throw new utils.Error('Please implement the interface function "findView(controllerContext, viewName, callback)" in the view engine "{0}"', engineName); }
+        if (!utils.isFunction(viewEngine.releaseView)) { throw new utils.Error('Please implement the interface function "releaseView(controllerContext, view)" in the view engine "{0}"', engineName); }
+        if (this.exists(engineName)) { throw new utils.Error('View engine "{0}" already exists', engineName); }
         return this._inner.set(engineName, viewEngine);
     },
 
     registerAll: function() {
-        // vash
-        var vashViewEngine = require('./vashViewEngine');
-        this.register('vash', new vashViewEngine());
-        // ejs
-        var ejsViewEngine = require('./ejsViewEngine');
-        this.register('ejs', new ejsViewEngine());
+        this.register('vash', require('./vashViewEngine'));
+        this.register('ejs', require('./ejsViewEngine'));
         // more engines...
     },
 
@@ -66,7 +62,7 @@ viewEngineManager.prototype = {
         //
         var done = function() {
             if (!viewEngineResult) {
-                callback(new Error('Can not find any view engine.'));
+                callback(new Error('Can not find any view engine'));
             } else {
                 viewEngineResult.searchedLocations = searchedLocations;
                 callback(null, viewEngineResult);
@@ -78,14 +74,15 @@ viewEngineManager.prototype = {
                 done();
                 return;
             }
-            var engine = all[allKeys[index++]];
+            var engineName = allKeys[index++];
+            var engine = all[engineName];
             engine.findView(controllerContext, viewName, function(err, ret) {
                 if (err) {
                     callback(err);
                     return;
                 }
                 if (!ret) {
-                    callback(new Error('The interface function "findView" in the viewEngine require return object as: { view: viewInstance, searchedLocations: [] }'));
+                    callback(new utils.Error('The interface function "findView" in the "{0}"" view engine requires return object as "{ view: viewInstance, searchedLocations: [] }"', engineName));
                     return;
                 }
                 viewEngineResult = ret;

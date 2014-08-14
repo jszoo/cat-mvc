@@ -12,15 +12,9 @@ var fs = require('fs'),
     utils = require('zoo-utils'),
     vashView = require('./vashView');
 
-var vashViewEngine = module.exports = function(set) {
-    utils.extend(this, set);
-};
-
-vashViewEngine.prototype = {
+module.exports = {
 
     extname: '.vash',
-
-    constructor: vashViewEngine,
 
     findView: function(controllerContext, viewName, callback) {
         callback = utils.deferProxy(callback);
@@ -37,7 +31,8 @@ vashViewEngine.prototype = {
                         if (viewEngineResult.view) {
                             return viewEngineResult.view.filePath;
                         } else {
-                            callback(new Error('Failed to lookup view "' + name + '" in the following locations <br/>' + viewEngineResult.searchedLocations.join('<br/>')));
+                            var locationsMsg = viewEngineResult.searchedLocations.join('<br/>');
+                            callback(new utils.Error('Failed to lookup view "{0}" in the following locations<br/>{1}', name, locationsMsg));
                         }
                     }
                 });

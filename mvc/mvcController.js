@@ -166,11 +166,11 @@ mvcController.prototype = {
         var params = annotated.params = [];
         if (!annotated.args || annotated.args.length === 0) { return annotated; }
         //
-        //
-        var customInject = {}, injectContext = {
+        var customInject = {};
+        var injectContext = ctx.toControllerInjectContext({
             inject: customInject,
             controller: this
-        };
+        });
         ctx.app.emit('injectController', ctx.app, injectContext);
         ctx.routeArea.fireEvent('onInjectController', ctx.routeArea, injectContext);
         customInject = utils.formalObj(customInject);

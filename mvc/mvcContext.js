@@ -108,6 +108,11 @@ mvcContext.prototype = {
         return utils.nudeExtend(clone(this), { controller: controller });
     },
 
+    toControllerInjectContext: function(merge) {
+        if (this.controller) { merge.controller = this.controller; }
+        return utils.nudeExtend(clone(this), merge);
+    },
+
     toAuthorizationContext: function(merge) {
         if (this.controller) { merge.controller = this.controller; }
         return utils.nudeExtend(clone(this), merge);

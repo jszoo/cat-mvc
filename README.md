@@ -191,10 +191,7 @@ There we can see some parameters in the controller handler function. The paramet
 | **Name**    | **Description**            | **Useage**          |
 |:----------- |:---------------------------|:--------------------|
 | req         | raw nodejs request object  |                     |
-| request     | raw nodejs request object  |                     |
 | res         | raw nodejs response object |                     |
-| response    | raw nodejs response object |                     |
-| ctx         | httpContext object         |                     |
 | context     | httpContext object         |                     |
 | session     | plain object session data  | session['logged']   |
 | query       | plain object query data    | query['PageIndx']   |

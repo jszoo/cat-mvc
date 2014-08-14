@@ -142,6 +142,10 @@ dataTypeManager.prototype = {
         return this._inner.remove(name);
     },
 
+    count: function() {
+        return this._inner.count();
+    },
+
     clear: function() {
         return this._inner.clear();
     }
@@ -179,6 +183,10 @@ validatorManager.prototype = {
 
     remove: function(name) {
         return this._inner.remove(name);
+    },
+
+    count: function() {
+        return this._inner.count();
     },
 
     clear: function() {

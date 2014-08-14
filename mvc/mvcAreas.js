@@ -52,6 +52,10 @@ utils.inherit(mvcAreas, events.EventEmitter, {
         return this._inner.exists(areaName);
     },
 
+    count: function() {
+        return this._inner.count();
+    },
+
     conf: function(name) {
         return this.app.get(name) || utils.readObj({ fileNames: fileNames, folderNames: folderNames }, name);
     },

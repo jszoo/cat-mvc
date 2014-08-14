@@ -55,6 +55,14 @@ attributeManager.prototype = {
         }
     },
 
+    count: function(category) {
+        if (!category) {
+            return this._inner.count();
+        } else {
+            
+        }
+    },
+
     clear: function(category) {
         if (!category) {
             return this._inner.clear();

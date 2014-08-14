@@ -58,6 +58,10 @@ mvcModelMetas.prototype = {
         modelAttributes.del(name, this.ownerAreaName);
     },
 
+    count: function() {
+        return this._inner.count();
+    },
+
     clear: function() {
         this._inner.clear();
     },

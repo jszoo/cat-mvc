@@ -71,8 +71,24 @@ mvcModelState.prototype = {
         state.value = value;
     },
 
+    all: function() {
+        return this._inner.all();
+    },
+
+    get: function(namespace) {
+        return this._inner.get(namespace);
+    },
+
+    exists: function(namespace) {
+        return this._inner.exists(namespace);
+    },
+
     remove: function(namespace) {
         this._inner.remove(namespace);
+    },
+
+    count: function() {
+        return this._inner.count();
     },
 
     clear: function() {

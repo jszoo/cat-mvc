@@ -51,6 +51,10 @@ utils.inherit(mvcRoutes, events.EventEmitter, {
         this.emit('changed');
     },
 
+    count: function() {
+        return this._inner.count();
+    },
+
     clear: function() {
         this._inner.clear();
         this.emit('changed');

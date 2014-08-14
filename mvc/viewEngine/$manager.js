@@ -36,6 +36,10 @@ viewEngineManager.prototype = {
         return this._inner.remove(engineName);
     },
 
+    count: function() {
+        return this._inner.count();
+    },
+
     clear: function() {
         return this._inner.clear();
     },

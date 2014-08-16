@@ -64,9 +64,9 @@ module.exports = function(app) {
                 //
                 var httpContext = new mvcContext({
                     id: utils.unique(32),
+                    items: {},
                     app: app,
                     zoo: zoo,
-                    items: {},
                     req: req,
                     res: res,
                     route: route,

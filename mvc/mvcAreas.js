@@ -112,6 +112,7 @@ utils.inherit(mvcAreas, events.EventEmitter, {
             }
         }
         // load 'areas/account/models'
+        area.modelMetas.loaddir(path.join(__dirname, 'modelMeta'));
         area.modelMetas.loaddir(area.modelsPath);
         // load 'areas/account/controllers'
         area.controllers.loaddir(area.controllersPath);

@@ -132,9 +132,7 @@ We take auth.js controller for one impression.
 
 ```javascript
 // areas/account/controllers/auth.js
-
 var mvc = require('cat-mvc');
-
 mvc.controller(function(session, end) {
 
     // GET /account/auth/login
@@ -163,7 +161,7 @@ mvc.controller(function(session, end) {
         end.redirectToAction('login');
     };
 
-    //.... other actions
+    //.... more actions
 });
 ```
 
@@ -251,12 +249,12 @@ mvc.controller(function(end) {
 ```
 + Definition 1, the basic action with action name and user work area handle function.
 + Definition 2, this with the support of Action Attribute. For more details please see the attribute section.
-+ Definition 3, 'index' will be recognized as action name. Just alias, it's the same as Definition 1.
++ Definition 3, 'index' will be recognized as action name. No attributes, it's the same as Definition 1, just alias.
 
 **Injection of action**   
 The action handle funciton you can see that parameters. They are injected with current request data. FormData/QueryString/RouteData will the request data source. Only one thing you need to do is to specify a correct parameter name (case insensitive), then you can get the value you want directly. With the help of attributes, the parameters even can be strong types. You can define your own model, then attribute the model to your parameter. System will deserialize the values into your model. It's much more cooool then parse the values one by one from string type. We really love this feature.
 
-**Sampel Action**   
+**Sample Action**   
 ```javascript
 // login action
 this.action('login', 'httpPost, loginModel(user), bool(remember)', function(user, remember) {

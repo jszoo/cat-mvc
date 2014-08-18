@@ -174,16 +174,19 @@ var mvc = require('cat-mvc');
 
 // specify attributes
 // for attributes please see to attribute section
-mvc.controller(attributes, function() {
+mvc.controller('attributes', function() {
     // actions here
 });
 
 // specify controller name manually
 // this name will replace the controller file name as controller name
-mvc.controller(name, attributes, function() {
+mvc.controller('name', 'attributes', function() {
     // actions here
 });
 ```
+
+**Controller Attribute**
+A series events inside controller can be subscribed via adding controller attributes. You will see the other attribute on Action api signature in the following document. They are almost the same, but all the Action Attribute events will bubble to Controller Attribute. For more details please see the attribute section.
 
 **Injection of controller**   
 There we can see some parameters in the controller handler function. The parameters will injected automatically base on parameter names (case insensitive). We alreay have some common used component objects builtin.
@@ -227,12 +230,55 @@ mvc.controller(attributes, function(end, mongo) {
         end.json(mongo.query('select * from table'));
     };
 });
-
 ```
 
 Action
 -----------
-Coming soon...
+Action is the main work area of the user. Do whatever to process your business and end with a result. Both sync and async are allow. 
+
+The full signature of define a action is:
+
+```javascript
+var mvc = require('cat-mvc');
+mvc.controller(function(end) {
+    // 1. basic
+    this.action('action name', function(param1, param2, ...) { });
+    // 2. full signature
+    this.action('action name', 'attributes', function(param1, param2, ...) { });
+    // 3. minimal
+    this.index = function(param1, param2, ...) { };
+});
+```
++ Definition 1, the basic action with action name and user work area handle function.
++ Definition 2, this with the support of Action Attribute. For more details please see the attribute section.
++ Definition 3, 'index' will be recognized as action name. Just alias, it's the same as Definition 1.
+
+**Injection of action**   
+The action handle funciton you can see that parameters. They are injected with current request data. FormData/QueryString/RouteData will the request data source. Only one thing you need to do is to specify a correct parameter name (case insensitive), then you can get the value you want directly. With the help of attributes, the parameters even can be strong types. You can define your own model, then attribute the model to your parameter. System will deserialize the values into your model. It's much more cooool then parse the values one by one from string type. We really love this feature.
+
+**Sampel Action**   
+```javascript
+// login action
+this.action('login', 'httpPost, loginModel(user), bool(remember)', function(user, remember) {
+    // string type with the required validation
+    user.UserName; user.Password;
+    // boolean type, primitive types already builtin:
+    // **array, bool, date, float, int, string**
+    remember; 
+});
+
+// login model
+module.exports = {
+    UserName: {
+        type: 'string',
+        required: true
+    },
+    Password: {
+        type: 'string',
+        required: true
+    }
+};
+```
 
 Action result
 ---------------

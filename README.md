@@ -262,7 +262,7 @@ The action handle funciton you can see that parameters. They are injected with c
 this.action('login', 'httpPost, loginModel(user), bool(remember)', function(user, remember) {
     // string type with the required validation
     user.UserName; user.Password;
-    // boolean type
+    // boolean type, a primitive type attribute
     remember;
 });
 

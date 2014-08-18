@@ -111,8 +111,9 @@ utils.inherit(mvcAreas, events.EventEmitter, {
                 settProcedure.call(area);
             }
         }
-        // load 'areas/account/models'
+        // load builtin model metas
         area.modelMetas.loaddir(path.join(__dirname, 'modelMeta'));
+        // load 'areas/account/models'
         area.modelMetas.loaddir(area.modelsPath);
         // load 'areas/account/controllers'
         area.controllers.loaddir(area.controllersPath);

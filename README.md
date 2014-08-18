@@ -262,9 +262,8 @@ The action handle funciton you can see that parameters. They are injected with c
 this.action('login', 'httpPost, loginModel(user), bool(remember)', function(user, remember) {
     // string type with the required validation
     user.UserName; user.Password;
-    // boolean type, primitive types already builtin:
-    // **array, bool, date, float, int, string**
-    remember; 
+    // boolean type
+    remember;
 });
 
 // login model
@@ -279,6 +278,9 @@ module.exports = {
     }
 };
 ```
+**Primitive types attribute**   
+We already builtin these related attributes for primitive data types:   
+string, bool, int, float, date, array
 
 Action result
 ---------------

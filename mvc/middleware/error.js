@@ -24,7 +24,7 @@ var format = function(err, stack) {
     return msg.join('\n');
 };
 
-var writeError = function(res, err) {
+var write = function(res, err) {
     if (!(err instanceof Error)) { err = new Error(err); }
     if (!err.message) { err.message = 'Internal Server Error'; }
     if (!err.status) { err.status = 500; }
@@ -38,11 +38,11 @@ var writeError = function(res, err) {
 module.exports = function() {
     return function(req, res, next, err) {
         if (err) {
-            writeError(res, err);
+            write(res, err);
         } else {
             next(err);
         }
     };
 };
 
-module.exports.writeError = writeError;
+module.exports.write = write;

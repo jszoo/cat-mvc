@@ -88,6 +88,10 @@ utils.inherit(mvcAreas, events.EventEmitter, {
         if (area) {
             this.emit('unload', area);
             area.fireEvent('onUnload', area);
+            area.modelMetas.clear();
+            area.controllers.clear();
+            area.routes.clear();
+            this._routeSet = null;
         }
         return this._inner.remove(areaName);
     },
@@ -118,14 +122,16 @@ utils.inherit(mvcAreas, events.EventEmitter, {
                 settProcedure.call(area);
             }
         }
-        // load builtin model metas
+        // load builtin model metas and 'areas/account/models'
+        area.modelMetas.clear();
         area.modelMetas.loaddir(path.join(__dirname, 'modelMeta'));
-        // load 'areas/account/models'
         area.modelMetas.loaddir(area.modelsPath);
         // load 'areas/account/controllers'
+        area.controllers.clear();
         area.controllers.loaddir(area.controllersPath);
         // map route
         var self = this;
+        area.routes.clear();
         area.routes.on('changed', function() { self._routeSet = null; });
         area.routes.set(area.name, areaRouteExpression, defaultRouteValues);
         // fire event

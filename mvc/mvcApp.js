@@ -13,7 +13,7 @@ var path = require('path'),
     caching = require('zoo-cache'),
     httpHelper = require('./httpHelper'),
     mvcArea = require('./mvcArea'),
-	mvcAreas = require('./mvcAreas'),
+    mvcAreas = require('./mvcAreas'),
     mvcModelMeta = require('./mvcModelMeta'),
     mvcController = require('./mvcController'),
     mvcActionResult = require('./mvcActionResult'),
@@ -148,47 +148,82 @@ utils.inherit(mvcApp, events.EventEmitter, {
     handler: function() {
         var self = this, initialize = appInitialization(this);
         return function(req, res) {
-            initialize(req, res);
             req._app = res._app = self;
-            self.emit('beginRequest', self);
-            self._handlers.execute(req, res);
-            self.emit('endRequest', self);
+            if (initialize(req, res)) {
+                self.emit('beginRequest', self);
+                self._handlers.execute(req, res);
+                self.emit('endRequest', self);
+            }
         };
     }
 });
 
+var neverInited = true;
 var appInitialization = function(app) {
     return function(req, res) {
-        if (app._initialized) { return; }
-        else { app._initialized = true; }
-        //
+        if (app._initialized) { return true; }
         var handlers = app._handlers;
-        handlers.register(bodyParser.json());
-        handlers.register(bodyParser.json({ type: 'application/hal+json' }));
-        handlers.register(bodyParser.urlencoded({ extended: true }));
-        handlers.register(cookieParser());
-        handlers.register(session({
-            name: 'catmvc.sid',
-            secret: 'catmvc',
-            cookie: { maxAge: 3600000 },
-            resave: true,
-            rolling: false,
-            saveUninitialized: true
-        }));
         //
-        handlers.register('/', 'midHeader', midHeader());
-        handlers.register('/', 'midRequest', midRequest());
-        handlers.register('/', 'midResponse', midResponse());
-        handlers.registerAtLast('/', 'midError', midError());
-        //
-        handlers.register(mvcHandler(app));
-        //
-        app.viewEngines.registerAll();
-        app.attributes.registerAll();
-        app.modelling.registerAll();
-        app.areas.registerAll(); // user code always focus on the controllers, so register at last
-        //
-        app.emit('appInit', app);
+        try {
+            handlers.unregister('bodyParser-json');
+            handlers.register('/', 'bodyParser-json', bodyParser.json());
+            //
+            handlers.unregister('bodyParser-hal+json');
+            handlers.register('/', 'bodyParser-hal+json', bodyParser.json({ type: 'application/hal+json' }));
+            //
+            handlers.unregister('bodyParser-urlencoded');
+            handlers.register('/', 'bodyParser-urlencoded', bodyParser.urlencoded({ extended: true }));
+            //
+            handlers.unregister('cookieParser');
+            handlers.register('/', 'cookieParser', cookieParser());
+            //
+            handlers.unregister('sessionProvider');
+            handlers.register('/', 'sessionProvider', session({
+                name: 'catmvc.sid',
+                secret: 'catmvc',
+                cookie: { maxAge: 3600000 },
+                resave: true,
+                rolling: false,
+                saveUninitialized: true
+            }));
+            //
+            handlers.unregister('midHeader');
+            handlers.register('/', 'midHeader', midHeader());
+            //
+            handlers.unregister('midRequest');
+            handlers.register('/', 'midRequest', midRequest());
+            //
+            handlers.unregister('midResponse');
+            handlers.register('/', 'midResponse', midResponse());
+            //
+            handlers.unregister('midError');
+            handlers.registerAtLast('/', 'midError', midError());
+            //
+            handlers.unregister('catmvc-handler');
+            handlers.register('/', 'catmvc-handler', mvcHandler(app));
+            //
+            if (neverInited) {
+                app.viewEngines.clear();
+                app.viewEngines.registerAll();
+                //
+                app.attributes.clear();
+                app.attributes.registerAll();
+                //
+                app.modelling.clear();
+                app.modelling.registerAll();
+                neverInited = false;
+            }
+            //
+            app.areas.clear();
+            app.areas.registerAll(); // user code always focus on the controllers, so register at last
+            //
+            app.emit('appInit', app);
+            app._initialized = true;
+            return true;
+        }
+        catch (ex) {
+            midError.write(res, ex);
+        }
     };
 };
 

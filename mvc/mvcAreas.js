@@ -132,6 +132,7 @@ utils.inherit(mvcAreas, events.EventEmitter, {
         // map route
         var self = this;
         area.routes.clear();
+        area.routes.removeAllListeners();
         area.routes.on('changed', function() { self._routeSet = null; });
         area.routes.set(area.name, areaRouteExpression, defaultRouteValues);
         // fire event

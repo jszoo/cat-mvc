@@ -151,8 +151,8 @@ utils.inherit(viewResult, baseResult, {
                     return;
                 }
                 if (!viewEngineResult.view) {
-                    var locationsMsg = viewEngineResult.searchedLocations.join('\n');
-                    callback(new utils.Error('Failed to lookup view "{0}" in the following locations\n{1}', viewName, locationsMsg));
+                    var locationsMsg = viewEngineResult.searchedLocations.join('<br/>');
+                    callback(new Error(utils.format('Failed to lookup view "{0}" in the following locations<br/>{1}', viewName, locationsMsg)));
                     return;
                 }
                 render(viewEngineResult.view, function(err) {

@@ -38,7 +38,7 @@ mvcHandlerRouter.prototype = {
             name = null;
         }
         if (!utils.isFunction(handler)) {
-            throw new utils.Error('The handler requires function type but got {0} type', utils.type(handler));
+            throw new Error(utils.format('The handler requires function type but got {0} type', utils.type(handler)));
         } else {
             this._handlers.push({
                 name: name, handler: handler,

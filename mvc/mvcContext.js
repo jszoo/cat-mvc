@@ -84,7 +84,7 @@ mvcContext.prototype = {
         var datas = this.items[cacheKey];
         if (!datas) {
             var lowerFn = lowerFuncs[lowerType];
-            if (!lowerFn) { throw new utils.Error('Invalid lowerType "{0}"', lowerType); }
+            if (!lowerFn) { throw new Error(utils.format('Invalid lowerType "{0}"', lowerType)); }
             //
             this.items[cacheKey] = datas = {};
             utils.each(this.routeData, function(i, it) {

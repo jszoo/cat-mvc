@@ -47,9 +47,9 @@ viewEngineManager.prototype = {
     register: function(engineName, viewEngine) {
         if (!engineName) { throw new Error('View engine name is required'); }
         if (!viewEngine) { throw new Error('View engine object is required'); }
-        if (!utils.isFunction(viewEngine.findView)) { throw new utils.Error('Please implement the interface function "findView(controllerContext, viewName, callback)" in the view engine "{0}"', engineName); }
-        if (!utils.isFunction(viewEngine.releaseView)) { throw new utils.Error('Please implement the interface function "releaseView(controllerContext, view)" in the view engine "{0}"', engineName); }
-        if (this.exists(engineName)) { throw new utils.Error('View engine "{0}" already exists', engineName); }
+        if (!utils.isFunction(viewEngine.findView)) { throw new Error(utils.format('Please implement the interface function "findView(controllerContext, viewName, callback)" in the view engine "{0}"', engineName)); }
+        if (!utils.isFunction(viewEngine.releaseView)) { throw new Error(utils.format('Please implement the interface function "releaseView(controllerContext, view)" in the view engine "{0}"', engineName)); }
+        if (this.exists(engineName)) { throw new Error(utils.format('View engine "{0}" already exists', engineName)); }
         return this._inner.set(engineName, viewEngine);
     },
 
@@ -86,7 +86,7 @@ viewEngineManager.prototype = {
                     return;
                 }
                 if (!ret) {
-                    callback(new utils.Error('The interface function "findView" in the "{0}"" view engine requires return object as "{ view: viewInstance, searchedLocations: [] }"', engineName));
+                    callback(new Error(utils.format('The interface function "findView" in the "{0}"" view engine requires return object as "{ view: viewInstance, searchedLocations: [] }"', engineName)));
                     return;
                 }
                 viewEngineResult = ret;

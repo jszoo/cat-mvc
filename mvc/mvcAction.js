@@ -370,7 +370,7 @@ mvcAction.prototype = {
             if (utils.isFunction(annotated.func)) {
                 executing(annotated);
             } else {
-                throw new utils.Error('Implementation not found, controller "{0}", action "{1}"', this.controller.name(), this.name());
+                throw new Error(utils.format('Implementation not found, controller "{0}", action "{1}"', this.controller.name(), this.name()));
             }
         }
     }

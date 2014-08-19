@@ -79,7 +79,7 @@ mvcModelMetas.prototype = {
         name = (name || modelMeta.name);
         //
         if (!name) { throw Error('Model name is required'); }
-        if (this.exists(name)) { throw new utils.Error('Model "{0}" under area "{1}" is duplicated', name, this.ownerAreaName); }
+        if (this.exists(name)) { throw new Error(utils.format('Model "{0}" under area "{1}" is duplicated', name, this.ownerAreaName)); }
         //
         this._inner.set(name, modelMeta);
         modelAttributes.set(name, modelMeta, this.ownerAreaName);

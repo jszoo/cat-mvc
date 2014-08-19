@@ -35,7 +35,7 @@ var decode = function(param) {
     try {
         return decodeURIComponent(param);
     } catch (ex) {
-        var err = new utils.Error('Failed to decode param "{0}"', param);
+        var err = new Error(utils.format('Failed to decode param "{0}"', param));
         err.status = 400;
         throw err;
     }

@@ -56,6 +56,13 @@ utils.inherit(mvcAreas, events.EventEmitter, {
         return this._inner.count();
     },
 
+    clear: function() {
+        var self = this;
+        utils.each(this.all(), function() {
+            self.unload(this.name);
+        });
+    },
+
     conf: function(name) {
         return this.app.get(name) || utils.readObj({ fileNames: fileNames, folderNames: folderNames }, name);
     },

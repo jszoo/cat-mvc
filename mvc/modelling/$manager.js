@@ -27,6 +27,11 @@ modellingManager.prototype = {
         utils.each(require('./validator'), function(key, cls) { self.validators.register(key, cls); });
     },
 
+    clear: function() {
+        this.dataTypes.clear();
+        this.validators.clear();
+    },
+
     /*
     * reslove setting to sepcified data type class and valiadator classes
     *   set: { type: 'string', required: true, ... }  /  set: 'string'

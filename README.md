@@ -128,7 +128,7 @@ app.set('folderNames.controllers', 'controllers');
 
 Controller
 -----------
-We take auth.js controller for one impression.
+Let's take auth.js controller for one impression.
 
 ```javascript
 // areas/account/controllers/auth.js
@@ -168,8 +168,6 @@ mvc.controller(function(session, end) {
 The full signature of define a controller is:
 
 ```javascript
-var mvc = require('cat-mvc');
-
 // specify attributes
 // for attributes please see to attribute section
 mvc.controller('attributes', function() {
@@ -257,14 +255,30 @@ The action handle funciton you can see that parameters. They are injected with c
 **Sample Action**   
 ```javascript
 // login action
-this.action('login', 'httpPost, loginModel(user), bool(remember)', function(user, remember) {
+this.action('login', 'httpPost, loginModel(user), bool(rem)', function(user, rem) {
     // string type with the required validation
     user.UserName; user.Password;
     // boolean type, a primitive type attribute
-    remember;
+    rem;
 });
+```
 
-// login model
+**1. Action selector attribute**   
+The *httpPost* attribute in the sample action. Just like its name, it's a filter to make only POST request to enter this action. There are some more related attributes.
+
+| httpPost | httpHead | httpTrace | httpPut | httpDelete | httpOptions | httpConnect |
+|:---------|:---------|:----------|:--------|:-----------|:------------|:------------|
+
+**2. Primitive types attribute**   
+The *bool(rem)* attribute in the sample action. We already builtin attributes for primitive data types.
+
+| string | bool | int | float | date | array |
+|:-------|:-----|:----|:------|:-----|:------|
+
+**3. Customized model attribute**   
+The *loginModel(user)* attribute in the sample action. *loginModel* is a customized model file that put in the *models* folder. We generate a model binder attribute with the same name.
+```javascript
+// loginModel.js
 module.exports = {
     UserName: {
         type: 'string',
@@ -276,9 +290,6 @@ module.exports = {
     }
 };
 ```
-**Primitive types attribute**   
-We already builtin these related attributes for primitive data types:   
-string, bool, int, float, date, array
 
 Action result
 ---------------

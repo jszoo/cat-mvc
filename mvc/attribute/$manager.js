@@ -64,10 +64,10 @@ attributeManager.prototype = {
     },
 
     register: function(attrName, attrClass, category) {
-        if (!utils.isString(attrName)) { throw new utils.Error('Attribute name requires string type but got {0} type', utils.type(attrName)); }
-        if (!utils.isFunction(attrClass)) { throw new utils.Error('Attribute class requires function type but got {0} type', utils.type(attrClass)); }
-        if (!/[0-9a-zA-Z_-]+/.test(attrName)) { throw new utils.Error('Attribute name "{0}" is invalid', attrName); }
-        if (this.exists(attrName)) { throw new utils.Error('Attribute "{0}" already exists', attrName); }
+        if (!utils.isString(attrName)) { throw new Error(utils.format('Attribute name requires string type but got {0} type', utils.type(attrName))); }
+        if (!utils.isFunction(attrClass)) { throw new Error(utils.format('Attribute class requires function type but got {0} type', utils.type(attrClass))); }
+        if (!/[0-9a-zA-Z_-]+/.test(attrName)) { throw new Error(utils.format('Attribute name "{0}" is invalid', attrName)); }
+        if (this.exists(attrName)) { throw new Error(utils.format('Attribute "{0}" already exists', attrName)); }
         //
         if (!category) {
             this._inner.set(attrName, attrClass);
@@ -143,7 +143,7 @@ var tryEval = function(str, attrName) {
             str = str.replace(/^\s+|\s+$/g, ''); // trim whitespaces
             eval('temp="' + str + '";');
         } catch (ex) {
-            throw new utils.Error('Can not resolve the parameters of attribute "{0}"', attrName);
+            throw new Error(utils.format('Can not resolve the parameters of attribute "{0}"', attrName));
         }
     }
     return temp;

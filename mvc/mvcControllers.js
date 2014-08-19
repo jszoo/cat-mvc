@@ -66,7 +66,7 @@ mvcControllers.prototype = {
         }
         //
         if (!name) { throw new Error('Controller name is required'); }
-        if (this.exists(name)) { throw new utils.Error('Controller "{0}" under area "{1}" is duplicated', name, this.ownerAreaName); }
+        if (this.exists(name)) { throw new Error(utils.format('Controller "{0}" under area "{1}" is duplicated', name, this.ownerAreaName)); }
         //
         this._inner.set(name, controller);
     },

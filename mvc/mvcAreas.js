@@ -56,6 +56,13 @@ utils.inherit(mvcAreas, events.EventEmitter, {
         return this._inner.count();
     },
 
+    clear: function() {
+        var self = this;
+        utils.each(this.all(), function() {
+            self.unload(this.name);
+        });
+    },
+
     conf: function(name) {
         return this.app.get(name) || utils.readObj({ fileNames: fileNames, folderNames: folderNames }, name);
     },
@@ -81,6 +88,10 @@ utils.inherit(mvcAreas, events.EventEmitter, {
         if (area) {
             this.emit('unload', area);
             area.fireEvent('onUnload', area);
+            area.modelMetas.clear();
+            area.controllers.clear();
+            area.routes.clear();
+            this._routeSet = null;
         }
         return this._inner.remove(areaName);
     },
@@ -91,7 +102,7 @@ utils.inherit(mvcAreas, events.EventEmitter, {
 
     register: function(areaPath, areaName, areaRouteExpression, defaultRouteValues) {
         if (!fs.existsSync(areaPath) || !fs.statSync(areaPath).isDirectory()) {
-            throw new utils.Error('The specified areasPath "{0}" is invalid', areaPath);
+            throw new Error(utils.format('The specified areasPath "{0}" is invalid', areaPath));
         }
         // area obj
         var area = new mvcArea({
@@ -111,14 +122,17 @@ utils.inherit(mvcAreas, events.EventEmitter, {
                 settProcedure.call(area);
             }
         }
-        // load builtin model metas
+        // load builtin model metas and 'areas/account/models'
+        area.modelMetas.clear();
         area.modelMetas.loaddir(path.join(__dirname, 'modelMeta'));
-        // load 'areas/account/models'
         area.modelMetas.loaddir(area.modelsPath);
         // load 'areas/account/controllers'
+        area.controllers.clear();
         area.controllers.loaddir(area.controllersPath);
         // map route
         var self = this;
+        area.routes.clear();
+        area.routes.removeAllListeners();
         area.routes.on('changed', function() { self._routeSet = null; });
         area.routes.set(area.name, areaRouteExpression, defaultRouteValues);
         // fire event
@@ -128,7 +142,7 @@ utils.inherit(mvcAreas, events.EventEmitter, {
         if (!this._inner.exists(area.name)) {
             this._inner.set(area.name, area);
         } else {
-            throw new utils.Error('Duplicated area name "{0}"', area.name);
+            throw new Error(utils.format('Duplicated area name "{0}"', area.name));
         }
         // ret
         return area;
@@ -157,7 +171,7 @@ utils.inherit(mvcAreas, events.EventEmitter, {
 
     registerAreas: function(areasPath) {
         if (!fs.existsSync(areasPath) || !fs.statSync(areasPath).isDirectory()) {
-            throw new utils.Error('The specified areasPath "{0}" is invalid', areaPath);
+            throw new Error(utils.format('The specified areasPath "{0}" is invalid', areaPath));
         }
         var self = this, areaDirs = fs.readdirSync(areasPath);
         utils.each(areaDirs, function(i, areaName) {

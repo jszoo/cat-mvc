@@ -57,7 +57,7 @@ module.exports = {
                             return viewEngineResult.view.filePath;
                         } else {
                             var locationsMsg = viewEngineResult.searchedLocations.join('<br/>');
-                            callback(new utils.Error('Failed to lookup view "{0}" in the following locations<br/>{1}', name, locationsMsg));
+                            callback(new Error(utils.format('Failed to lookup view "{0}" in the following locations<br/>{1}', name, locationsMsg)));
                         }
                     }
                 });

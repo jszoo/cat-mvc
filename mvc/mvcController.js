@@ -287,7 +287,7 @@ mvcController.prototype = {
             message.push(utils.format('{0} [{1}] {2}', this.name(), String(this.attr() || ''), fnStr));
         });
         var methodsMsg = message.join('\n');
-        return new utils.Error('The current request for action "{0}" on controller type "{1}" is ambiguous between the following action methods\n{2}', actionName, this.name(), methodsMsg);
+        return new Error(utils.format('The current request for action "{0}" on controller type "{1}" is ambiguous between the following action methods\n{2}', actionName, this.name(), methodsMsg));
     }
 };
 

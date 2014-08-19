@@ -257,28 +257,28 @@ The action handle funciton you can see that parameters. They are injected with c
 **Sample Action**   
 ```javascript
 // login action
-this.action('login', 'httpPost, loginModel(user), bool(remember)', function(user, remember) {
+this.action('login', 'httpPost, loginModel(user), bool(rem)', function(user, rem) {
     // string type with the required validation
     user.UserName; user.Password;
     // boolean type, a primitive type attribute
-    remember;
+    rem;
 });
 ```
 
 **1. Action selector attribute**   
 The *httpPost* attribute in the sample action. Just like its name, it's a filter to make only POST request to enter this action. There are some more related attributes.
 
-| httpGet | httpPost | httpHead | httpTrace | httpPut | httpDelete | httpOptions | httpConnect |
-|:--------|:---------|:---------|:----------|:--------|:-----------|:------------|:------------|
+| httpPost | httpHead | httpTrace | httpPut | httpDelete | httpOptions | httpConnect |
+|:---------|:---------|:----------|:--------|:-----------|:------------|:------------|
 
 **2. Primitive types attribute**   
-The *bool(remember)* attribute in the sample action. We already builtin attributes for primitive data types.
+The *bool(rem)* attribute in the sample action. We already builtin attributes for primitive data types.
 
 | string | bool | int | float | date | array |
 |:-------|:-----|:----|:------|:-----|:------|
 
 **3. Customized model attribute**   
-The *loginModel(user)* attribute in the sample action. *loginModel* is a customized model file what put in the *models* folder.
+The *loginModel(user)* attribute in the sample action. *loginModel* is a customized model file that put in the *models* folder. We generate a model binder attribute with the same name.
 ```javascript
 // loginModel.js
 module.exports = {

@@ -128,7 +128,7 @@ app.set('folderNames.controllers', 'controllers');
 
 Controller
 -----------
-We take auth.js controller for one impression.
+Let's take auth.js controller for one impression.
 
 ```javascript
 // areas/account/controllers/auth.js
@@ -277,8 +277,10 @@ module.exports = {
 };
 ```
 **Primitive types attribute**   
-We already builtin these related attributes for primitive data types:   
-string, bool, int, float, date, array
+We already builtin attributes for primitive data types:
+
+| string | bool | int | float | date | array |
+|:-------|:-----|:----|:------|:-----|:------|
 
 Action result
 ---------------

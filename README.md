@@ -265,20 +265,20 @@ this.action('login', 'httpPost, loginModel(user), bool(remember)', function(user
 });
 ```
 
-**Action selector attribute**   
-The *httpPost* attribute. Just like its name, it's a filter to make only POST request to enter this action. There are some more related attributes.
+**1. Action selector attribute**   
+The *httpPost* attribute in the sample action. Just like its name, it's a filter to make only POST request to enter this action. There are some more related attributes.
 
 | httpGet | httpPost | httpHead | httpTrace | httpPut | httpDelete | httpOptions | httpConnect |
 |:--------|:---------|:---------|:----------|:--------|:-----------|:------------|:------------|
 
-**Primitive types attribute**   
-The *bool(remember)* attribute. We already builtin attributes for primitive data types.
+**2. Primitive types attribute**   
+The *bool(remember)* attribute in the sample action. We already builtin attributes for primitive data types.
 
 | string | bool | int | float | date | array |
 |:-------|:-----|:----|:------|:-----|:------|
 
-**Customized model attribute**   
-The *loginModel(user)* attribute. *loginModel* is a customized model file what put in the *models* folder.
+**3. Customized model attribute**   
+The *loginModel(user)* attribute in the sample action. *loginModel* is a customized model file what put in the *models* folder.
 ```javascript
 // loginModel.js
 module.exports = {

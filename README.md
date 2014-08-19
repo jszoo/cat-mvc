@@ -293,19 +293,27 @@ module.exports = {
 
 Action result
 ---------------
-Instead of calling the raw nodejs response.write function to end a request. Here we provide some useful wrappers for write response content. 
+Instead of calling the raw nodejs response.write function to end a request. Here we provide some useful wrappers for write response content. We also combine the result types into a component called "end". Please always inject the "end" component in your controller, then use it to write your response content.
+```javascript
+mvc.controller(function(end) {
+    this.index = function() {
+        end.empty();
+    };
+});
+```
 
-| Type               | Useage                                                             |
-|:-------------------|:-------------------------------------------------------------------|
-| emptyResult        | end.empty();                                                       |
-| jsonResult         | end.json({ title: 'hello'});                                       |
-| jsonpResult        | end.jsonp({ title: 'hello'}, 'callback');                          |
-| viewResult         | end.view('viewName', { title: 'hello'});                           |
-| fileResult         | end.file('filePath', 'fileDownloadName');                          |
-| contentResult      | end.content('string content');                                     |
-| httpNotFoundResult | end.httpNotFound();                                                |
-| redirectResult     | end.redirect('url', permanent);                                    |
-| redirectToAction   | end.redirectToAction('actionName', 'controllerName', routeValues); |
+| Type                    | Useage                                                     |
+|:------------------------|:-----------------------------------------------------------|
+| *                       | end.with(whatever);                                        |
+| emptyResult             | end.empty();                                               |
+| jsonResult              | end.json({ title: 'hello'});                               |
+| jsonpResult             | end.jsonp({ title: 'hello'}, 'callback');                  |
+| viewResult              | end.view('viewName', { title: 'hello'});                   |
+| fileResult              | end.file('filePath', 'fileDownloadName');                  |
+| contentResult           | end.content('stringContent');                              |
+| httpNotFoundResult      | end.httpNotFound();                                        |
+| redirectResult          | end.redirect('url', isPermanent);                          |
+| redirectToRouteResult   | end.redirectToAction('action', 'controller', routeValues); |
 
 Attribute
 -----------------

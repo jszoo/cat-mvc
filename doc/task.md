@@ -41,3 +41,4 @@
 + 32. $ npm install -g cat-mvc-site   $ cat-mvc-site create my_app   $ cd my_app $ npm install   $ npm start
 + 33. use [Formidable](https://github.com/felixge/node-formidable) ?
 + 34. modelState function
++ 37. global filter

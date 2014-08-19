@@ -28,7 +28,7 @@
 + 29. independence controller inject params solution
 + 30. implement models support: models folder + model define rules.
 + 31. when there are same model name but in different directory, solutions?
-+ 37. model binder customizable
++ 36. model binder customizable
 
 ##POSTPONE##
 + 4. partialViewResult
@@ -39,6 +39,5 @@
 
 ##TODO##
 + 32. $ npm install -g cat-mvc-site   $ cat-mvc-site create my_app   $ cd my_app $ npm install   $ npm start
-+ 33. use [connect](https://github.com/senchalabs/connect) ?
-+ 34. use [Formidable](https://github.com/felixge/node-formidable) ?
-+ 36. modelState function
++ 33. use [Formidable](https://github.com/felixge/node-formidable) ?
++ 34. modelState function

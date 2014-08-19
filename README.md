@@ -168,8 +168,6 @@ mvc.controller(function(session, end) {
 The full signature of define a controller is:
 
 ```javascript
-var mvc = require('cat-mvc');
-
 // specify attributes
 // for attributes please see to attribute section
 mvc.controller('attributes', function() {

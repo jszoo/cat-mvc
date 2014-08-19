@@ -276,7 +276,7 @@ The *bool(rem)* attribute in the sample action. We already builtin attributes fo
 |:-------|:-----|:----|:------|:-----|:------|
 
 **3. Customized model attribute**   
-The *loginModel(user)* attribute in the sample action. *loginModel* is a customized model file that put in the *models* folder. We generate a model binder attribute with the same name.
+The *loginModel(user)* attribute in the sample action. *loginModel* is a customized model file that put in the *models* folder. We automatically generate a model binder attribute with the same name for each models.
 ```javascript
 // loginModel.js
 module.exports = {

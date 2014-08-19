@@ -37,7 +37,7 @@ server.listen(8000, function() { console.log('Server Start!'); });
 
 Sample site
 ------------
-Clone the [sample repo](https://github.com/jszoo/cat-mvc-sample-site.git), then install the dev dependencies and run start.
+Clone the [sample site repo](https://github.com/jszoo/cat-mvc-sample-site.git), then install the dev dependencies and run start.
 ```shell
 $ git clone https://github.com/jszoo/cat-mvc-sample-site.git
 $ npm install
@@ -293,7 +293,19 @@ module.exports = {
 
 Action result
 ---------------
-Coming soon...
+Instead of calling the raw nodejs response.write function to end a request. Here we provide some useful wrappers for write response content. 
+
+| Type               | Useage                                                             |
+|:-------------------|:-------------------------------------------------------------------|
+| emptyResult        | end.empty();                                                       |
+| jsonResult         | end.json({ title: 'hello'});                                       |
+| jsonpResult        | end.jsonp({ title: 'hello'}, 'callback');                          |
+| viewResult         | end.view('viewName', { title: 'hello'});                           |
+| fileResult         | end.file('filePath', 'fileDownloadName');                          |
+| contentResult      | end.content('string content');                                     |
+| httpNotFoundResult | end.httpNotFound();                                                |
+| redirectResult     | end.redirect('url', permanent);                                    |
+| redirectToAction   | end.redirectToAction('actionName', 'controllerName', routeValues); |
 
 Attribute
 -----------------

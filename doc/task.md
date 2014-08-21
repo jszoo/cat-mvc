@@ -29,6 +29,7 @@
 + 30. implement models support: models folder + model define rules.
 + 31. when there are same model name but in different directory, solutions?
 + 36. model binder customizable
++ 38. deprecated the "delete" in javascript
 
 ##POSTPONE##
 + 4. partialViewResult

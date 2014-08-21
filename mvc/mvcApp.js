@@ -149,10 +149,15 @@ utils.inherit(mvcApp, events.EventEmitter, {
         var self = this, initialize = appInitialization(this);
         return function(req, res) {
             req._app = res._app = self;
-            if (initialize(req, res)) {
-                self.emit('beginRequest', self);
+            var eventArg = {
+                app: self,
+                req: req,
+                res: res
+            };
+            if (initialize(req, res, eventArg)) {
+                self.emit('beginRequest', eventArg);
                 self._handlers.execute(req, res);
-                self.emit('endRequest', self);
+                self.emit('endRequest', eventArg);
             }
         };
     }
@@ -160,7 +165,7 @@ utils.inherit(mvcApp, events.EventEmitter, {
 
 var neverInited = true;
 var appInitialization = function(app) {
-    return function(req, res) {
+    return function(req, res, eventArg) {
         if (app._initialized) { return true; }
         var handlers = app._handlers;
         //
@@ -217,7 +222,7 @@ var appInitialization = function(app) {
             app.areas.clear();
             app.areas.registerAll(); // user code always focus on the controllers, so register at last
             //
-            app.emit('appInit', app);
+            app.emit('appInit', eventArg);
             app._initialized = true;
             return true;
         }

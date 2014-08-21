@@ -24,15 +24,16 @@ mvcTempData.prototype = {
 
     constructor: mvcTempData,
 
-    set: function(key, val) {
+    set: function(key, value) {
         key = utils.formalStr(key);
-        this.newData[key] = val;
+        value = (value === undefined) ? null : value;
+        this.newData[key] = value;
         return this;
     },
 
     get: function(key) {
         key = utils.formalStr(key);
-        if (key in this.newData) {
+        if (this.newData[key] !== undefined) {
             return this.newData[key];
         } else {
             return this.oldData[key];
@@ -46,29 +47,32 @@ mvcTempData.prototype = {
             }
         } else {
             key = utils.formalStr(key);
-            if (key in this.oldData && !(key in this.newData)) {
+            if (this.newData[key] === undefined && this.oldData[key] !== undefined) {
                 this.newData[key] = this.oldData[key];
             }
         }
+        return this;
     },
 
     remove: function(key) {
         key = utils.formalStr(key);
-        delete this.newData[key];
-        delete this.oldData[key];
+        this.newData[key] = undefined;
+        this.oldData[key] = undefined;
         return this;
     },
 
     exists: function(key) {
         key = utils.formalStr(key);
-        return (key in this.newData || key in this.oldData);
+        return (this.newData[key] !== undefined || this.oldData[key] !== undefined);
     },
 
     save: function(httpContext) {
         this.provider.saveTempData(httpContext, this.newData);
+        return this;
     },
 
     load: function(httpContext) {
         this.oldData = (this.provider.loadTempData(httpContext) || {});
+        return this;
     }
 };

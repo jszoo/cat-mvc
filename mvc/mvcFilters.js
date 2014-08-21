@@ -15,46 +15,46 @@ var mvcFilters = module.exports = function(set) {
 };
 
 mvcFilters.prototype = {
-	
-	_inner: null,
+    
+    _inner: null,
 
     constructor: mvcFilters,
 
     add: function(filter, order) {
-    	this._inner.push({
-    		filter: filter,
-    		order: order
-    	});
+        this._inner.push({
+            filter: filter,
+            order: order
+        });
     },
 
     exists: function(filter) {
-    	var found = false;
-    	utils.each(this._inner, function() {
-    		if (this.filter === filter) {
-    			found = true;
-    			return false;
-    		}
-    	});
-    	return found;
+        var found = false;
+        utils.each(this._inner, function() {
+            if (this.filter === filter) {
+                found = true;
+                return false;
+            }
+        });
+        return found;
     },
 
     count: function() {
-    	return this._inner.length;
+        return this._inner.length;
     },
 
     remove: function() {
-    	var index = -1;
-    	utils.each(this._inner, function(i) {
-    		if (this.filter === filter) {
-    			index = i;
-    			return false;
-    		}
-    	});
-    	this._inner.splice(index);
-    	return index !== -1;
+        var found = false, self = this;
+        utils.each(this._inner, function(i) {
+            if (this.filter === filter) {
+                self._inner.splice(i, 1);
+                found = true;
+                return false;
+            }
+        });
+        return found;
     },
 
     clear: function() {
-    	this._inner = [];
+        this._inner = [];
     }
 };

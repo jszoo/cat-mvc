@@ -29,7 +29,7 @@ mvcArea.api = function(fn) {
 mvcArea.loadSetting = function(filePath) {
     var ret, expo;
     try {
-        delete require.cache[filePath];
+        require.cache[filePath] = null;
         expo = require(filePath);
     } catch (ex) {
         procedureDefined = null;

@@ -18,7 +18,7 @@ var sessionProvider = {
         if (session) {
             var values = session[this.sessionKey];
             if (values) {
-                delete session[this.sessionKey];
+                session[this.sessionKey] = undefined;
                 return values;
             }
         }
@@ -29,8 +29,9 @@ var sessionProvider = {
         if (session) {
             if (utils.propCount(values) > 0) {
                 session[this.sessionKey] = values;
-            } else {
-                delete session[this.sessionKey];
+            }
+            else if (session[this.sessionKey] !== undefined){
+                session[this.sessionKey] = undefined;
             }
         }
     }

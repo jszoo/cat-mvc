@@ -57,7 +57,7 @@ mvcController.api = function() {
 mvcController.loadfile = function(filePath) {
     var ret, expo; controllersDefined = [];
     try {
-        delete require.cache[filePath];
+        require.cache[filePath] = null;
         expo = require(filePath);
     } catch (ex) {
         controllersDefined = null;

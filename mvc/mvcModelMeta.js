@@ -32,7 +32,7 @@ mvcModelMeta.api = function(name, obj) {
 mvcModelMeta.loadfile = function(filePath) {
     var ret, expo; modelsDefined = [];
     try {
-        delete require.cache[filePath];
+        require.cache[filePath] = null;
         expo = require(filePath);
     } catch (ex) {
         modelsDefined = null;

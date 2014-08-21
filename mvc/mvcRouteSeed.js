@@ -81,10 +81,10 @@ module.exports = {
             var regstr = utils.format('{0}:{1}[^{0}]*', this.delimiter, this.name);
             var repstr = value ? this.delimiter + value : '';
             expstr = expstr.replace(new RegExp(regstr, 'i'), repstr);
-            delete querys[fname];
+            querys[fname] =  undefined;
         });
         //
-        delete querys['area'];
+        querys['area'] = undefined;
         return utils.appendQuery(expstr, querys);
     },
 

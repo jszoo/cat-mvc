@@ -17,25 +17,23 @@ sampleAttribute.prototype = {
 
     constructor: sampleAttribute,
 
-    /************ controller events **************/
+    /************ controller events interface **************/
     onControllerInitialized: function(controller) { },
     onControllerDestroy: function(controller) { },
 
-    /************ authorize event **************/
+    /************ authorize filter interface **************/
     onAuthorization: function(authorizationContext) { },
 
-    /************ action filter events **************/
+    /************ action filter interface **************/
     onActionExecuting: function(actionExecutingContext, next) { next(); },
     onActionExecuted: function(actionExecutedContext, next) { next(); },
+
+    /************ result filter interface **************/
     onResultExecuting: function(resultExecutingContext, next) { next(); },
     onResultExecuted: function(resultExecutedContext, next) { next(); },
 
-    /************ exception event **************/
+    /************ exception filter interface **************/
     onException: function(exceptionContext) { },
-
-
-
-    
 
     /************ action name selector interface **************/
     isValidActionName: function(controllerContext, actionName) { },

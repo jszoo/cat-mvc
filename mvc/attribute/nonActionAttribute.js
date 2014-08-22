@@ -15,7 +15,7 @@ nonActionAttribute.prototype = {
 
     constructor: nonActionAttribute,
 
-    isValidActionName: function(httpContext, actionName) {
+    isValidActionRequest: function(httpContext) {
         return false;
     }
 

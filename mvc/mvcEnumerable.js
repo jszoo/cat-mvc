@@ -22,6 +22,55 @@ mvcEnumerable.prototype = {
 
     constructor: mvcEnumerable,
 
+    all: function() {
+        return this._inner;
+    },
+
+    add: function(obj) {
+        this._inner.push(obj);
+    },
+
+    insertAt: function(index, obj) {
+        this._inner.splice(index, 0, obj);
+    },
+
+    removeAt: function(index) {
+        this._inner.splice(index, 1);
+    },
+
+    remove: function(obj) {
+        var found = false, self = this;
+        utils.each(this._inner, function(i) {
+            if (this === obj) {
+                self._inner.splice(i, 1);
+                found = true;
+                return false;
+            }
+        });
+        return found;
+    },
+
+    exists: function(obj) {
+        var found = false;
+        utils.each(this._inner, function() {
+            if (this === obj) {
+                found = true;
+                return false;
+            }
+        });
+        return found;
+    },
+
+    count: function() {
+        return this._inner.length;
+    },
+
+    clear: function() {
+        this._inner = [];
+    },
+
+    /*************************************************************************/
+
     parent: function(p) {
         return (p === undefined) ? (this._parent) : (this._parent = p, this);
     },
@@ -47,45 +96,6 @@ mvcEnumerable.prototype = {
         } else {
             return rets;
         }
-    },
-
-    all: function() {
-        return this._inner;
-    },
-
-    add: function(obj) {
-        this._inner.push(obj);
-    },
-
-    exists: function(obj) {
-        var found = false;
-        utils.each(this._inner, function() {
-            if (this === obj) {
-                found = true;
-                return false;
-            }
-        });
-        return found;
-    },
-
-    count: function() {
-        return this._inner.length;
-    },
-
-    remove: function(obj) {
-        var found = false, self = this;
-        utils.each(this._inner, function(i) {
-            if (this === obj) {
-                self._inner.splice(i, 1);
-                found = true;
-                return false;
-            }
-        });
-        return found;
-    },
-
-    clear: function() {
-        this._inner = [];
     },
 
     /*

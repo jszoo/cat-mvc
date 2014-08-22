@@ -264,7 +264,7 @@ this.action('login', 'httpPost, loginModel(user), bool(rem)', function(user, rem
 ```
 
 **1. Action selector attribute**   
-The *httpPost* attribute in the sample action. Just like its name, it's a filter to make only POST request to enter this action. There are some more related attributes.
+The *httpPost* attribute in the sample action. Just like its name, it's a filter to make only POST request to enter this action. If you want multiple methods allowed, you can specify multiple attributes or use *acceptVerbs* attribute. For example: "acceptVerbs(POST,PUT)". There are some more related attributes.
 
 | httpPost | httpHead | httpTrace | httpPut | httpDelete | httpOptions | httpConnect |
 |:---------|:---------|:----------|:--------|:-----------|:------------|:------------|

@@ -1,5 +1,5 @@
 /*
-* mvcFilters
+* mvcEnumerable
 * author: ruleechen
 * contact: rulee@live.cn
 * create date: 2014.8.21
@@ -9,28 +9,25 @@
 
 var utils = require('zoo-utils');
 
-var mvcFilters = module.exports = function(set) {
+var mvcEnumerable = module.exports = function(set) {
     utils.extend(this, set);
     this._inner = [];
 };
 
-mvcFilters.prototype = {
+mvcEnumerable.prototype = {
     
     _inner: null,
 
-    constructor: mvcFilters,
+    constructor: mvcEnumerable,
 
-    add: function(filter, order) {
-        this._inner.push({
-            filter: filter,
-            order: order
-        });
+    add: function(obj) {
+        this._inner.push(obj);
     },
 
-    exists: function(filter) {
+    exists: function(obj) {
         var found = false;
         utils.each(this._inner, function() {
-            if (this.filter === filter) {
+            if (this === obj) {
                 found = true;
                 return false;
             }
@@ -42,10 +39,10 @@ mvcFilters.prototype = {
         return this._inner.length;
     },
 
-    remove: function() {
+    remove: function(obj) {
         var found = false, self = this;
         utils.each(this._inner, function(i) {
-            if (this.filter === filter) {
+            if (this === obj) {
                 self._inner.splice(i, 1);
                 found = true;
                 return false;

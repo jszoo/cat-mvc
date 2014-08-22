@@ -10,7 +10,8 @@
 var utils = require('zoo-utils'),
     mvcRoutes = require('./mvcRoutes'),
     mvcModelMetas = require('./mvcModelMetas'),
-    mvcControllers = require('./mvcControllers');
+    mvcControllers = require('./mvcControllers'),
+    mvcEnumerable = require('./mvcEnumerable');
 
 var mvcArea = module.exports = function(set, store) {
     utils.extend(this, set);
@@ -19,6 +20,7 @@ var mvcArea = module.exports = function(set, store) {
     this.routes = new mvcRoutes({ ownerAreaName: this.name }, store);
     this.modelMetas = new mvcModelMetas({ ownerAreaName: this.name }, store);
     this.controllers = new mvcControllers({ ownerAreaName: this.name }, store);
+    this.filters = new mvcEnumerable();
 };
 
 var procedureDefined;
@@ -52,7 +54,7 @@ mvcArea.loadSetting = function(filePath) {
 
 mvcArea.prototype = {
 
-    name: null, routes: null, modelMetas: null, controllers: null,
+    name: null, routes: null, modelMetas: null, controllers: null, filters: null,
 
     path: null, viewsPath: null, viewsSharedPath: null, modelsPath: null, controllersPath: null, settingFilePath: null,
 

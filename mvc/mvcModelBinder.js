@@ -87,11 +87,15 @@ mvcModelBinder.prototype = {
 };
 
 mvcModelBinder.resolveParams = function(controllerContext, paramNames, binderAttrs) {
-    var findAttribute = function() { }, routeAreaName, rootAreaName;
+    var findModelAttribute = function() { };
+    var findOhterAttributes = function() { };
+    var routeAreaName, rootAreaName;
+    //
     if (binderAttrs && binderAttrs.length) {
         routeAreaName = controllerContext.routeArea.name;
         rootAreaName = controllerContext.app.areas.rootArea().name;
-        findAttribute = function(paramName, areaName) {
+        // only one model binder attribute is allowed
+        findModelAttribute = function(paramName, areaName) {
             var attr;
             utils.each(binderAttrs, function(i, item) {
                 if (item.getParamName().toLowerCase() === paramName) {
@@ -100,19 +104,28 @@ mvcModelBinder.resolveParams = function(controllerContext, paramNames, binderAtt
                             attr = item;
                             return false;
                         }
-                    } else {
-                        attr = item;
-                        return false;
                     }
                 }
             });
             if (attr) {
                 return attr;
             } else if (areaName !== rootAreaName) {
-                return findAttribute(paramName, rootAreaName);
+                return findModelAttribute(paramName, rootAreaName);
             } else {
                 return null;
             }
+        };
+        // multiple custom binder attribute is allowed
+        findOhterAttributes = function(paramName) {
+            var attrs = [];
+            utils.each(binderAttrs, function(i, item) {
+                if (item.getParamName().toLowerCase() === paramName) {
+                    if (!(item.getBinder() instanceof mvcModelBinder)) {
+                        attrs.push(item);
+                    }
+                }
+            });
+            return attrs;
         };
     }
     //
@@ -122,20 +135,31 @@ mvcModelBinder.resolveParams = function(controllerContext, paramNames, binderAtt
     });
     //
     var values = [];
+    var bindingContext = {
+        paramsDict: namesDict, paramName: '', value: null,
+        modelState: controllerContext.controller.viewData.getModelState()
+    };
     utils.each(paramNames, function(i, name) {
         var lowerName = name.toLowerCase();
-        if (lowerName.charAt(0) === '$') {
-            lowerName = lowerName.substr(1);
-        }
-        var attr = findAttribute(lowerName, routeAreaName), val;
-        if (attr) {
-            val = attr.getBinder().bindModel(controllerContext, {
-                modelState: controllerContext.controller.viewData.getModelState(),
-                paramName: lowerName, paramsDict: namesDict
-            });
+        if (lowerName.charAt(0) === '$')
+        { lowerName = lowerName.substr(1); }
+        bindingContext.paramName = lowerName;
+        //
+        var modelAttr = findModelAttribute(lowerName, routeAreaName), val;
+        if (modelAttr) {
+            val = modelAttr.getBinder().bindModel(controllerContext, bindingContext);
         } else {
             val = controllerContext.requestDatas('lowerRoot')[lowerName];
         }
+        //
+        var otherAttrs = findOhterAttributes(lowerName);
+        if (otherAttrs && otherAttrs.length) {
+            utils.each(otherAttrs, function() {
+                bindingContext.value = val;
+                val = this.getBinder().bindModel(controllerContext, bindingContext);
+            });
+        }
+        //
         values.push(val || null);
     });
     return values;

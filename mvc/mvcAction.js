@@ -57,7 +57,7 @@ mvcAction.prototype = {
         //
         annotated = injector.annotate(this.impl());
         if (annotated.args && annotated.args.length > 0) {
-            var binderAttrs = this.attributes.filter('getBinder');
+            var binderAttrs = this.attributes.select('getBinder');
             annotated.params = mvcModelBinder.resolveParams(ctx, annotated.args, binderAttrs);
         } else {
             annotated.params = [];

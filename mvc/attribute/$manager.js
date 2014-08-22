@@ -177,7 +177,7 @@ attributes.prototype = {
         return (p === undefined) ? (this._parent) : (this._parent = p, this);
     },
 
-    filter: function(eventName, includeParent) {
+    select: function(eventName, includeParent) {
         var rets = [];
         utils.each(this._attrs, function(i, it) {
             if (it && utils.isFunction(it[eventName])) {
@@ -185,7 +185,7 @@ attributes.prototype = {
             }
         });
         if (includeParent && (this._parent instanceof attributes)) {
-            var ps = this._parent.filter(eventName, includeParent);
+            var ps = this._parent.select(eventName, includeParent);
             return rets.concat(ps);
         } else {
             return rets;
@@ -214,7 +214,7 @@ attributes.prototype = {
             sett.handler = function() { };
         }
         //
-        var items = this.filter(sett.eventName, sett.includeParent), rets = [], val;
+        var items = this.select(sett.eventName, sett.includeParent), rets = [], val;
         if (items.length === 0) { return rets; }
         //
         utils.each(items, function(i, it) {
@@ -254,7 +254,7 @@ attributes.prototype = {
         }
         //
         var callback = utils.deferProxy(sett.callback), vals = [];
-        var items = this.filter(sett.eventName, sett.includeParent);
+        var items = this.select(sett.eventName, sett.includeParent);
         if (items.length === 0) {
             callback(null, vals);
             return;

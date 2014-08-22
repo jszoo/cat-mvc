@@ -87,6 +87,7 @@ attributeManager.prototype = {
         this.register('handleError', require('./handleErrorAttribute'));
         this.register('requireHttps', require('./requireHttpsAttribute'));
         this.register('validateInput', require('./validateInputAttribute'));
+        this.register('acceptVerbs', require('./acceptVerbsAttribute'));
         utils.each(require('./httpMethodAttribute'), function(name) { self.register(name, this); });
     },
 

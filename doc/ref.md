@@ -21,3 +21,5 @@ REFERENCE
 
 + http://thinkjs.org/
 + http://sailsjs.org/#!documentation/models
+
++ https://github.com/xiecc/game-server-development/blob/master/node/node.js-V8%E5%BC%95%E6%93%8E%E7%9B%B8%E5%85%B3%E7%9A%84%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96.md

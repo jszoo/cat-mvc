@@ -21,7 +21,7 @@ sampleAttribute.prototype = {
     onControllerInitialized: function(controller) { },
     onControllerDestroy: function(controller) { },
 
-    /************ authorize filter interface **************/
+    /************ authorization filter interface **************/
     onAuthorization: function(authorizationContext) { },
 
     /************ action filter interface **************/

@@ -159,7 +159,7 @@ mvcController.prototype = {
         //
         this.attributes = httpContext.app.attributes.resolveConfig(this.attr());
         this.attributes.parent(httpContext.routeArea.filters);
-        this.attributes.append(this.implScope);
+        this.attributes.add(this.implScope);
     },
 
     injectImpl: function(ctx) {

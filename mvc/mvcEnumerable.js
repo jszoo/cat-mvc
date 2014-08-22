@@ -30,6 +30,16 @@ mvcEnumerable.prototype = {
         this._inner.push(obj);
     },
 
+    addRange: function(items) {
+        if (items instanceof mvcEnumerable) {
+            this.addRange(items.all());
+        } else if (utils.isArray(items)) {
+            this._inner = this._inner.concat(items);
+        } else {
+            throw new Error('Range value must be array type');
+        }
+    },
+
     insertAt: function(index, obj) {
         this._inner.splice(index, 0, obj);
     },
@@ -73,14 +83,6 @@ mvcEnumerable.prototype = {
 
     parent: function(p) {
         return (p === undefined) ? (this._parent) : (this._parent = p, this);
-    },
-
-    append: function(ins) {
-        if (ins instanceof mvcEnumerable) {
-            this._inner = this._inner.concat(ins.all());
-        } else {
-            this._inner.push(ins);
-        }
     },
 
     select: function(eventName, includeParent) {

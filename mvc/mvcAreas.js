@@ -114,6 +114,8 @@ utils.inherit(mvcAreas, events.EventEmitter, {
             controllersPath: path.join(areaPath, this.conf('folderNames.controllers')),
             settingFilePath: path.join(areaPath, this.conf('fileNames.areaSetting'))
         }, this._inner.sto());
+        // connect filters
+        area.filters.parent(this.app.filters);
         // load 'areas/account/area.js'
         var settPath = area.settingFilePath;
         if (fs.existsSync(settPath) && fs.statSync(settPath).isFile()) {

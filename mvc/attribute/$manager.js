@@ -8,7 +8,8 @@
 'use strict';
 
 var utils = require('zoo-utils'),
-    caching = require('zoo-cache');
+    caching = require('zoo-cache'),
+    mvcEnumerable = require('../mvcEnumerable');
 
 var attributeManager = module.exports = function(store) {
     this._inner = caching.region('mvc-attribute-types-cache', store);
@@ -127,10 +128,7 @@ attributeManager.prototype = {
             }
         }
         // ret
-        return new attributes({
-            _config: config,
-            _attrs: attrs
-        });
+        return new mvcEnumerable(attrs);
     }
 };
 
@@ -149,144 +147,4 @@ var tryEval = function(str, attrName) {
         }
     }
     return temp;
-};
-
-var attributes = function(set) {
-    utils.extend(this, set);
-};
-
-attributes.prototype = {
-
-    _config: null, _attrs: null, _parent: null,
-
-    constructor: attributes,
-
-    all: function() {
-        return this._attrs;
-    },
-
-    append: function(ins) {
-        if (ins instanceof attributes) {
-            this._attrs = this._attrs.concat(ins.all());
-        } else {
-            this._attrs.push(ins);
-        }
-    },
-
-    parent: function(p) {
-        return (p === undefined) ? (this._parent) : (this._parent = p, this);
-    },
-
-    select: function(eventName, includeParent) {
-        var rets = [];
-        utils.each(this._attrs, function(i, it) {
-            if (it && utils.isFunction(it[eventName])) {
-                rets.push(it);
-            }
-        });
-        if (includeParent && (this._parent instanceof attributes)) {
-            var ps = this._parent.select(eventName, includeParent);
-            return rets.concat(ps);
-        } else {
-            return rets;
-        }
-    },
-
-    /*
-    * emitSync(param_1, param_2, ..., param_n, sett)
-    * the last argument is the setting object
-    * sett: {
-    *   eventName: 'onXXX',
-    *   includeParent: false,
-    *   handler: function(att, val) { }
-    * }
-    */
-    emitSync: function() {
-        var args = utils.arg2arr(arguments), sett = args.pop();
-        //
-        if (!utils.isObject(sett)) {
-            throw new Error('Setting object not found which requires items + eventName + callback and handler is optional');
-        }
-        if (!utils.isString(sett.eventName)) {
-            throw new Error('Setting object can not found "eventName" string');
-        }
-        if (!utils.isFunction(sett.handler)) {
-            sett.handler = function() { };
-        }
-        //
-        var items = this.select(sett.eventName, sett.includeParent), rets = [], val;
-        if (items.length === 0) { return rets; }
-        //
-        utils.each(items, function(i, it) {
-            rets.push(val = it[sett.eventName].apply(it, args));
-            if (sett.handler(this, val) === false) {
-                return false;
-            }
-        });
-        //
-        return rets;
-    },
-
-    /*
-    * emit(param_1, param_2, ..., param_n, sett)
-    * the last argument is the setting object
-    * sett: {
-    *   eventName: 'onXXX',
-    *   includeParent: false,
-    *   handler: function(att, val) { }
-    *   callback: function(err, vals) { }
-    * }
-    */
-    emit: function() {
-        var args = utils.arg2arr(arguments), sett = args.pop();
-        //
-        if (!utils.isObject(sett)) {
-            throw new Error('Setting object not found which requires items + eventName + callback and handler is optional');
-        }
-        if (!utils.isString(sett.eventName)) {
-            throw new Error('Setting object can not found "eventName" string');
-        }
-        if (!utils.isFunction(sett.callback)) {
-            throw new Error('Setting object can not found "callback" function');
-        }
-        if (!utils.isFunction(sett.handler)) {
-            sett.handler = function() { };
-        }
-        //
-        var callback = utils.deferProxy(sett.callback), vals = [];
-        var items = this.select(sett.eventName, sett.includeParent);
-        if (items.length === 0) {
-            callback(null, vals);
-            return;
-        }
-        //
-        var index = -1, item, canceled = false;
-        var next = function(err, val) {
-            if (index > -1) {
-                vals.push(val);
-                if (err) {
-                    callback(err, vals);
-                    return;
-                }
-                if (sett.handler(item, val) === false) {
-                    canceled = true;
-                }
-            }
-            if (!canceled) {
-                item = items[++index];
-                if (item) {
-                    try {
-                        item[sett.eventName].apply(item, args);
-                    } catch (ex) {
-                        callback(ex, vals);
-                    }
-                    return;
-                }
-            }
-            callback(null, vals);
-        };
-        //
-        args.push(next);
-        next();
-    }
 };

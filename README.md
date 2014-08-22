@@ -100,15 +100,15 @@ var app = mvc();
 // defaultRouteValues: object as format "{ controller: 'home', action: 'index' }"
 app.areas.register(areaPath, areaName, areaRouteExpression, defaultRouteValues);
 
-// a sugar api to "app.areas.register".
+// a sugar api to "app.areas.register"
 // only the root controllers/views etc will be loaded. we recognize this as RootArea
 app.areas.registerRoot(rootPath);
 
-// a sugar api to "app.areas.register".
+// a sugar api to "app.areas.register"
 // register one area by the specified areaPath + areaName
 app.areas.registerArea(areaPath, areaName);
 
-// a sugar api to "app.areas.registerArea".
+// a sugar api to "app.areas.registerArea"
 // all the area folders under specified areasPath will be registered
 app.areas.registerAreas(areasPath);
 
@@ -208,19 +208,19 @@ It's very cooool, isn't it? But we think further more. We made the awesome injec
 var mvc = require('cat-mvc');
 var app = mvc({ appPath: __dirname });
 
-// global.js | this make the "mongo" inject to all controllers under app instance.
+// global.js | this make the "mongo" inject to all controllers under app instance
 app.on('injectController', function(app, injectContext) {
     injectContext.inject['mongo'] = 'mongo api';
 });
 
-// area.js | or inject in area events subscription for all controllers under area.
+// area.js | or inject in area events subscription for all controllers under area
 mvc.area(function() {
     this.onInjectController = function(area, injectContext) {
         injectContext.inject['mongo'] = 'mongo api';
     };
 });
 
-// controller.js | simple and easy using the mongo object.
+// controller.js | simple and easy using the mongo object
 mvc.controller(attributes, function(end, mongo) {
     this.index = function() {
         end.json(mongo.query('select * from table'));

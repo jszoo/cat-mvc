@@ -94,10 +94,16 @@ mvcModelBinder.resolveParams = function(controllerContext, paramNames, binderAtt
         findAttribute = function(paramName, areaName) {
             var attr;
             utils.each(binderAttrs, function(i, item) {
-                if (item.paramName.toLowerCase() === paramName &&
-                    item.getBinder().getModelMeta().ownerAreaName === areaName) {
-                    attr = item;
-                    return false;
+                if (item.getParamName().toLowerCase() === paramName) {
+                    if (item.getBinder() instanceof mvcModelBinder) {
+                        if (item.getBinder().getModelMeta().ownerAreaName === areaName) {
+                            attr = item;
+                            return false;
+                        }
+                    } else {
+                        attr = item;
+                        return false;
+                    }
                 }
             });
             if (attr) {

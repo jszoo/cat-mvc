@@ -26,6 +26,10 @@ sampleModelBinderAttribute.prototype = {
 
     constructor: sampleModelBinderAttribute,
 
+    getParamName: function() {
+        return this.paramName;
+    },
+
     getBinder: function() {
         return new sampleModelBinder();
     }

@@ -9,7 +9,7 @@
 
 var utils = require('zoo-utils');
 
-var acceptVerbsAttribute = exports.acceptVerbsAttribute = function(methods) {
+var acceptVerbsAttribute = module.exports = function(methods) {
 	this.methodNames = methods; // GET,POST,PUT,DELETE,HEAD,PATCH,OPTIONS,etc...
 	if (!utils.isString(this.methodNames)) {
 		throw new Error('The methodNames of actionNameAttribute is invalid');

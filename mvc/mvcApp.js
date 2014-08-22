@@ -222,7 +222,7 @@ var appInitialization = function(app) {
             app.areas.clear();
             app.areas.registerAll(); // user code always focus on the controllers, so register at last
             //
-            app.emit('appInit', eventArg);
+            app.emit('init', app, eventArg);
             app._initialized = true;
             return true;
         }

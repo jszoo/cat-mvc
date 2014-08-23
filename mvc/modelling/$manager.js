@@ -21,7 +21,7 @@ modellingManager.prototype = {
 
     constructor: modellingManager,
 
-    registerAll: function() {
+    discover: function() {
         var self = this;
         utils.each(require('./datatype'), function(key, cls) { self.dataTypes.register(key, cls); });
         utils.each(require('./validator'), function(key, cls) { self.validators.register(key, cls); });

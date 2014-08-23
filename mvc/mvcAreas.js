@@ -184,7 +184,7 @@ utils.inherit(mvcAreas, events.EventEmitter, {
         });
     },
 
-    registerAll: function(rootPath) {
+    discover: function(rootPath) {
         if (utils.isString(rootPath) && utils.isAbsolute(rootPath)) {
             this.registerRoot(rootPath);
             this.registerAreas(path.join(rootPath, this.conf('folderNames.areas')));

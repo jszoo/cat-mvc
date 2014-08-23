@@ -85,7 +85,7 @@ In the classical .NET MVC site files structure, you don't need to care the area 
 ```javascript
 // global.js
 var mvc = require('cat-mvc');
-// supply the appPath and the "app.areas.registerAll()" will be called in internal
+// supply the appPath and the "app.areas.discover()" will be called by default
 var app = mvc({ appPath: __dirname });
 ```
 

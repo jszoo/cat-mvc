@@ -213,18 +213,18 @@ var appInitialization = function(app) {
             //
             if (neverInited) {
                 app.viewEngines.clear();
-                app.viewEngines.registerAll();
+                app.viewEngines.discover();
                 //
                 app.attributes.clear();
-                app.attributes.registerAll();
+                app.attributes.discover();
                 //
                 app.modelling.clear();
-                app.modelling.registerAll();
+                app.modelling.discover();
                 neverInited = false;
             }
             //
             app.areas.clear();
-            app.areas.registerAll(); // user code always focus on the controllers, so register at last
+            app.areas.discover(); // user code always focus on the controllers, so register at last
             //
             app.emit('init', app, eventArg);
             app._inited = true;

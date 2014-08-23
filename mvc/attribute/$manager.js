@@ -81,7 +81,7 @@ attributeManager.prototype = {
         }
     },
 
-    registerAll: function() {
+    discover: function() {
         var self = this;
         this.register('actionName', require('./actionNameAttribute'));
         this.register('nonAction', require('./nonActionAttribute'));

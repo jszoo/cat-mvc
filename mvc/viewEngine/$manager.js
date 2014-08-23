@@ -53,7 +53,7 @@ viewEngineManager.prototype = {
         return this._inner.set(engineName, viewEngine);
     },
 
-    registerAll: function() {
+    discover: function() {
         this.register('vash', require('./vashViewEngine'));
         this.register('ejs', require('./ejsViewEngine'));
         // more engines...

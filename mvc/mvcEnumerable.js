@@ -12,7 +12,7 @@ var utils = require('zoo-utils');
 var mvcEnumerable = module.exports = function(items) {
     this._inner = items || [];
     if (!utils.isArray(this._inner)) {
-        throw new Error('The given items is not array type');
+        throw new Error(utils.format('The given items is required array type but got {0} type', utils.type(this._inner)));
     }
 };
 

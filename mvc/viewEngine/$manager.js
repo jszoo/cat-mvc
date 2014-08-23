@@ -44,6 +44,11 @@ viewEngineManager.prototype = {
         return this._inner.clear();
     },
 
+    set: function(engineName, viewEngine) {
+        this.remove(engineName);
+        this.register(engineName, viewEngine);
+    },
+
     register: function(engineName, viewEngine) {
         if (!utils.isString(engineName)) { throw new Error(utils.format('View engine name requires string type but got {0} type', utils.type(engineName))); }
         if (!engineName) { throw new Error('View engine name is required'); }

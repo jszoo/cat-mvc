@@ -64,6 +64,11 @@ attributeManager.prototype = {
         return this._inner.clear();
     },
 
+    set: function(attrName, attrClass, category) {
+        this.remove(attrName, category);
+        this.register(attrName, attrClass, category);
+    },
+
     register: function(attrName, attrClass, category) {
         if (!utils.isString(attrName)) { throw new Error(utils.format('Attribute name requires string type but got {0} type', utils.type(attrName))); }
         if (!attrName) { throw new Error('Attribute name is required'); }

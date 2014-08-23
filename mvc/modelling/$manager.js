@@ -124,10 +124,10 @@ dataTypeManager.prototype = {
     constructor: dataTypeManager,
 
     register: function(name, klass) {
-        if (!name) { throw new Error('Data type name is required'); }
         if (!utils.isString(name)) { throw new Error(utils.format('Data type name requires string type but got {0} type', utils.type(name))); }
-        if (!utils.isFunction(klass)) { throw new Error(utils.format('Data type "{0}" requires function type class but got {1} type', name, utils.type(klass))); }
+        if (!name) { throw new Error('Data type name is required'); }
         if (this.exists(name)) { throw new Error(utils.format('Data type "{0}" already exists', name)); }
+        if (!utils.isFunction(klass)) { throw new Error(utils.format('Data type "{0}" requires function type class but got {1} type', name, utils.type(klass))); }
         return this._inner.set(name, klass);
     },
     
@@ -167,10 +167,10 @@ validatorManager.prototype = {
     constructor: validatorManager,
 
     register: function(name, klass) {
-        if (!name) { throw new Error('Validator name is required'); }
         if (!utils.isString(name)) { throw new Error(utils.format('Validator name requires string type but got {0} type', utils.type(name))); }
-        if (!utils.isFunction(klass)) { throw new Error(utils.format('Validator "{0}" requires function type class but got {1} type', name, utils.type(klass))); }
+        if (!name) { throw new Error('Validator name is required'); }
         if (this.exists(name)) { throw new Error(utils.format('Valiadator "{0}" already exists', name)); }
+        if (!utils.isFunction(klass)) { throw new Error(utils.format('Validator "{0}" requires function type class but got {1} type', name, utils.type(klass))); }
         return this._inner.set(name, klass);
     },
 

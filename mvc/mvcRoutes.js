@@ -24,6 +24,7 @@ utils.inherit(mvcRoutes, events.EventEmitter, {
     ownerAreaName: null, _inner: null,
 
     set: function(name, expression, defaultValues) {
+        if (!utils.isString(name)) { throw new Error(utils.format('Route name requires string type but got {0} type', utils.type(name))); }
         if (!name) { throw new Error('Route name is required'); }
         this._inner.set(name, new mvcRoute({
             name: name,

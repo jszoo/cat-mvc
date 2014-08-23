@@ -28,6 +28,7 @@ mvcEnumerable.prototype = {
 
     add: function(obj) {
         this._inner.push(obj);
+        return this;
     },
 
     addRange: function(items) {
@@ -38,14 +39,17 @@ mvcEnumerable.prototype = {
         } else {
             throw new Error('Range value must be array type');
         }
+        return this;
     },
 
     insertAt: function(index, obj) {
         this._inner.splice(index, 0, obj);
+        return this;
     },
 
     removeAt: function(index) {
         this._inner.splice(index, 1);
+        return this;
     },
 
     remove: function(obj) {
@@ -77,6 +81,7 @@ mvcEnumerable.prototype = {
 
     clear: function() {
         this._inner = [];
+        return this;
     },
 
     /*************************************************************************/

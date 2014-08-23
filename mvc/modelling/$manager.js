@@ -30,6 +30,7 @@ modellingManager.prototype = {
     clear: function() {
         this.dataTypes.clear();
         this.validators.clear();
+        return this;
     },
 
     /*
@@ -144,12 +145,14 @@ dataTypeManager.prototype = {
     },
 
     clear: function() {
-        return this._inner.clear();
+        this._inner.clear();
+        return this;
     },
 
     set: function(name, klass) {
         this.remove(name);
         this.register(name, klass);
+        return this;
     },
 
     register: function(name, klass) {
@@ -157,7 +160,7 @@ dataTypeManager.prototype = {
         if (!name) { throw new Error('Data type name is required'); }
         if (this.exists(name)) { throw new Error(utils.format('Data type "{0}" already exists', name)); }
         if (!utils.isFunction(klass)) { throw new Error(utils.format('Data type "{0}" requires function type class but got {1} type', name, utils.type(klass))); }
-        return this._inner.set(name, klass);
+        this._inner.set(name, klass);
     }
 };
 
@@ -192,12 +195,14 @@ validatorManager.prototype = {
     },
 
     clear: function() {
-        return this._inner.clear();
+        this._inner.clear();
+        return this;
     },
 
     set: function(name, klass) {
         this.remove(name);
         this.register(name, klass);
+        return this;
     },
 
     register: function(name, klass) {
@@ -205,6 +210,6 @@ validatorManager.prototype = {
         if (!name) { throw new Error('Validator name is required'); }
         if (this.exists(name)) { throw new Error(utils.format('Valiadator "{0}" already exists', name)); }
         if (!utils.isFunction(klass)) { throw new Error(utils.format('Validator "{0}" requires function type class but got {1} type', name, utils.type(klass))); }
-        return this._inner.set(name, klass);
+        this._inner.set(name, klass);
     }
 };

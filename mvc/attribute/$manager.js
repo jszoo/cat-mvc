@@ -61,12 +61,14 @@ attributeManager.prototype = {
     },
 
     clear: function() {
-        return this._inner.clear();
+        this._inner.clear();
+        return this;
     },
 
     set: function(attrName, attrClass, category) {
         this.remove(attrName, category);
         this.register(attrName, attrClass, category);
+        return this;
     },
 
     register: function(attrName, attrClass, category) {

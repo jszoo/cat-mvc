@@ -61,6 +61,7 @@ utils.inherit(mvcAreas, events.EventEmitter, {
         utils.each(this.all(), function() {
             self.unload(this.name);
         });
+        return this;
     },
 
     conf: function(name) {

@@ -46,7 +46,8 @@ mvcControllers.prototype = {
     },
 
     clear: function() {
-        return this._inner.clear();
+        this._inner.clear();
+        return this;
     },
 
     register: function(name, controller) {

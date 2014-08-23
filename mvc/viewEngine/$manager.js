@@ -41,12 +41,14 @@ viewEngineManager.prototype = {
     },
 
     clear: function() {
-        return this._inner.clear();
+        this._inner.clear();
+        return this;
     },
 
     set: function(engineName, viewEngine) {
         this.remove(engineName);
         this.register(engineName, viewEngine);
+        return this;
     },
 
     register: function(engineName, viewEngine) {
@@ -57,7 +59,7 @@ viewEngineManager.prototype = {
         if (!utils.isFunction(viewEngine.findView)) { throw new Error(utils.format('Please implement the interface function "findView(controllerContext, viewName, callback)" in the view engine "{0}"', engineName)); }
         if (!utils.isFunction(viewEngine.releaseView)) { throw new Error(utils.format('Please implement the interface function "releaseView(controllerContext, view)" in the view engine "{0}"', engineName)); }
         if (this.exists(engineName)) { throw new Error(utils.format('View engine "{0}" already exists', engineName)); }
-        return this._inner.set(engineName, viewEngine);
+        this._inner.set(engineName, viewEngine);
     },
 
     discover: function() {

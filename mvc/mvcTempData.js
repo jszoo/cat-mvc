@@ -61,6 +61,12 @@ mvcTempData.prototype = {
         return this;
     },
 
+    clear: function() {
+        this.newData = {};
+        this.oldData = {};
+        return this;
+    },
+
     exists: function(key) {
         key = utils.formalStr(key);
         return (this.newData[key] !== undefined || this.oldData[key] !== undefined);

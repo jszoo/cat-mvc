@@ -20,57 +20,6 @@ mvcModelState.prototype = {
 
     constructor: mvcModelState,
 
-    addModelError: function(namespace, error) {
-        var state = this._inner.get(namespace);
-        if (!state) {
-            this._inner.set(namespace, state = {
-                value: null, errors: [],
-                namespace: namespace
-            });
-        }
-        if (error) {
-            state.errors.push(error);
-        }
-    },
-
-    isValidField: function(namespace) {
-        namespace = namespace.toLowerCase();
-        var state = this._inner.get(namespace);
-        if (state) {
-            return (state.errors.length === 0);
-        } else {
-            var result = true;
-            utils.each(this._inner.all(), function(key, state) {
-                key = key.toLowerCase();
-                if (key.length > namespace.length && key.indexOf(namespace) === 0) {
-                    var chr = key.charAt(namespace.length);
-                    if (chr === '.' || chr === '[') {
-                        result = result && (state.errors.length === 0);
-                        if (!result) { return false; }
-                    }
-                }
-            });
-            return result;
-        }
-    },
-
-    isValid: function() {
-        var result = true;
-        utils.each(this._inner.all(), function() {
-            if (this.errors.length > 0) {
-                result = false;
-                return false;
-            }
-        });
-        return result;
-    },
-
-    setModelValue: function(namespace, value) {
-        this.addModelError(namespace, null);
-        var state = this._inner.get(namespace);
-        state.value = value;
-    },
-
     all: function() {
         return this._inner.all();
     },
@@ -84,7 +33,7 @@ mvcModelState.prototype = {
     },
 
     remove: function(namespace) {
-        this._inner.remove(namespace);
+        return this._inner.remove(namespace);
     },
 
     count: function() {
@@ -93,5 +42,85 @@ mvcModelState.prototype = {
 
     clear: function() {
         this._inner.clear();
+        return this;
+    },
+
+    set: function(namespace, state) {
+        if (!(state instanceof stateItem)) { throw new Error('State object type is incorrect'); }
+        this._inner.set(namespace, state);
+        return this;
+    },
+
+    setModelValue: function(namespace, value) {
+        this.addModelError(namespace, null);
+        var state = this._inner.get(namespace);
+        state.setValue(value);
+    },
+
+    addModelError: function(namespace, error) {
+        var state = this._inner.get(namespace);
+        if (!state) {
+            state = new stateItem();
+            state.namespace = namespace;
+            this._inner.set(namespace, state);
+        }
+        if (error) {
+            state.addError(error);
+        }
+    },
+
+    isValidField: function(namespace) {
+        namespace = namespace.toLowerCase();
+        var state = this._inner.get(namespace);
+        if (state) {
+            return !state.hasError();
+        } else {
+            var result = true;
+            utils.each(this._inner.all(), function(key, state) {
+                key = key.toLowerCase();
+                if (key.length > namespace.length && key.indexOf(namespace) === 0) {
+                    var chr = key.charAt(namespace.length);
+                    if (chr === '.' || chr === '[') {
+                        result = result && !state.hasError();
+                        if (!result) { return false; }
+                    }
+                }
+            });
+            return result;
+        }
+    },
+
+    isValid: function() {
+        var result = true;
+        utils.each(this._inner.all(), function() {
+            if (this.hasError()) {
+                result = false;
+                return false;                
+            }
+        });
+        return result;
+    }
+};
+
+var stateItem = function() {
+    this.errors = [];
+};
+
+stateItem.prototype = {
+
+    namespace: null, value: null, errors: null,
+    
+    constructor: stateItem,
+
+    setValue: function(v) {
+        this.value = v;
+    },
+
+    addError: function(error) {
+        this.errors.push(error);
+    },
+
+    hasError: function() {
+        return this.errors.length > 0;
     }
 };

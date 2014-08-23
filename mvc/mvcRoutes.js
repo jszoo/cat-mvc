@@ -23,15 +23,24 @@ utils.inherit(mvcRoutes, events.EventEmitter, {
 
     ownerAreaName: null, _inner: null,
 
-    set: function(name, expression, defaultValues) {
+    register: function(name, expression, defaultValues) {
         if (!utils.isString(name)) { throw new Error(utils.format('Route name requires string type but got {0} type', utils.type(name))); }
         if (!name) { throw new Error('Route name is required'); }
+        if (this.exists(name)) { throw new Error(utils.format('Route "{0}" already exists', name)); }
         this._inner.set(name, new mvcRoute({
             name: name,
             expression: expression,
             defaultValues: defaultValues,
             ownerAreaName: this.ownerAreaName
         }));
+        this.emit('changed');
+    },
+
+    set: function(name, route) {
+        if (!utils.isString(name)) { throw new Error(utils.format('Route name requires string type but got {0} type', utils.type(name))); }
+        if (!name) { throw new Error('Route name is required'); }
+        if (!(route instanceof mvcRoute)) { throw new Error('Route is not instance of mvcRoute'); }
+        this._inner.set(name, route);
         this.emit('changed');
     },
 

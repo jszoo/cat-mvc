@@ -136,7 +136,7 @@ utils.inherit(mvcAreas, events.EventEmitter, {
         area.routes.clear();
         area.routes.removeAllListeners();
         area.routes.on('changed', function() { self._routeSet = null; });
-        area.routes.set(area.name, areaRouteExpression, defaultRouteValues);
+        area.routes.register(area.name, areaRouteExpression, defaultRouteValues);
         // fire event
         this.emit('register', area);
         area.fireEvent('onRegister', area);

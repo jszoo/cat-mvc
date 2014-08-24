@@ -68,23 +68,30 @@ mvcModelMetas.prototype = {
         return this;
     },
 
-    register: function(name, modelMeta) {
+    set: function(name, modelMeta) {
         if (!modelMeta) {
             modelMeta = name;
             name = null;
         }
+        //
         if (!(modelMeta instanceof mvcModelMeta)) {
             throw new Error('The specified model is invalid type');
         }
         //
-        modelMeta.ownerAreaName = this.ownerAreaName;
         name = (name || modelMeta.name);
         //
-        if (!name) { throw Error('Model name is required'); }
+        if (!utils.isString(name)) { throw new Error(utils.format('Model name requires string type but got {0} type', utils.type(name))); }
+        if (!name) { throw new Error('Model name is required'); }
+        if (!/^[0-9a-zA-Z_-]+$/.test(name)) { throw new Error(utils.format('Model name "{0}" is invalid', name)); }
         if (this.exists(name)) { throw new Error(utils.format('Model "{0}" under area "{1}" is duplicated', name, this.ownerAreaName)); }
         //
+        modelMeta.ownerAreaName = this.ownerAreaName;
         this._inner.set(name, modelMeta);
         modelAttributes.set(name, modelMeta, this.ownerAreaName);
+    },
+
+    register: function(name, metadata) {
+        this.set(mvcModelMeta.api(name, metadata));
     },
 
     loaddir: function(modelsPath, act) {
@@ -111,7 +118,7 @@ mvcModelMetas.prototype = {
                 this.name = path.basename(filePath, extName);
             }
             this.path = filePath;
-            self.register(this.name, this);
+            self.set(this.name, this);
         });
     },
 

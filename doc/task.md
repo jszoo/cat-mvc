@@ -29,6 +29,7 @@
 + 30. implement models support: models folder + model define rules.
 + 31. when there are same model name but in different directory, solutions?
 + 36. model binder customizable
++ 37. global filter
 + 38. deprecated the "delete" in javascript
 
 ##POSTPONE##
@@ -42,4 +43,4 @@
 + 32. $ npm install -g cat-mvc-site   $ cat-mvc-site create my_app   $ cd my_app $ npm install   $ npm start
 + 33. use [Formidable](https://github.com/felixge/node-formidable) ?
 + 34. modelState function
-+ 37. global filter
++ 39. better set + register [api]

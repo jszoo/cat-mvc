@@ -21,7 +21,8 @@ var path = require('path'),
     mvcAttributes = require('./attribute/$manager'),
     mvcViewEngines = require('./viewEngine/$manager'),
     mvcHandler = require('./mvcHandler'),
-    mvcHandlerRouter = require('./mvcHandlerRouter');
+    mvcHandlerRouter = require('./mvcHandlerRouter'),
+    mvcEnumerable = require('./mvcEnumerable');
 
 var midError = require('./middleware/error'),
     midHeader = require('./middleware/header'),
@@ -58,6 +59,7 @@ var mvcApp = function(set) {
     this.set('etag', 'weak');
     //
     this.areas = new mvcAreas(this, this._store);
+    this.filters = new mvcEnumerable();
     mvcApp.superclass.constructor.call(this);
 };
 
@@ -65,7 +67,9 @@ utils.inherit(mvcApp, events.EventEmitter, {
 
     _store: null, _sett: null, _handlers: null, _inited: null,
 
-    appPath: null, areas: null, attributes: attributes, modelling: modelling, viewEngines: viewEngines,
+    appPath: null, areas: null, filters: null,
+
+    attributes: attributes, modelling: modelling, viewEngines: viewEngines,
 
     /*
     * get app setting
@@ -166,7 +170,7 @@ utils.inherit(mvcApp, events.EventEmitter, {
 var neverInited = true;
 var appInitialization = function(app) {
     return function(req, res, eventArg) {
-        if (app._initialized) { return true; }
+        if (app._inited) { return true; }
         var handlers = app._handlers;
         //
         try {
@@ -209,21 +213,21 @@ var appInitialization = function(app) {
             //
             if (neverInited) {
                 app.viewEngines.clear();
-                app.viewEngines.registerAll();
+                app.viewEngines.discover();
                 //
                 app.attributes.clear();
-                app.attributes.registerAll();
+                app.attributes.discover();
                 //
                 app.modelling.clear();
-                app.modelling.registerAll();
+                app.modelling.discover();
                 neverInited = false;
             }
             //
             app.areas.clear();
-            app.areas.registerAll(); // user code always focus on the controllers, so register at last
+            app.areas.discover(); // user code always focus on the controllers, so register at last
             //
             app.emit('init', app, eventArg);
-            app._initialized = true;
+            app._inited = true;
             return true;
         }
         catch (ex) {

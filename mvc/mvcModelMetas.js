@@ -54,8 +54,9 @@ mvcModelMetas.prototype = {
     },
 
     remove: function(name) {
-        this._inner.remove(name);
+        var ret = this._inner.remove(name);
         modelAttributes.del(name, this.ownerAreaName);
+        return ret;
     },
 
     count: function() {
@@ -64,6 +65,7 @@ mvcModelMetas.prototype = {
 
     clear: function() {
         this._inner.clear();
+        return this;
     },
 
     register: function(name, modelMeta) {

@@ -61,6 +61,7 @@ utils.inherit(mvcAreas, events.EventEmitter, {
         utils.each(this.all(), function() {
             self.unload(this.name);
         });
+        return this;
     },
 
     conf: function(name) {
@@ -114,6 +115,8 @@ utils.inherit(mvcAreas, events.EventEmitter, {
             controllersPath: path.join(areaPath, this.conf('folderNames.controllers')),
             settingFilePath: path.join(areaPath, this.conf('fileNames.areaSetting'))
         }, this._inner.sto());
+        // connect filters
+        area.filters.parent(this.app.filters);
         // load 'areas/account/area.js'
         var settPath = area.settingFilePath;
         if (fs.existsSync(settPath) && fs.statSync(settPath).isFile()) {
@@ -134,7 +137,7 @@ utils.inherit(mvcAreas, events.EventEmitter, {
         area.routes.clear();
         area.routes.removeAllListeners();
         area.routes.on('changed', function() { self._routeSet = null; });
-        area.routes.set(area.name, areaRouteExpression, defaultRouteValues);
+        area.routes.register(area.name, areaRouteExpression, defaultRouteValues);
         // fire event
         this.emit('register', area);
         area.fireEvent('onRegister', area);
@@ -182,7 +185,7 @@ utils.inherit(mvcAreas, events.EventEmitter, {
         });
     },
 
-    registerAll: function(rootPath) {
+    discover: function(rootPath) {
         if (utils.isString(rootPath) && utils.isAbsolute(rootPath)) {
             this.registerRoot(rootPath);
             this.registerAreas(path.join(rootPath, this.conf('folderNames.areas')));

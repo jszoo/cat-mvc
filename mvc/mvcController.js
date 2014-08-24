@@ -24,23 +24,21 @@ var mvcController = module.exports = function(set) {
     utils.extend(this, set);
 };
 
-mvcController.api = function() {
-    var name, attr, impl;
-    var len = arguments.length, arg0 = arguments[0];
-    //
-    if (len === 1 && utils.isFunction(arg0)) {
-        impl = arg0;
-    } else if (len === 1 && utils.isObject(arg0)) {
-        name = arg0.name;
-        attr = arg0.attr;
-        impl = arg0.impl;
-    } else if (len === 2) {
-        attr = arg0;
-        impl = arguments[1];
-    } else {
-        name = arg0;
-        attr = arguments[1];
-        impl = arguments[2];
+mvcController.api = function(name, attr, impl) {
+    if (utils.isFunction(name)) {
+        impl = name;
+        attr = null;
+        name = null;
+    }
+    else if (utils.isFunction(attr)) {
+        impl = attr;
+        attr = name;
+        name = null;
+    }
+    else if (utils.isObject(name)) {
+        impl = name.impl;
+        attr = name.attr;
+        name = name.name;
     }
     //
     var ret = new mvcController({

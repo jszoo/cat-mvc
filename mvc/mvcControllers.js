@@ -50,13 +50,10 @@ mvcControllers.prototype = {
         return this;
     },
 
-    register: function(name, controller) {
+    set: function(name, controller) {
         if (!controller) {
             controller = name;
             name = null;
-        }
-        if (!(controller instanceof mvcController)) {
-            throw new Error('The specified controller is invalid type');
         }
         //
         name = (name || controller.name());
@@ -66,10 +63,16 @@ mvcControllers.prototype = {
             controller.name(name);
         }
         //
+        if (!utils.isString(name)) { throw new Error(utils.format('Controller name requires string type but got {0} type', utils.type(name))); }
         if (!name) { throw new Error('Controller name is required'); }
         if (this.exists(name)) { throw new Error(utils.format('Controller "{0}" under area "{1}" is duplicated', name, this.ownerAreaName)); }
+        if (!(controller instanceof mvcController)) { throw new Error('The specified controller is invalid type'); }
         //
         this._inner.set(name, controller);
+    },
+
+    register: function(name, attr, impl) {
+        this.set(mvcController.api(name, attr, impl));
     },
 
     loaddir: function(ctrlsPath, act) {
@@ -96,7 +99,7 @@ mvcControllers.prototype = {
                 this.name(path.basename(filePath, extName));
             }
             this.path(filePath);
-            self.register(this.name(), this);
+            self.set(this.name(), this);
         });
     },
 

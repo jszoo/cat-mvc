@@ -73,6 +73,7 @@ mvcControllers.prototype = {
         //
         controller.name(name);
         this._inner.set(name, controller);
+        return this;
     },
 
     register: function(name, attr, impl) {

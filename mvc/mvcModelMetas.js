@@ -88,6 +88,7 @@ mvcModelMetas.prototype = {
         modelMeta.ownerAreaName = this.ownerAreaName;
         this._inner.set(name, modelMeta);
         modelAttributes.set(name, modelMeta, this.ownerAreaName);
+        return this;
     },
 
     register: function(name, metadata) {

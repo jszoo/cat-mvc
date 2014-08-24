@@ -56,18 +56,22 @@ mvcControllers.prototype = {
             name = null;
         }
         //
+        if (!(controller instanceof mvcController)) {
+            throw new Error('The specified controller is invalid type');
+        }
+        //
         name = (name || controller.name());
         if (/.+Controller$/i.test(name)) {
             var len = 'Controller'.length;
             name = name.substr(0, name.length - len);
-            controller.name(name);
         }
         //
         if (!utils.isString(name)) { throw new Error(utils.format('Controller name requires string type but got {0} type', utils.type(name))); }
         if (!name) { throw new Error('Controller name is required'); }
+        if (!/[0-9a-zA-Z_-]+/.test(name)) { throw new Error(utils.format('Controller name "{0}" is invalid', name)); }
         if (this.exists(name)) { throw new Error(utils.format('Controller "{0}" under area "{1}" is duplicated', name, this.ownerAreaName)); }
-        if (!(controller instanceof mvcController)) { throw new Error('The specified controller is invalid type'); }
         //
+        controller.name(name);
         this._inner.set(name, controller);
     },
 

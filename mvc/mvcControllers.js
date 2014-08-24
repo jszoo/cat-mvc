@@ -68,7 +68,7 @@ mvcControllers.prototype = {
         //
         if (!utils.isString(name)) { throw new Error(utils.format('Controller name requires string type but got {0} type', utils.type(name))); }
         if (!name) { throw new Error('Controller name is required'); }
-        if (!/[0-9a-zA-Z_-]+/.test(name)) { throw new Error(utils.format('Controller name "{0}" is invalid', name)); }
+        if (!/^[0-9a-zA-Z_-]+$/.test(name)) { throw new Error(utils.format('Controller name "{0}" is invalid', name)); }
         if (this.exists(name)) { throw new Error(utils.format('Controller "{0}" under area "{1}" is duplicated', name, this.ownerAreaName)); }
         //
         controller.name(name);

@@ -25,7 +25,6 @@ var baseResult = exports.baseResult = function(set) {
 };
 
 baseResult.prototype = {
-    httpContext: null,
     constructor: baseResult,
     executeResult: function(controllerContext, callback) {
         throw new Error('"executeResult" interface function needs override by sub classes.');
@@ -315,13 +314,15 @@ var redirectToAction = exports.redirectToAction = function(actionName, controlle
         routeValues = controllerName;
         controllerName = null;
     }
-    var mergedRouteValues = mvcHelper.mergeRouteValues(actionName, controllerName, this.httpContext.routeData, routeValues, true);
-    redirectToAction.superclass.constructor.call(this, mergedRouteValues, null, permanent);
+    this._args = { actionName: actionName, controllerName: controllerName, routeValues: routeValues };
+    redirectToAction.superclass.constructor.call(this, null, null, permanent);
 };
 
 utils.inherit(redirectToAction, redirectToRoute, {
-    executeResult: function() {
-        redirectToAction.superclass.executeResult.apply(this, arguments);
+    executeResult: function(controllerContext, callback) {
+        var actionName = this._args.actionName, controllerName = this._args.controllerName, routeValues = this._args.routeValues;
+        this.routeValues = mvcHelper.mergeRouteValues(actionName, controllerName, controllerContext.routeData, routeValues, true);
+        redirectToAction.superclass.executeResult.call(this, controllerContext, callback);
     }
 });
 

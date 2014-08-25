@@ -122,14 +122,6 @@ mvcController.prototype = {
             this.viewData.httpContext = null;
             this.viewdata = null;
         }
-        if (this.resultApi) {
-            this.resultApi.httpContext = null;
-            this.resultApi = null;
-        }
-        if (this.resultApiSync) {
-            this.resultApiSync.httpContext = null;
-            this.resultApiSync = null;
-        }
         if (this.modelApi) {
             this.modelApi.httpContext = null;
             this.modelApi = null;
@@ -146,6 +138,8 @@ mvcController.prototype = {
         this._impl = null;
         this._attr = null;
         this.tempData = null;
+        this.resultApi = null;
+        this.resultApiSync = null;
     },
 
     initialize: function(httpContext) {
@@ -156,8 +150,8 @@ mvcController.prototype = {
         this.viewData = new mvcViewData({ httpContext: this.httpContext });
         this.tempData = new mvcTempData({ provider: mvcTempDataStore.sessionProvider });
         //
-        this.resultApi = new mvcActionResultApi({ httpContext: this.httpContext, sync: false });
-        this.resultApiSync = new mvcActionResultApi({ httpContext: this.httpContext, sync: true });
+        this.resultApi = new mvcActionResultApi({ sync: false });
+        this.resultApiSync = new mvcActionResultApi({ sync: true });
         this.modelApi = new mvcModelApi({ httpContext: this.httpContext });
         this.implScope = new controllerImplementationScope(this);
         //

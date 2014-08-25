@@ -73,12 +73,12 @@ actionResultManager.prototype = {
 };
 
 
-var proto = mvcActionResultApi.prototype;
-var nativeNames = 'httpContext,sync,callback,with,constructor,';
+var proto = mvcActionResultApi.prototype, protoNames = '';
+utils.each(proto, function(name) { protoNames += name + ','; });
 
 var actionResultApi = {
     allow: function(name) {
-        return (nativeNames.indexOf(name + ',') === -1);
+        return (protoNames.indexOf(name + ',') === -1);
     },
     set: function(name, func) {
         if (!this.allow(name)) {
@@ -86,7 +86,6 @@ var actionResultApi = {
         }
         proto[name] = function() {
             var result = createNew(func, arguments);
-            result.httpContext = this.httpContext;
             return this.with(result);
         };
     },
@@ -106,17 +105,18 @@ var actionResultApi = {
 };
 
 var createNew = function(fn, as) {
+    var ret;
     switch (as.length) {
-        case 0: ret = fn(); break;
-        case 1: ret = fn(as[0]); break;
-        case 2: ret = fn(as[0], as[1]); break;
-        case 3: ret = fn(as[0], as[1], as[2]); break;
-        case 4: ret = fn(as[0], as[1], as[2], as[3]); break;
-        case 5: ret = fn(as[0], as[1], as[2], as[3], as[4]); break;
-        case 6: ret = fn(as[0], as[1], as[2], as[3], as[4], as[5]); break;
-        case 7: ret = fn(as[0], as[1], as[2], as[3], as[4], as[5], as[6]); break;
-        case 8: ret = fn(as[0], as[1], as[2], as[3], as[4], as[5], as[6], as[7]); break;
-        case 9: ret = fn(as[0], as[1], as[2], as[3], as[4], as[5], as[6], as[7], as[8]); break;
+        case 0: ret = new fn(); break;
+        case 1: ret = new fn(as[0]); break;
+        case 2: ret = new fn(as[0], as[1]); break;
+        case 3: ret = new fn(as[0], as[1], as[2]); break;
+        case 4: ret = new fn(as[0], as[1], as[2], as[3]); break;
+        case 5: ret = new fn(as[0], as[1], as[2], as[3], as[4]); break;
+        case 6: ret = new fn(as[0], as[1], as[2], as[3], as[4], as[5]); break;
+        case 7: ret = new fn(as[0], as[1], as[2], as[3], as[4], as[5], as[6]); break;
+        case 8: ret = new fn(as[0], as[1], as[2], as[3], as[4], as[5], as[6], as[7]); break;
+        case 9: ret = new fn(as[0], as[1], as[2], as[3], as[4], as[5], as[6], as[7], as[8]); break;
         default: throw new Error('Maximum 9 parameters allowed'); break;
     }
     return ret;

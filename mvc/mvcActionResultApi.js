@@ -15,7 +15,7 @@ var mvcActionResultApi = module.exports = function(set) {
 
 mvcActionResultApi.prototype = {
 
-    httpContext: null, sync: false, callback: null,
+    sync: false, callback: null,
 
     constructor: mvcActionResultApi,
 

@@ -61,6 +61,7 @@ actionResultManager.prototype = {
     },
 
     discover: function() {
-        
+        var self = this;
+        utils.each(require('./actionResult'), function(name) { self.register(name, this); });
     }
 };

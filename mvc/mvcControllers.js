@@ -51,14 +51,13 @@ mvcControllers.prototype = {
     },
 
     set: function(name, controller) {
-        if (!controller) {
+        if (controller === undefined) {
             controller = name;
             name = null;
         }
         //
-        if (!(controller instanceof mvcController)) {
-            throw new Error('The specified controller is invalid type');
-        }
+        if (!controller) { throw new Error('Controller object is required'); }
+        if (!(controller instanceof mvcController)) { throw new Error('The specified controller is invalid type'); }
         //
         name = (name || controller.name());
         if (/.+Controller$/i.test(name)) {
@@ -73,6 +72,7 @@ mvcControllers.prototype = {
         //
         controller.name(name);
         this._inner.set(name, controller);
+        return this;
     },
 
     register: function(name, attr, impl) {

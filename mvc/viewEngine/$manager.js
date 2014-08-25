@@ -46,12 +46,6 @@ viewEngineManager.prototype = {
     },
 
     set: function(engineName, viewEngine) {
-        this.remove(engineName);
-        this.register(engineName, viewEngine);
-        return this;
-    },
-
-    register: function(engineName, viewEngine) {
         if (!utils.isString(engineName)) { throw new Error(utils.format('View engine name requires string type but got {0} type', utils.type(engineName))); }
         if (!engineName) { throw new Error('View engine name is required'); }
         if (!viewEngine) { throw new Error('View engine object is required'); }
@@ -60,6 +54,11 @@ viewEngineManager.prototype = {
         if (!utils.isFunction(viewEngine.releaseView)) { throw new Error(utils.format('Please implement the interface function "releaseView(controllerContext, view)" in the view engine "{0}"', engineName)); }
         if (this.exists(engineName)) { throw new Error(utils.format('View engine "{0}" already exists', engineName)); }
         this._inner.set(engineName, viewEngine);
+        return this;
+    },
+
+    register: function(engineName, viewEngine) {
+        this.set(engineName, viewEngine);
     },
 
     discover: function() {

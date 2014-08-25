@@ -14,14 +14,14 @@ var mvcModelMeta = module.exports = function(set) {
     utils.extend(this, set);
 };
 
-mvcModelMeta.api = function(name, obj) {
-    if (!obj) {
-        obj = name;
+mvcModelMeta.api = function(name, metadata) {
+    if (metadata === undefined) {
+        metadata = name;
         name = null;
     }
     var ret = new mvcModelMeta({
         name: name,
-        metadata: obj
+        metadata: metadata
     });
     if (modelsDefined) {
         modelsDefined.push(ret);

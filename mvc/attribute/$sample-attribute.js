@@ -42,5 +42,6 @@ sampleAttribute.prototype = {
     isValidActionRequest: function(controllerContext) { },
 
     /************ model binder interface **************/
+    getParamName: function() { },
     getBinder: function() { }
 };

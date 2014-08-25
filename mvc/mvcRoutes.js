@@ -52,27 +52,32 @@ utils.inherit(mvcRoutes, events.EventEmitter, {
     },
 
     set: function(name, route) {
-        verifyName(name);
-        if (!(route instanceof mvcRoute)) { throw new Error('Route is not instance of mvcRoute'); }
+        if (route === undefined) {
+            route = name;
+            name = null;
+        }
+        //
+        if (!route) { throw new Error('Route object is required'); }
+        if (!(route instanceof mvcRoute)) { throw new Error('The specified route is invalid type'); }
+        //
+        name = (name || route.name);
+        //
+        if (!utils.isString(name)) { throw new Error(utils.format('Route name requires string type but got {0} type', utils.type(name))); }
+        if (!name) { throw new Error('Route name is required'); }
+        if (this.exists(name)) { throw new Error(utils.format('Route "{0}" under area "{1}" is duplicated', name, this.ownerAreaName)); }
+        //
+        route.name = name;
+        route.ownerAreaName = this.ownerAreaName;
         this._inner.set(name, route);
         this.emit('changed');
         return this;
     },
 
     register: function(name, expression, defaultValues) {
-        verifyName(name);
-        if (this.exists(name)) { throw new Error(utils.format('Route "{0}" already exists', name)); }
-        this._inner.set(name, new mvcRoute({
+        this.set(new mvcRoute({
             name: name,
             expression: expression,
-            defaultValues: defaultValues,
-            ownerAreaName: this.ownerAreaName
+            defaultValues: defaultValues
         }));
-        this.emit('changed');
     }
 });
-
-var verifyName = function(name) {
-    if (!utils.isString(name)) { throw new Error(utils.format('Route name requires string type but got {0} type', utils.type(name))); }
-    if (!name) { throw new Error('Route name is required'); }
-};

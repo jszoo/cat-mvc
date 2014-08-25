@@ -40,7 +40,7 @@ mvcController.api = function(name, attr, impl) {
         attr = name.attr;
         name = name.name;
     }
-    //
+    // create
     var ret = new mvcController({
         _name: name,
         _attr: attr,
@@ -49,6 +49,7 @@ mvcController.api = function(name, attr, impl) {
     if (controllersDefined) {
         controllersDefined.push(ret);
     }
+    // for chain
     return ret;
 };
 
@@ -84,7 +85,7 @@ mvcController.prototype = {
 
     viewData: null, tempData: null,
 
-    resultApi: null, modelApi: null, implScope: null,
+    resultApi: null, resultApiSync: null, modelApi: null, implScope: null,
 
     httpContext: null, attributes: null,
 
@@ -121,10 +122,6 @@ mvcController.prototype = {
             this.viewData.httpContext = null;
             this.viewdata = null;
         }
-        if (this.resultApi) {
-            this.resultApi.httpContext = null;
-            this.resultApi = null;
-        }
         if (this.modelApi) {
             this.modelApi.httpContext = null;
             this.modelApi = null;
@@ -141,6 +138,8 @@ mvcController.prototype = {
         this._impl = null;
         this._attr = null;
         this.tempData = null;
+        this.resultApi = null;
+        this.resultApiSync = null;
     },
 
     initialize: function(httpContext) {
@@ -151,7 +150,8 @@ mvcController.prototype = {
         this.viewData = new mvcViewData({ httpContext: this.httpContext });
         this.tempData = new mvcTempData({ provider: mvcTempDataStore.sessionProvider });
         //
-        this.resultApi = new mvcActionResultApi({ httpContext: this.httpContext, sync: false });
+        this.resultApi = new mvcActionResultApi({ sync: false });
+        this.resultApiSync = new mvcActionResultApi({ sync: true });
         this.modelApi = new mvcModelApi({ httpContext: this.httpContext });
         this.implScope = new controllerImplementationScope(this);
         //
@@ -166,12 +166,12 @@ mvcController.prototype = {
         if (!annotated.args || annotated.args.length === 0) { return annotated; }
         //
         var customInject = {};
-        var injectContext = ctx.toControllerInjectContext({
+        var injectionContext = ctx.toControllerInjectContext({
             inject: customInject,
             controller: this
         });
-        ctx.app.emit('injectController', ctx.app, injectContext);
-        ctx.routeArea.fireEvent('onInjectController', ctx.routeArea, injectContext);
+        ctx.app.emit('injectController', ctx.app, injectionContext);
+        ctx.routeArea.fireEvent('onInjectController', ctx.routeArea, injectionContext);
         customInject = utils.formalObj(customInject);
         //
         var self = this;
@@ -185,21 +185,22 @@ mvcController.prototype = {
                 return;
             }
             switch(lowerName) {
-                case 'req':        params.push(ctx.req); break;
-                case 'res':        params.push(ctx.res); break;
-                case 'context':    params.push(ctx); break;
-                case 'session':    params.push(ctx.zoo.request.session); break;
-                case 'query':      params.push(ctx.zoo.request.query); break;
-                case 'form':       params.push(ctx.zoo.request.form); break;
+                case 'req':          params.push(ctx.req); break;
+                case 'res':          params.push(ctx.res); break;
+                case 'context':      params.push(ctx); break;
+                case 'session':      params.push(ctx.zoo.request.session); break;
+                case 'query':        params.push(ctx.zoo.request.query); break;
+                case 'form':         params.push(ctx.zoo.request.form); break;
                 //
-                case 'tempdata':   params.push(self.tempData); break;
-                case 'viewdata':   params.push(self.viewData); break;
-                case 'modelstate': params.push(self.viewData.getModelState()); break;
-                case 'model':      params.push(self.modelApi); break;
-                case 'end':        params.push(self.resultApi); break;
-                case 'url':        params.push(self.url); break;
+                case 'tempdata':     params.push(self.tempData); break;
+                case 'viewdata':     params.push(self.viewData); break;
+                case 'modelstate':   params.push(self.viewData.getModelState()); break;
+                case 'model':        params.push(self.modelApi); break;
+                case 'url':          params.push(self.url); break;
+                case 'end':          params.push(self.resultApi); break;
+                case 'actionResult': params.push(self.resultApiSync); break;
                 //
-                default:           params.push(null); break;
+                default:             params.push(null); break;
             }
         });
         //
@@ -221,38 +222,31 @@ mvcController.prototype = {
             if (!utils.hasOwn(scope, name)) { continue; }
             if (!utils.isFunction(scope[name])) { continue; }
             if (!(name in proto) || name === 'action') {
-                var impl = scope[name], attr = impl.attr;
-                this.actions.push(new mvcAction({
-                    _name: name,
-                    _attr: attr,
-                    _impl: impl
-                }));
+                var impl = scope[name];
+                var attr = impl.attr;
+                this.action(name, attr, impl);
             }
         }
     },
 
-    action: function() {
-        var len = arguments.length, act;
-        if (len === 0) {
-            act = new mvcAction();
-        } else if (len === 1) {
-            act = new mvcAction({
-                _name: arguments[0]
-            });
-        } else if (len === 2) {
-            act = new mvcAction({
-                _name: arguments[0],
-                _impl: arguments[1]
-            });
-        } else {
-            act = new mvcAction({
-                _name: arguments[0],
-                _attr: arguments[1],
-                _impl: arguments[2]
-            });
+    action: function(name, attr, impl) {
+        if (utils.isFunction(name)) {
+            impl = name;
+            attr = null;
+            name = null;
+        } else if (utils.isFunction(attr)) {
+            impl = attr;
+            attr = null;
         }
+        // create
+        var act = new mvcAction({
+            _name: name,
+            _attr: attr,
+            _impl: impl
+        });
         this.actions.push(act);
-        return act; //  for chain
+        // for chain
+        return act;
     },
 
     findAction: function(actionName) {

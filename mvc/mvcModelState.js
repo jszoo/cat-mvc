@@ -46,27 +46,38 @@ mvcModelState.prototype = {
     },
 
     set: function(namespace, state) {
-        if (!(state instanceof stateItem)) { throw new Error('State object type is incorrect'); }
+        if (state === undefined) {
+            state = namespace;
+            namespace = null;
+        }
+        //
+        if (!state) { throw new Error('State object is required'); }
+        if (!(state instanceof stateItem)) { throw new Error('The specified state object is invalid type'); }
+        //
+        namespace = (namespace || state.namespace);
+        //
+        if (!utils.isString(namespace)) { throw new Error(utils.format('State namespace requires string type but got {0} type', utils.type(namespace))); }
+        if (!namespace) { throw new Error('State namespace is required'); }
+        //
+        state.namespace = namespace;
         this._inner.set(namespace, state);
         return this;
+    },
+
+    addModelError: function(namespace, error) {
+        var state = this._inner.get(namespace);
+        if (!state) {
+            this.set(namespace, state = new stateItem());
+        }
+        if (error) {
+            state.addError(error);
+        }
     },
 
     setModelValue: function(namespace, value) {
         this.addModelError(namespace, null);
         var state = this._inner.get(namespace);
         state.setValue(value);
-    },
-
-    addModelError: function(namespace, error) {
-        var state = this._inner.get(namespace);
-        if (!state) {
-            state = new stateItem();
-            state.namespace = namespace;
-            this._inner.set(namespace, state);
-        }
-        if (error) {
-            state.addError(error);
-        }
     },
 
     isValidField: function(namespace) {

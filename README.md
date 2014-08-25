@@ -187,20 +187,21 @@ A series events inside controller can be subscribed via adding controller attrib
 **Injection of controller**   
 There we can see some parameters in the controller handler function. The parameters will injected automatically base on parameter names (case insensitive). We alreay have some common used component objects builtin.
 
-| **Name**    | **Description**            | **Useage**          |
-|:----------- |:---------------------------|:--------------------|
-| req         | raw nodejs request object  |                     |
-| res         | raw nodejs response object |                     |
-| context     | httpContext object         |                     |
-| session     | plain object session data  | session['logged']   |
-| query       | plain object query data    | query['PageIndx']   |
-| form        | plain object form data     | form['UserName']    |
-| tempData    | temp data                  | tempData.set('title', 'xxx')  |
-| viewData    | view data                  | viewData.model(obj)           |
-| modelState  | request model state        | modelState.isValid()          |
-| model       | model APIs                 | model.new('UserModel')        |
-| end         | response functions         | end.json({ success: true })   |
-| url         | url generator              | url.action('index', 'home')   |
+| **Name**     | **Description**                         | **Useage**          |
+|:-------------|:----------------------------------------|:--------------------|
+| req          | raw nodejs request object               |                     |
+| res          | raw nodejs response object              |                     |
+| context      | httpContext object                      |                     |
+| session      | plain object session data               | session['logged']   |
+| query        | plain object query data                 | query['PageIndx']   |
+| form         | plain object form data                  | form['UserName']    |
+| tempData     | temp data                               | tempData.set('title', 'xxx')        |
+| viewData     | view data                               | viewData.model(obj)                 |
+| modelState   | request model state                     | modelState.isValid()                |
+| model        | model APIs                              | model.new('UserModel')              |
+| url          | url generator                           | url.action('index', 'home')         |
+| end          | response functions for ending request   | end.json({ success: true })         |
+| actionResult | same api as "end" for create result     | actionResult.json({ success: true}) |
 
 It's very cooool, isn't it? But we think further more. We made the awesome injection customizable.
 
@@ -209,14 +210,14 @@ var mvc = require('cat-mvc');
 var app = mvc({ appPath: __dirname });
 
 // global.js | this make the "mongo" inject to all controllers under app instance
-app.on('injectController', function(app, injectContext) {
-    injectContext.inject['mongo'] = 'mongo api';
+app.on('injectController', function(app, injectionContext) {
+    injectionContext.inject['mongo'] = 'mongo api';
 });
 
 // area.js | or inject in area events subscription for all controllers under area
 mvc.area(function() {
-    this.onInjectController = function(area, injectContext) {
-        injectContext.inject['mongo'] = 'mongo api';
+    this.onInjectController = function(area, injectionContext) {
+        injectionContext.inject['mongo'] = 'mongo api';
     };
 });
 

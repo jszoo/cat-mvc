@@ -235,8 +235,8 @@ var httpNotFound = exports.httpNotFound = function(statusText) {
 };
 
 utils.inherit(httpNotFound, httpStatusCode, {
-    executeResult: function(controllerContext, callback) {
-        httpNotFound.superclass.executeResult.call(this, controllerContext, callback);
+    executeResult: function() {
+        httpNotFound.superclass.executeResult.apply(this, arguments);
     }
 });
 
@@ -248,8 +248,8 @@ var httpUnauthorized = exports.httpUnauthorized = function(statusText) {
 };
 
 utils.inherit(httpUnauthorized, httpStatusCode, {
-    executeResult: function(controllerContext, callback) {
-        httpUnauthorized.superclass.executeResult.call(this, controllerContext, callback);
+    executeResult: function() {
+        httpUnauthorized.superclass.executeResult.apply(this, arguments);
     }
 });
 
@@ -302,8 +302,8 @@ var redirectToRoutePermanent = exports.redirectToRoutePermanent = function(route
 };
 
 utils.inherit(redirectToRoutePermanent, redirectToRoute, {
-    executeResult: function(controllerContext, callback) {
-        redirectToRoutePermanent.superclass.executeResult.call(this, controllerContext, callback);
+    executeResult: function() {
+        redirectToRoutePermanent.superclass.executeResult.apply(this, arguments);
     }
 });
 
@@ -320,8 +320,8 @@ var redirectToAction = exports.redirectToAction = function(actionName, controlle
 };
 
 utils.inherit(redirectToAction, redirectToRoute, {
-    executeResult: function(controllerContext, callback) {
-        redirectToAction.superclass.executeResult.call(this, controllerContext, callback);
+    executeResult: function() {
+        redirectToAction.superclass.executeResult.apply(this, arguments);
     }
 });
 
@@ -333,7 +333,7 @@ var redirectToActionPermanent = exports.redirectToActionPermanent = function(act
 };
 
 utils.inherit(redirectToActionPermanent, redirectToAction, {
-    executeResult: function(controllerContext, callback) {
-        redirectToActionPermanent.superclass.executeResult.call(this, controllerContext, callback);
+    executeResult: function() {
+        redirectToActionPermanent.superclass.executeResult.apply(this, arguments);
     }
 });

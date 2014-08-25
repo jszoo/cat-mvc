@@ -40,7 +40,7 @@ mvcController.api = function(name, attr, impl) {
         attr = name.attr;
         name = name.name;
     }
-    //
+    // create
     var ret = new mvcController({
         _name: name,
         _attr: attr,
@@ -49,6 +49,7 @@ mvcController.api = function(name, attr, impl) {
     if (controllersDefined) {
         controllersDefined.push(ret);
     }
+    // for chain
     return ret;
 };
 
@@ -227,38 +228,31 @@ mvcController.prototype = {
             if (!utils.hasOwn(scope, name)) { continue; }
             if (!utils.isFunction(scope[name])) { continue; }
             if (!(name in proto) || name === 'action') {
-                var impl = scope[name], attr = impl.attr;
-                this.actions.push(new mvcAction({
-                    _name: name,
-                    _attr: attr,
-                    _impl: impl
-                }));
+                var impl = scope[name];
+                var attr = impl.attr;
+                this.action(name, attr, impl);
             }
         }
     },
 
-    action: function() {
-        var len = arguments.length, act;
-        if (len === 0) {
-            act = new mvcAction();
-        } else if (len === 1) {
-            act = new mvcAction({
-                _name: arguments[0]
-            });
-        } else if (len === 2) {
-            act = new mvcAction({
-                _name: arguments[0],
-                _impl: arguments[1]
-            });
-        } else {
-            act = new mvcAction({
-                _name: arguments[0],
-                _attr: arguments[1],
-                _impl: arguments[2]
-            });
+    action: function(name, attr, impl) {
+        if (utils.isFunction(name)) {
+            impl = name;
+            attr = null;
+            name = null;
+        } else if (utils.isFunction(attr)) {
+            impl = attr;
+            attr = null;
         }
+        // create
+        var act = new mvcAction({
+            _name: name,
+            _attr: attr,
+            _impl: impl
+        });
         this.actions.push(act);
-        return act; //  for chain
+        // for chain
+        return act;
     },
 
     findAction: function(actionName) {

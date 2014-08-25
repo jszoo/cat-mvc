@@ -32,6 +32,7 @@
 + 37. global filter
 + 38. deprecated the "delete" in javascript
 + 39. better set + register [api]
++ 40. actionResult cutomizable
 
 ##POSTPONE##
 + 4. partialViewResult
@@ -44,5 +45,4 @@
 + 32. $ npm install -g cat-mvc-site   $ cat-mvc-site create my_app   $ cd my_app $ npm install   $ npm start
 + 33. use [Formidable](https://github.com/felixge/node-formidable) ?
 + 34. modelState function
-+ 40. component injection for filter functions?
-+ 41. actionResult cutomizable
++ 41. component injection for filter functions?

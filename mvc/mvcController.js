@@ -84,7 +84,7 @@ mvcController.prototype = {
 
     viewData: null, tempData: null,
 
-    resultApi: null, modelApi: null, implScope: null,
+    resultApi: null, resultApiSync: null, modelApi: null, implScope: null,
 
     httpContext: null, attributes: null,
 
@@ -125,6 +125,10 @@ mvcController.prototype = {
             this.resultApi.httpContext = null;
             this.resultApi = null;
         }
+        if (this.resultApiSync) {
+            this.resultApiSync.httpContext = null;
+            this.resultApiSync = null;
+        }
         if (this.modelApi) {
             this.modelApi.httpContext = null;
             this.modelApi = null;
@@ -152,6 +156,7 @@ mvcController.prototype = {
         this.tempData = new mvcTempData({ provider: mvcTempDataStore.sessionProvider });
         //
         this.resultApi = new mvcActionResultApi({ httpContext: this.httpContext, sync: false });
+        this.resultApiSync = new mvcActionResultApi({ httpContext: this.httpContext, sync: true });
         this.modelApi = new mvcModelApi({ httpContext: this.httpContext });
         this.implScope = new controllerImplementationScope(this);
         //
@@ -185,21 +190,22 @@ mvcController.prototype = {
                 return;
             }
             switch(lowerName) {
-                case 'req':        params.push(ctx.req); break;
-                case 'res':        params.push(ctx.res); break;
-                case 'context':    params.push(ctx); break;
-                case 'session':    params.push(ctx.zoo.request.session); break;
-                case 'query':      params.push(ctx.zoo.request.query); break;
-                case 'form':       params.push(ctx.zoo.request.form); break;
+                case 'req':          params.push(ctx.req); break;
+                case 'res':          params.push(ctx.res); break;
+                case 'context':      params.push(ctx); break;
+                case 'session':      params.push(ctx.zoo.request.session); break;
+                case 'query':        params.push(ctx.zoo.request.query); break;
+                case 'form':         params.push(ctx.zoo.request.form); break;
                 //
-                case 'tempdata':   params.push(self.tempData); break;
-                case 'viewdata':   params.push(self.viewData); break;
-                case 'modelstate': params.push(self.viewData.getModelState()); break;
-                case 'model':      params.push(self.modelApi); break;
-                case 'end':        params.push(self.resultApi); break;
-                case 'url':        params.push(self.url); break;
+                case 'tempdata':     params.push(self.tempData); break;
+                case 'viewdata':     params.push(self.viewData); break;
+                case 'modelstate':   params.push(self.viewData.getModelState()); break;
+                case 'model':        params.push(self.modelApi); break;
+                case 'url':          params.push(self.url); break;
+                case 'end':          params.push(self.resultApi); break;
+                case 'actionResult': params.push(self.resultApiSync); break;
                 //
-                default:           params.push(null); break;
+                default:             params.push(null); break;
             }
         });
         //

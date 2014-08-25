@@ -16,10 +16,10 @@ var path = require('path'),
     mvcAreas = require('./mvcAreas'),
     mvcModelMeta = require('./mvcModelMeta'),
     mvcController = require('./mvcController'),
-    mvcActionResult = require('./mvcActionResult'),
     mvcModelling = require('./modelling/$manager'),
     mvcAttributes = require('./attribute/$manager'),
     mvcViewEngines = require('./viewEngine/$manager'),
+    mvcActionResults = require('./httpResult/$manager'),
     mvcHandler = require('./mvcHandler'),
     mvcHandlerRouter = require('./mvcHandlerRouter'),
     mvcEnumerable = require('./mvcEnumerable');
@@ -37,7 +37,8 @@ var emptyAppPath = 'empty_app_path',
     apps = caching.region('mvc-app-instances'),
     modelling = new mvcModelling(),
     attributes = new mvcAttributes(),
-    viewEngines = new mvcViewEngines();
+    viewEngines = new mvcViewEngines(),
+    actionResults = new mvcActionResults();
 
 var mvcApp = function(set) {
     utils.extend(this, set);
@@ -69,7 +70,7 @@ utils.inherit(mvcApp, events.EventEmitter, {
 
     appPath: null, areas: null, filters: null,
 
-    attributes: attributes, modelling: modelling, viewEngines: viewEngines,
+    attributes: attributes, modelling: modelling, viewEngines: viewEngines, actionResults: actionResults,
 
     /*
     * get app setting
@@ -220,6 +221,10 @@ var appInitialization = function(app) {
                 //
                 app.modelling.clear();
                 app.modelling.discover();
+                //
+                app.actionResults.clear();
+                app.actionResults.discover();
+                //
                 neverInited = false;
             }
             //
@@ -244,7 +249,6 @@ var appGainer = function(set) {
 module.exports = utils.extend(appGainer, {
     utils: utils,
     caching: caching,
-    actionResults: mvcActionResult,
     //
     area: mvcArea.api,
     model: mvcModelMeta.api,
@@ -253,6 +257,7 @@ module.exports = utils.extend(appGainer, {
     modelling: modelling,
     attributes: attributes,
     viewEngines: viewEngines,
+    actionResults: actionResults,
     //
     gainApp: function(set) {
         return appGainer(set);

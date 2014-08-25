@@ -77,15 +77,15 @@ utils.inherit(mvcAreas, events.EventEmitter, {
         //
         if (!utils.isString(areaName)) { throw new Error(utils.format('Area name requires string type but got {0} type', utils.type(areaName))); }
         if (!areaName) { throw new Error('Area name is required'); }
-        if (!/^[0-9a-zA-Z_-]+$/.test(areaName)) { throw new Error(utils.format('Area name "{0}" is invalid', areaName)); }
+        if (areaName !== consts.root && !/^[0-9a-zA-Z_-]+$/.test(areaName)) { throw new Error(utils.format('Area name "{0}" is invalid', areaName)); }
         if (this.exists(areaName)) { throw new Error(utils.format('Area "{0}" is duplicated', areaName)); }
         //
         area.name            = areaName;
-        area.viewsPath       = path.join(area.areaPath, this.conf('folderNames.views'));
-        area.viewsSharedPath = path.join(area.areaPath, this.conf('folderNames.views'), this.conf('folderNames.shared'));
-        area.modelsPath      = path.join(area.areaPath, this.conf('folderNames.models'));
-        area.controllersPath = path.join(area.areaPath, this.conf('folderNames.controllers'));
-        area.settingFilePath = path.join(area.areaPath, this.conf('fileNames.areaSetting'));
+        area.viewsPath       = path.join(area.path, this.conf('folderNames.views'));
+        area.viewsSharedPath = path.join(area.path, this.conf('folderNames.views'), this.conf('folderNames.shared'));
+        area.modelsPath      = path.join(area.path, this.conf('folderNames.models'));
+        area.controllersPath = path.join(area.path, this.conf('folderNames.controllers'));
+        area.settingFilePath = path.join(area.path, this.conf('fileNames.areaSetting'));
         // connect filters
         area.filters.parent(this.app.filters);
         // load 'areas/account/area.js'
@@ -108,7 +108,6 @@ utils.inherit(mvcAreas, events.EventEmitter, {
         area.routes.clear();
         area.routes.removeAllListeners();
         area.routes.on('changed', function() { self._routeSet = null; });
-        area.routes.register(area.name, areaRouteExpression, defaultRouteValues);
         //
         this._inner.set(area.name, area);
         return this;
@@ -125,6 +124,7 @@ utils.inherit(mvcAreas, events.EventEmitter, {
         }, this._inner.sto());
         // store
         this.set(areaName, area);
+        area.routes.register(area.name, areaRouteExpression, defaultRouteValues);
         // fire event
         this.emit('register', area);
         area.fireEvent('onRegister', area);

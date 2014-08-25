@@ -7,8 +7,7 @@
 
 'use strict';
 
-var utils = require('zoo-utils'),
-    redirectResult = require('../mvcActionResult').redirectResult;
+var utils = require('zoo-utils');
 
 var requireHttpsAttribute = module.exports = function(set) {
     if (utils.isBoolean(set)) {
@@ -40,7 +39,8 @@ requireHttpsAttribute.prototype = {
         } else {
             var u = authorizationContext.zoo.request.url;
             var url = "https://" + u.host + u.path;
-            authorizationContext.result = new redirectResult({ url: url });
+            var redirectResult = authorizationContext.app.actionResults.get('redirect');
+            authorizationContext.result = new redirectResult(url);
         }
     }
 };

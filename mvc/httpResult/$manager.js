@@ -85,7 +85,9 @@ var actionResultApi = {
             throw new Error(utils.format('Action result name "{0}" is not allow', name));
         }
         proto[name] = function() {
-            return this.with(func.apply(null, arguments));
+            var result = func.apply(null, arguments);
+            result.httpContext = this.httpContext;
+            return this.with(result);
         };
     },
     remove: function(name) {

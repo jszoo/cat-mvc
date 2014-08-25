@@ -210,14 +210,14 @@ var mvc = require('cat-mvc');
 var app = mvc({ appPath: __dirname });
 
 // global.js | this make the "mongo" inject to all controllers under app instance
-app.on('injectController', function(app, injectContext) {
-    injectContext.inject['mongo'] = 'mongo api';
+app.on('injectController', function(app, injectionContext) {
+    injectionContext.inject['mongo'] = 'mongo api';
 });
 
 // area.js | or inject in area events subscription for all controllers under area
 mvc.area(function() {
-    this.onInjectController = function(area, injectContext) {
-        injectContext.inject['mongo'] = 'mongo api';
+    this.onInjectController = function(area, injectionContext) {
+        injectionContext.inject['mongo'] = 'mongo api';
     };
 });
 

@@ -172,12 +172,12 @@ mvcController.prototype = {
         if (!annotated.args || annotated.args.length === 0) { return annotated; }
         //
         var customInject = {};
-        var injectContext = ctx.toControllerInjectContext({
+        var injectionContext = ctx.toControllerInjectContext({
             inject: customInject,
             controller: this
         });
-        ctx.app.emit('injectController', ctx.app, injectContext);
-        ctx.routeArea.fireEvent('onInjectController', ctx.routeArea, injectContext);
+        ctx.app.emit('injectController', ctx.app, injectionContext);
+        ctx.routeArea.fireEvent('onInjectController', ctx.routeArea, injectionContext);
         customInject = utils.formalObj(customInject);
         //
         var self = this;

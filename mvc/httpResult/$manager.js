@@ -85,7 +85,7 @@ var actionResultApi = {
             throw new Error(utils.format('Action result name "{0}" is not allow', name));
         }
         proto[name] = function() {
-            var result = func.apply(null, arguments);
+            var result = createNew(func, arguments);
             result.httpContext = this.httpContext;
             return this.with(result);
         };
@@ -103,4 +103,21 @@ var actionResultApi = {
             actionResultApi.remove(name);
         });
     }
+};
+
+var createNew = function(fn, as) {
+    switch (as.length) {
+        case 0: ret = fn(); break;
+        case 1: ret = fn(as[0]); break;
+        case 2: ret = fn(as[0], as[1]); break;
+        case 3: ret = fn(as[0], as[1], as[2]); break;
+        case 4: ret = fn(as[0], as[1], as[2], as[3]); break;
+        case 5: ret = fn(as[0], as[1], as[2], as[3], as[4]); break;
+        case 6: ret = fn(as[0], as[1], as[2], as[3], as[4], as[5]); break;
+        case 7: ret = fn(as[0], as[1], as[2], as[3], as[4], as[5], as[6]); break;
+        case 8: ret = fn(as[0], as[1], as[2], as[3], as[4], as[5], as[6], as[7]); break;
+        case 9: ret = fn(as[0], as[1], as[2], as[3], as[4], as[5], as[6], as[7], as[8]); break;
+        default: throw new Error('Maximum 9 parameters allowed'); break;
+    }
+    return ret;
 };

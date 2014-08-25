@@ -64,57 +64,28 @@ utils.inherit(mvcAreas, events.EventEmitter, {
         return this;
     },
 
-    conf: function(name) {
-        return this.app.get(name) || utils.readObj({ fileNames: fileNames, folderNames: folderNames }, name);
-    },
-
-    rootArea: function() {
-        return this._inner.get(consts.root);
-    },
-
-    routeSet: function() {
-        if (!this._routeSet) {
-            var rs = this._routeSet = {};
-            utils.each(this.all(), function() {
-                utils.each(this.ownedRoutes(), function(key, val) {
-                    rs[key] = val;
-                });
-            });
+    set: function(areaName, area) {
+        if (area === undefined) {
+            area = areaName;
+            areaName = null;
         }
-        return this._routeSet;
-    },
-
-    unload: function(areaName) {
-        var area = this.get(areaName);
-        if (area) {
-            this.emit('unload', area);
-            area.fireEvent('onUnload', area);
-            area.modelMetas.clear();
-            area.controllers.clear();
-            area.routes.clear();
-            this._routeSet = null;
-        }
-        return this._inner.remove(areaName);
-    },
-
-    unloadRoot: function() {
-        this.unload(consts.root);
-    },
-
-    register: function(areaPath, areaName, areaRouteExpression, defaultRouteValues) {
-        if (!fs.existsSync(areaPath) || !fs.statSync(areaPath).isDirectory()) {
-            throw new Error(utils.format('The specified areasPath "{0}" is invalid', areaPath));
-        }
-        // area obj
-        var area = new mvcArea({
-            name: areaName,
-            path: areaPath,
-            viewsPath:       path.join(areaPath, this.conf('folderNames.views')),
-            viewsSharedPath: path.join(areaPath, this.conf('folderNames.views'), this.conf('folderNames.shared')),
-            modelsPath:      path.join(areaPath, this.conf('folderNames.models')),
-            controllersPath: path.join(areaPath, this.conf('folderNames.controllers')),
-            settingFilePath: path.join(areaPath, this.conf('fileNames.areaSetting'))
-        }, this._inner.sto());
+        //
+        if (!area) { throw new Error('Area object is required'); }
+        if (!(area instanceof mvcArea)) { throw new Error('The specified area is invalid type'); }
+        //
+        areaName = (areaName || area.name);
+        //
+        if (!utils.isString(areaName)) { throw new Error(utils.format('Area name requires string type but got {0} type', utils.type(areaName))); }
+        if (!areaName) { throw new Error('Area name is required'); }
+        if (!/^[0-9a-zA-Z_-]+$/.test(areaName)) { throw new Error(utils.format('Area name "{0}" is invalid', areaName)); }
+        if (this.exists(areaName)) { throw new Error(utils.format('Area "{0}" is duplicated', areaName)); }
+        //
+        area.name            = areaName;
+        area.viewsPath       = path.join(area.areaPath, this.conf('folderNames.views'));
+        area.viewsSharedPath = path.join(area.areaPath, this.conf('folderNames.views'), this.conf('folderNames.shared'));
+        area.modelsPath      = path.join(area.areaPath, this.conf('folderNames.models'));
+        area.controllersPath = path.join(area.areaPath, this.conf('folderNames.controllers'));
+        area.settingFilePath = path.join(area.areaPath, this.conf('fileNames.areaSetting'));
         // connect filters
         area.filters.parent(this.app.filters);
         // load 'areas/account/area.js'
@@ -138,17 +109,25 @@ utils.inherit(mvcAreas, events.EventEmitter, {
         area.routes.removeAllListeners();
         area.routes.on('changed', function() { self._routeSet = null; });
         area.routes.register(area.name, areaRouteExpression, defaultRouteValues);
+        //
+        this._inner.set(area.name, area);
+        return this;
+    },
+
+    register: function(areaPath, areaName, areaRouteExpression, defaultRouteValues) {
+        if (!fs.existsSync(areaPath) || !fs.statSync(areaPath).isDirectory()) {
+            throw new Error(utils.format('The specified areasPath "{0}" is invalid', areaPath));
+        }
+        // new area
+        var area = new mvcArea({
+            name: areaName,
+            path: areaPath
+        }, this._inner.sto());
+        // store
+        this.set(areaName, area);
         // fire event
         this.emit('register', area);
         area.fireEvent('onRegister', area);
-        // store
-        if (!this._inner.exists(area.name)) {
-            this._inner.set(area.name, area);
-        } else {
-            throw new Error(utils.format('Duplicated area name "{0}"', area.name));
-        }
-        // ret
-        return area;
     },
 
     registerRoot: function(rootPath) {
@@ -194,5 +173,42 @@ utils.inherit(mvcAreas, events.EventEmitter, {
             this.registerRoot(this.app.mapPath('~/'));
             this.registerAreas(this.app.mapPath(this.conf('folderNames.areas')));
         }
+    },
+
+    conf: function(name) {
+        return this.app.get(name) || utils.readObj({ fileNames: fileNames, folderNames: folderNames }, name);
+    },
+
+    rootArea: function() {
+        return this._inner.get(consts.root);
+    },
+
+    routeSet: function() {
+        if (!this._routeSet) {
+            var rs = this._routeSet = {};
+            utils.each(this.all(), function() {
+                utils.each(this.ownedRoutes(), function(key, val) {
+                    rs[key] = val;
+                });
+            });
+        }
+        return this._routeSet;
+    },
+
+    unload: function(areaName) {
+        var area = this.get(areaName);
+        if (area) {
+            this.emit('unload', area);
+            area.fireEvent('onUnload', area);
+            area.modelMetas.clear();
+            area.controllers.clear();
+            area.routes.clear();
+            this._routeSet = null;
+        }
+        this._inner.remove(areaName);
+    },
+
+    unloadRoot: function() {
+        this.unload(consts.root);
     }
 });

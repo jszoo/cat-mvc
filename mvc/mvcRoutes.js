@@ -57,9 +57,8 @@ utils.inherit(mvcRoutes, events.EventEmitter, {
             name = null;
         }
         //
-        if (!(route instanceof mvcRoute)) {
-            throw new Error('The specified route is invalid type');
-        }
+        if (!route) { throw new Error('Route object is required'); }
+        if (!(route instanceof mvcRoute)) { throw new Error('The specified route is invalid type'); }
         //
         name = (name || route.name);
         //

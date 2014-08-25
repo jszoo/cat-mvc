@@ -74,9 +74,8 @@ mvcModelMetas.prototype = {
             name = null;
         }
         //
-        if (!(modelMeta instanceof mvcModelMeta)) {
-            throw new Error('The specified model is invalid type');
-        }
+        if (!modelMeta) { throw new Error('Model object is required'); }
+        if (!(modelMeta instanceof mvcModelMeta)) { throw new Error('The specified model is invalid type'); }
         //
         name = (name || modelMeta.name);
         //

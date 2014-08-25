@@ -51,9 +51,8 @@ mvcModelState.prototype = {
             namespace = null;
         }
         //
-        if (!(state instanceof stateItem)) {
-            throw new Error('The specified state object is invalid type');
-        }
+        if (!state) { throw new Error('State object is required'); }
+        if (!(state instanceof stateItem)) { throw new Error('The specified state object is invalid type'); }
         //
         namespace = (namespace || state.namespace);
         //

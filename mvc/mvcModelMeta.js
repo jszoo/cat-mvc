@@ -15,7 +15,7 @@ var mvcModelMeta = module.exports = function(set) {
 };
 
 mvcModelMeta.api = function(name, metadata) {
-    if (!metadata) {
+    if (metadata === undefined) {
         metadata = name;
         name = null;
     }

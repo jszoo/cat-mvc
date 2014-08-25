@@ -51,7 +51,7 @@ mvcControllers.prototype = {
     },
 
     set: function(name, controller) {
-        if (!controller) {
+        if (controller === undefined) {
             controller = name;
             name = null;
         }

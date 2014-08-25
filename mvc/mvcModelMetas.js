@@ -69,7 +69,7 @@ mvcModelMetas.prototype = {
     },
 
     set: function(name, modelMeta) {
-        if (!modelMeta) {
+        if (modelMeta === undefined) {
             modelMeta = name;
             name = null;
         }
@@ -85,6 +85,7 @@ mvcModelMetas.prototype = {
         if (!/^[0-9a-zA-Z_-]+$/.test(name)) { throw new Error(utils.format('Model name "{0}" is invalid', name)); }
         if (this.exists(name)) { throw new Error(utils.format('Model "{0}" under area "{1}" is duplicated', name, this.ownerAreaName)); }
         //
+        modelMeta.name = name;
         modelMeta.ownerAreaName = this.ownerAreaName;
         this._inner.set(name, modelMeta);
         modelAttributes.set(name, modelMeta, this.ownerAreaName);

@@ -66,12 +66,6 @@ attributeManager.prototype = {
     },
 
     set: function(attrName, attrClass, category) {
-        this.remove(attrName, category);
-        this.register(attrName, attrClass, category);
-        return this;
-    },
-
-    register: function(attrName, attrClass, category) {
         if (!utils.isString(attrName)) { throw new Error(utils.format('Attribute name requires string type but got {0} type', utils.type(attrName))); }
         if (!attrName) { throw new Error('Attribute name is required'); }
         if (!/^[0-9a-zA-Z_-]+$/.test(attrName)) { throw new Error(utils.format('Attribute name "{0}" is invalid', attrName)); }
@@ -87,6 +81,11 @@ attributeManager.prototype = {
             classes.set(category, attrClass);
             this._inner.set(attrName, classes);
         }
+        return this;
+    },
+
+    register: function(attrName, attrClass, category) {
+        this.set(attrName, attrClass, category);
     },
 
     discover: function() {

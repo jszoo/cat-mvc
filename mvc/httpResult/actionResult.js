@@ -50,9 +50,9 @@ utils.inherit(empty, baseResult, {
 /* json
 ***************************************/
 var json = exports.json = function(data, contentType) {
-    json.superclass.constructor.call(this);
-    this.data = data;
-    this.contentType = contentType;
+    json.superclass.constructor.call(this, {
+        data: data, contentType: contentType
+    });
 };
 
 utils.inherit(json, baseResult, {
@@ -70,9 +70,9 @@ utils.inherit(json, baseResult, {
 /* jsonp
 ***************************************/
 var jsonp = exports.jsonp = function(data, callbackName) {
-    jsonp.superclass.constructor.call(this);
-    this.data = data;
-    this.callbackName = callbackName;
+    jsonp.superclass.constructor.call(this, {
+        data: data, callbackName: callbackName
+    });
 };
 
 utils.inherit(jsonp, baseResult, {
@@ -92,13 +92,13 @@ utils.inherit(jsonp, baseResult, {
 /* view
 ***************************************/
 var view = exports.view = function(viewName, model) {
-    view.superclass.constructor.call(this);
     if (!utils.isString(viewName)) {
         model = viewName;
         viewName = null;
     }
-    this.viewName = viewName;
-    this.model = model;
+    view.superclass.constructor.call(this, {
+        viewName: viewName, model: model
+    });
 };
 
 utils.inherit(view, baseResult, {
@@ -168,9 +168,9 @@ utils.inherit(view, baseResult, {
 /* file
 ***************************************/
 var file = exports.file = function(filePath, fileDownloadName) {
-    file.superclass.constructor.call(this);
-    this.filePath = filePath;
-    this.fileDownloadName = fileDownloadName;
+    file.superclass.constructor.call(this, {
+        filePath: filePath, fileDownloadName: fileDownloadName
+    });
 };
 
 utils.inherit(file, baseResult, {
@@ -183,15 +183,15 @@ utils.inherit(file, baseResult, {
 });
 
 
-/* content
+/* contentResult
 ***************************************/
-var content = exports.content = function(content, contentType) {
-    content.superclass.constructor.call(this);
-    this.content = content;
-    this.contentType = contentType;
+var contentResult = exports.content = function(content, contentType) {
+    contentResult.superclass.constructor.call(this, {
+        content: content, contentType: contentType
+    });
 };
 
-utils.inherit(content, baseResult, {
+utils.inherit(contentResult, baseResult, {
     content: null, contentType: 'text/plain',
     executeResult: function(controllerContext, callback) {
         //
@@ -208,9 +208,9 @@ utils.inherit(content, baseResult, {
 /* httpStatusCode
 ***************************************/
 var httpStatusCode = exports.httpStatusCode = function(statusCode, statusText) {
-    httpStatusCode.superclass.constructor.call(this);
-    this.statusCode = statusCode;
-    this.statusText = statusText;
+    httpStatusCode.superclass.constructor.call(this, {
+        statusCode: statusCode, statusText: statusText
+    });
 };
 
 utils.inherit(httpStatusCode, baseResult, {
@@ -256,9 +256,9 @@ utils.inherit(httpUnauthorized, httpStatusCode, {
 /* redirect
 ***************************************/
 var redirect = exports.redirect = function(url, permanent) {
-    redirect.superclass.constructor.call(this);
-    this.url = url;
-    this.permanent = permanent;
+    redirect.superclass.constructor.call(this, {
+        url: url, permanent: permanent
+    });
 };
 
 utils.inherit(redirect, baseResult, {
@@ -273,14 +273,13 @@ utils.inherit(redirect, baseResult, {
 /* redirectToRoute
 ***************************************/
 var redirectToRoute = exports.redirectToRoute = function(routeName, routeValues, permanent) {
-    redirectToRoute.superclass.constructor.call(this);
     if (!utils.isString(routeName)) {
         routeValues = routeName;
         routeName = null;
     }
-    this.routeName = routeName;
-    this.routeValues = routeValues;
-    this.permanent = !!permanent;
+    redirectToRoute.superclass.constructor.call(this, {
+        routeName: routeName, routeValues: routeValues, permanent: !!permanent
+    });
 };
 
 utils.inherit(redirectToRoute, baseResult, {

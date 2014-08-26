@@ -1,6 +1,6 @@
 {
   "name": "cat-mvc",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "description": "The best nodejs MVC web framework in .NET MVC style",
   "main": "mvc/index.js",
   "scripts": {
@@ -29,7 +29,7 @@
   "author": "ruleechen <rulee@live.cn>",
   "licenses": "MIT",
   "dependencies": {
-    "zoo-utils": "0.0.6",
+    "zoo-utils": "0.0.7",
     "zoo-cache": "0.0.7",
     "express-session": "~1.7.6",
     "body-parser": "~1.6.5",

@@ -32,13 +32,13 @@ baseResult.prototype = {
 };
 
 
-/* empty
+/* emptyResult
 ***************************************/
-var empty = exports.empty = function() {
-    empty.superclass.constructor.call(this);
+var emptyResult = exports.empty = function() {
+    emptyResult.superclass.constructor.call(this);
 };
 
-utils.inherit(empty, baseResult, {
+utils.inherit(emptyResult, baseResult, {
     executeResult: function(controllerContext, callback) {
         controllerContext.zoo.response.contentType('text/plain');
         controllerContext.zoo.response.send('');
@@ -47,15 +47,15 @@ utils.inherit(empty, baseResult, {
 });
 
 
-/* json
+/* jsonResult
 ***************************************/
-var json = exports.json = function(data, contentType) {
-    json.superclass.constructor.call(this);
-    this.data = data;
-    this.contentType = contentType;
+var jsonResult = exports.json = function(data, contentType) {
+    jsonResult.superclass.constructor.call(this, {
+        data: data, contentType: contentType
+    });
 };
 
-utils.inherit(json, baseResult, {
+utils.inherit(jsonResult, baseResult, {
     data: null, contentType: 'application/json',
     executeResult: function(controllerContext, callback) {
         var json = JSON.stringify(this.data);
@@ -67,15 +67,15 @@ utils.inherit(json, baseResult, {
 });
 
 
-/* jsonp
+/* jsonpResult
 ***************************************/
-var jsonp = exports.jsonp = function(data, callbackName) {
-    jsonp.superclass.constructor.call(this);
-    this.data = data;
-    this.callbackName = callbackName;
+var jsonpResult = exports.jsonp = function(data, callbackName) {
+    jsonpResult.superclass.constructor.call(this, {
+        data: data, callbackName: callbackName
+    });
 };
 
-utils.inherit(jsonp, baseResult, {
+utils.inherit(jsonpResult, baseResult, {
     data: null, contentType: 'text/javascript', callbackName: 'callback',
     executeResult: function(controllerContext, callback) {
         //
@@ -89,19 +89,19 @@ utils.inherit(jsonp, baseResult, {
 });
 
 
-/* view
+/* viewResult
 ***************************************/
-var view = exports.view = function(viewName, model) {
-    view.superclass.constructor.call(this);
+var viewResult = exports.view = function(viewName, model) {
     if (!utils.isString(viewName)) {
         model = viewName;
         viewName = null;
     }
-    this.viewName = viewName;
-    this.model = model;
+    viewResult.superclass.constructor.call(this, {
+        viewName: viewName, model: model
+    });
 };
 
-utils.inherit(view, baseResult, {
+utils.inherit(viewResult, baseResult, {
     viewName: null, model: null, view: null,
     executeResult: function(controllerContext, callback) {
         //
@@ -165,15 +165,15 @@ utils.inherit(view, baseResult, {
 });
 
 
-/* file
+/* fileResult
 ***************************************/
-var file = exports.file = function(filePath, fileDownloadName) {
-    file.superclass.constructor.call(this);
-    this.filePath = filePath;
-    this.fileDownloadName = fileDownloadName;
+var fileResult = exports.file = function(filePath, fileDownloadName) {
+    fileResult.superclass.constructor.call(this, {
+        filePath: filePath, fileDownloadName: fileDownloadName
+    });
 };
 
-utils.inherit(file, baseResult, {
+utils.inherit(fileResult, baseResult, {
     filePath: null, fileDownloadName: null,
     executeResult: function(controllerContext, callback) {
         controllerContext.zoo.response.download(this.filePath, this.fileDownloadName, function(err) {
@@ -183,15 +183,15 @@ utils.inherit(file, baseResult, {
 });
 
 
-/* content
+/* contentResult
 ***************************************/
-var content = exports.content = function(content, contentType) {
-    content.superclass.constructor.call(this);
-    this.content = content;
-    this.contentType = contentType;
+var contentResult = exports.content = function(content, contentType) {
+    contentResult.superclass.constructor.call(this, {
+        content: content, contentType: contentType
+    });
 };
 
-utils.inherit(content, baseResult, {
+utils.inherit(contentResult, baseResult, {
     content: null, contentType: 'text/plain',
     executeResult: function(controllerContext, callback) {
         //
@@ -205,15 +205,15 @@ utils.inherit(content, baseResult, {
 });
 
 
-/* httpStatusCode
+/* httpStatusCodeResult
 ***************************************/
-var httpStatusCode = exports.httpStatusCode = function(statusCode, statusText) {
-    httpStatusCode.superclass.constructor.call(this);
-    this.statusCode = statusCode;
-    this.statusText = statusText;
+var httpStatusCodeResult = exports.httpStatusCode = function(statusCode, statusText) {
+    httpStatusCodeResult.superclass.constructor.call(this, {
+        statusCode: statusCode, statusText: statusText
+    });
 };
 
-utils.inherit(httpStatusCode, baseResult, {
+utils.inherit(httpStatusCodeResult, baseResult, {
     statusCode: null, statusText: null,
     executeResult: function(controllerContext, callback) {
         //
@@ -227,41 +227,41 @@ utils.inherit(httpStatusCode, baseResult, {
 });
 
 
-/* httpNotFound
+/* httpNotFoundResult
 ***************************************/
-var httpNotFound = exports.httpNotFound = function(statusText) {
-    httpNotFound.superclass.constructor.call(this, httpStatusCodeEnum.NotFound, statusText);
+var httpNotFoundResult = exports.httpNotFound = function(statusText) {
+    httpNotFoundResult.superclass.constructor.call(this, httpStatusCodeEnum.NotFound, statusText);
 };
 
-utils.inherit(httpNotFound, httpStatusCode, {
+utils.inherit(httpNotFoundResult, httpStatusCodeResult, {
     executeResult: function() {
-        httpNotFound.superclass.executeResult.apply(this, arguments);
+        httpNotFoundResult.superclass.executeResult.apply(this, arguments);
     }
 });
 
 
-/* httpUnauthorized
+/* httpUnauthorizedResult
 ***************************************/
-var httpUnauthorized = exports.httpUnauthorized = function(statusText) {
-    httpUnauthorized.superclass.constructor.call(this, httpStatusCodeEnum.Unauthorized, statusText);
+var httpUnauthorizedResult = exports.httpUnauthorized = function(statusText) {
+    httpUnauthorizedResult.superclass.constructor.call(this, httpStatusCodeEnum.Unauthorized, statusText);
 };
 
-utils.inherit(httpUnauthorized, httpStatusCode, {
+utils.inherit(httpUnauthorizedResult, httpStatusCodeResult, {
     executeResult: function() {
-        httpUnauthorized.superclass.executeResult.apply(this, arguments);
+        httpUnauthorizedResult.superclass.executeResult.apply(this, arguments);
     }
 });
 
 
-/* redirect
+/* redirectResult
 ***************************************/
-var redirect = exports.redirect = function(url, permanent) {
-    redirect.superclass.constructor.call(this);
-    this.url = url;
-    this.permanent = permanent;
+var redirectResult = exports.redirect = function(url, permanent) {
+    redirectResult.superclass.constructor.call(this, {
+        url: url, permanent: permanent
+    });
 };
 
-utils.inherit(redirect, baseResult, {
+utils.inherit(redirectResult, baseResult, {
     url: null, permanent: false,
     executeResult: function(controllerContext, callback) {
         controllerContext.zoo.response.redirect(this.url, this.permanent);
@@ -270,20 +270,19 @@ utils.inherit(redirect, baseResult, {
 });
 
 
-/* redirectToRoute
+/* redirectToRouteResult
 ***************************************/
-var redirectToRoute = exports.redirectToRoute = function(routeName, routeValues, permanent) {
-    redirectToRoute.superclass.constructor.call(this);
+var redirectToRouteResult = exports.redirectToRoute = function(routeName, routeValues, permanent) {
     if (!utils.isString(routeName)) {
         routeValues = routeName;
         routeName = null;
     }
-    this.routeName = routeName;
-    this.routeValues = routeValues;
-    this.permanent = !!permanent;
+    redirectToRouteResult.superclass.constructor.call(this, {
+        routeName: routeName, routeValues: routeValues, permanent: !!permanent
+    });
 };
 
-utils.inherit(redirectToRoute, baseResult, {
+utils.inherit(redirectToRouteResult, baseResult, {
     routeName: null, routeValues: null, permanent: false,
     executeResult: function(controllerContext, callback) {
         controllerContext.controller.tempData.keep();
@@ -294,47 +293,47 @@ utils.inherit(redirectToRoute, baseResult, {
 });
 
 
-/* redirectToRoutePermanent
+/* redirectToRoutePermanentResult
 ***************************************/
-var redirectToRoutePermanent = exports.redirectToRoutePermanent = function(routeName, routeValues) {
-    redirectToRoutePermanent.superclass.constructor.call(this, routeName, routeValues, true);
+var redirectToRoutePermanentResult = exports.redirectToRoutePermanent = function(routeName, routeValues) {
+    redirectToRoutePermanentResult.superclass.constructor.call(this, routeName, routeValues, true);
 };
 
-utils.inherit(redirectToRoutePermanent, redirectToRoute, {
+utils.inherit(redirectToRoutePermanentResult, redirectToRouteResult, {
     executeResult: function() {
-        redirectToRoutePermanent.superclass.executeResult.apply(this, arguments);
+        redirectToRoutePermanentResult.superclass.executeResult.apply(this, arguments);
     }
 });
 
 
-/* redirectToAction
+/* redirectToActionResult
 ***************************************/
-var redirectToAction = exports.redirectToAction = function(actionName, controllerName, routeValues, permanent) {
+var redirectToActionResult = exports.redirectToAction = function(actionName, controllerName, routeValues, permanent) {
     if (!utils.isString(controllerName)) {
         routeValues = controllerName;
         controllerName = null;
     }
     this._args = { actionName: actionName, controllerName: controllerName, routeValues: routeValues };
-    redirectToAction.superclass.constructor.call(this, null, null, permanent);
+    redirectToActionResult.superclass.constructor.call(this, null, null, permanent);
 };
 
-utils.inherit(redirectToAction, redirectToRoute, {
+utils.inherit(redirectToActionResult, redirectToRouteResult, {
     executeResult: function(controllerContext, callback) {
         var actionName = this._args.actionName, controllerName = this._args.controllerName, routeValues = this._args.routeValues;
         this.routeValues = mvcHelper.mergeRouteValues(actionName, controllerName, controllerContext.routeData, routeValues, true);
-        redirectToAction.superclass.executeResult.call(this, controllerContext, callback);
+        redirectToActionResult.superclass.executeResult.call(this, controllerContext, callback);
     }
 });
 
 
-/* redirectToActionPermanent
+/* redirectToActionPermanentResult
 ***************************************/
-var redirectToActionPermanent = exports.redirectToActionPermanent = function(actionName, controllerName, routeValues) {
-    redirectToActionPermanent.superclass.constructor.call(this, actionName, controllerName, routeValues, true);
+var redirectToActionPermanentResult = exports.redirectToActionPermanent = function(actionName, controllerName, routeValues) {
+    redirectToActionPermanentResult.superclass.constructor.call(this, actionName, controllerName, routeValues, true);
 };
 
-utils.inherit(redirectToActionPermanent, redirectToAction, {
+utils.inherit(redirectToActionPermanentResult, redirectToActionResult, {
     executeResult: function() {
-        redirectToActionPermanent.superclass.executeResult.apply(this, arguments);
+        redirectToActionPermanentResult.superclass.executeResult.apply(this, arguments);
     }
 });

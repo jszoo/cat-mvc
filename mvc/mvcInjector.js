@@ -17,7 +17,7 @@ var JS_COMMENTS = /((\/\/.*$)|(\/\*[\s\S]*?\*\/))/mg,
 exports.annotate = function(func) {
     var inject;
     if (utils.isFunction(func)) {
-        if (!(inject = func.inject)) {
+        if (!(inject = func.$inject)) {
             inject = [];
             var functionText = func.toString().replace(JS_COMMENTS, '');
             var declaredArgs = functionText.match(FN_ARGS);
@@ -26,7 +26,7 @@ exports.annotate = function(func) {
                     inject.push(name);
                 });
             });
-            func.inject = inject;
+            func.$inject = inject;
         }
     } else if (utils.isArray(func)) {
         var last = func.length - 1;

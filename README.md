@@ -185,23 +185,23 @@ mvc.controller('name', 'attributes', function() {
 A series events inside controller can be subscribed via adding controller attributes. You will see the other attribute on Action api signature in the following document. They are almost the same, but all the Action Attribute events will bubble to Controller Attribute. For more details please see the attribute section.
 
 **Injection of controller**   
-There we can see some parameters in the controller handler function. The parameters will injected automatically base on parameter names (case insensitive). We alreay have some common used component objects builtin.
+There we can see some parameters in the controller handler function. The parameters will injected automatically base on parameter names (case insensitive). We alreay have some common used component objects builtin. Case the component names are confused to you action variables, you can add a prefix "$" to the component name. For example: model -> $model
 
-| **Name**     | **Description**                         | **Useage**          |
-|:-------------|:----------------------------------------|:--------------------|
-| req          | raw nodejs request object               |                     |
-| res          | raw nodejs response object              |                     |
-| context      | httpContext object                      |                     |
-| session      | plain object session data               | session['logged']   |
-| query        | plain object query data                 | query['PageIndx']   |
-| form         | plain object form data                  | form['UserName']    |
-| tempData     | temp data                               | tempData.set('title', 'xxx')        |
-| viewData     | view data                               | viewData.model(obj)                 |
-| modelState   | request model state                     | modelState.isValid()                |
-| model        | model APIs                              | model.new('UserModel')              |
-| url          | url generator                           | url.action('index', 'home')         |
-| end          | response functions for ending request   | end.json({ success: true })         |
-| actionResult | same api as "end" for create result     | actionResult.json({ success: true}) |
+| **Name**     | **Prefixed Name** | **Description**                         | **Useage**          |
+|:-------------|:------------------|:----------------------------------------|:--------------------|
+| req          | $req              | raw nodejs request object               |                     |
+| res          | $res              | raw nodejs response object              |                     |
+| context      | $context          | httpContext object                      |                     |
+| session      | $session          | plain object session data               | session['logged']   |
+| query        | $query            | plain object query data                 | query['PageIndx']   |
+| form         | $form             | plain object form data                  | form['UserName']    |
+| tempData     | $tempData         | temp data                               | tempData.set('title', 'xxx')        |
+| viewData     | $viewData         | view data                               | viewData.model(obj)                 |
+| modelState   | $modelState       | request model state                     | modelState.isValid()                |
+| model        | $model            | model APIs                              | model.new('UserModel')              |
+| url          | $url              | url generator                           | url.action('index', 'home')         |
+| end          | $end              | response functions for ending request   | end.json({ success: true })         |
+| actionResult | $actionResult     | same api as "end" for create result     | actionResult.json({ success: true}) |
 
 It's very cooool, isn't it? But we think further more. We made the awesome injection customizable.
 
@@ -315,6 +315,34 @@ mvc.controller(function(end) {
 | httpNotFoundResult      | end.httpNotFound();                                        |
 | redirectResult          | end.redirect('url', isPermanent);                          |
 | redirectToRouteResult   | end.redirectToAction('action', 'controller', routeValues); |
+
+**Custom action result**   
+Except the builtin result types, you can custom your action result to meet all the requirements. Implement your logic in "executeResult" and when done call the callback function. That's very easy. Below is a custom json result for example:
+
+```javascript
+var myJsonResult = function(data) {
+    this.data = data;
+};
+myJsonResult.prototype = {
+    data: null, constructor: myJsonResult,
+    executeResult: function(controllerContext, callback) {
+        var json = JSON.stringify(this.data);
+        controllerContext.zoo.response.contentType('application/json');
+        controllerContext.zoo.response.send(json);
+        callback();
+    }
+};
+// global.js
+app.on('init', function() {
+    app.actionResults.register('myJson', myJsonResult);
+});
+// controller.js
+mvc.controller(function(end) {
+    this.index = function() {
+        end.myJson({ id: 1 });
+    };
+});
+```
 
 Attribute
 -----------------

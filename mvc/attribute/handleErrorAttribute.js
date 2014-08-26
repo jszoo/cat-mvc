@@ -7,7 +7,8 @@
 
 'use strict';
 
-var utils = require('zoo-utils');
+var utils = require('zoo-utils'),
+    actionResult = require('../httpResult/actionResult');
 
 var handleErrorAttribute = module.exports = function(set) {
     if (utils.isBoolean(set)) {
@@ -25,9 +26,8 @@ handleErrorAttribute.prototype = {
 
     onException: function(exceptionContext) {
         if (this.enabled && !exceptionContext.exceptionHandled) {
-            var viewResult = exceptionContext.app.actionResults.get('view');
             exceptionContext.exceptionHandled = true;
-            exceptionContext.result = new viewResult(this.viewName, exceptionContext.exception);
+            exceptionContext.result = new actionResult.view(this.viewName, exceptionContext.exception);
         }
     }
 

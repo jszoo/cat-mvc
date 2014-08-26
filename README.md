@@ -316,6 +316,34 @@ mvc.controller(function(end) {
 | redirectResult          | end.redirect('url', isPermanent);                          |
 | redirectToRouteResult   | end.redirectToAction('action', 'controller', routeValues); |
 
+**Custom action result**   
+Except the builtin result types, you can custom your action result to meet all the requirements. Implement your logic in "executeResult" and when done call the callback function. That's very easy. Below is a custom json result for example:
+
+```javascript
+var myJsonResult = function(data) {
+    this.data = data;
+};
+myJsonResult.prototype = {
+    data: null, constructor: myJsonResult,
+    executeResult: function(controllerContext, callback) {
+        var json = JSON.stringify(this.data);
+        controllerContext.zoo.response.contentType('application/json');
+        controllerContext.zoo.response.send(json);
+        callback();
+    }
+};
+// global.js
+app.on('init', function() {
+    app.actionResults.register('myJson', myJsonResult);
+});
+// controller.js
+mvc.controller(function(end) {
+    this.index = function() {
+        end.myJson({ id: 1 });
+    };
+});
+```
+
 Attribute
 -----------------
 Coming soon...

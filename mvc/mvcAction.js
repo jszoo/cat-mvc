@@ -9,6 +9,7 @@
 
 var utils = require('zoo-utils'),
     injector = require('./mvcInjector'),
+    actionResult = require('./httpResult/actionResult'),
     mvcModelBinder = require('./mvcModelBinder');
 
 var mvcAction = module.exports = function(set) {
@@ -200,10 +201,10 @@ mvcAction.prototype = {
 
     checkActionResult: function(ret) {
         if (ret === null) {
-            ret = this.controller.resultApiSync.empty();
+            ret = new actionResult.empty();
         }
         if (!utils.isFunction(ret.executeResult)) {
-            ret = this.controller.resultApiSync.content(String(ret));
+            ret = new actionResult.content(ret);
         }
         return ret;
     },

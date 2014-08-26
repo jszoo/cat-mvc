@@ -77,20 +77,24 @@ var proto = mvcActionResultApi.prototype, protoNames = '';
 utils.each(proto, function(name) { protoNames += name + ','; });
 
 var actionResultApi = {
-    allow: function(name) {
-        return (protoNames.indexOf(name + ',') === -1);
+    allow: function(name, thro) {
+        var ret = (protoNames.indexOf(name + ',') === -1);
+        if (!ret && thro) {
+            throw new Error(utils.format('Action result name "{0}" is reserved', name));
+        } else {
+            return ret;
+        }
     },
     set: function(name, func) {
-        if (!this.allow(name)) {
-            throw new Error(utils.format('Action result name "{0}" is not allow', name));
-        }
+        this.allow(name, true);
         proto[name] = function() {
             var result = createNew(func, arguments);
             return this.with(result);
         };
     },
     remove: function(name) {
-        if (this.allow(name) && proto[name] !== undefined) {
+        this.allow(name, true);
+        if (proto[name] !== undefined) {
             proto[name] = undefined;
             return true;
         } else {

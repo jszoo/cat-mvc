@@ -103,7 +103,9 @@ var actionResultApi = {
     },
     clear: function() {
         utils.each(proto, function(name) {
-            actionResultApi.remove(name);
+            if (actionResultApi.allow(name)) {
+                actionResultApi.remove(name);
+            }
         });
     }
 };

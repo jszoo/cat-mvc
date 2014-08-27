@@ -5,7 +5,7 @@
 * create date: 2014.7.31
 */
 
-'use strict';
+//'use strict';
 
 var utils = require('zoo-utils');
 
@@ -27,7 +27,7 @@ dataTypeBase.prototype = {
 /* string
 ***************************************/
 var string = exports.string = function(set) {
-    string.superclass.constructor.call(this, set);
+    this.inherited(set);
 };
 
 utils.inherit(string, dataTypeBase, {
@@ -44,7 +44,7 @@ utils.inherit(string, dataTypeBase, {
 /* integer
 ***************************************/
 var integer = exports.integer = function(set) {
-    integer.superclass.constructor.call(this, set);
+    this.inherited(set);
 };
 
 utils.inherit(integer, dataTypeBase, {
@@ -60,7 +60,7 @@ exports.Int = exports.integer;
 /* Float
 ***************************************/
 var Float = exports.Float = function(set) {
-    Float.superclass.constructor.call(this, set);
+    this.inherited(set);
 };
 
 utils.inherit(Float, dataTypeBase, {
@@ -74,7 +74,7 @@ utils.inherit(Float, dataTypeBase, {
 /* BOOLEAN
 ***************************************/
 var BOOLEAN = exports.BOOLEAN = function(set) {
-    BOOLEAN.superclass.constructor.call(this, set);
+    this.inherited(set);
 };
 
 utils.inherit(BOOLEAN, dataTypeBase, {
@@ -89,7 +89,7 @@ exports.bool = exports.BOOLEAN;
 /* date
 ***************************************/
 var date = exports.date = function(set) {
-    date.superclass.constructor.call(this, set);
+    this.inherited(set);
 };
 
 utils.inherit(date, dataTypeBase, {
@@ -103,7 +103,7 @@ utils.inherit(date, dataTypeBase, {
 /* array
 ***************************************/
 var array = exports.array = function(set) {
-    array.superclass.constructor.call(this, set);
+    this.inherited(set);
 };
 
 utils.inherit(array, dataTypeBase, {

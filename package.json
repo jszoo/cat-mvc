@@ -1,6 +1,6 @@
 {
   "name": "cat-mvc",
-  "version": "0.2.3",
+  "version": "0.2.4",
   "description": "The best nodejs MVC web framework in .NET MVC style",
   "main": "mvc/index.js",
   "scripts": {
@@ -15,8 +15,8 @@
     "url": "https://github.com/jszoo/cat-mvc.git"
   },
   "keywords": [
-    "web",
     "mvc",
+    "web",
     "view",
     "model",
     "controller",
@@ -29,7 +29,7 @@
   "author": "ruleechen <rulee@live.cn>",
   "licenses": "MIT",
   "dependencies": {
-    "zoo-utils": "0.0.8",
+    "zoo-utils": "0.0.9",
     "zoo-cache": "0.0.8",
     "express-session": "~1.7.6",
     "body-parser": "~1.6.5",

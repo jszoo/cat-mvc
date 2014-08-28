@@ -5,7 +5,7 @@
 * create date: 2014.7.31
 */
 
-'use strict';
+//'use strict';
 
 var utils = require('zoo-utils');
 
@@ -31,7 +31,7 @@ validatorBase.prototype = {
 /* empty
 ***************************************/
 var empty = exports.empty = function(enabled) {
-    empty.superclass.constructor.call(this);
+    this.inherited();
     this.enabled = !!enabled;
 };
 
@@ -51,7 +51,7 @@ utils.inherit(empty, validatorBase, {
 /* notEmpty
 ***************************************/
 var notEmpty = exports.notEmpty = function(enabled) {
-    notEmpty.superclass.constructor.apply(this);
+    this.inherited();
     this.enabled = !!enabled;
 };
 
@@ -71,7 +71,7 @@ utils.inherit(notEmpty, validatorBase, {
 /* required
 ***************************************/
 var required = exports.required = function(enabled) {
-    required.superclass.constructor.call(this);
+    this.inherited();
     this.enabled = !!enabled;
 };
 
@@ -91,7 +91,7 @@ utils.inherit(required, validatorBase, {
 /* minLength
 ***************************************/
 var minLength = exports.minLength = function(len) {
-    minLength.superclass.constructor.call(this);
+    this.inherited();
     this.length = len;
 };
 
@@ -112,7 +112,7 @@ exports.minLen = exports.minLength;
 /* maxLength
 ***************************************/
 var maxLength = exports.maxLength = function(len) {
-    maxLength.superclass.constructor.call(this);
+    this.inherited();
     this.length = len;
 };
 
@@ -133,7 +133,7 @@ exports.maxLen = exports.maxLength;
 /* Length
 ***************************************/
 var Length = exports.Length = function(len) {
-    Length.superclass.constructor.call(this);
+    this.inherited();
     this.length = len;
 };
 
@@ -154,7 +154,7 @@ exports.len = exports.Length;
 /* min
 ***************************************/
 var min = exports.min = function(value) {
-    min.superclass.constructor.call(this);
+    this.inherited();
     this.value = value;
 };
 
@@ -173,7 +173,7 @@ utils.inherit(min, validatorBase, {
 /* max
 ***************************************/
 var max = exports.max = function(value) {
-    max.superclass.constructor.call(this);
+    this.inherited();
     this.value = value;
 };
 
@@ -192,7 +192,7 @@ utils.inherit(max, validatorBase, {
 /* Undefined
 ***************************************/
 var Undefined = exports.Undefined = function(enabled) {
-    Undefined.superclass.constructor.call(this);
+    this.inherited();
     this.enabled = !!enabled;
 };
 
@@ -211,7 +211,7 @@ utils.inherit(Undefined, validatorBase, {
 /* notUndefined
 ***************************************/
 var notUndefined = exports.notUndefined = function(enabled) {
-    notUndefined.superclass.constructor.call(this);
+    this.inherited();
     this.enabled = !!enabled;
 };
 
@@ -230,7 +230,7 @@ utils.inherit(notUndefined, validatorBase, {
 /* Null
 ***************************************/
 var Null = exports.Null = function(enabled) {
-    Null.superclass.constructor.call(this);
+    this.inherited();
     this.enabled = !!enabled;
 };
 
@@ -249,7 +249,7 @@ utils.inherit(Null, validatorBase, {
 /* notNull
 ***************************************/
 var notNull = exports.notNull = function(enabled) {
-    notNull.superclass.constructor.call(this);
+    this.inherited();
     this.enabled = !!enabled;
 };
 
@@ -268,7 +268,7 @@ utils.inherit(notNull, validatorBase, {
 /* string
 ***************************************/
 var string = exports.string = function(enabled) {
-    string.superclass.constructor.call(this);
+    this.inherited();
     this.enabled = !!enabled;
 };
 
@@ -287,7 +287,7 @@ utils.inherit(string, validatorBase, {
 /* numeric
 ***************************************/
 var numeric = exports.numeric = function(enabled) {
-    numeric.superclass.constructor.call(this);
+    this.inherited();
     this.enabled = !!enabled;
 };
 
@@ -306,7 +306,7 @@ utils.inherit(numeric, validatorBase, {
 /* number
 ***************************************/
 var number = exports.number = function(enabled) {
-    number.superclass.constructor.call(this);
+    this.inherited();
     this.enabled = !!enabled;
 };
 
@@ -325,7 +325,7 @@ utils.inherit(number, validatorBase, {
 /* BOOLEAN
 ***************************************/
 var BOOLEAN = exports.BOOLEAN = function(enabled) {
-    BOOLEAN.superclass.constructor.call(this);
+    this.inherited();
     this.enabled = !!enabled;
 };
 
@@ -346,7 +346,7 @@ exports.bool = exports.BOOLEAN;
 /* array
 ***************************************/
 var array = exports.array = function(enabled) {
-    array.superclass.constructor.call(this);
+    this.inherited();
     this.enabled = !!enabled;
 };
 
@@ -365,7 +365,7 @@ utils.inherit(array, validatorBase, {
 /* date
 ***************************************/
 var date = exports.date = function(enabled) {
-    date.superclass.constructor.call(this);
+    this.inherited();
     this.enabled = !!enabled;
 };
 

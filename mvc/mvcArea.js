@@ -69,10 +69,12 @@ mvcArea.prototype = {
     },
 
     fireEvent: function(funcName) {
+        funcName = String(funcName);
         var func = this[funcName];
-        if (utils.isFunction(func)) {
-            var args = utils.arg2arr(arguments, 1);
-            func.apply(this, args);
+        if (utils.isFunction(func) && /^on.+$/.test(funcName)) {
+            func.apply(this, utils.arg2arr(arguments, 1));
+        } else {
+            throw new Error(utils.format('Can not find the specified event "{0}"', funcName));
         }
     },
 

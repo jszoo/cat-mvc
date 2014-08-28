@@ -298,17 +298,17 @@ controllerImplementationScope.prototype = {
     onControllerInitialized: function(controller) { },
     onControllerDestroy: function(controller) { },
 
-    /************ authorization filter interface **************/
+    /************ authorization filter interface [IAuthorizationFilter] **************/
     onAuthorization: function(authorizationContext) { },
 
-    /************ action filter interface **************/
+    /************ action filter interface [ActionFilterAttribute + IActionFilter] **************/
     onActionExecuting: function(actionExecutingContext, next) { next(); },
     onActionExecuted: function(actionExecutedContext, next) { next(); },
 
-    /************ result filter interface **************/
+    /************ result filter interface [ActionFilterAttribute + IResultFilter] **************/
     onResultExecuting: function(resultExecutingContext, next) { next(); },
     onResultExecuted: function(resultExecutedContext, next) { next(); },
 
-    /************ exception filter interface **************/
+    /************ exception filter interface [IExceptionFilter] **************/
     onException: function(exceptionContext) { },
 };

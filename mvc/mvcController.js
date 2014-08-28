@@ -18,7 +18,7 @@ var utils = require('zoo-utils'),
     mvcModelApi = require('./mvcModelApi');
 
 var controllersDefined,
-    controllerKeyInScope = 'dont_use_me(random:' + utils.unique(8) + ')';
+    randomObjectKey = 'dont_use_me(random:' + utils.unique(8) + ')';
 
 var mvcController = module.exports = function(set) {
     utils.extend(this, set);
@@ -50,7 +50,7 @@ mvcController.api = function(name, attr, impl) {
         controllersDefined.push(ret);
     }
     // for chain
-    return ret;
+    return new controllerDeclareChain(ret);
 };
 
 mvcController.loadfile = function(filePath) {
@@ -92,9 +92,9 @@ mvcController.prototype = {
     constructor: mvcController,
 
     name: function(p) { return (p === undefined) ? (this._name) : (this._name = p, this); },
-    path: function(p) { return (p === undefined) ? (this._path) : (this._path = p, this); },
     attr: function(p) { return (p === undefined) ? (this._attr) : (this._attr = p, this); },
     impl: function(p) { return (p === undefined) ? (this._impl) : (this._impl = p, this); },
+    path: function(p) { return (p === undefined) ? (this._path) : (this._path = p, this); },
 
     clone: function() {
         return new mvcController({
@@ -131,7 +131,7 @@ mvcController.prototype = {
             this.httpContext = null;
         }
         if (this.implScope) {
-            this.implScope[controllerKeyInScope] = null;
+            this.implScope[randomObjectKey] = null;
             this.implScope = null;
         }
         // clear reference types
@@ -246,7 +246,7 @@ mvcController.prototype = {
         });
         this.actions.push(act);
         // for chain
-        return act;
+        return new actionDeclareChain(act);
     },
 
     findAction: function(actionName) {
@@ -284,15 +284,35 @@ mvcController.prototype = {
     }
 };
 
-var controllerImplementationScope = function(controller) {
-    this[controllerKeyInScope] = controller;
+
+var actionDeclareChain = function(action) {
+    this[randomObjectKey] = action;
+};
+actionDeclareChain.prototype = {
+    constructor: actionDeclareChain,
+    name: function(p) { return (p === undefined) ? (this[randomObjectKey].name()) : (this[randomObjectKey].name(p), this); },
+    attr: function(p) { return (p === undefined) ? (this[randomObjectKey].attr()) : (this[randomObjectKey].attr(p), this); },
+    impl: function(p) { return (p === undefined) ? (this[randomObjectKey].impl()) : (this[randomObjectKey].impl(p), this); }
 };
 
+
+var controllerDeclareChain = function(controller) {
+    this[randomObjectKey] = controller;
+};
+controllerDeclareChain.prototype = {
+    constructor: controllerDeclareChain,
+    name: function(p) { return (p === undefined) ? (this[randomObjectKey].name()) : (this[randomObjectKey].name(p), this); },
+    attr: function(p) { return (p === undefined) ? (this[randomObjectKey].attr()) : (this[randomObjectKey].attr(p), this); },
+    impl: function(p) { return (p === undefined) ? (this[randomObjectKey].impl()) : (this[randomObjectKey].impl(p), this); }
+};
+
+
+var controllerImplementationScope = function(controller) {
+    this[randomObjectKey] = controller;
+};
 controllerImplementationScope.prototype = {
-
     constructor: controllerImplementationScope,
-
-    action: function() { return this[controllerKeyInScope].action.apply(this[controllerKeyInScope], arguments); },
+    action: function() { return this[randomObjectKey].action.apply(this[randomObjectKey], arguments); },
 
     /************ controller events interface **************/
     onControllerInitialized: function(controller) { },
@@ -310,5 +330,5 @@ controllerImplementationScope.prototype = {
     onResultExecuted: function(resultExecutedContext, next) { next(); },
 
     /************ exception filter interface [IExceptionFilter] **************/
-    onException: function(exceptionContext) { },
+    onException: function(exceptionContext) { }
 };

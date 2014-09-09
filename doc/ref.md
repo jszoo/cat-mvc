@@ -12,8 +12,6 @@ REFERENCE
 + http://wingolog.org/archives/2013/05/08/generators-in-v8
 + http://jlongster.com/A-Study-on-Solving-Callbacks-with-JavaScript-Generators
 
-+ http://www.csdn.net/article/2014-02-24/2818519-node-js-mvc-frameworks-for-javascript-developers
-
 + http://howtonode.org/generators-vs-fibers
 + http://www.csdn.net/article/2014-02-24/2818519-node-js-mvc-frameworks-for-javascript-developers
 

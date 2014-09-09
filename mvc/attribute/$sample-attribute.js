@@ -21,27 +21,27 @@ sampleAttribute.prototype = {
     onControllerInitialized: function(controller) { },
     onControllerDestroy: function(controller) { },
 
-    /************ authorization filter interface **************/
+    /************ authorization filter interface [IAuthorizationFilter] **************/
     onAuthorization: function(authorizationContext) { },
 
-    /************ action filter interface **************/
+    /************ action filter interface [ActionFilterAttribute + IActionFilter] **************/
     onActionExecuting: function(actionExecutingContext, next) { next(); },
     onActionExecuted: function(actionExecutedContext, next) { next(); },
 
-    /************ result filter interface **************/
+    /************ result filter interface [ActionFilterAttribute + IResultFilter] **************/
     onResultExecuting: function(resultExecutingContext, next) { next(); },
     onResultExecuted: function(resultExecutedContext, next) { next(); },
 
-    /************ exception filter interface **************/
+    /************ exception filter interface [IExceptionFilter] **************/
     onException: function(exceptionContext) { },
 
-    /************ action name selector interface **************/
+    /************ action name selector interface [ActionNameSelectorAttribute] **************/
     isValidActionName: function(controllerContext, actionName) { },
 
-    /************ action method selector interface **************/
+    /************ action method selector interface [ActionMethodSelectorAttribute] **************/
     isValidActionRequest: function(controllerContext) { },
 
-    /************ model binder interface **************/
+    /************ model binder interface [CustomModelBinderAttribute] **************/
     getParamName: function() { },
     getBinder: function() { }
 };

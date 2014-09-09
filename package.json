@@ -1,6 +1,6 @@
 {
   "name": "cat-mvc",
-  "version": "0.2.4",
+  "version": "0.2.5",
   "description": "The best nodejs MVC web framework in .NET MVC style",
   "main": "mvc/index.js",
   "scripts": {
@@ -15,8 +15,8 @@
     "url": "https://github.com/jszoo/cat-mvc.git"
   },
   "keywords": [
-    "web",
     "mvc",
+    "web",
     "view",
     "model",
     "controller",

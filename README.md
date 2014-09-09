@@ -346,7 +346,68 @@ mvc.controller(function(end) {
 
 Attribute
 -----------------
-Coming soon...
+Now the attribute is available for controller,action,model. Just as we mentioned in the document above. The controllers and action declare api has an argument for specifying attributes. And for the models, we automatically generate a model binder attribute with the same name for each models. Attributes also use for handling MVC events, such as: onActionExecuting, onActionExecuted, onResultExecuting, onResultExecuted (we call them filters). Any attribute can has one or more of the following functions:
+
+| Function Name             | Function Signature                                   |
+|:--------------------------|:-----------------------------------------------------|
+| onControllerInitialized   | function(controller) { }                             |
+| onControllerDestroy       | function(controller) { }                             |
+| onAuthorization           | function(authorizationContext) { }                   |
+| onActionExecuting         | function(actionExecutingContext, next) { next(); }   |
+| onActionExecuted          | function(actionExecutedContext, next) { next(); }    |
+| onResultExecuting         | function(resultExecutingContext, next) { next(); }   |
+| onResultExecuted          | function(resultExecutedContext, next) { next(); }    |
+| onException               | function(exceptionContext) { }                       |
+| isValidActionName         | function(controllerContext, actionName) { }          |
+| isValidActionRequest      | function(controllerContext) { }                      |
+| getParamName + getBinder  | function() { return (paramName or binder); }         |
+
+Attribute feature is a low level interposition to MVC, it's powerful but please use it carefully. We already builtin some useful attributes:
+
+| Attribute Name             | Description                                        |
+|:---------------------------|:---------------------------------------------------|
+| actionNameAttribute        | Specify a alias name for action                    |
+| nonActionAttribute         | Prevent a function be recognized as action         |
+| acceptVerbsAttribute       | Specify multiple accept http methods for action    |
+| handleErrorAttribute       | Handle errors for controllers or actions           |
+| requireHttpsAttribute      | Indicate action accept HTTPS request only          |
+| httpGetAttribute           | Indicate action accept GET request                 |
+| httpPostAttribute          | Indicate action accpet POST request                |
+| httpHeadAttribute          | Indicate action accpet HEAD request                |
+| httpTraceAttribute         | Indicate action accpet TRACE request               |
+| httpPutAttribute           | Indicate action accpet PUT request                 |
+| httpDeleteAttribute        | Indicate action accpet DELETE request              |
+| httpOptionsAttribute       | Indicate action accpet OPTIONS request             |
+| httpConnectAttribute       | Indicate action accpet CONNECT request             |
+| stringAttribute            | Indicate action parameter is STRING type           |
+| boolAttribute              | Indicate action parameter is BOOLEAN type          |
+| intAttribute               | Indicate action parameter is INT type              |
+| floatAttribute             | Indicate action parameter is FLOAT type            |
+| dateAttribute              | Indicate action parameter is DATE type             |
+| arrayAttribute             | Indicate action parameter is ARRAY type            |
+
+**Attribute sample**   
+This is a sample for declaring a model binder (and) attribute. The binder add a test property to the default binding result. You can do any operation to the binding value to achieve your need. Register attribute class to MVC by using attribute manager **app.attributes**.
+
+```javascript
+// custom model binder
+app.on('init', function() {
+    // binder
+    var customBinder = function() {
+        this.bindModel = function(controllerContext, bindingContext) {
+            bindingContext.value.test = 1;
+            return bindingContext.value;
+        };
+    };
+    // attribute
+    var customBinderAttribute = function(paramName) {
+        this.getParamName = function() { return paramName; };
+        this.getBinder = function() { return new customBinder(); }
+    };
+    // register
+    app.attributes.register('customBinder', customBinderAttribute);
+});
+```
 
 Model
 ----------

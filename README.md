@@ -409,21 +409,10 @@ app.on('init', function() {
 });
 ```
 
-Model
-----------
-Coming soon...
-
-Model binder
-----------
-Coming soon...
-
-Data annotation
-----------------
-Coming soon...
-
-View engine
------------------
-Coming soon...
+* [ ] Model
+* [ ] Model binder
+* [ ] Data annotation
+* [ ] View engine
 
 License 
 --------
